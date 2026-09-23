@@ -347,7 +347,7 @@ p { margin: 0 0 16px; }
 .marker .ic { width:16px; height:16px; stroke-width:1.6; } .marker .ic.ph { width:16px; height:16px; }
 .marker .ic-pair { display:flex; gap:1px; align-items:center; } .marker .ic-pair .ic { width:9px; height:9px; } .marker .ic-pair .ic.ph { width:13px; height:13px; }
 .xmark { font:700 13px var(--font-mono); color:var(--text); transform:translateY(-30px); }
-.site { width:8px; height:8px; border-radius:50%; background:var(--text); border:2px solid #0b0b0c; opacity:0; transition:opacity .4s; } .site.on { opacity:1; }
+.rt-site-dot { width:8px; height:8px; border-radius:50%; background:var(--text); border:2px solid #0b0b0c; opacity:0; transition:opacity .4s; } .rt-site-dot.on { opacity:1; }
 .cursor { width:10px; height:10px; border-radius:50%; background:var(--text); border:2px solid #0b0b0c; }
 @media (max-width:860px) { .rt-app.app { grid-template-columns:1fr; grid-template-rows:minmax(0,1fr) 6px var(--ph, 40%); } .rt-app.collapsed { grid-template-rows:minmax(0,1fr) 6px 44px; } .splitter { cursor:row-resize; } .panel { border-left:0; border-top:1px solid var(--line); } .tab-nm { display:none; } .ptoggle { right:12px; top:auto; bottom:calc(var(--ph, 40%) + 12px); } .rt-app.collapsed .ptoggle { bottom:56px; } .rt-app.collapsed .panel { padding:10px 14px; } }
 
@@ -414,10 +414,10 @@ p { margin: 0 0 16px; }
 .composer-row .rip:hover { border-color: var(--text); background: var(--accent-soft); transform: translateY(-1px); }
 .composer-row .rip:active { transform: scale(0.97); }
 .composer-note { font-size: 13px; color: var(--muted); }
-@media (max-width: 600px) { .composer-fields { grid-template-columns: 1fr; } .hero .band-links { width: calc(100% - 132px); max-width: none; justify-content: space-between; gap: 0 4px; bottom: calc(50% + 9px); flex-wrap: nowrap; }
+@media (max-width: 600px) { .composer-fields { grid-template-columns: 1fr; } .hero .band-links { width: calc(100% - 132px); max-width: none; justify-content: flex-start; gap: 2px 12px; bottom: calc(50% + 9px); flex-wrap: wrap; }
   .hero .band-links a, .hero .band-links .docs-wrap > a { font-size: 9.5px; letter-spacing: -0.02em; padding: 4px 0; gap: 3px; border: 0; border-radius: 0; border-bottom: 1px solid transparent; }
   .hero .band-links a:hover, .hero .band-links a:active { background: transparent; border-color: transparent; border-bottom-color: var(--text); transform: none; }
-  .hero .band-links a span { white-space: nowrap; } .hero .band-links .more { display: none; } .hero .band-links svg { width: 11px; height: 11px; } .band-track { height: 128px; } .cta { width: 102px; height: 102px; font-size: 12.5px; } .band-cta { right: 0; } .band-wrap { margin-bottom: 0; } .pill-fill { top: calc(50% + 23px); padding: 7px 12px; font-size: 10.5px; } .hero .row > div:first-child { order: 1; } }
+  .hero .band-links a span { white-space: nowrap; } .hero .band-links .more { display: none; } .hero .band-links svg { width: 11px; height: 11px; } .band-track { height: 128px; } .cta { width: 102px; height: 102px; font-size: 12.5px; } .band-cta { right: 0; margin-right: 0; padding-right: 0; } .band-wrap { margin-bottom: 0; } .pill-fill { top: calc(50% + 23px); padding: 7px 12px; font-size: 10.5px; } .hero .row > div:first-child { order: 1; } }
 @media (prefers-reduced-motion: reduce) { .composer-form { animation: none; } .cta, .cta-fill, .pill-blob { transition: none; } }
 footer.site { padding: 36px var(--pad); text-align: center; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
 footer.site .loc { display: inline-flex; align-items: center; gap: 5px; }
@@ -764,7 +764,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           <div class="title">Mendocino Fire Complex: surface vegetation change through spectral indices (NDVI and NBR)</div>
           <div class="authors">UCLA Geography &middot; Landsat 8 OLI, Google Earth Engine</div>
           <div class="venue">Undergraduate thesis, 2018 &middot; <a href="https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program">Los Angeles Geospatial Summit, 2019</a> &middot; rebuild pending</div>
-          <div class="links"><a href="https://mappingwithmatt.com/2012/09/20/Mendocino-Fire-Complex/">write-up</a></div>
+          <div class="links"><a href="/maps/mendocino-fire-complex/">write-up</a></div>
         </div>
       </li>
       <li>
@@ -787,10 +787,10 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       <li>
         <div class="thumb ph-maps"></div>
         <div>
-          <div class="title">Twenty-plus coursework maps: classification, SAR, terrain, interpolation, and cartography</div>
-          <div class="authors">UCLA Geography, 2016 to 2018</div>
+          <div class="title">Thirty-one coursework projects: classification, SAR, terrain, interpolation, and cartography</div>
+          <div class="authors">UCLA Geography, 2014 to 2018</div>
           <div class="venue">Archive</div>
-          <div class="links"><a href="https://mappingwithmatt.com/">archive</a></div>
+          <div class="links"><a href="/maps/">archive</a></div>
         </div>
       </li>
     </ol>
@@ -1073,7 +1073,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     map.addSource('arcs', { type: 'geojson', data: { type: 'FeatureCollection', features: SITES.map(function (s) { var f = STOPS[s.from_]; var a = arcLine([f.lon, f.lat], [s.lon, s.lat]); a.properties = { from: s.from_, label: s.label }; return a; }) } });
     map.addLayer({ id: 'arcs', type: 'line', source: 'arcs', paint: { 'line-color': '#fff', 'line-opacity': 0, 'line-width': 1, 'line-dasharray': [2, 3] } });
     markers = STOPS.map(function (s, i) { var el = document.createElement('div'); el.className = 'marker'; el.innerHTML = document.querySelector('.tab[data-i="' + i + '"] .tab-ic').innerHTML; el.title = s.name + ' · ' + s.years; el.addEventListener('click', function () { goStop(i); }); return new maplibregl.Marker({ element: el }).setLngLat([s.lon, s.lat]).addTo(map); });
-    siteMarkers = SITES.map(function (s) { var el = document.createElement('div'); el.className = 'site'; el.title = s.label; return { m: new maplibregl.Marker({ element: el }).setLngLat([s.lon, s.lat]).addTo(map), from: s.from_ }; });
+    siteMarkers = SITES.map(function (s) { var el = document.createElement('div'); el.className = 'rt-site-dot'; el.title = s.label; return { m: new maplibregl.Marker({ element: el }).setLngLat([s.lon, s.lat]).addTo(map), from: s.from_ }; });
     var xe = document.createElement('div'); xe.className = 'xmark'; xe.textContent = 'X'; xe.style.opacity = 0; xmark = new maplibregl.Marker({ element: xe }).setLngLat([STOPS[6].lon, STOPS[6].lat]).addTo(map);
     var ce = document.createElement('div'); ce.className = 'cursor'; ce.style.opacity = 0; cursorM = new maplibregl.Marker({ element: ce }).setLngLat([STOPS[0].lon, STOPS[0].lat]).addTo(map);
     ready = true; activate(0); setProgress(0);
