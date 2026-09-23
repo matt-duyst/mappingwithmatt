@@ -1,0 +1,1148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Matt Duyst</title>
+<meta name="description" content="Environmental data scientist and machine learning engineer">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/6.10.0/maplibre-gl.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #0f0f10;
+  --surface: rgba(255,255,255,0.035);
+  --text: #ECECEA;
+  --muted: #9A9A98;
+  --line: #2A2A2C;
+  --accent: #F2F2F0;
+  --accent-soft: #FFFFFF14;
+  --accent-text: #F2F2F0;
+  --link: #D9A066;
+  --body: #ECECEA;
+  --max: 1100px;
+  --pad: clamp(16px, 4vw, 40px);
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #FAFAF7; --surface: rgba(0,0,0,0.03); --text: #18181B; --muted: #6B7280; --line: #E5E5E0; --accent: #18181B; --accent-soft: #0000000C; --accent-text: #18181B; --link: #9A5F22; --body: #18181B;
+  }
+}
+:root[data-theme="dark"] { --bg: #0f0f10; --surface: rgba(255,255,255,0.035); --text: #ECECEA; --muted: #9A9A98; --line: #2A2A2C; --accent: #F2F2F0; --accent-soft: #FFFFFF14; --accent-text: #F2F2F0; --body: #ECECEA; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+a { color: var(--link); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .15s ease, color .15s ease; }
+a:hover { border-bottom-color: var(--link); }
+.intro .jump a, .hero .links a, .composer a, #rail a, footer.site a, .exp-head h3 a, .oss .card h3 a { color: var(--text); }
+.exp-head h3 a { border-bottom: 1px solid var(--line); } .exp-head h3 a:hover { color: var(--link); border-bottom-color: var(--link); }
+
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+img { max-width: 100%; height: auto; }
+
+/* Liquid blob */
+#goo { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; opacity: 0; transition: opacity 1600ms ease; mix-blend-mode: screen; }
+#goo.on { opacity: 0.9; }
+#goo circle { transition: fill 800ms linear; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) #goo { mix-blend-mode: multiply; } :root:not([data-theme="dark"]) #goo.on { opacity: 0.6; } }
+@media (prefers-reduced-motion: reduce) { #goo { display: none; } }
+
+/* Welcome curtain */
+#curtain { position: fixed; inset: 0; z-index: 60; background: var(--bg); color: var(--text); display: grid; place-items: center; transform: translateY(0); transition: transform 900ms cubic-bezier(.76, 0, .24, 1); }
+#curtain::after { content: ""; position: absolute; left: -10%; right: -10%; bottom: -140px; height: 280px; background: var(--bg); border-radius: 0 0 50% 50%; }
+#curtain.lift { transform: translateY(-115%); }
+#curtain.gone { display: none; }
+#flap { position: relative; width: min(92vw, 720px); height: 1.4em; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); font-weight: 600; font-size: clamp(36px, 6vw, 72px); letter-spacing: -0.02em; line-height: 1.4; perspective: 1200px; cursor: pointer; }
+#flap .card { position: absolute; inset: 0; display: grid; place-items: center; backface-visibility: hidden; transform-origin: 50% 50%; will-change: transform, opacity; }
+#flap .card span { display: block; white-space: nowrap; }
+#flap .card.out { animation: flapOut 460ms cubic-bezier(.65, 0, .35, 1) forwards; }
+#flap .card.in { animation: flapIn 460ms cubic-bezier(.65, 0, .35, 1) forwards; }
+#flap .card.idle { opacity: 0; transform: rotateX(90deg); }
+@keyframes flapOut { from { transform: rotateX(0deg); opacity: 1; } 60% { opacity: 1; } to { transform: rotateX(-90deg); opacity: 0; } }
+@keyframes flapIn { from { transform: rotateX(90deg); opacity: 0; } 40% { opacity: 1; } to { transform: rotateX(0deg); opacity: 1; } }
+#flap-hint { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--muted); opacity: 0; animation: hintIn 600ms ease 1200ms forwards; }
+@keyframes hintIn { to { opacity: 1; } }
+#flap.tick { animation: tick 180ms ease-out; }
+@keyframes tick { 30% { transform: translateY(2px); } }
+@media (prefers-reduced-motion: reduce) { #curtain { transition: none; } #flap .card { animation: none !important; } #flap-hint { display: none; } }
+
+section, footer { position: relative; z-index: 2; }
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity 560ms cubic-bezier(.65, 0, .35, 1), transform 560ms cubic-bezier(.65, 0, .35, 1); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: 60ms; } .reveal.d2 { transition-delay: 120ms; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+.papers li { transition: transform 200ms cubic-bezier(.65, 0, .35, 1); }
+.papers li:hover { transform: translateY(-1px); }
+.papers .thumb { transition: filter 200ms ease; filter: brightness(0.85); }
+.papers li:hover .thumb { filter: brightness(1.05); }
+
+/* Rail: a vertical path of section markers on the right edge, visible once the intro scrolls away */
+#rail { position: fixed; right: clamp(14px, 2.4vw, 34px); top: 50%; transform: translate(12px, -50%); z-index: 40; display: flex; flex-direction: column; align-items: flex-end; gap: 0; opacity: 0; pointer-events: none; transition: opacity 420ms ease, transform 420ms cubic-bezier(.65, 0, .35, 1); }
+#rail.show { opacity: 1; pointer-events: auto; transform: translate(0, -50%); }
+#rail a { position: relative; display: flex; align-items: center; gap: 12px; padding: 9px 0; color: var(--muted); border: 0; }
+#rail a span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.03em; opacity: 0; transform: translateX(6px); transition: opacity 200ms ease, transform 200ms cubic-bezier(.65, 0, .35, 1); white-space: nowrap; }
+#rail a i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--muted); background: transparent; box-sizing: border-box; transition: background 200ms ease, border-color 200ms ease, transform 200ms ease; }
+#rail a + a::before { content: ""; position: absolute; right: 3px; top: -9px; height: 18px; border-left: 1px dashed var(--line); }
+#rail a:hover span, #rail a.active span { opacity: 1; transform: none; color: var(--text); }
+#rail a.active i { background: var(--text); border-color: var(--text); transform: scale(1.25); }
+#rail a:hover i { border-color: var(--text); }
+#rail .rail-top { margin-top: 6px; }
+#rail .rail-top i { border-radius: 2px; }
+@media (max-width: 900px) { #rail { display: none; } }
+@media (prefers-reduced-motion: reduce) { #rail, #rail a span, #rail a i { transition: none; } }
+
+/* Typewriter intro */
+.intro { min-height: 84svh; display: grid; place-items: center; text-align: center; padding: 40px var(--pad) 24px; position: relative; }
+.intro .stack { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.intro .stack > * { opacity: 0; transform: translateY(10px); transition: opacity 520ms cubic-bezier(.65, 0, .35, 1), transform 520ms cubic-bezier(.65, 0, .35, 1); }
+.intro .stack.show > * { opacity: 1; transform: none; }
+.intro .stack.show > :nth-child(1) { transition-delay: 0ms; } .intro .stack.show > :nth-child(2) { transition-delay: 60ms; } .intro .stack.show > :nth-child(3) { transition-delay: 120ms; } .intro .stack.show > :nth-child(4) { transition-delay: 180ms; } .intro .stack.show > :nth-child(5) { transition-delay: 240ms; }
+@media (prefers-reduced-motion: reduce) { .intro .stack > * { opacity: 1; transform: none; transition: none; } }
+.intro img.round { width: 156px; height: 156px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); display: block; position: relative; z-index: 30; }
+.intro .kicker { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.04em; color: var(--text); font-weight: 500; }
+.intro .loc svg { width: 13px; height: 13px; }
+.intro .loc { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--muted); margin-top: -12px; letter-spacing: 0.04em; }
+.intro .kicker.mono { font-family: var(--font-mono); text-transform: none; letter-spacing: 0.04em; font-size: 14px; }
+.intro .type { font-size: clamp(22px, 3vw, 36px); font-weight: 600; letter-spacing: -0.01em; min-height: 1.4em; color: var(--text); }
+.intro .type.mono { font-family: var(--font-mono); font-weight: 500; }
+
+.intro .type .cursor { display: inline-block; width: 0.08em; height: 1em; background: var(--accent); vertical-align: -0.12em; margin-left: 0.12em; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.intro .jump { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 8px; max-width: 720px; }
+.intro .jump a { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; transition: border-color .15s ease, background .15s ease; }
+.intro .jump svg { width: 12px; height: 12px; }
+.intro .jump a:hover { border-color: var(--text); background: var(--accent-soft); }
+.intro .down { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); color: var(--muted); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+@media (prefers-reduced-motion: reduce) { .intro .type .cursor { animation: none; } }
+
+/* Top nav */
+nav.top { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg); position: sticky; top: 0; z-index: 10; }
+nav.top .inner { max-width: var(--max); margin: 0 auto; padding: 22px var(--pad); display: flex; align-items: baseline; justify-content: space-between; gap: 24px; }
+nav.top .brand { font-weight: 600; letter-spacing: -0.01em; color: var(--text); border: none; }
+nav.top .brand:hover { color: var(--accent-text); }
+nav.top ul { list-style: none; display: flex; gap: 22px; padding: 0; margin: 0; flex-wrap: wrap; }
+nav.top a { color: var(--text); border-bottom: none; font-size: 14.5px; font-weight: 500; }
+nav.top a:hover { color: var(--accent-text); }
+
+/* Section frame */
+section { padding: 56px var(--pad); }
+section .inner { max-width: var(--max); margin: 0 auto; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 12px; display: inline-flex; align-items: center; gap: 10px; }
+h1, h2, h3 { letter-spacing: -0.015em; }
+h1 { font-size: clamp(32px, 4.2vw, 44px); line-height: 1.1; margin: 0 0 8px; font-weight: 600; }
+h2 { font-size: 20px; margin: 0 0 20px; font-weight: 600; }
+h3 { font-size: 17px; margin: 0 0 6px; font-weight: 600; }
+p { margin: 0 0 16px; }
+
+/* Hero */
+.hero { padding-top: 14px; padding-bottom: 8px; border-top: 1px solid var(--line); }
+.hero .row { display: grid; gap: clamp(24px, 4vw, 44px); align-items: start; grid-template-columns: 1fr; }
+@media (max-width: 640px) { .hero .row { grid-template-columns: 1fr; gap: 28px; } .hero .row > div:first-child { order: 1; } .band-wrap { order: 2; } .photo-col { order: 3; margin-top: 4px; } }
+.hero .role { color: var(--muted); font-size: 15px; margin: 0 0 22px; line-height: 1.5; }
+.hero p.bio { font-family: var(--font-mono); font-size: 13px; line-height: 1.75; letter-spacing: -0.005em; color: var(--body); max-width: 72ch; }
+.hero .links { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14.5px; margin-top: 12px; }
+
+
+.hero .links svg { width: 15px; height: 15px; }
+.hero .contact { display: inline-flex; align-items: center; gap: 6px; }
+.hero .links a:hover { color: var(--accent-text); }
+.hero .contact { color: var(--muted); font-size: 14.5px; margin-top: 4px; }
+.hero .contact a { color: var(--accent-text); }
+.photo-col img.portrait { width: 100%; max-width: 280px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); display: block; }
+.photo-col .affiliations { margin-top: 0; max-width: 340px; padding-top: 14px; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 12px; color: var(--muted); line-height: 1.55; }
+.glance, .glance .branch { list-style: none; margin: 0; padding: 0; }
+.glance { position: relative; margin-top: 8px; }
+.glance > li { position: relative; padding: 0 0 18px 18px; }
+.glance > li::before { content: ""; position: absolute; left: 0; top: 7px; width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--text); background: var(--bg); box-sizing: border-box; }
+.glance > li::after { content: ""; position: absolute; left: 3px; top: 16px; bottom: -2px; border-left: 1px dashed var(--line); }
+.glance > li:last-child::after { display: none; }
+.glance .branch { margin: 10px 0 0 0; padding-left: 16px; position: relative; }
+.glance .branch::before { content: ""; position: absolute; left: -15px; top: -6px; bottom: 10px; width: 12px; border-left: 1px dashed var(--line); border-bottom: 1px dashed var(--line); border-radius: 0 0 0 6px; }
+.glance .branch > li { position: relative; padding-left: 10px; }
+.glance .branch > li::before { content: ""; position: absolute; left: -3px; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--muted); }
+.glance .g-head { font-size: 12px; line-height: 1.5; }
+.glance .g-head strong { font-weight: 500; color: var(--text); }
+.glance .g-when { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.glance .g-note { font-size: 11.5px; line-height: 1.6; color: var(--muted); margin-top: 4px; }
+.glance .g-note a { color: var(--link); }
+.glance .g-role { margin: 8px 0 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,0.035); font-size: 11.5px; line-height: 1.6; color: var(--body); transition: border-color .2s ease, background .2s ease; }
+.glance .g-role:hover { border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.05); }
+.glance .g-role a { color: var(--link); }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .glance .g-role { background: rgba(0,0,0,0.03); } } }
+.photo-col .affiliations .aff-label { font-family: var(--font-mono); font-size: 22px; font-weight: 700; letter-spacing: 0.01em; color: var(--text); margin-bottom: 6px; }
+.photo-col .affiliations .aff-yr { display: block; font-size: 11px; color: var(--muted); }
+.photo-col .affiliations a { color: var(--link); }
+.photo-col .affiliations a:hover { border-bottom-color: var(--link); }
+.photo-col .affiliations strong { color: var(--text); font-weight: 500; }
+
+/* Experience */
+.exp { display: grid; grid-template-columns: 300px 1fr; gap: 32px; padding: 28px 0; border-top: 1px solid var(--line); }
+.exp:last-child { border-bottom: 1px solid var(--line); }
+.exp-head h3 { font-size: 17px; margin: 0 0 6px; }
+.exp-head h3 a { border-bottom: 1px solid var(--line); }
+.exp-meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted); line-height: 1.55; }
+.exp-body p { font-family: var(--font-mono); color: var(--body); font-size: 12.5px; line-height: 1.75; margin: 0 0 12px; }
+.exp-body p:last-child { margin-bottom: 0; }
+@media (max-width: 820px) { .exp { grid-template-columns: 1fr; gap: 12px; } }
+
+/* Themes */
+.themes .grid { display: grid; gap: 32px; grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1000px) { .themes .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .themes .grid { grid-template-columns: 1fr; gap: 24px; } }
+.theme { border-top: 1px solid var(--text); padding-top: 14px; }
+.theme h3 { font-size: 16px; margin-bottom: 10px; }
+.theme p { font-family: var(--font-mono); color: var(--body); font-size: 12.5px; line-height: 1.7; margin-bottom: 10px; }
+.theme .projects { font-size: 14px; color: var(--muted); margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.theme .projects a { color: var(--link); border-bottom: 1px dotted transparent; }
+.theme .projects a:hover { border-bottom-color: var(--link); }
+
+.lines { margin-top: 36px; border-top: 1px solid var(--line); }
+.line-row { display: grid; grid-template-columns: 200px 1fr; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 12px; line-height: 1.7; }
+.line-k { color: var(--muted); }
+.line-v { color: var(--body); }
+.line-v a { color: var(--link); }
+@media (max-width: 700px) { .line-row { grid-template-columns: 1fr; gap: 4px; } }
+
+/* Papers / work list */
+.papers ol { list-style: none; padding: 0; margin: 0; }
+.papers li { display: grid; grid-template-columns: 110px 1fr; gap: 22px; padding: 18px 0; border-top: 1px solid var(--line); align-items: start; }
+.papers li:last-child { border-bottom: 1px solid var(--line); }
+.papers .thumb { width: 110px; height: 78px; border-radius: 3px; background-size: cover; background-position: center; background-color: var(--surface); border: 1px solid var(--line); }
+.papers .title { font-weight: 600; font-size: 15.5px; line-height: 1.35; }
+.papers .authors { font-family: var(--font-mono); color: var(--body); font-size: 12.5px; margin: 4px 0 4px; line-height: 1.6; }
+.papers .venue { font-family: var(--font-mono); color: var(--muted); font-size: 12px; font-style: normal; }
+.papers .award { color: var(--link); font-style: normal; font-weight: 500; }
+.papers .links { font-size: 13px; margin-top: 8px; display: flex; gap: 14px; flex-wrap: wrap; }
+@media (max-width: 600px) { .papers li { grid-template-columns: 1fr; } .papers .thumb { width: 100%; height: 140px; } }
+.ph-peat { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
+.ph-yrd { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
+.ph-flare { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
+.ph-pv { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
+.ph-mend { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
+.ph-grc { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
+.ph-ets { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
+.ph-maps { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
+.surface { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+/* Map */
+.map .frame { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 32px; align-items: start; }
+@media (max-width: 820px) { .map .frame { grid-template-columns: 1fr; } }
+.mapsvg { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 3px; background: transparent; }
+.mapsvg .land { fill: var(--surface); }
+.mapsvg .states { fill: none; stroke: var(--line); stroke-width: 0.6; }
+.mapsvg .route { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 4 5; }
+.mapsvg .route.spur { stroke-dasharray: 2 5; }
+.mapsvg .arc { fill: none; stroke: var(--text); stroke-width: 1; opacity: 0.55; }
+.mapsvg .mk { fill: var(--accent); stroke: var(--bg); stroke-width: 1.5; }
+.mapsvg .ring { fill: var(--bg); stroke: var(--text); stroke-width: 1.6; }
+.mapsvg .origin { fill: var(--body); }
+.mapsvg .region { fill: var(--text); fill-opacity: 0.08; stroke: var(--accent); stroke-width: 0.8; stroke-dasharray: 3 3; }
+.mapsvg .lbl { font-family: var(--font-body); font-size: 12.5px; fill: var(--body); paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
+.mapsvg .stop .lbl { fill: var(--text); }
+.mapsvg .proj .lbl { opacity: 0; transition: opacity 160ms ease; }
+.mapsvg .proj:hover .lbl, .mapsvg .proj:focus .lbl, .mapsvg .proj.on .lbl { opacity: 1; }
+.mapsvg .site { cursor: pointer; outline: none; }
+.mapsvg .site:focus-visible .mk, .mapsvg .site:focus-visible .ring { stroke: var(--accent); }
+.mapsvg .arc.draw { stroke-dasharray: 2000; stroke-dashoffset: 2000; animation: draw 1400ms cubic-bezier(.4,0,.2,1) forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .mapsvg .arc.draw { animation: none; stroke-dashoffset: 0; } }
+.map .panel { font-size: 14.5px; display: flex; flex-direction: column; gap: 8px; }
+.map .panel h3 { margin: 0; }
+.map .panel .years { color: var(--muted); font-size: 13.5px; }
+.map .panel p { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.65; color: var(--body); margin: 0; }
+.map .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 12px; font-size: 12.5px; color: var(--muted); }
+.map .legend span { display: inline-flex; align-items: center; gap: 7px; }
+.map .legend i { display: inline-block; width: 9px; height: 9px; }
+.map .legend .l-ring { border: 1.5px solid var(--text); border-radius: 50%; }
+.map .legend .l-circle { background: var(--accent); border-radius: 50%; }
+.map .legend .l-tri { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 9px solid var(--accent); }
+.map .legend .l-square { background: var(--accent); }
+.map .legend .l-region { border: 1px dashed var(--accent); border-radius: 50%; }
+.map .caption { font-family: var(--font-mono); color: var(--muted); font-size: 12.5px; line-height: 1.65; max-width: 72ch; margin: 0 0 22px; }
+
+/* Roles */
+.roles { padding-top: 40px; padding-bottom: 24px; }
+.roles-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 24px; font-family: var(--font-mono); font-size: 12px; }
+.roles-grid .role { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,0.03); line-height: 1.5; }
+.roles-grid .role strong { font-weight: 500; color: var(--text); }
+.roles-grid .role a { color: var(--link); }
+.roles-grid .aff-yr { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+@media (max-width: 900px) { .roles-grid { grid-template-columns: 1fr; } }
+
+/* Roadmap app (MapLibre) */
+.roadmap .inner { margin-bottom: 18px; }
+.roadmap .caption { font-family: var(--font-mono); color: var(--muted); font-size: 12.5px; line-height: 1.65; max-width: 72ch; margin: 0; }
+
+.rt-app.app { position:relative; width:min(1400px, 100% - 2 * clamp(8px, 2vw, 24px)); margin:0 auto; height:clamp(560px, 78vh, 900px); border:1px solid var(--line); border-radius:8px; overflow:hidden; font-family:var(--font-mono); display:grid; grid-template-columns:minmax(0,1fr) 6px var(--pw, 360px); }
+.rt-app.collapsed { grid-template-columns:minmax(0,1fr) 6px 0px; }
+.splitter { cursor:col-resize; background:var(--line); position:relative; z-index:8; }
+.splitter:hover, .splitter.drag { background:var(--text); }
+.ptoggle { position:absolute; right:calc(var(--pw, 360px) + 12px); top:12px; z-index:9; width:32px; height:32px; border-radius:8px; border:1px solid var(--line); background:rgba(15,15,16,.85); color:var(--text); font:inherit; font-size:14px; cursor:pointer; backdrop-filter:blur(8px); transition:right .25s ease; }
+.rt-app.collapsed .ptoggle { right:12px; }
+.rt-app.collapsed .panel { overflow:hidden; padding:0; }
+.mapwrap { position:relative; min-width:0; }
+#rt-mapcanvas { position:absolute; inset:0; }
+.maplibregl-ctrl-group { background:rgba(15,15,16,.85)!important; border:1px solid var(--line); backdrop-filter:blur(8px); }
+.maplibregl-ctrl-group button { filter:invert(1); }
+.maplibregl-ctrl-scale { background:transparent!important; color:var(--text)!important; border-color:var(--text)!important; font-family:var(--font-mono); font-size:10.5px!important; }
+.maplibregl-ctrl-bottom-left { bottom:118px; }
+.maplibregl-ctrl-attrib { background:rgba(15,15,16,.6)!important; color:rgba(255,255,255,.5); font-family:var(--font-mono); font-size:9.5px; }
+.maplibregl-ctrl-bottom-right { bottom:118px; }
+.maplibregl-ctrl-attrib a { color:rgba(255,255,255,.6); }
+.mini { position:absolute; right:12px; bottom:118px; width:180px; height:110px; border:1px solid var(--line); border-radius:6px; overflow:hidden; z-index:5; background:#0b0b0c; }
+#minimap { position:absolute; inset:0; }
+.minibox { position:absolute; border:1px solid var(--text); background:rgba(255,255,255,.08); pointer-events:none; }
+.readout { position:absolute; right:12px; top:12px; z-index:5; font-size:10.5px; color:var(--muted); text-align:right; line-height:1.5; pointer-events:none; }
+.ticks { display:flex; justify-content:space-between; font-size:9px; color:var(--muted); padding:0 2px; margin-top:-4px; }
+.hud { position:absolute; left:12px; bottom:100px; z-index:5; font-size:10.5px; color:var(--muted); pointer-events:none; }
+.hint { position:absolute; left:50%; top:14px; transform:translateX(-50%); z-index:6; padding:7px 12px; border:1px solid var(--line); border-radius:999px; background:rgba(15,15,16,.85); backdrop-filter:blur(8px); font-size:11px; color:var(--text); transition:opacity .5s; pointer-events:none; }
+.hint.gone { opacity:0; }
+.tip { position:absolute; z-index:7; pointer-events:none; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:rgba(15,15,16,.92); font-size:11px; color:var(--text); white-space:nowrap; transform:translate(12px,-28px); }
+.tip[hidden] { display:none; }
+.strip { position:absolute; left:0; right:0; bottom:0; z-index:6; display:grid; grid-template-columns:auto 1fr; gap:8px 12px; align-items:center; padding:10px 12px 12px; background:linear-gradient(to top, rgba(11,11,12,.97), rgba(11,11,12,.8) 70%, transparent); }
+.play { grid-row:1 / span 2; width:42px; height:42px; border-radius:50%; border:1px solid var(--line); background:var(--text); color:var(--bg); font-size:13px; cursor:pointer; display:grid; place-items:center; }
+.tabs { display:flex; gap:6px; }
+.tab { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:3px; padding:6px 4px; min-height:58px; border-radius:8px; border:1px solid transparent; background:transparent; color:var(--muted); font:inherit; cursor:pointer; transition:all .15s; }
+.tab:hover { border-color:var(--line); color:var(--text); }
+.tab.active { border-color:var(--text); color:var(--text); background:rgba(255,255,255,.06); }
+.tab-ic { width:22px; height:22px; display:flex; align-items:flex-end; justify-content:center; }
+.tab-ic .ic { width:17px; height:17px; stroke-width:1.5; } .tab-ic .ic.ph { width:17px; height:17px; }
+.tab-ic .ic-pair { display:flex; align-items:flex-end; gap:1px; } .tab-ic .ic-pair .ic { width:10px; height:10px; } .tab-ic .ic-pair .ic.ph { width:14px; height:14px; }
+.tab-nm { font-size:10.5px; font-weight:500; } .tab-yr { font-size:9.5px; opacity:.8; }
+.scrub { width:100%; margin:0; accent-color:#ECECEA; height:18px; }
+.panel { border-left:1px solid var(--line); background:rgba(15,15,16,.96); overflow:auto; padding:14px 14px 18px; display:flex; flex-direction:column; gap:16px; }
+.k { font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+.head { display:flex; justify-content:space-between; align-items:baseline; }
+.card .rt-when { font-size:11px; color:var(--muted); margin-bottom:6px; }
+.card .rt-head { font-family:var(--font-body); font-size:15px; font-weight:600; margin:0 0 6px; line-height:1.35; }
+.card .rt-note { font-size:11.5px; line-height:1.6; color:var(--muted); margin:0 0 8px; }
+.card .g-role { margin:6px 0 0; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.035); font-size:11px; line-height:1.6; }
+.card-body[hidden] { display:none; }
+.sec { border-top:1px solid var(--line); padding-top:12px; display:flex; flex-direction:column; gap:8px; font-size:11px; }
+.sec label { display:flex; align-items:center; gap:8px; cursor:pointer; }
+.sec input { margin:0; accent-color:#ECECEA; }
+.row { display:flex; gap:14px; flex-wrap:wrap; }
+.marker { width:34px; height:34px; border-radius:50%; background:#121213; border:1px solid rgba(255,255,255,.55); box-shadow:0 0 0 4px rgba(15,15,16,.5), 0 0 0 5px rgba(255,255,255,.35); display:grid; place-items:center; color:var(--text); cursor:pointer; opacity:.4; transition:opacity .3s, border-color .2s; }
+.marker.on { opacity:1; } .marker.active { border-color:var(--text); box-shadow:0 0 0 4px rgba(15,15,16,.5), 0 0 0 5px var(--text); }
+.marker .ic { width:16px; height:16px; stroke-width:1.6; } .marker .ic.ph { width:16px; height:16px; }
+.marker .ic-pair { display:flex; gap:1px; align-items:center; } .marker .ic-pair .ic { width:9px; height:9px; } .marker .ic-pair .ic.ph { width:13px; height:13px; }
+.xmark { font:700 13px var(--font-mono); color:var(--text); transform:translateY(-30px); }
+.site { width:8px; height:8px; border-radius:50%; background:var(--text); border:2px solid #0b0b0c; opacity:0; transition:opacity .4s; } .site.on { opacity:1; }
+.cursor { width:10px; height:10px; border-radius:50%; background:var(--text); border:2px solid #0b0b0c; }
+@media (max-width:860px) { .rt-app.app { grid-template-columns:1fr; grid-template-rows:minmax(0,1fr) 6px var(--ph, 40%); } .rt-app.collapsed { grid-template-rows:minmax(0,1fr) 6px 44px; } .splitter { cursor:row-resize; } .panel { border-left:0; border-top:1px solid var(--line); } .tab-nm { display:none; } .ptoggle { right:12px; top:auto; bottom:calc(var(--ph, 40%) + 12px); } .rt-app.collapsed .ptoggle { bottom:56px; } .rt-app.collapsed .panel { padding:10px 14px; } }
+
+/* Code & data *//* Code & data */
+.oss .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 820px) { .oss .grid { grid-template-columns: 1fr; } }
+.oss .card { border: 1px solid var(--line); border-radius: 3px; padding: 16px 18px; background: var(--surface); display: flex; flex-direction: column; min-height: 140px; }
+.oss .card h3 { font-family: var(--font-mono); font-size: 14px; }
+.oss .card .desc { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.65; color: var(--body); margin: 6px 0 12px; flex: 1; }
+.oss .card .stats { display: flex; justify-content: space-between; gap: 12px; font-size: 12.5px; color: var(--muted); margin-top: auto; padding-top: 8px; border-top: 1px solid var(--line); }
+.oss .card .stats a { color: var(--link); font-family: var(--font-mono); }
+
+/* Contact, footer */
+/* Contact band: a centerd line with the chat circle riding on it */
+.band-wrap { grid-column: 1 / -1; }
+.band { position: relative; margin: 8px 0 0; }
+.band-track { position: relative; height: 172px; border-bottom: 1px solid var(--line); }
+.hero .band-links { position: absolute; left: 0; bottom: calc(50% + 12px); z-index: 2; display: flex; flex-wrap: nowrap; gap: 8px; width: auto; margin: 0; }
+.hero .band-links a, .hero .band-links .docs-wrap > a { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; transition: border-color .15s ease, background .15s ease, transform .2s cubic-bezier(.34,1.56,.64,1); }
+.hero .band-links a:hover { color: var(--text); border-color: var(--text); background: var(--accent-soft); transform: translateY(-1px); }
+.hero .band-links a:active { transform: scale(0.97); }
+.hero .band-links svg { width: 12px; height: 12px; }
+.docs-wrap { position: relative; display: inline-flex; }
+.docs-menu { position: absolute; left: 0; top: calc(100% + 8px); display: flex; flex-direction: column; min-width: 150px; padding: 4px; border: 1px solid var(--line); border-radius: 10px; background: rgba(15,15,16,0.92); backdrop-filter: blur(10px); z-index: 5; animation: rise 180ms ease-out; }
+.docs-menu[hidden] { display: none; }
+.docs-menu a, .docs-menu button { font-family: var(--font-mono); font-size: 11.5px; color: var(--text); background: transparent; border: 0; text-align: left; padding: 8px 10px; border-radius: 7px; cursor: pointer; }
+.docs-menu a:hover, .docs-menu button:hover { background: var(--accent-soft); }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .docs-menu { background: rgba(250,250,247,0.94); } }
+.band-line { position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--line); }
+.band-cta { position: absolute; right: 4%; top: 50%; transform: translateY(-50%); padding: 24px; margin: -24px; }
+.band-arrow { position: absolute; right: calc(100% - 14px); top: -2px; width: 18px; height: 18px; color: var(--muted); }
+.band-arrow svg { width: 100%; height: 100%; }
+.cta { position: relative; width: 170px; height: 170px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; font-size: 15px; font-weight: 500; cursor: pointer; overflow: hidden; display: grid; place-items: center; will-change: transform; transition: border-color .2s ease; }
+.cta-label { position: relative; z-index: 2; transition: color .3s ease; }
+.cta:hover .cta-label, .cta:active .cta-label, .cta[aria-expanded="true"] .cta-label { color: #0f0f10; transition-delay: 520ms; }
+.cta-fill { position: absolute; left: -30%; right: -30%; bottom: 0; height: 0%; border-radius: 50% 50% 0 0 / 14px 14px 0 0; transition: height 900ms cubic-bezier(.4, 0, .2, 1); background: linear-gradient(to top, rgba(255,255,255,0.35), rgba(255,255,255,0.8) 55%, #ffffff); }
+.cta:hover .cta-fill, .cta:active .cta-fill, .cta[aria-expanded="true"] .cta-fill { height: 95%; }
+.cta:hover, .cta[aria-expanded="true"] { border-color: rgba(255,255,255,0.35); }
+.cta:active { transform: scale(0.97) !important; }
+.cta.pressed { animation: press 380ms cubic-bezier(.34, 1.56, .64, 1); }
+@keyframes press { 40% { transform: scale(1.06); } }
+.pill-fill { position: absolute; left: 0; top: calc(50% + 28px); z-index: 2; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.02em; color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; cursor: pointer; transition: border-color .2s ease, transform .2s cubic-bezier(.65, 0, .35, 1); }
+.pill-fill:hover { border-color: rgba(255,255,255,0.35); transform: translateY(-1px); }
+.pill-fill::after { content: "copy"; position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translate(-50%, 4px); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; color: var(--muted); opacity: 0; transition: opacity 180ms ease, transform 180ms ease; pointer-events: none; z-index: 3; }
+.pill-fill:hover::after { opacity: 1; transform: translate(-50%, 0); }
+.pill-fill.copied::after { content: "copied"; color: var(--text); opacity: 1; }
+.pill-text { position: relative; z-index: 2; transition: color .3s ease; }
+.pill-fill:hover .pill-text, .pill-fill:active .pill-text { color: #0f0f10; transition-delay: 380ms; }
+.pill-fill .pill-clip { position: absolute; inset: 0; border-radius: 999px; overflow: hidden; }
+.pill-blob { position: absolute; left: -10%; right: -10%; bottom: 0; height: 0%; border-radius: 50% 50% 0 0 / 8px 8px 0 0; transition: height 700ms cubic-bezier(.4, 0, .2, 1); background: linear-gradient(to top, rgba(255,255,255,0.35), rgba(255,255,255,0.85) 55%, #ffffff); }
+.pill-fill:hover .pill-blob, .pill-fill:active .pill-blob { height: 95%; }
+.composer-form[hidden] { display: none; }
+.composer-form { display: grid; gap: 10px; max-width: 520px; margin-top: 8px; animation: rise 220ms ease-out; }
+@keyframes rise { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.composer-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.composer-form input, .composer-form textarea { font: inherit; font-size: 14.5px; color: var(--text); background: transparent; border: 0; border-bottom: 1px solid var(--line); padding: 8px 0; outline: none; resize: vertical; transition: border-color .15s ease; }
+.composer-form input:focus, .composer-form textarea:focus { border-bottom-color: var(--text); }
+.composer-form ::placeholder { color: var(--muted); }
+.composer-row { display: flex; align-items: center; gap: 14px; }
+.composer-row .rip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; cursor: pointer; transition: border-color .15s ease, background .15s ease, transform .2s cubic-bezier(.34,1.56,.64,1); }
+.composer-row .rip svg { width: 12px; height: 12px; }
+.composer-row .rip:hover { border-color: var(--text); background: var(--accent-soft); transform: translateY(-1px); }
+.composer-row .rip:active { transform: scale(0.97); }
+.composer-note { font-size: 13px; color: var(--muted); }
+@media (max-width: 600px) { .composer-fields { grid-template-columns: 1fr; } .hero .band-links { width: calc(100% - 132px); max-width: none; justify-content: space-between; gap: 0 4px; bottom: calc(50% + 9px); flex-wrap: nowrap; }
+  .hero .band-links a, .hero .band-links .docs-wrap > a { font-size: 9.5px; letter-spacing: -0.02em; padding: 4px 0; gap: 3px; border: 0; border-radius: 0; border-bottom: 1px solid transparent; }
+  .hero .band-links a:hover, .hero .band-links a:active { background: transparent; border-color: transparent; border-bottom-color: var(--text); transform: none; }
+  .hero .band-links a span { white-space: nowrap; } .hero .band-links .more { display: none; } .hero .band-links svg { width: 11px; height: 11px; } .band-track { height: 128px; } .cta { width: 102px; height: 102px; font-size: 12.5px; } .band-cta { right: 0; } .band-wrap { margin-bottom: 0; } .pill-fill { top: calc(50% + 23px); padding: 7px 12px; font-size: 10.5px; } .hero .row > div:first-child { order: 1; } }
+@media (prefers-reduced-motion: reduce) { .composer-form { animation: none; } .cta, .cta-fill, .pill-blob { transition: none; } }
+footer.site { padding: 36px var(--pad); text-align: center; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+footer.site .loc { display: inline-flex; align-items: center; gap: 5px; }
+footer.site .loc svg { width: 13px; height: 13px; }
+footer.site a { color: var(--muted); border-bottom: 1px dotted var(--muted); }
+footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--accent-text); }
+</style>
+</head>
+<body>
+<div id="curtain" aria-hidden="true">
+  <div id="flap" role="presentation">
+    <div class="card" id="card-a"><span>¡Bienvenido!</span></div>
+    <div class="card" id="card-b"><span></span></div>
+  </div>
+  <div id="flap-hint">tap to skip</div>
+</div>
+<svg id="goo" aria-hidden="true">
+  <defs>
+    <filter id="goo-f" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="46" result="b"/>
+      <feColorMatrix in="b" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -12" result="g"/>
+      <feGaussianBlur in="g" stdDeviation="28"/>
+    </filter>
+  </defs>
+  <g filter="url(#goo-f)" opacity="0.5">
+    <circle r="130"/><circle r="110"/><circle r="90"/><circle r="75"/><circle r="60"/><circle r="50"/><circle r="40"/>
+  </g>
+</svg>
+
+<nav id="rail" aria-label="Sections">
+  <a href="#top" data-sec="top"><span>About</span><i></i></a>
+  <a href="#map" data-sec="map"><span>At a glance</span><i></i></a>
+  <a href="#experience" data-sec="experience"><span>Experience</span><i></i></a>
+  <a href="#research" data-sec="research"><span>Research</span><i></i></a>
+  <a href="#work" data-sec="work"><span>Projects</span><i></i></a>
+  <a href="#code" data-sec="code"><span>Code &amp; data</span><i></i></a>
+  <a href="#intro" class="rail-top"><span>Top</span><i></i></a>
+</nav>
+<section class="intro" id="intro">
+  <div class="stack">
+    <img class="round" alt="Matt Duyst" src="assets/portrait.jpg">
+    <div class="kicker">Environmental Data Scientist, Machine Learning</div>
+    <div class="loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Austin, TX</div>
+    <div class="type" id="type" aria-live="polite"><span id="typed"></span><span class="cursor" aria-hidden="true"></span></div>
+    <div class="jump">
+      <a href="#top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>About</a>
+      <a href="#map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/></svg>At a glance</a>
+      <a href="#experience"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg>Experience</a>
+      <a href="#research"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2.2h12.4a1.5 1.5 0 0 0 1.3-2.2L14 9V3"/><path d="M7 15h10"/></svg>Research</a>
+      <a href="#work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5"/></svg>Projects</a>
+      <a href="#code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></svg>Code &amp; data</a>
+    </div>
+  </div>
+</section>
+
+
+<section class="hero" id="top">
+  <div class="inner">
+    <div class="row">
+      <div>
+        <div class="eyebrow">About</div>
+        <p class="bio">
+          I'm an environmental data scientist at <a href="https://www.grassrootscarbon.com/">Grassroots Carbon</a>, where I build the data systems and models that turn satellite imagery, soil samples, and climate records into the biomass and soil carbon estimates behind verified carbon credits.
+          <br><br>
+          Before that I was at <a href="https://seekops.com/">SeekOps</a>, a NASA JPL spin-off, measuring methane from drones: I led a study of flare combustion efficiency across the Bakken and Permian basins and published it at SPE ATCE 2024. I hold a Master of Environmental Science from Yale in machine learning, remote sensing, and spatial statistics, fully funded as a Merit Research Scholar and Hixon Center Fellow, with a summer at the University of Minnesota's Marcell Experimental Forest forecasting methane from a peatland flux tower, and an <a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Honorable Mention at the 2022 Global Stocktake Climate Datathon</a> ahead of COP 27. My BA is from UCLA, in Geography and Environmental Studies with minors in GIS and English.
+          <br><br>
+          I grew up on a small citrus farm near Sequoia National Park, where land, climate, and livelihood were never abstract.
+        </p>
+                
+        
+      </div>
+      
+      <div class="band-wrap">
+<div class="band" id="band">
+          <div class="links band-links">
+          <a href="https://www.linkedin.com/in/matthew-duyst"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg><span>LinkedIn</span></a>
+          <a href="https://github.com/matt-duyst"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4.5 1.5-4.5-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg><span>GitHub</span></a>
+          <a href="https://www.mappingwithmatt.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span>Portfolio</span></a>
+          <a href="https://doi.org/10.2118/221067-MS"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Publications</span></a>
+          <span class="docs-wrap"><a href="#docs" id="cv-link" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg><span>CV<span class="more"> &amp; Resume</span></span></a><span class="docs-menu" id="docs-menu" hidden><a href="assets/Duyst_Resume.pdf" download>Resume, PDF</a><a href="assets/Duyst_CV.pdf" download>CV, PDF</a></span></span>
+        </div>
+          <div class="band-track"><div class="band-line"></div>
+          <button type="button" class="pill-fill" id="copy-email" title="Copy email address" aria-live="polite"><span class="pill-clip" aria-hidden="true"><span class="pill-blob"></span></span><span class="pill-text" id="copy-label">matthew.duyst@gmail.com</span></button>
+          <div class="band-cta" id="cta-wrap">
+            <span class="band-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M17 9v8H9"/></svg></span>
+            <button type="button" class="cta" id="cta" aria-expanded="false" aria-controls="composer-form"><span class="cta-fill" aria-hidden="true"></span><span class="cta-label">let's chat!</span></button>
+          </div>
+          </div>
+        </div>
+        
+        <form class="composer-form" id="composer-form" hidden novalidate>
+          <div class="composer-fields">
+            <input type="text" name="name" placeholder="Name" autocomplete="name" required>
+            <input type="email" name="email" placeholder="Email" autocomplete="email" required>
+          </div>
+          <textarea name="message" placeholder="Say hi, ask about a project, or float an idea. It lands straight in my inbox." rows="3" required></textarea>
+          <div class="composer-row">
+            <button type="submit" class="rip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4z"/></svg>let it rip!</button>
+            <span class="composer-note" id="composer-note"></span>
+          </div>
+        </form>
+</div>
+      
+    </div>
+    
+  </div>
+</section>
+
+<section id="map" class="roadmap">
+  <div class="inner">
+    <div class="eyebrow">At a glance</div>
+    <h2>The route so far.</h2>
+    <p class="caption">A map you drive. Press play to travel the route in time order, or pick a stop. Zoom, pan, and read as you go; nothing here waits on the page scroll.</p>
+  </div>
+  <div class="rt-app app" id="rt-app" tabindex="0">
+  <div class="mapwrap">
+    <div id="rt-mapcanvas"></div>
+    <button class="ptoggle" id="ptoggle" title="Collapse panel (P)">&#9656;</button>
+    <div class="hint" id="hint">&#9654; Play the route, or drag and zoom to explore</div>
+    <div class="hud" id="coords">&nbsp;</div>
+    <div class="mini" id="mini" title="Overview: drag the box or click"><div id="minimap"></div><div class="minibox" id="minibox"></div></div>
+    <div class="readout" id="readout"></div>
+    <div class="tip" id="tip" hidden></div>
+    <div class="strip">
+      <button class="play" id="play" aria-label="Play the route"><span id="ic-play">&#9654;</span><span id="ic-pause" hidden>&#10074;&#10074;</span></button>
+      <div class="tabs" id="tabs"><button class="tab" data-i="0"><span class="tab-ic"><svg class="ic" viewBox="2.5 2 19 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M12 3l-3.5 6h2.2l-3 5h2.6l-2.8 5h9l-2.8-5h2.6l-3-5h2.2z"/><path d="M5 21v-7l-1.5 2.5h1.1L3 19h2M19 21v-7l1.5 2.5h-1.1L21 19h-2"/></svg></span><span class="tab-nm">Visalia</span><span class="tab-yr">origin</span></button><button class="tab" data-i="1"><span class="tab-ic"><svg class="ic" viewBox="3 3.5 18 17.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="7" r="2.6"/><circle cx="18" cy="7" r="2.6"/><path d="M4.5 14a7.5 7.5 0 0 1 15 0c0 3.8-3.2 6.5-7.5 6.5S4.5 17.8 4.5 14z"/><circle cx="9.5" cy="13" r=".9" fill="currentColor"/><circle cx="14.5" cy="13" r=".9" fill="currentColor"/><path d="M12 15.2c-1 0-1.6.5-1.6 1 0 .7.8 1.2 1.6 1.2s1.6-.5 1.6-1.2c0-.5-.6-1-1.6-1z"/></svg></span><span class="tab-nm">UCLA</span><span class="tab-yr">2014</span></button><button class="tab" data-i="2"><span class="tab-ic"><svg class="ic" viewBox="2.5 3.5 19 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3zM3 10h18M3 14.5h18M9 5v14M15 5v14"/><path d="M12 7.6a2.2 2.2 0 0 1 2.2 2.2c0 1.7-2.2 4-2.2 4s-2.2-2.3-2.2-4A2.2 2.2 0 0 1 12 7.6z" fill="#121213"/></svg></span><span class="tab-nm">Cydcor</span><span class="tab-yr">2019</span></button><button class="tab" data-i="3"><span class="tab-ic"><!-- @license lucide-static v1.47.0 - ISC -->
+<svg
+  class="lucide lucide-satellite"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="m13.5 6.5-3.148-3.148a1.205 1.205 0 0 0-1.704 0L6.352 5.648a1.205 1.205 0 0 0 0 1.704L9.5 10.5" />
+  <path d="M16.5 7.5 19 5" />
+  <path d="m17.5 10.5 3.148 3.148a1.205 1.205 0 0 1 0 1.704l-2.296 2.296a1.205 1.205 0 0 1-1.704 0L13.5 14.5" />
+  <path d="M9 21a6 6 0 0 0-6-6" />
+  <path d="M9.352 10.648a1.205 1.205 0 0 0 0 1.704l2.296 2.296a1.205 1.205 0 0 0 1.704 0l4.296-4.296a1.205 1.205 0 0 0 0-1.704l-2.296-2.296a1.205 1.205 0 0 0-1.704 0z" />
+</svg>
+</span><span class="tab-nm">Yale</span><span class="tab-yr">2021</span></button><button class="tab" data-i="4"><span class="tab-ic"><svg class="ic" viewBox="2.5 2.5 19 19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M9 21h6"/><path d="M12 6l-3 4h6zM12 10l-3.5 5h7zM12 15l-4 6h8"/><path d="M9 10h6M8.5 15h7"/><path d="M15 6h3M18 4.5v3"/><path d="M4 21v-5l1.5-2.5L7 16v5M4 16h3"/><path d="M19 21v-4l1-2 1 2v4"/></svg></span><span class="tab-nm">Minnesota</span><span class="tab-yr">2022</span></button><button class="tab" data-i="5"><span class="tab-ic"><svg class="ic" viewBox="6.5 2.5 15 19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21V9h4v12M8 13h4M8 17h4"/><path d="M10 9c-1.5-2 .5-3.5 0-5.5 1.5 1.5 3 3.5 1.5 5.5"/><path d="M17 13h3M18.5 11.5v3M15 11a1.5 1.5 0 1 0 0 .01M20 15.5a1.5 1.5 0 1 0 0 .01M17 15.5l1.5-1.5 1.5 1.5"/></svg></span><span class="tab-nm">SeekOps</span><span class="tab-yr">2024</span></button><button class="tab" data-i="6"><span class="tab-ic"><span class="ic-pair"><svg class="ic ph" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor"><path d="M102,192a6,6,0,0,1-6,6H80a6,6,0,0,1,0-12H96A6,6,0,0,1,102,192Zm74-6H160a6,6,0,0,0,0,12h16a6,6,0,0,0,0-12Zm-76-72a10,10,0,1,0,10,10A10,10,0,0,0,100,114Zm56,0a10,10,0,1,0,10,10A10,10,0,0,0,156,114Zm86.85,6.85A14,14,0,0,1,232,126H198v35.05A38,38,0,0,1,176,230H80a38,38,0,0,1-22-68.95V126H24a14,14,0,0,1-10.87-5.15,13.82,13.82,0,0,1-2.88-11.5A54.12,54.12,0,0,1,63.22,66h6.89A53.93,53.93,0,0,1,50,24a6,6,0,0,1,12,0,42,42,0,0,0,42,42h48a42,42,0,0,0,42-42,6,6,0,0,1,12,0,53.93,53.93,0,0,1-20.11,42h6.89a54.12,54.12,0,0,1,52.95,43.35A13.82,13.82,0,0,1,242.85,120.85ZM58,114V104A37.87,37.87,0,0,1,68.32,78h-5.1A42.08,42.08,0,0,0,22,111.7a1.83,1.83,0,0,0,.4,1.55A2,2,0,0,0,24,114Zm144,78a26,26,0,0,0-26-26H80a26,26,0,0,0,0,52h96A26,26,0,0,0,202,192Zm-16-36.66V104a26,26,0,0,0-26-26H96a26,26,0,0,0-26,26v51.34A37.94,37.94,0,0,1,80,154h96A37.94,37.94,0,0,1,186,155.34Zm48-43.64A42.08,42.08,0,0,0,192.78,78h-5.1A37.87,37.87,0,0,1,198,104v10h34a2,2,0,0,0,1.58-.75A1.83,1.83,0,0,0,234,111.7Z"/></svg><!-- @license lucide-static v1.47.0 - ISC -->
+<svg
+  class="lucide lucide-sprout"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3" />
+  <path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4" />
+  <path d="M5 21h14" />
+</svg>
+</span></span><span class="tab-nm">Grassroots</span><span class="tab-yr">2025</span></button></div>
+      <div><input type="range" class="scrub" id="scrub" min="0" max="6" step="0.01" value="0"><div class="ticks"><span>2014</span><span>2016</span><span>2018</span><span>2020</span><span>2022</span><span>2024</span><span>2026</span></div></div>
+    </div>
+  </div>
+  <div class="splitter" id="splitter" title="Drag to resize"></div>
+  <aside class="panel" id="panel">
+    <div class="head"><span class="k">Stop</span><span id="pn">1 / 7</span></div>
+    <div class="card" id="card"><div class="card-body" data-i="0" hidden><div class="rt-when">Hometown</div><h3 class="rt-head">Visalia, California</h3><p class="rt-note">A small citrus farm near Sequoia National Park, where the connection between land, climate, and livelihood was never abstract.</p></div><div class="card-body" data-i="1" hidden><div class="rt-when">2014 to 2018 &middot; Los Angeles</div><h3 class="rt-head">BA, Geography and Environmental Studies, <a href="#exp-ucla">UCLA</a></h3><p class="rt-note">Minors in Geographic Information Systems (GIS) and English. Regents Scholar and Undergraduate Research Scholars Program recipient.</p><div class="g-role">The geospatial foundation: image classification, spectral indices, SAR, terrain, interpolation, spatial querying, and cartography. A thesis on burn severity across the Mendocino Complex from Landsat 8, presented at the <a href="https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program">2019 LA Geospatial Summit</a>. The coursework maps on this site date from here.</div></div><div class="card-body" data-i="2" hidden><div class="rt-when">2019 to 2020 &middot; Los Angeles</div><h3 class="rt-head">Geospatial Analyst, <a href="https://www.cydcor.com/">Cydcor</a></h3><p class="rt-note">A national outsourced sales company running face-to-face campaigns for large brands.</p><div class="g-role">Spatial statistics applied outside science. Territory planning from census demographics and sales data in ArcGIS, spatial models for expansion into new markets, and automated geocoding in Python for high-volume campaigns.</div></div><div class="card-body" data-i="3" hidden><div class="rt-when">2021 to 2023 &middot; New Haven</div><h3 class="rt-head">MESc, <a href="#exp-yale">Yale School of the Environment</a></h3><p class="rt-note">Master of Environmental Science in machine learning, remote sensing, and spatial statistics, fully funded as a Merit Research Scholar and <a href="https://hixon.yale.edu/hixon-fellows/matthew-duyst">Hixon Center Fellow</a>.</p><div class="g-role">Satellite land cover classification, atmospheric remote sensing, spatial statistics, and deep learning. A thesis on urbanization, paddy rice, and satellite methane over the Yangtze River Delta, reproduced in 2026 with an errata; a calibrated thermal and RGB drone survey of Yale's West Campus solar array; teaching regression modeling of environmental data; and a carbon trading analysis tool built for the <a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">COP 27 datathon</a> with Abhinav Bhardwaj.</div></div><div class="card-body" data-i="4" hidden><div class="rt-when">Summer 2022 &middot; Marcell Experimental Forest</div><h3 class="rt-head">Visiting Research Scientist, <a href="#exp-umn">University of Minnesota</a></h3><p class="rt-note">One of the longest-running peatland monitoring programs in the world, with methane flux measured by eddy covariance under <a href="https://ameriflux.lbl.gov/sites/siteinfo/US-MBP">AmeriFlux</a> protocols.</p><div class="g-role">Micrometeorological fieldwork and time series forecasting. Eddy covariance instrumentation in the Griffis lab, then an ensemble forecast of methane flux at Bog Lake Peatland in 2022, rebuilt in 2026 as a monthly study of the full 2009 to 2024 record.</div></div><div class="card-body" data-i="5" hidden><div class="rt-when">2024 &middot; Austin</div><h3 class="rt-head">Environmental Data Scientist, <a href="#exp-seekops">SeekOps</a></h3><p class="rt-note">A <a href="https://spinoff.nasa.gov/Spinoff2019/ps_7.html">NASA JPL spin-off</a> that put the Mars Curiosity rover's laser spectrometer on drones: detection, localization, and quantification of methane leaks for oil and gas operators onshore and offshore, feeding leak detection and repair programs and OGMP and EPA reporting.</p><div class="g-role">Field measurement, atmospheric quantification, and computer vision. Drone-based methane surveys with laser spectrometers, anemometers, and RTK positioning; mass balance and plume modeling for flare combustion efficiency across the Bakken and Permian; the QA/QC workflow of terrain, roughness, and wind corrections behind the company's emission maps; an object detection model for oil and gas equipment in aerial imagery; and the mapping and reporting tools used by clients and the team.</div></div><div class="card-body" data-i="6" hidden><div class="rt-when">2025 to present &middot; San Antonio and Austin</div><h3 class="rt-head">Environmental Data Scientist, Machine Learning, <a href="#exp-grc">Grassroots Carbon</a></h3><p class="rt-note">Founded in 2021 in San Antonio, Grassroots Carbon pays US ranchers for carbon stored in grassland soil under regenerative grazing. Carbon is measured by soil sampling, verified by third parties, and sold as credits to corporate buyers. The program covers about <a href="https://grassrootscarbon.com/">two million acres across 22 states</a>.</p><div class="g-role">Geospatial data engineering, model development, and technology planning. The data infrastructure that joins soil sampling with satellite, terrain, soil, and climate inputs; the shared extraction tooling the team pulls covariates through; and the biomass, baseline, and soil carbon models used for crediting under SEP v2, VM0042, and CAR-SEP. Evaluation of sensing platforms and data sources for the company's remote sensing roadmap.</div></div></div>
+    <div class="sec">
+      <div class="k">Basemap</div>
+      <div class="row"><label><input type="radio" name="base" value="imagery" checked>USGS imagery</label><label><input type="radio" name="base" value="eox">Sentinel-2</label><label><input type="radio" name="base" value="dark">Dark map</label><label><input type="radio" name="base" value="none">None</label></div>
+      <label><input type="checkbox" id="l-labels" checked>Place labels</label>
+      <label><input type="checkbox" id="l-terrain">3D terrain and hillshade</label>
+      <label><input type="checkbox" id="l-route" checked>Route</label>
+      <label><input type="checkbox" id="l-sites" checked>Study sites</label>
+      <label><input type="checkbox" id="l-stops" checked>Stops</label>
+      <label><input type="checkbox" id="l-globe">Globe at low zoom</label>
+    </div>
+    <div class="sec"><div class="k">Keys</div><div style="color:var(--muted);line-height:1.6">Space play &middot; &larr; &rarr; stops &middot; + &minus; zoom &middot; 0 fit &middot; arrows pan</div></div>
+    <div class="sec"><div class="k">Sources</div><div style="color:var(--muted);line-height:1.6">Imagery: USGS The National Map (public domain) and EOX Sentinel-2 cloudless (Copernicus, CC BY-NC-SA). Labels and dark map: OpenFreeMap, OpenMapTiles, OpenStreetMap contributors. Terrain: Mapzen and AWS Terrain Tiles. Engine: MapLibre GL JS 6.</div></div>
+  </aside>
+</div>
+</section>
+<section id="roles" class="roles">
+  <div class="inner">
+    <div class="eyebrow">Roles</div>
+    <div class="roles-grid">
+          
+          <div class="role"><strong>Environmental Data Scientist, Machine Learning</strong>, <a href="#rt-grc">Grassroots Carbon</a><span class="aff-yr">2025 to present</span></div>
+          <div class="role"><strong>Environmental Data Scientist</strong>, <a href="#rt-seekops">SeekOps</a><span class="aff-yr">2024</span></div>
+          <div class="role"><strong>MESc</strong>, <a href="#rt-yale">Yale School of the Environment</a><span class="aff-yr">2021 to 2023</span></div>
+          <div class="role"><strong>Visiting Research Scientist</strong>, <a href="#rt-umn">University of Minnesota</a><span class="aff-yr">2022</span></div>
+          <div class="role"><strong>Geospatial Analyst</strong>, <a href="#rt-cydcor">Cydcor</a><span class="aff-yr">2019 to 2020</span></div>
+          <div class="role"><strong>BA, Geography and Environmental Studies</strong>, <a href="#rt-ucla">UCLA</a><span class="aff-yr">2014 to 2018</span></div>
+        </div>
+      </div>
+  </div>
+</section>
+
+<section id="experience" class="experience">
+  <div class="inner">
+    <div class="eyebrow">Experience and education</div>
+    <h2>Where the work happened.</h2>
+
+    <article class="exp" id="exp-grc">
+      <div class="exp-head">
+        <h3><a href="https://www.grassrootscarbon.com/">Grassroots Carbon</a></h3>
+        <div class="exp-meta">Environmental Data Scientist, Machine Learning<br>San Antonio and Austin, Texas &middot; February 2025 to present</div>
+      </div>
+      <div class="exp-body">
+        <p>Grassroots Carbon is the largest soil carbon removal company in the United States, issuing credits for regenerative grazing across two million acres of rangeland. I build and maintain the data infrastructure beneath that verification: a system that ingests sparse ground-truth field observations from multiple monitoring networks and harmonizes them with satellite imagery, spectral indices, terrain derivatives, and soil and climate context into training-ready datasets for the downstream models. Ranch-level stratification is designed around SEP v2, where clustering geophysically similar ground directly reduces the sampling uncertainty that drives credit deductions.</p>
+        <p>I engineered the team's shared covariate extraction tooling, a Python client that queries five authoritative geospatial sources through one interface and consolidates what were previously fragmented workflows into a single maintained codebase. I benchmark biomass and structural vegetation architectures spanning deep learning, ensemble methods, and process-based ecological models, with outputs supporting quantification under the Regenerative Standard, VM0042, and CAR-SEP, and extends them into counterfactual baselines that reconstruct expected productivity under business-as-usual management, a required step under each methodology. I also lead technology planning for the company's earth observation capabilities, evaluating sensing platforms and data sources for the geospatial roadmap. This work is under active development and unpublished; publications are forthcoming.</p>
+      </div>
+    </article>
+
+    <article class="exp" id="exp-seekops">
+      <div class="exp-head">
+        <h3><a href="https://seekops.com/">SeekOps</a></h3>
+        <div class="exp-meta">Environmental Data Scientist<br>Austin, Texas &middot; January to December 2024</div>
+      </div>
+      <div class="exp-body">
+        <p>SeekOps is a NASA JPL spin-off that quantifies methane emissions with tunable diode laser absorption spectroscopy sensors flown on UAVs. As one of three scientists on the Science team, reporting to the co-founder and CTO, I led a quantitative assessment of flare destruction removal efficiency across the Bakken and Permian basins. The campaign deployed UAV-mounted TDLAS sensors, ultrasonic anemometers, and RTK ground stations, and calculated efficiency through mass balance, comparing uncombusted methane in each plume against measured inflow while examining the influence of flowrate, temperature, and pressure. The result covered 42 flare systems across 71 observations, including 27 revisits, and was published as first author and presented at SPE ATCE 2024 (SPE-221067-MS), contributing to enhanced leak detection and repair programs in two major shale basins.</p>
+        <p>I designed the QA/QC workflow for the company's UAV methane detection: LiDAR terrain corrections, surface roughness adjustments for airflow near oil and gas facilities, and wind vector validation through flight telemetry, with plume dynamics modeled from mass conservation to produce emission source maps aligned with OGMP and EPA reporting standards. I trained a fine-tuned YOLOv8 detector to classify wellheads, compressors, storage tanks, and flare stacks from aerial imagery for autonomous site characterization, managing the full cycle from annotation to held-out validation, and built the client-facing and internal visualization suites in Python and GIS platforms that communicated spatial emissions distributions across survey campaigns.</p>
+      </div>
+    </article>
+
+    <article class="exp" id="exp-yale">
+      <div class="exp-head">
+        <h3><a href="https://environment.yale.edu/">Yale School of the Environment</a></h3>
+        <div class="exp-meta">Master of Environmental Science, Machine Learning, Remote Sensing and Spatial Statistics<br>New Haven, Connecticut &middot; 2021 to 2023</div>
+      </div>
+      <div class="exp-body">
+        <p>Fully funded as a Yale Merit Research Scholar and <a href="https://hixon.yale.edu/hixon-fellows/matthew-duyst">Hixon Center for Urban Sustainability Fellow</a>, and a Graduate Teaching Fellow for Regression Modeling of Ecological and Environmental Data. In the Lee Lab I investigated the relationship between urbanization, rice cultivation, and methane across China's Yangtze River Delta, home to more than 150 million people: multi-decadal land cover classified from 30 m Landsat in Google Earth Engine, with urban extent from the GAIA dataset and paddy rice from the Phenology and Pixel-Based Paddy Mapping algorithm, set against Sentinel-5P TROPOMI column methane and tested for spatial clustering with Getis-Ord Gi* and Global Moran's I. The thesis proposed a DeepLabV3+ network to extend the emissions record before the satellite era. A 2026 reproduction of the analysis does not reach the thesis conclusion: no land-cover model outperforms a spatial null at 0.25 degrees, and both the original thesis and the reproduction are published together with an errata.</p>
+        <p>Alongside the thesis, I integrated thermal and RGB UAV imagery into a calibrated four-band orthomosaic to assess photovoltaic panel performance across Yale's West Campus array, and with a Yale collaborator earned an <a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Honorable Mention at the 2022 Global Stocktake Climate Datathon</a> ahead of COP 27, competing among more than 100 participants with a cross-sectoral analysis of allowance pathways under the EU Emissions Trading System.</p>
+      </div>
+    </article>
+
+    <article class="exp" id="exp-umn">
+      <div class="exp-head">
+        <h3><a href="https://twin-cities.umn.edu/">University of Minnesota</a></h3>
+        <div class="exp-meta">Visiting Research Scientist, Griffis Lab<br>Marcell Experimental Forest, Minnesota &middot; Summer 2022</div>
+      </div>
+      <div class="exp-body">
+        <p>Field and computational research at one of the world's longest-running peatland monitoring programs, working with eddy covariance towers, ultrasonic anemometers, and greenhouse gas analyzers under AmeriFlux protocols to capture methane concentration gradients at fine temporal resolution. The 2022 work applied feature importance and seasonal decomposition to isolate the environmental drivers of flux and built an ensemble of LightGBM, SARIMAX, Prophet, and XGBoost over OLS regression, reported at the time to explain 87 percent of variance with forecasts extended to 52 weeks.</p>
+        <p>The project was rebuilt from source in 2026 as a monthly study of the full 2009 to 2024 record, forecasting one to twelve months ahead against seasonal benchmarks and projecting the fitted relationships back two decades. The rebuilt finding is narrower and more useful: the seasonal cycle repeats reliably, the size of each season varies without trend, and none of the recorded covariates predict that variation once seasonality is accounted for. It is the first of my repositories brought to production standard, with its data, decisions, and limits documented.</p>
+      </div>
+    </article>
+
+    <article class="exp" id="exp-ucla">
+      <div class="exp-head">
+        <h3><a href="https://www.ucla.edu/">University of California, Los Angeles</a></h3>
+        <div class="exp-meta">BA, Geography and Environmental Studies; minors in Geographic Information Systems (GIS) and English<br>Los Angeles, California &middot; 2014 to 2018</div>
+      </div>
+      <div class="exp-body">
+        <p>UCLA Regents Scholar and Undergraduate Research Scholars Program recipient. The coursework covered the full geospatial stack: supervised and unsupervised image classification, spectral index analysis, SAR interpretation, DEM construction, spatial interpolation and autocorrelation, SQL spatial querying, cartographic design, and predictive environmental modeling. The undergraduate thesis measured surface vegetation change across the Mendocino Complex, at the time the largest wildfire in California history, from Landsat 8 pre- and post-fire scenes in Google Earth Engine using NDVI and NBR, and was presented at the 2019 Los Angeles Geospatial Summit, hosted by the USC Spatial Sciences Institute. Twenty-plus of the coursework maps form the archive on this site.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="research" class="themes surface">
+  <div class="inner">
+    <div class="eyebrow">Research</div>
+    <h2>Research themes.</h2>
+    <div class="grid">
+      <div class="theme">
+        <h3>Measuring what you cannot see directly</h3>
+        <p>Methane from a satellite column, biomass from reflectance, combustion from a plume. Every project infers a quantity the instrument never touches, and has to say how well.</p>
+        <div class="projects"><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting">Peatland flux</a><a href="https://github.com/matt-duyst/Yangtze-Landcover-Methane">Yangtze methane</a><a href="https://doi.org/10.2118/221067-MS">Flare efficiency</a></div>
+      </div>
+      <div class="theme">
+        <h3>Two sources rarely agree</h3>
+        <p>Satellites, drones, towers, and field samples were each built for their own purpose, at their own resolution and revisit. Everything downstream rests on reconciling them into one measurement you can rely on.</p>
+        <div class="projects"><a href="#work">Rangeland growth</a><a href="https://github.com/matt-duyst/UAV-PV-Assessment">Thermal drone survey</a></div>
+      </div>
+      <div class="theme">
+        <h3>Ground the model was never trained on</h3>
+        <p>What happens when a model leaves its training region, year, or ecosystem, and whether it can be honest about where it cannot answer. Physics-constrained structure and foundation models are the two levers.</p>
+        <div class="projects"><a href="#work">Rangeland growth</a><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting">Peatland backcast</a></div>
+      </div>
+      <div class="theme">
+        <h3>Checkable science</h3>
+        <p>A result earns trust by being reproducible, not by who produced it. Each project is published with its data and code, and an errata where the reproduction disagrees with the original.</p>
+        <div class="projects"><a href="https://github.com/matt-duyst/Yangtze-Landcover-Methane/blob/main/ERRATA.md">Errata</a><a href="https://github.com/matt-duyst">All repositories</a></div>
+      </div>
+      
+    </div>
+    <div class="lines">
+      <div class="line-row"><span class="line-k">Publications and talks</span><span class="line-v"><a href="https://doi.org/10.2118/221067-MS">SPE-221067-MS, SPE ATCE 2024, first author</a> &middot; <a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Global Stocktake Climate Datathon, Honorable Mention, 2022</a> &middot; <a href="https://hixon.yale.edu/hixon-fellows/matthew-duyst">Hixon Center Fellow, 2022</a> &middot; <a href="https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program">Los Angeles Geospatial Summit, poster, 2019</a></span></div>
+      <div class="line-row"><span class="line-k">Methods and tools</span><span class="line-v">Python, R, SQL &middot; PyTorch, TensorFlow, scikit-learn, XGBoost, LightGBM &middot; Google Earth Engine, GDAL, Rasterio, GeoPandas &middot; QGIS, ArcGIS Pro &middot; Landsat, Sentinel-5P TROPOMI, LiDAR, UAV photogrammetry &middot; eddy covariance, spatial statistics, time series forecasting &middot; Docker, Azure</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="work" class="papers">
+  <div class="inner">
+    <div class="eyebrow">Selected projects</div>
+    <h2>Projects. <span style="font-weight: 400; color: var(--muted); font-size: 14px;">Rebuilt repositories carry their 2026 findings; the rest carry the original result until their rebuild lands.</span></h2>
+    <ol>
+      <li>
+        <div class="thumb ph-peat"></div>
+        <div>
+          <div class="title">Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland</div>
+          <div class="authors">University of Minnesota, Griffis lab &middot; AmeriFlux US-MBP, 2009 to 2024</div>
+          <div class="venue">Visiting Research Scientist, 2022 &middot; <span class="award">Rebuilt 2026</span></div>
+          <div class="links"><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting">code</a><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting/tree/main/notes">notes</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="thumb ph-yrd"></div>
+        <div>
+          <div class="title">Urban expansion, paddy rice, and atmospheric methane over the Yangtze River Delta</div>
+          <div class="authors">Yale School of the Environment, Lee lab &middot; Landsat-derived land cover, Sentinel-5P TROPOMI</div>
+          <div class="venue">MESc thesis, 2023 &middot; <span class="award">Reproduced 2026, with errata</span></div>
+          <div class="links"><a href="https://github.com/matt-duyst/Yangtze-Landcover-Methane">code</a><a href="https://github.com/matt-duyst/Yangtze-Landcover-Methane/blob/main/ERRATA.md">errata</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="thumb ph-flare"></div>
+        <div>
+          <div class="title">Quantification of methane flare destruction removal efficiency across the Bakken and Permian basins using UAV-mounted TDLAS sensors</div>
+          <div class="authors">Duyst, K. M., Smith, B. J., et al. &middot; SeekOps</div>
+          <div class="venue">SPE Annual Technical Conference and Exhibition, 2024 &middot; SPE-221067-MS</div>
+          <div class="links"><a href="https://doi.org/10.2118/221067-MS">paper</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="thumb ph-pv"></div>
+        <div>
+          <div class="title">Toward UAV decision-support tools for photovoltaic arrays: a coastal Connecticut thermal mosaicking case study</div>
+          <div class="authors">Anthony, Duyst, Verheyden, Zhao &middot; Yale ENV 704</div>
+          <div class="venue">Course research, 2022 &middot; rebuild pending</div>
+          <div class="links"><a href="https://github.com/matt-duyst/UAV-PV-Assessment">code</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="thumb ph-mend"></div>
+        <div>
+          <div class="title">Mendocino Fire Complex: surface vegetation change through spectral indices (NDVI and NBR)</div>
+          <div class="authors">UCLA Geography &middot; Landsat 8 OLI, Google Earth Engine</div>
+          <div class="venue">Undergraduate thesis, 2018 &middot; <a href="https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program">Los Angeles Geospatial Summit, 2019</a> &middot; rebuild pending</div>
+          <div class="links"><a href="https://mappingwithmatt.com/2012/09/20/Mendocino-Fire-Complex/">write-up</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="thumb ph-ets"></div>
+        <div>
+          <div class="title">Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS</div>
+          <div class="authors">Duyst, Bhardwaj &middot; Global Stocktake Climate Datathon</div>
+          <div class="venue">2022, ahead of COP 27 &middot; <span class="award"><a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Honorable Mention</a></span></div>
+          <div class="links"><a href="https://github.com/matt-duyst/Carbon-Trading">code</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="thumb ph-grc"></div>
+        <div>
+          <div class="title">Grassland growth across US rangeland for soil carbon verification</div>
+          <div class="authors">Grassroots Carbon &middot; process-based light use efficiency with a machine-learning correction</div>
+          <div class="venue">2025 to present &middot; publications forthcoming</div>
+        </div>
+      </li>
+      <li>
+        <div class="thumb ph-maps"></div>
+        <div>
+          <div class="title">Twenty-plus coursework maps: classification, SAR, terrain, interpolation, and cartography</div>
+          <div class="authors">UCLA Geography, 2016 to 2018</div>
+          <div class="venue">Archive</div>
+          <div class="links"><a href="https://mappingwithmatt.com/">archive</a></div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+
+<section id="code" class="oss">
+  <div class="inner">
+    <div class="eyebrow">Code &amp; data</div>
+    <h2>Open repositories.</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Peatland-Flux-Forecasting</h3>
+        <div class="desc">Monthly methane and carbon dioxide flux at Marcell Bog Lake Peatland, 2009 to 2024: forecasts against seasonal benchmarks and a backward reconstruction.</div>
+        <div class="stats"><span>AmeriFlux US-MBP</span><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting">github ↑</a></div>
+      </div>
+      <div class="card">
+        <h3>Yangtze-Landcover-Methane</h3>
+        <div class="desc">A 2023 thesis preserved as submitted, a 2026 reproduction with a working pipeline, and an errata recording where they disagree.</div>
+        <div class="stats"><span>Landsat, TROPOMI</span><a href="https://github.com/matt-duyst/Yangtze-Landcover-Methane">github ↑</a></div>
+      </div>
+      <div class="card">
+        <h3>Carbon-Trading</h3>
+        <div class="desc">Sector emissions and allowance pathways under the EU ETS, with a Dash tool for user-set allowance decay rates.</div>
+        <div class="stats"><span>EU ETS, 2005 to 2021</span><a href="https://github.com/matt-duyst/Carbon-Trading">github ↑</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer class="site"><span class="loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Austin, TX</span> &middot; &copy; 2026 Matt Duyst &middot; <a href="https://github.com/matt-duyst/mapping-with-matt">Source on GitHub</a> &middot; <a href="#intro">Top</a></footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var lines = [
+    { t: "hey, hey! name's matt.", mono: false, hold: 1600 },
+    { t: 'i_like_to_code.py', mono: true, hold: 1400 },
+    { t: 'i train models to read satellite imagery 🛰️', mono: false, hold: 2000 },
+    { t: 'i lift 🏋️ i snowboard 🏂 i hit 🎾', mono: false, hold: 1800 },
+    { t: 'i grew up on a citrus farm in california 🍊', mono: false, hold: 2200 },
+    { t: "sco' bruins & boola, boola baby!", mono: false, hold: 2000 }
+  ];
+  var typed = document.getElementById('typed');
+  var typeEl = document.getElementById('type');
+  var li = 0;
+  function chars(str) { return Array.from(str); }
+  function typeLine() {
+    var line = lines[li];
+    typeEl.classList.toggle('mono', line.mono);
+    var cs = chars(line.t), i = 0;
+    typed.textContent = '';
+    if (reduce) { typed.textContent = line.t; setTimeout(nextLine, line.hold); return; }
+    var tick = function () {
+      if (i < cs.length) { typed.textContent += cs[i]; i += 1; setTimeout(tick, 42 + Math.random() * 40); }
+      else { setTimeout(eraseLine, line.hold); }
+    };
+    tick();
+  }
+  function eraseLine() {
+    var tick = function () {
+      var cs = chars(typed.textContent);
+      if (cs.length) { cs.pop(); typed.textContent = cs.join(''); setTimeout(tick, 14); }
+      else { nextLine(); }
+    };
+    tick();
+  }
+  function nextLine() { li = (li + 1) % lines.length; setTimeout(typeLine, 300); }
+  // Welcome curtain: greetings crossfade, then the curtain lifts and the typewriter begins. Plays on every load while iterating; gate on sessionStorage at launch.
+  var greets = ['¡Bienvenido!', 'ようこそ！', 'Willkommen!', '환영합니다!', 'Bienvenue !', '欢迎！', 'Benvenuto!', 'Welkom!', 'Bem-vindo!', 'Welcome!'];
+  try { history.scrollRestoration = 'manual'; } catch (e) {}
+  window.scrollTo(0, 0);
+  var curtain = document.getElementById('curtain');
+  var cards = [document.getElementById('card-a'), document.getElementById('card-b')], cur = 0, gi = 0, timer = null, lifted = false;
+  cards[1].classList.add('idle');
+  var lift = function () { if (lifted) return; lifted = true; clearTimeout(timer); window.scrollTo(0, 0); curtain.classList.add('lift'); gooStart(); document.querySelector('.intro .stack').classList.add('show'); setTimeout(function () { curtain.classList.add('gone'); }, reduce ? 0 : 950); setTimeout(typeLine, reduce ? 100 : 520); };
+  var flip = function () {
+    if (gi >= greets.length - 1) { lift(); return; }
+    gi += 1;
+    var outC = cards[cur], inC = cards[1 - cur];
+    inC.querySelector('span').textContent = greets[gi];
+    inC.classList.remove('idle', 'out'); inC.classList.add('in');
+    outC.classList.remove('in'); outC.classList.add('out');
+    cur = 1 - cur;
+    var fl = document.getElementById('flap'); fl.classList.remove('tick'); void fl.offsetWidth; fl.classList.add('tick');
+    clearTimeout(timer);
+    timer = setTimeout(flip, gi === greets.length - 1 ? 1100 : 520);
+  };
+  if (reduce) { cards[0].querySelector('span').textContent = 'Welcome!'; lift(); }
+  else {
+    timer = setTimeout(flip, 700);
+    curtain.addEventListener('click', function () { if (gi >= greets.length - 1) lift(); else flip(); });
+  }
+
+  // Liquid blobs: seven discs drift slowly between a dispersed and a gathered arrangement; positions are blended, so speed stays even
+  var goo = document.getElementById('goo');
+  var gooStart = function () {};
+  if (goo && !reduce) {
+    var discs = Array.prototype.slice.call(goo.querySelectorAll('circle'));
+    var W = window.innerWidth, Hh = window.innerHeight, hue = 210, lastY = window.scrollY;
+    window.addEventListener('resize', function () { W = window.innerWidth; Hh = window.innerHeight; });
+    window.addEventListener('scroll', function () { var dy = window.scrollY - lastY; lastY = window.scrollY; hue += dy * 0.08; }, { passive: true });
+    var st = discs.map(function (c, i) {
+      return { ax: 0.15 + Math.random() * 0.7, ay: 0.15 + Math.random() * 0.7, rx: 0.14 + Math.random() * 0.2, ry: 0.12 + Math.random() * 0.18,
+               s1: 0.00014 + Math.random() * 0.0001, s2: 0.0001 + Math.random() * 0.00008, p1: Math.random() * 6.28, p2: Math.random() * 6.28,
+               gr: 0.35 + Math.random() * 0.45, gp: Math.random() * 6.28, hoff: i * 40 + Math.random() * 30 };
+    });
+    var t0 = null;
+    var ease = function (w) { return w < 0.5 ? 2 * w * w : 1 - Math.pow(-2 * w + 2, 2) / 2; };
+    var loop = function (now) {
+      if (t0 === null) t0 = now;
+      var t = now - t0;
+      var g = ease(0.5 - 0.5 * Math.cos((t % 18000) / 18000 * 6.2832)); // 18 s breath: apart, together, apart
+      var cx = W * (0.5 + 0.2 * Math.sin(t * 0.00016)), cy = Hh * (0.45 + 0.16 * Math.cos(t * 0.00013));
+      discs.forEach(function (c, i) {
+        var d = st[i], r = +c.getAttribute('r');
+        // dispersed target: a slow personal wander across the viewport
+        var dx = (d.ax + Math.sin(t * d.s1 + d.p1) * d.rx + Math.sin(t * d.s2 * 1.7 + d.p2) * d.rx * 0.35) * W;
+        var dy = (d.ay + Math.cos(t * d.s2 + d.p2) * d.ry + Math.cos(t * d.s1 * 1.3 + d.p1) * d.ry * 0.35) * Hh;
+        // gathered target: a small orbit around the shared center, so the body still breathes
+        var gx = cx + Math.cos(t * 0.0003 + d.gp) * r * d.gr, gy = cy + Math.sin(t * 0.00026 + d.gp) * r * d.gr * 0.8;
+        var x = dx + (gx - dx) * g, y = dy + (gy - dy) * g;
+        c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1));
+        c.setAttribute('fill', 'hsl(' + ((hue + t * 0.005 + d.hoff) % 360).toFixed(0) + ' 82% 60%)');
+      });
+      requestAnimationFrame(loop);
+    };
+    gooStart = function () { goo.classList.add('on'); requestAnimationFrame(loop); };
+  }
+
+  // Rail: show once the intro is out of view; highlight the section in view
+  var dock = document.getElementById('rail'), introEl = document.getElementById('intro');
+  if (dock && introEl && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { dock.classList.toggle('show', !es[0].isIntersecting); }, { threshold: 0.05 }).observe(introEl);
+    var secs = ['top', 'map', 'experience', 'research', 'work', 'code'].map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    var links = dock.querySelectorAll('a');
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { links.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id); }); } });
+    }, { rootMargin: '-40% 0px -55% 0px' }).observe && secs.forEach(function (sec) { new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) links.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id); }); }); }, { rootMargin: '-40% 0px -55% 0px' }).observe(sec); });
+  }
+  // Section entrances: eyebrow, headline, then body rise in on the intro's curve
+  document.querySelectorAll('section:not(.intro) .inner').forEach(function (inner) {
+    var kids = Array.prototype.slice.call(inner.children);
+    kids.forEach(function (k, i) { if (k.classList.contains('rt-grid')) return; k.classList.add('reveal'); if (i === 1) k.classList.add('d1'); if (i >= 2) k.classList.add('d2'); });
+  });
+  if ('IntersectionObserver' in window) {
+    var ro = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); } }); }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { ro.observe(el); });
+  } else { document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); }); }
+
+  // Contact band: the chat circle is magnetic, fills with color on hover, and opens the note; the email pill copies on click
+  var cta = document.getElementById('cta'), ctaWrap = document.getElementById('cta-wrap'), cformEl = document.getElementById('composer-form');
+  if (cta && cformEl) {
+    cta.addEventListener('click', function () {
+      cta.classList.remove('pressed'); void cta.offsetWidth; cta.classList.add('pressed');
+      if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) {} }
+      var open = cta.getAttribute('aria-expanded') === 'true';
+      cta.setAttribute('aria-expanded', String(!open)); cformEl.hidden = open;
+      if (!open) { var first = cformEl.querySelector('input'); if (first) first.focus({ preventScroll: true }); cformEl.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); }
+    });
+    cformEl.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var f = new FormData(cformEl), name = (f.get('name') || '').toString().trim(), email = (f.get('email') || '').toString().trim(), msg = (f.get('message') || '').toString().trim();
+      var note = document.getElementById('composer-note');
+      if (!name || !email || !msg) { note.textContent = 'Name, email, and a note are all needed.'; return; }
+      window.location.href = 'mailto:matthew.duyst@gmail.com?subject=' + encodeURIComponent('mappingwithmatt.com: note from ' + name) + '&body=' + encodeURIComponent(msg + '\n\n' + name + '\n' + email);
+      note.textContent = 'Composing in your mail app.';
+    });
+    if (window.matchMedia('(hover: hover)').matches && !reduce) {
+      var mx = 0, my = 0, cx0 = 0, cy0 = 0, raf = null, inside = false, MAX = 18, PAD = 24;
+      var settle = function () {
+        var k = inside ? 0.16 : 0.10;                 // ease toward the target; slower on release so it springs back rather than snaps
+        cx0 += (mx - cx0) * k; cy0 += (my - cy0) * k;
+        cta.style.transform = 'translate(' + cx0.toFixed(2) + 'px,' + cy0.toFixed(2) + 'px)';
+        if (Math.abs(mx - cx0) > 0.05 || Math.abs(my - cy0) > 0.05) raf = requestAnimationFrame(settle); else raf = null;
+      };
+      ctaWrap.addEventListener('mousemove', function (e) {
+        var r = cta.getBoundingClientRect(), ccx = r.left + r.width / 2, ccy = r.top + r.height / 2;
+        var dx = e.clientX - ccx, dy = e.clientY - ccy, dist = Math.hypot(dx, dy), reach = r.width / 2 + PAD;
+        if (dist > reach) { if (inside) { inside = false; mx = 0; my = 0; if (!raf) raf = requestAnimationFrame(settle); } return; }
+        inside = true;
+        var f = Math.min(1, dist / reach);           // pull grows with distance from center, capped at MAX px
+        mx = (dx / (dist || 1)) * f * MAX; my = (dy / (dist || 1)) * f * MAX;
+        if (!raf) raf = requestAnimationFrame(settle);
+      }, { passive: true });
+      ctaWrap.addEventListener('mouseleave', function () { inside = false; mx = 0; my = 0; if (!raf) raf = requestAnimationFrame(settle); });
+    }
+    // hue for the fills drifts with the page blobs
+    var hueEl = document.documentElement, hh = 200;
+    (function hueLoop() { hh = (hh + 0.05) % 360; hueEl.style.setProperty('--ch', hh.toFixed(1)); requestAnimationFrame(hueLoop); })();
+  }
+  var copyBtn = document.getElementById('copy-email'), copyLabel = document.getElementById('copy-label');
+  if (copyBtn) copyBtn.addEventListener('click', function () {
+    if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) {} }
+    var done = function () { copyBtn.classList.add('copied'); setTimeout(function () { copyBtn.classList.remove('copied'); }, 1400); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText('matthew.duyst@gmail.com').then(done, function () { window.location.href = 'mailto:matthew.duyst@gmail.com'; });
+    else window.location.href = 'mailto:matthew.duyst@gmail.com';
+  });
+
+  var cvLink = document.getElementById('cv-link'), docsMenu = document.getElementById('docs-menu');
+  if (cvLink && docsMenu) { cvLink.addEventListener('click', function (e) { e.preventDefault(); var open = !docsMenu.hidden; docsMenu.hidden = open; cvLink.setAttribute('aria-expanded', String(!open)); }); document.addEventListener('click', function (e) { if (!docsMenu.hidden && !e.target.closest('.docs-wrap')) { docsMenu.hidden = true; cvLink.setAttribute('aria-expanded', 'false'); } }); }
+})();
+</script>
+<script type="module">
+import * as maplibregl from "https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/6.10.0/maplibre-gl.mjs";
+(function () {
+  var STOPS = [{"k": "visalia", "name": "Visalia", "short": "Visalia", "yr": "origin", "years": "Hometown", "lon": -119.2921, "lat": 36.3302, "zoom": 9.2}, {"k": "ucla", "name": "Los Angeles", "short": "UCLA", "yr": "2014", "years": "2014 to 2018", "lon": -118.4452, "lat": 34.0689, "zoom": 11.5}, {"k": "cydcor", "name": "Los Angeles", "short": "Cydcor", "yr": "2019", "years": "2019 to 2020", "lon": -118.7627, "lat": 34.1566, "zoom": 10.5}, {"k": "yale", "name": "New Haven", "short": "Yale", "yr": "2021", "years": "2021 to 2023", "lon": -72.9223, "lat": 41.3163, "zoom": 11.5}, {"k": "umn", "name": "Marcell Experimental Forest", "short": "Minnesota", "yr": "2022", "years": "Summer 2022", "lon": -93.4893, "lat": 47.5051, "zoom": 10.5}, {"k": "seekops", "name": "Austin", "short": "SeekOps", "yr": "2024", "years": "2024", "lon": -97.7431, "lat": 30.2672, "zoom": 10.5}, {"k": "grc", "name": "San Antonio", "short": "Grassroots", "yr": "2025", "years": "2025 to present", "lon": -98.4936, "lat": 29.4241, "zoom": 9.6}];
+  var SITES = [{"label": "Mendocino Complex, 2018", "from_": 1, "lon": -122.9, "lat": 39.3}, {"label": "West Campus solar array, 2022", "from_": 3, "lon": -72.98, "lat": 41.26}, {"label": "Yangtze River Delta, 2023", "from_": 3, "lon": 120.5, "lat": 31.2}, {"label": "Marcell peatland tower, 2022", "from_": 4, "lon": -93.4893, "lat": 47.5051}, {"label": "Bakken flare sites, 2024", "from_": 5, "lon": -102.8, "lat": 47.9}, {"label": "Permian flare sites, 2024", "from_": 5, "lon": -102.4, "lat": 31.9}, {"label": "US rangeland, 2025 to present", "from_": 6, "lon": -99.5, "lat": 31.6}];
+  var ROUTE = ["visalia", "ucla", "cydcor", "yale", "umn", "yale", "seekops", "grc"];
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var byKey = {}; STOPS.forEach(function (s) { byKey[s.k] = s; });
+  var map = new maplibregl.Map({
+    container: 'rt-mapcanvas',
+    style: { version: 8, sources: {}, layers: [ { id: 'bg', type: 'background', paint: { 'background-color': '#0b0b0c' } } ] },
+    center: [-96, 38.5], zoom: 3.6, minZoom: 2.5, maxZoom: 19, attributionControl: true, dragRotate: false, pitchWithRotate: false, cooperativeGestures: true
+  });
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
+  map.addControl(new maplibregl.FullscreenControl(), 'top-left');
+  map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: 'imperial' }), 'bottom-left');
+  map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: 'metric' }), 'bottom-left');
+  var rad = Math.PI / 180;
+  function gc(a, b, n) {
+    var lat1 = a[1] * rad, lon1 = a[0] * rad, lat2 = b[1] * rad, lon2 = b[0] * rad;
+    var d = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin((lat1 - lat2) / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon1 - lon2) / 2), 2)));
+    var pts = []; for (var i = 0; i <= n; i++) { var f = i / n; if (d === 0) { pts.push(a); continue; } var A = Math.sin((1 - f) * d) / Math.sin(d), B = Math.sin(f * d) / Math.sin(d); var x = A * Math.cos(lat1) * Math.cos(lon1) + B * Math.cos(lat2) * Math.cos(lon2), y = A * Math.cos(lat1) * Math.sin(lon1) + B * Math.cos(lat2) * Math.sin(lon2), z = A * Math.sin(lat1) + B * Math.sin(lat2); pts.push([Math.atan2(y, x) / rad, Math.atan2(z, Math.sqrt(x * x + y * y)) / rad]); }
+    return pts;
+  }
+  var legs = []; for (var i = 0; i < ROUTE.length - 1; i++) { var a = byKey[ROUTE[i]], b = byKey[ROUTE[i + 1]]; legs.push(gc([a.lon, a.lat], [b.lon, b.lat], 64)); }
+  var TRAVEL = { 0: [0], 1: [1], 2: [2], 3: [3], 4: [4, 5], 5: [6] };
+  var full = [].concat.apply([], legs);
+  function arcLine(s, e) { return { type: 'Feature', geometry: { type: 'LineString', coordinates: gc(s, e, 80) } }; }
+  var markers = [], siteMarkers = [], xmark = null, cursorM = null, ready = false;
+  map.on('load', function () {
+    map.addSource('usgs', { type: 'raster', tiles: ['https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}'], tileSize: 256, maxzoom: 16, attribution: 'Imagery: USGS The National Map (NAIP), public domain' });
+    map.addSource('eox', { type: 'raster', tiles: ['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg'], tileSize: 256, maxzoom: 15, attribution: 'Sentinel-2 cloudless 2024 by <a href="https://s2maps.eu">EOX IT Services</a> (contains modified Copernicus Sentinel data), CC BY-NC-SA 4.0' });
+    map.addSource('dem', { type: 'raster-dem', tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'], encoding: 'terrarium', tileSize: 256, maxzoom: 15, attribution: 'Terrain: Mapzen, AWS Terrain Tiles' });
+    map.addLayer({ id: 'imagery', type: 'raster', source: 'usgs', paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08 } });
+    map.addLayer({ id: 'imagery-eox', type: 'raster', source: 'eox', layout: { visibility: 'none' }, paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08 } });
+    map.addSource('slot', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } }); map.addLayer({ id: 'plan', type: 'circle', source: 'slot' });
+    map.addLayer({ id: 'hillshade', type: 'hillshade', source: 'dem', layout: { visibility: 'none' }, paint: { 'hillshade-exaggeration': 0.35, 'hillshade-shadow-color': '#000', 'hillshade-highlight-color': '#666' } });
+    // OpenFreeMap (OpenStreetMap vector tiles, no key, no cap): the dark basemap and a labels-only overlay derived from the liberty style
+    var OFM_DARK = 'https://tiles.openfreemap.org/styles/dark', OFM_LIBERTY = 'https://tiles.openfreemap.org/styles/liberty';
+    var ofmReady = fetch(OFM_LIBERTY).then(function (r) { return r.json(); }).then(function (st) {
+      if (st.glyphs) map.setGlyphs(st.glyphs); if (st.sprite) map.setSprite(st.sprite);
+      Object.keys(st.sources).forEach(function (k) { if (!map.getSource('ofm-' + k)) map.addSource('ofm-' + k, st.sources[k]); });
+      st.layers.filter(function (l) { return l.type === 'symbol'; }).forEach(function (l) {
+        var L = JSON.parse(JSON.stringify(l)); L.id = 'lbl-' + l.id; L.source = 'ofm-' + l.source; L.paint = L.paint || {};
+        L.paint['text-color'] = 'rgba(236,236,234,0.9)'; L.paint['text-halo-color'] = 'rgba(11,11,12,0.85)'; L.paint['text-halo-width'] = 1.2; delete L.paint['icon-color'];
+        L.layout = L.layout || {}; L.layout.visibility = 'visible'; map.addLayer(L, 'plan');
+      });
+    }).catch(function () {});
+    fetch(OFM_DARK).then(function (r) { return r.json(); }).then(function (st) {
+      Object.keys(st.sources).forEach(function (k) { if (!map.getSource('dk-' + k)) map.addSource('dk-' + k, st.sources[k]); });
+      st.layers.filter(function (l) { return l.type !== 'symbol'; }).forEach(function (l) {
+        var L = JSON.parse(JSON.stringify(l)); L.id = 'dk-' + l.id; if (L.source) L.source = 'dk-' + l.source; L.layout = L.layout || {}; L.layout.visibility = 'none'; map.addLayer(L, 'plan');
+      });
+    }).catch(function () {});
+    map.addSource('plan', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: full } } });
+    map.addLayer({ id: 'plan-line', type: 'line', source: 'plan', paint: { 'line-color': '#fff', 'line-opacity': 0.35, 'line-width': 1.2, 'line-dasharray': [2, 3] } });
+    map.addSource('done', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [] } } });
+    map.addLayer({ id: 'done-glow', type: 'line', source: 'done', paint: { 'line-color': '#fff', 'line-opacity': 0.25, 'line-width': 6, 'line-blur': 4 } });
+    map.addLayer({ id: 'done', type: 'line', source: 'done', paint: { 'line-color': '#fff', 'line-width': 2 } });
+    map.addSource('arcs', { type: 'geojson', data: { type: 'FeatureCollection', features: SITES.map(function (s) { var f = STOPS[s.from_]; var a = arcLine([f.lon, f.lat], [s.lon, s.lat]); a.properties = { from: s.from_, label: s.label }; return a; }) } });
+    map.addLayer({ id: 'arcs', type: 'line', source: 'arcs', paint: { 'line-color': '#fff', 'line-opacity': 0, 'line-width': 1, 'line-dasharray': [2, 3] } });
+    markers = STOPS.map(function (s, i) { var el = document.createElement('div'); el.className = 'marker'; el.innerHTML = document.querySelector('.tab[data-i="' + i + '"] .tab-ic').innerHTML; el.title = s.name + ' · ' + s.years; el.addEventListener('click', function () { goStop(i); }); return new maplibregl.Marker({ element: el }).setLngLat([s.lon, s.lat]).addTo(map); });
+    siteMarkers = SITES.map(function (s) { var el = document.createElement('div'); el.className = 'site'; el.title = s.label; return { m: new maplibregl.Marker({ element: el }).setLngLat([s.lon, s.lat]).addTo(map), from: s.from_ }; });
+    var xe = document.createElement('div'); xe.className = 'xmark'; xe.textContent = 'X'; xe.style.opacity = 0; xmark = new maplibregl.Marker({ element: xe }).setLngLat([STOPS[6].lon, STOPS[6].lat]).addTo(map);
+    var ce = document.createElement('div'); ce.className = 'cursor'; ce.style.opacity = 0; cursorM = new maplibregl.Marker({ element: ce }).setLngLat([STOPS[0].lon, STOPS[0].lat]).addTo(map);
+    ready = true; activate(0); setProgress(0);
+    // deep link
+    var m = /map-stop-(\d)/.exec(location.hash); if (m) { var si = +m[1]; if (si >= 0 && si < N) { setProgress(si); flyStop(si, 0); } }
+    // hover tooltips on stop markers with the one-line role
+    markers.forEach(function (mk, i) { var el = mk.getElement(); el.addEventListener('mousemove', function (e) { var body = bodies[i]; var head = body.querySelector('.rt-head'); tip.innerHTML = '<strong>' + STOPS[i].name + '</strong> · ' + STOPS[i].years + (head ? '<br>' + head.textContent : ''); tip.hidden = false; var r = document.getElementById('rt-mapcanvas').getBoundingClientRect(); tip.style.left = (e.clientX - r.left) + 'px'; tip.style.top = (e.clientY - r.top) + 'px'; }); el.addEventListener('mouseleave', function () { tip.hidden = true; }); });
+    siteMarkers.forEach(function (sm) { var el = sm.m.getElement(); el.addEventListener('mousemove', function (e) { tip.textContent = el.title; tip.hidden = false; var r = document.getElementById('rt-mapcanvas').getBoundingClientRect(); tip.style.left = (e.clientX - r.left) + 'px'; tip.style.top = (e.clientY - r.top) + 'px'; }); el.addEventListener('mouseleave', function () { tip.hidden = true; }); });
+  });
+  // minimap: a second map synced to the main one, with the current window drawn on it
+  var mini = new maplibregl.Map({ container: 'minimap', style: 'https://tiles.openfreemap.org/styles/dark', center: [-96, 38.5], zoom: 1.6, interactive: false, attributionControl: false });
+  function syncMini() { var b = map.getBounds(); var p1 = mini.project(b.getNorthWest()), p2 = mini.project(b.getSouthEast()); var box = document.getElementById('minibox'); box.style.left = Math.min(p1.x, p2.x) + 'px'; box.style.top = Math.min(p1.y, p2.y) + 'px'; box.style.width = Math.max(2, Math.abs(p2.x - p1.x)) + 'px'; box.style.height = Math.max(2, Math.abs(p2.y - p1.y)) + 'px'; }
+  map.on('move', syncMini); mini.on('load', syncMini);
+  document.getElementById('mini').addEventListener('click', function (e) { var r = e.currentTarget.getBoundingClientRect(); var ll = mini.unproject([e.clientX - r.left, e.clientY - r.top]); map.easeTo({ center: ll, duration: 500 }); });
+  // readouts: distance travelled along the route and elevation under the cursor when terrain is on
+  function kmBetween(a, b) { var R = 6371, dLat = (b[1] - a[1]) * rad, dLon = (b[0] - a[0]) * rad, s1 = Math.sin(dLat / 2), s2 = Math.sin(dLon / 2); var q = s1 * s1 + Math.cos(a[1] * rad) * Math.cos(b[1] * rad) * s2 * s2; return 2 * R * Math.asin(Math.sqrt(q)); }
+  var legKm = legs.map(function (L) { var d = 0; for (var i = 1; i < L.length; i++) d += kmBetween(L[i - 1], L[i]); return d; });
+  function travelled(p) { var i = Math.floor(p), f = p - i, d = 0; for (var k = 0; k < i; k++) (TRAVEL[k] || []).forEach(function (L) { d += legKm[L]; }); if (f > 0 && TRAVEL[i]) { var Ls = TRAVEL[i], per = 1 / Ls.length; Ls.forEach(function (L, q) { d += Math.max(0, Math.min(1, (f - q * per) / per)) * legKm[L]; }); } return d; }
+  var readout = document.getElementById('readout'), hoverLL = null;
+  function updateReadout() { var d = travelled(progress); var txt = 'travelled ' + Math.round(d).toLocaleString() + ' km · ' + Math.round(d * 0.621371).toLocaleString() + ' mi'; if (terrainOn && hoverLL) { var el = map.queryTerrainElevation(hoverLL); if (el !== null && el !== undefined) txt += '<br>elevation ' + Math.round(el) + ' m'; } readout.innerHTML = txt; }
+  map.on('mousemove', function (e) { hoverLL = e.lngLat; updateReadout(); });
+  // globe at low zoom
+  document.getElementById('l-globe').addEventListener('change', function (e) { try { map.setProjection({ type: e.target.checked ? 'globe' : 'mercator' }); } catch (err) {} });
+  map.on('mousemove', function (e) { document.getElementById('coords').textContent = Math.abs(e.lngLat.lat).toFixed(4) + (e.lngLat.lat >= 0 ? '°N ' : '°S ') + Math.abs(e.lngLat.lng).toFixed(4) + (e.lngLat.lng >= 0 ? '°E' : '°W') + ' · zoom ' + map.getZoom().toFixed(1); });
+  var hint = document.getElementById('hint'); ['mousedown', 'wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, function () { hint.classList.add('gone'); }, { once: true, passive: true }); });
+  document.querySelectorAll('input[name="base"]').forEach(function (r) { r.addEventListener('change', function () { map.setLayoutProperty('imagery', 'visibility', r.value === 'imagery' ? 'visible' : 'none'); map.setLayoutProperty('imagery-eox', 'visibility', r.value === 'eox' ? 'visible' : 'none'); map.getStyle().layers.filter(function (l) { return l.id.indexOf('dk-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', r.value === 'dark' ? 'visible' : 'none'); }); }); });
+  document.getElementById('l-labels').addEventListener('change', function (e) { map.getStyle().layers.filter(function (l) { return l.id.indexOf('lbl-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', e.target.checked ? 'visible' : 'none'); }); });
+  document.getElementById('l-terrain').addEventListener('change', function (e) { terrainOn = e.target.checked; if (e.target.checked) { map.setTerrain({ source: 'dem', exaggeration: 1.3 }); map.setLayoutProperty('hillshade', 'visibility', 'visible'); try { if (!map.getLayer('sky')) map.addLayer({ id: 'sky', type: 'sky', paint: { 'sky-color': '#0b0b0c', 'horizon-color': '#1a1a1c', 'fog-color': '#0b0b0c', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.6, 'fog-ground-blend': 0.5 } }); } catch (err) {} map.easeTo({ pitch: 55, duration: 900 }); } else { map.setTerrain(null); map.setLayoutProperty('hillshade', 'visibility', 'none'); map.easeTo({ pitch: 0, duration: 700 }); } });
+  document.getElementById('l-route').addEventListener('change', function (e) { ['plan-line', 'done', 'done-glow'].forEach(function (l) { map.setLayoutProperty(l, 'visibility', e.target.checked ? 'visible' : 'none'); }); });
+  document.getElementById('l-sites').addEventListener('change', function (e) { map.setLayoutProperty('arcs', 'visibility', e.target.checked ? 'visible' : 'none'); siteMarkers.forEach(function (s) { s.m.getElement().style.display = e.target.checked ? '' : 'none'; }); });
+  document.getElementById('l-stops').addEventListener('change', function (e) { markers.forEach(function (m) { m.getElement().style.display = e.target.checked ? '' : 'none'; }); xmark.getElement().style.display = e.target.checked ? '' : 'none'; });
+  var progress = 0, active = -1, N = 7, terrainOn = false;
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab')), bodies = Array.prototype.slice.call(document.querySelectorAll('.card-body')), scrub = document.getElementById('scrub');
+  function activate(i) {
+    active = i; document.getElementById('pn').textContent = (i + 1) + ' / ' + N;
+    tabs.forEach(function (t, j) { t.classList.toggle('active', j === i); });
+    bodies.forEach(function (b, j) { b.hidden = j !== i; });
+    if (!ready) return;
+    markers.forEach(function (m, j) { m.getElement().classList.toggle('on', j <= i); m.getElement().classList.toggle('active', j === i); });
+    siteMarkers.forEach(function (s) { s.m.getElement().classList.toggle('on', s.from <= i); });
+    map.setPaintProperty('arcs', 'line-opacity', ['case', ['<=', ['get', 'from'], i], 0.6, 0]);
+    xmark.getElement().style.opacity = i === N - 1 ? 1 : 0;
+  }
+  function legPoint(pts, f) { var k = f * (pts.length - 1), i = Math.floor(k), t = k - i; if (i >= pts.length - 1) return pts[pts.length - 1]; var a = pts[i], b = pts[i + 1]; return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; }
+  function setProgress(p, follow) {
+    progress = Math.max(0, Math.min(N - 1, p)); var i = Math.floor(progress), f = progress - i;
+    var coords = [];
+    for (var k = 0; k < i; k++) (TRAVEL[k] || []).forEach(function (L) { coords = coords.concat(legs[L]); });
+    var pos = null;
+    if (f > 0 && TRAVEL[i]) { var Ls = TRAVEL[i], per = 1 / Ls.length; Ls.forEach(function (L, q) { var lf = Math.max(0, Math.min(1, (f - q * per) / per)); if (lf > 0) { var n = Math.floor(lf * (legs[L].length - 1)); coords = coords.concat(legs[L].slice(0, n + 1)); pos = legPoint(legs[L], lf); } }); }
+    if (ready) { map.getSource('done').setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: coords } }); if (pos) { cursorM.setLngLat(pos); cursorM.getElement().style.opacity = 1; if (follow) map.jumpTo({ center: pos }); } else cursorM.getElement().style.opacity = 0; }
+    if (i !== active) activate(i);
+    scrub.value = progress; if (typeof updateReadout === 'function') updateReadout();
+  }
+  var CAM = [ { b: -12, p: 48 }, { b: 20, p: 45 }, { b: 35, p: 40 }, { b: -25, p: 48 }, { b: 10, p: 52 }, { b: -18, p: 46 }, { b: 24, p: 44 } ];
+  function flyStop(i, ms) { var s = STOPS[i], c = CAM[i]; map.flyTo({ center: [s.lon, s.lat], zoom: s.zoom, bearing: c.b, pitch: terrainOn ? c.p : Math.min(c.p, 35), duration: reduce ? 0 : (ms || 1800), curve: 1.4 }); history.replaceState(null, '', '#map-stop-' + i); }
+  function goStop(i) { stopPlay(); setProgress(i); flyStop(i); }
+  tabs.forEach(function (t) { t.addEventListener('click', function () { goStop(+t.getAttribute('data-i')); }); });
+  scrub.addEventListener('input', function () { stopPlay(); setProgress(+scrub.value, false); });
+  var playing = false, raf = null, playBtn = document.getElementById('play');
+  function ui() { document.getElementById('ic-play').hidden = playing; document.getElementById('ic-pause').hidden = !playing; }
+  function stopPlay() { if (!playing) return; playing = false; if (raf) cancelAnimationFrame(raf); raf = null; ui(); }
+  var legMs = 3400, holdMs = 2600, travelZoom = 5.2;
+  function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+  function play() {
+    if (playing) { stopPlay(); return; }
+    playing = true; ui(); if (progress >= N - 1) progress = 0;
+    var from = Math.floor(progress), phase = 'hold', t0 = null, h0 = null;
+    setProgress(from); flyStop(from, 1200);
+    function step(now) {
+      if (!playing) return;
+      if (phase === 'hold') { if (h0 === null) h0 = now; if (now - h0 >= holdMs) { phase = 'climb'; t0 = now; map.easeTo({ zoom: travelZoom, pitch: 0, bearing: 0, duration: 900 }); } }
+      else if (phase === 'climb') { if (now - t0 >= 950) { phase = 'travel'; t0 = now; } }
+      else { var t = Math.min(1, (now - t0) / (reduce ? 1 : legMs)); setProgress(from + ease(t), true); if (t >= 1) { from += 1; setProgress(from); flyStop(from, 1400); if (from >= N - 1) { playing = false; ui(); return; } phase = 'hold'; h0 = null; } }
+      raf = requestAnimationFrame(step);
+    }
+    raf = requestAnimationFrame(step);
+  }
+  playBtn.addEventListener('click', play);
+  map.on('dragstart', stopPlay); map.on('wheel', stopPlay);
+  document.getElementById('rt-app').addEventListener('keydown', function (e) {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key === ' ') { e.preventDefault(); play(); }
+    else if (e.key === 'ArrowRight') goStop(Math.min(N - 1, active + 1));
+    else if (e.key === 'ArrowLeft') goStop(Math.max(0, active - 1));
+    else if (e.key === '+' || e.key === '=') map.zoomIn();
+    else if (e.key === '-') map.zoomOut();
+    else if (e.key === 'p' || e.key === 'P') togglePanel();
+    else if (e.key === '0') map.fitBounds([[-125, 24], [-66, 50]], { padding: 40, duration: 900 });
+  });
+  // panel: collapse, resize by dragging the splitter, keyboard P
+  var appEl = document.getElementById('rt-app'), splitter = document.getElementById('splitter'), ptoggle = document.getElementById('ptoggle'), mobile = function () { return document.getElementById('rt-app').clientWidth <= 860; };
+  function togglePanel(force) { var c = typeof force === 'boolean' ? force : !appEl.classList.contains('collapsed'); appEl.classList.toggle('collapsed', c); ptoggle.innerHTML = c ? '&#9666;' : '&#9656;'; ptoggle.title = c ? 'Expand panel (P)' : 'Collapse panel (P)'; setTimeout(function () { map.resize(); }, 280); }
+  ptoggle.addEventListener('click', function () { togglePanel(); });
+  var rs = false;
+  splitter.addEventListener('pointerdown', function (e) { rs = true; splitter.classList.add('drag'); splitter.setPointerCapture(e.pointerId); e.preventDefault(); });
+  window.addEventListener('pointermove', function (e) { if (!rs) return; if (mobile()) { var ph = Math.max(120, Math.min(window.innerHeight * 0.8, window.innerHeight - e.clientY)); appEl.style.setProperty('--ph', ph + 'px'); } else { var pw = Math.max(240, Math.min(640, window.innerWidth - e.clientX)); appEl.style.setProperty('--pw', pw + 'px'); } appEl.classList.remove('collapsed'); map.resize(); });
+  window.addEventListener('pointerup', function () { if (rs) { rs = false; splitter.classList.remove('drag'); map.resize(); } });
+  window.addEventListener('resize', function () { map.resize(); });
+  var tip = document.getElementById('tip');
+  map.on('mousemove', 'arcs', function (e) { var f = e.features[0]; if (!f) return; tip.textContent = f.properties.label; tip.hidden = false; tip.style.left = e.point.x + 'px'; tip.style.top = e.point.y + 'px'; map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', 'arcs', function () { tip.hidden = true; map.getCanvas().style.cursor = ''; });
+})();
+</script>
+</body>
+</html>
