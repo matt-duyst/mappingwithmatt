@@ -15,7 +15,8 @@
 <title>Matt Duyst</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="vendor/maplibre-gl-6.10.0/maplibre-gl.css" rel="stylesheet">
+<link rel="preload" href="https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwgknk-4.woff2" as="font" type="font/woff2" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -298,7 +299,7 @@ p { margin: 0 0 16px; }
 .rt-app.collapsed .ptoggle { right:12px; }
 .rt-app.collapsed .panel { overflow:hidden; padding:0; }
 .mapwrap { position:relative; min-width:0; }
-#rt-mapcanvas { position:absolute; inset:0; }
+#rt-mapcanvas { position:absolute; inset:0; background:#0b0b0c; }
 .maplibregl-ctrl-group { background:rgba(15,15,16,.85)!important; border:1px solid var(--line); backdrop-filter:blur(8px); }
 .maplibregl-ctrl-group button { filter:invert(1); }
 .maplibregl-ctrl-scale { background:transparent!important; color:var(--text)!important; border-color:var(--text)!important; font-family:var(--font-mono); font-size:10.5px!important; }
@@ -999,13 +1000,14 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 })();
 </script>
 <script type="module">
-import * as maplibregl from "./vendor/maplibre-gl-6.10.0/maplibre-gl.mjs";
 (function () {
   var STOPS = [{"k": "visalia", "name": "Visalia", "short": "Visalia", "yr": "origin", "years": "Hometown", "lon": -119.2921, "lat": 36.3302, "zoom": 9.2}, {"k": "ucla", "name": "Los Angeles", "short": "UCLA", "yr": "2014", "years": "2014 to 2018", "lon": -118.4452, "lat": 34.0689, "zoom": 11.5}, {"k": "cydcor", "name": "Los Angeles", "short": "Cydcor", "yr": "2019", "years": "2019 to 2020", "lon": -118.7627, "lat": 34.1566, "zoom": 10.5}, {"k": "yale", "name": "New Haven", "short": "Yale", "yr": "2021", "years": "2021 to 2023", "lon": -72.9223, "lat": 41.3163, "zoom": 11.5}, {"k": "umn", "name": "Marcell Experimental Forest", "short": "Minnesota", "yr": "2022", "years": "Summer 2022", "lon": -93.4893, "lat": 47.5051, "zoom": 10.5}, {"k": "seekops", "name": "Austin", "short": "SeekOps", "yr": "2024", "years": "2024", "lon": -97.7431, "lat": 30.2672, "zoom": 10.5}, {"k": "grc", "name": "San Antonio", "short": "Grassroots", "yr": "2025", "years": "2025 to present", "lon": -98.4936, "lat": 29.4241, "zoom": 9.6}];
   var SITES = [{"label": "Mendocino Complex, 2018", "from_": 1, "lon": -122.9, "lat": 39.3}, {"label": "West Campus solar array, 2022", "from_": 3, "lon": -72.98, "lat": 41.26}, {"label": "Yangtze River Delta, 2023", "from_": 3, "lon": 120.5, "lat": 31.2}, {"label": "Marcell peatland tower, 2022", "from_": 4, "lon": -93.4893, "lat": 47.5051}, {"label": "Bakken flare sites, 2024", "from_": 5, "lon": -102.8, "lat": 47.9}, {"label": "Permian flare sites, 2024", "from_": 5, "lon": -102.4, "lat": 31.9}, {"label": "US rangeland, 2025 to present", "from_": 6, "lon": -99.5, "lat": 31.6}];
   var ROUTE = ["visalia", "ucla", "cydcor", "yale", "umn", "yale", "seekops", "grc"];
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var byKey = {}; STOPS.forEach(function (s) { byKey[s.k] = s; });
+  // Everything that needs MapLibre runs here, once, after the module has been imported (see initMaps below)
+  function run(maplibregl) {
   var map = new maplibregl.Map({
     container: 'rt-mapcanvas',
     style: { version: 8, sources: {}, layers: [ { id: 'bg', type: 'background', paint: { 'background-color': '#0b0b0c' } } ] },
@@ -1040,18 +1042,23 @@ import * as maplibregl from "./vendor/maplibre-gl-6.10.0/maplibre-gl.mjs";
     var ofmReady = fetch(OFM_LIBERTY).then(function (r) { return r.json(); }).then(function (st) {
       if (st.glyphs) map.setGlyphs(st.glyphs); if (st.sprite) map.setSprite(st.sprite);
       Object.keys(st.sources).forEach(function (k) { if (!map.getSource('ofm-' + k)) map.addSource('ofm-' + k, st.sources[k]); });
-      st.layers.filter(function (l) { return l.type === 'symbol'; }).forEach(function (l) {
+      // only place and water-name labels, in one font and Latin script, so few glyph ranges are fetched
+      var latin = JSON.stringify(st.layers).indexOf('name:latin') !== -1;
+      st.layers.filter(function (l) { return l.type === 'symbol' && (/^place_/.test(l.id) || /^water_name/.test(l.id) || l['source-layer'] === 'place' || l['source-layer'] === 'water_name'); }).forEach(function (l) {
         var L = JSON.parse(JSON.stringify(l)); L.id = 'lbl-' + l.id; L.source = 'ofm-' + l.source; L.paint = L.paint || {};
         L.paint['text-color'] = 'rgba(236,236,234,0.9)'; L.paint['text-halo-color'] = 'rgba(11,11,12,0.85)'; L.paint['text-halo-width'] = 1.2; delete L.paint['icon-color'];
-        L.layout = L.layout || {}; L.layout.visibility = 'visible'; map.addLayer(L, 'plan');
+        L.layout = L.layout || {}; L.layout.visibility = 'visible'; L.layout['text-font'] = ['Noto Sans Regular'];
+        L.layout['text-field'] = latin ? ['coalesce', ['get', 'name:latin'], ['get', 'name']] : ['get', 'name'];
+        map.addLayer(L, 'plan');
       });
     }).catch(function () {});
     fetch(OFM_DARK).then(function (r) { return r.json(); }).then(function (st) {
+      makeMini(st);
       Object.keys(st.sources).forEach(function (k) { if (!map.getSource('dk-' + k)) map.addSource('dk-' + k, st.sources[k]); });
       st.layers.filter(function (l) { return l.type !== 'symbol'; }).forEach(function (l) {
         var L = JSON.parse(JSON.stringify(l)); L.id = 'dk-' + l.id; if (L.source) L.source = 'dk-' + l.source; L.layout = L.layout || {}; L.layout.visibility = 'none'; map.addLayer(L, 'plan');
       });
-    }).catch(function () {});
+    }).catch(function () { makeMini(null); });
     map.addSource('plan', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: full } } });
     map.addLayer({ id: 'plan-line', type: 'line', source: 'plan', paint: { 'line-color': '#fff', 'line-opacity': 0.35, 'line-width': 1.2, 'line-dasharray': [2, 3] } });
     map.addSource('done', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [] } } });
@@ -1070,11 +1077,19 @@ import * as maplibregl from "./vendor/maplibre-gl-6.10.0/maplibre-gl.mjs";
     markers.forEach(function (mk, i) { var el = mk.getElement(); el.addEventListener('mousemove', function (e) { var body = bodies[i]; var head = body.querySelector('.rt-head'); tip.innerHTML = '<strong>' + STOPS[i].name + '</strong> · ' + STOPS[i].years + (head ? '<br>' + head.textContent : ''); tip.hidden = false; var r = document.getElementById('rt-mapcanvas').getBoundingClientRect(); tip.style.left = (e.clientX - r.left) + 'px'; tip.style.top = (e.clientY - r.top) + 'px'; }); el.addEventListener('mouseleave', function () { tip.hidden = true; }); });
     siteMarkers.forEach(function (sm) { var el = sm.m.getElement(); el.addEventListener('mousemove', function (e) { tip.textContent = el.title; tip.hidden = false; var r = document.getElementById('rt-mapcanvas').getBoundingClientRect(); tip.style.left = (e.clientX - r.left) + 'px'; tip.style.top = (e.clientY - r.top) + 'px'; }); el.addEventListener('mouseleave', function () { tip.hidden = true; }); });
   });
-  // minimap: a second map synced to the main one, with the current window drawn on it
-  var mini = new maplibregl.Map({ container: 'minimap', style: 'https://tiles.openfreemap.org/styles/dark', center: [-96, 38.5], zoom: 1.6, interactive: false, attributionControl: false });
-  function syncMini() { var b = map.getBounds(); var p1 = mini.project(b.getNorthWest()), p2 = mini.project(b.getSouthEast()); var box = document.getElementById('minibox'); box.style.left = Math.min(p1.x, p2.x) + 'px'; box.style.top = Math.min(p1.y, p2.y) + 'px'; box.style.width = Math.max(2, Math.abs(p2.x - p1.x)) + 'px'; box.style.height = Math.max(2, Math.abs(p2.y - p1.y)) + 'px'; }
-  map.on('move', syncMini); mini.on('load', syncMini);
-  document.getElementById('mini').addEventListener('click', function (e) { var r = e.currentTarget.getBoundingClientRect(); var ll = mini.unproject([e.clientX - r.left, e.clientY - r.top]); map.easeTo({ center: ll, duration: 500 }); });
+  // minimap: a second map synced to the main one, with the current window drawn on it; it is created after the main map
+  // loads, from the dark style without its symbol layers, so it draws no labels and fetches no glyphs
+  var mini = null;
+  function makeMini(st) {
+    if (mini) return;
+    var style = 'https://tiles.openfreemap.org/styles/dark';
+    if (st) { style = JSON.parse(JSON.stringify(st)); style.layers = style.layers.filter(function (l) { return l.type !== 'symbol'; }); }
+    mini = new maplibregl.Map({ container: 'minimap', style: style, center: [-96, 38.5], zoom: 1.6, interactive: false, attributionControl: false });
+    mini.on('load', function () { mini.getStyle().layers.filter(function (l) { return l.type === 'symbol'; }).forEach(function (l) { mini.removeLayer(l.id); }); syncMini(); });
+  }
+  function syncMini() { if (!mini) return; var b = map.getBounds(); var p1 = mini.project(b.getNorthWest()), p2 = mini.project(b.getSouthEast()); var box = document.getElementById('minibox'); box.style.left = Math.min(p1.x, p2.x) + 'px'; box.style.top = Math.min(p1.y, p2.y) + 'px'; box.style.width = Math.max(2, Math.abs(p2.x - p1.x)) + 'px'; box.style.height = Math.max(2, Math.abs(p2.y - p1.y)) + 'px'; }
+  map.on('move', syncMini);
+  document.getElementById('mini').addEventListener('click', function (e) { if (!mini) return; var r = e.currentTarget.getBoundingClientRect(); var ll = mini.unproject([e.clientX - r.left, e.clientY - r.top]); map.easeTo({ center: ll, duration: 500 }); });
   // readouts: distance travelled along the route and elevation under the cursor when terrain is on
   function kmBetween(a, b) { var R = 6371, dLat = (b[1] - a[1]) * rad, dLon = (b[0] - a[0]) * rad, s1 = Math.sin(dLat / 2), s2 = Math.sin(dLon / 2); var q = s1 * s1 + Math.cos(a[1] * rad) * Math.cos(b[1] * rad) * s2 * s2; return 2 * R * Math.asin(Math.sqrt(q)); }
   var legKm = legs.map(function (L) { var d = 0; for (var i = 1; i < L.length; i++) d += kmBetween(L[i - 1], L[i]); return d; });
@@ -1163,6 +1178,28 @@ import * as maplibregl from "./vendor/maplibre-gl-6.10.0/maplibre-gl.mjs";
   var tip = document.getElementById('tip');
   map.on('mousemove', 'arcs', function (e) { var f = e.features[0]; if (!f) return; tip.textContent = f.properties.label; tip.hidden = false; tip.style.left = e.point.x + 'px'; tip.style.top = e.point.y + 'px'; map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', 'arcs', function () { tip.hidden = true; map.getCanvas().style.cursor = ''; });
+  return { play: play, goStop: goStop };
+  }
+  // Deferred start: MapLibre, its stylesheet and every tile request wait until the map is about to scroll into view
+  // (600 px ahead), or start at once for a #map-stop- deep link. Play and the stop tabs start it first if it has not run.
+  var api = null, starting = null;
+  function initMaps() {
+    if (starting) return starting;
+    var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = 'vendor/maplibre-gl-6.10.0/maplibre-gl.css';
+    var cssReady = new Promise(function (res) { css.onload = res; css.onerror = res; });
+    document.head.appendChild(css);
+    starting = Promise.all([import('./vendor/maplibre-gl-6.10.0/maplibre-gl.mjs'), cssReady]).then(function (r) { api = run(r[0]); return api; });
+    return starting;
+  }
+  var tabEls = document.querySelectorAll('.tab'), bodyEls = document.querySelectorAll('.card-body');
+  if (tabEls[0]) tabEls[0].classList.add('active'); if (bodyEls[0]) bodyEls[0].hidden = false;
+  document.getElementById('play').addEventListener('click', function () { if (api) return; initMaps().then(function (a) { a.play(); }); });
+  Array.prototype.forEach.call(tabEls, function (t) { t.addEventListener('click', function () { if (api) return; var i = +t.getAttribute('data-i'); initMaps().then(function (a) { a.goStop(i); }); }); });
+  if (location.hash.indexOf('#map-stop-') === 0) initMaps();
+  else if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) { if (es.some(function (e) { return e.isIntersecting; })) { io.disconnect(); initMaps(); } }, { rootMargin: '600px 0px' });
+    io.observe(document.getElementById('rt-app'));
+  } else initMaps();
 })();
 </script>
 </body>
