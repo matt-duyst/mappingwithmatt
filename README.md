@@ -14,7 +14,7 @@ python3 -m http.server 8000
 Then open http://localhost:8000.
 
 ## Contact form
-`#composer-form` opens the visitor's mail app. To send from the page, point the form at a Formspree (or similar) endpoint and remove the mailto handler in the script.
+The form posts to Formspree (form mljdnobg) from the page's own script and shows a sent state without leaving the site. Submissions arrive at the site owner's email. Formspree's Formshield spam filter is on. With JavaScript off, the browser submits the form directly and Formspree shows its own confirmation page.
 
 ## Sources and licenses
 Imagery: USGS The National Map, USGSImageryOnly (public domain; NAIP 2017 to 2021 for the lower 48). EOX Sentinel-2 cloudless 2024 (contains modified Copernicus Sentinel data; CC BY-NC-SA 4.0, suitable for this non-commercial site). Labels and dark basemap: OpenFreeMap (no key, no request cap), OpenMapTiles schema, OpenStreetMap contributors (ODbL). Terrain: Mapzen and AWS Terrain Tiles (see tilezen/joerd attribution). Engine: MapLibre GL JS 6 (BSD-3). Icons: Lucide (ISC) and Phosphor (MIT). Fonts: Inter, JetBrains Mono (OFL).

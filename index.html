@@ -956,7 +956,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       btn.disabled = true; note.textContent = 'Sending';
       fetch(cformEl.action, { method: 'POST', body: new FormData(cformEl), headers: { Accept: 'application/json' } }).then(function (res) {
         if (!res.ok) { failed(); return; }
-        cformEl.reset(); cformEl.hidden = true; cta.setAttribute('aria-expanded', 'false');
+        cformEl.reset(); cformEl.hidden = true; btn.disabled = false; note.textContent = ''; cta.setAttribute('aria-expanded', 'false');
         label.textContent = 'sent!'; cta.classList.add('sent');
         setTimeout(function () { label.textContent = "let's chat!"; cta.classList.remove('sent'); }, 2600);
       }, failed);
