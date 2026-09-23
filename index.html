@@ -13,6 +13,7 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <title>Matt Duyst</title>
+<script>try { if (sessionStorage.getItem('mwm-welcome') === '1' || matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('no-curtain'); } catch (e) {}</script>
 <style>
 /* Self-hosted fonts (vendor/fonts/, SIL OFL 1.1): one variable latin file per family */
 @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400 600; font-display: swap; src: url('vendor/fonts/inter-v20-latin-variable.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
@@ -68,7 +69,7 @@ img { max-width: 100%; height: auto; }
 #curtain { position: fixed; inset: 0; z-index: 60; background: var(--bg); color: var(--text); display: grid; place-items: center; transform: translateY(0); transition: transform 900ms cubic-bezier(.76, 0, .24, 1); }
 #curtain::after { content: ""; position: absolute; left: -10%; right: -10%; bottom: -140px; height: 280px; background: var(--bg); border-radius: 0 0 50% 50%; }
 #curtain.lift { transform: translateY(-115%); }
-#curtain.gone { display: none; }
+#curtain.gone, .no-curtain #curtain { display: none; }
 #flap { position: relative; width: min(92vw, 720px); height: 1.4em; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); font-weight: 600; font-size: clamp(36px, 6vw, 72px); letter-spacing: -0.02em; line-height: 1.4; perspective: 1200px; cursor: pointer; }
 #flap .card { position: absolute; inset: 0; display: grid; place-items: center; backface-visibility: hidden; transform-origin: 50% 50%; will-change: transform, opacity; }
 #flap .card span { display: block; white-space: nowrap; }
@@ -312,11 +313,11 @@ p { margin: 0 0 16px; }
 .readout { position:absolute; right:56px; top:12px; z-index:5; font-size:10.5px; color:var(--muted); text-align:right; line-height:1.5; pointer-events:none; }
 .ticks { display:flex; justify-content:space-between; font-size:9px; color:var(--muted); padding:0 2px; margin-top:-4px; }
 .hud { position:absolute; left:12px; bottom:100px; z-index:5; font-size:10.5px; color:var(--muted); pointer-events:none; }
-.hint { position:absolute; left:50%; top:52px; transform:translateX(-50%); z-index:6; max-width:calc(100% - 112px); padding:7px 12px; border:1px solid var(--line); border-radius:999px; background:rgba(15,15,16,.85); backdrop-filter:blur(8px); font-size:11px; color:var(--text); transition:opacity .5s; pointer-events:none; }
+.hint { position:absolute; right:56px; top:30px; z-index:5; font-size:10.5px; line-height:1.5; color:var(--muted); text-align:right; white-space:nowrap; pointer-events:none; transition:opacity .5s; }
 .hint.gone { opacity:0; }
 .tip { position:absolute; z-index:7; pointer-events:none; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:rgba(15,15,16,.92); font-size:11px; color:var(--text); white-space:nowrap; transform:translate(12px,-28px); }
 .tip[hidden] { display:none; }
-.strip { position:absolute; left:0; right:0; bottom:0; z-index:6; min-width:0; display:grid; grid-template-columns:auto 1fr; gap:8px 12px; align-items:center; padding:10px 12px 12px; background:linear-gradient(to top, rgba(11,11,12,.97), rgba(11,11,12,.8) 70%, transparent); }
+.strip { position:absolute; left:0; right:0; bottom:0; z-index:6; min-width:0; display:grid; grid-template-columns:auto 1fr; gap:8px 12px; align-items:center; padding:10px 12px 12px; background:#0b0b0c; }
 .play { grid-row:1 / span 2; width:42px; height:42px; border-radius:50%; border:1px solid var(--line); background:var(--text); color:var(--bg); font-size:13px; cursor:pointer; display:grid; place-items:center; }
 .tabs { display:flex; gap:6px; }
 .strip > * { min-width:0; }
@@ -326,6 +327,7 @@ p { margin: 0 0 16px; }
   .tabs::-webkit-scrollbar { display:none; }
   .tab { flex:0 0 auto; min-width:46px; scroll-snap-align:start; }
   .readout { max-width:128px; }
+  .hint { display:none; }
 }
 .tab { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:3px; padding:6px 4px; min-height:58px; border-radius:8px; border:1px solid transparent; background:transparent; color:var(--muted); font:inherit; cursor:pointer; transition:all .15s; }
 .tab:hover { border-color:var(--line); color:var(--text); }
@@ -557,13 +559,13 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   <div class="mapwrap">
     <div id="rt-mapcanvas"></div>
     <button class="ptoggle" id="ptoggle" title="Collapse panel (P)">&#9656;</button>
-    <div class="hint" id="hint">&#9654; Play the route, or drag and zoom to explore</div>
+    <div class="hint" id="hint">Play the route, or drag and zoom</div>
     <div class="hud" id="coords">&nbsp;</div>
     <div class="mini" id="mini" title="Overview: drag the box or click" aria-hidden="true"><div id="minimap"></div><div class="minibox" id="minibox"></div></div>
     <div class="readout" id="readout"></div>
     <div class="tip" id="tip" hidden></div>
     <div class="strip">
-      <button class="play" id="play" aria-label="Play the route"><span id="ic-play">&#9654;</span><span id="ic-pause" hidden>&#10074;&#10074;</span></button>
+      <button class="play" id="play" aria-label="Play the route" title="Play the route (Space). Arrow keys step between stops; + and - zoom; 0 fits the route; P collapses the panel."><span id="ic-play">&#9654;</span><span id="ic-pause" hidden>&#10074;&#10074;</span></button>
       <div class="tabs" id="tabs"><button class="tab" data-i="0"><span class="tab-ic"><svg class="ic" viewBox="2.5 2 19 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M12 3l-3.5 6h2.2l-3 5h2.6l-2.8 5h9l-2.8-5h2.6l-3-5h2.2z"/><path d="M5 21v-7l-1.5 2.5h1.1L3 19h2M19 21v-7l1.5 2.5h-1.1L21 19h-2"/></svg></span><span class="tab-nm">Visalia</span><span class="tab-yr">origin</span></button><button class="tab" data-i="1"><span class="tab-ic"><svg class="ic" viewBox="3 3.5 18 17.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="7" r="2.6"/><circle cx="18" cy="7" r="2.6"/><path d="M4.5 14a7.5 7.5 0 0 1 15 0c0 3.8-3.2 6.5-7.5 6.5S4.5 17.8 4.5 14z"/><circle cx="9.5" cy="13" r=".9" fill="currentColor"/><circle cx="14.5" cy="13" r=".9" fill="currentColor"/><path d="M12 15.2c-1 0-1.6.5-1.6 1 0 .7.8 1.2 1.6 1.2s1.6-.5 1.6-1.2c0-.5-.6-1-1.6-1z"/></svg></span><span class="tab-nm">UCLA</span><span class="tab-yr">2014</span></button><button class="tab" data-i="2"><span class="tab-ic"><svg class="ic" viewBox="2.5 3.5 19 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3zM3 10h18M3 14.5h18M9 5v14M15 5v14"/><path d="M12 7.6a2.2 2.2 0 0 1 2.2 2.2c0 1.7-2.2 4-2.2 4s-2.2-2.3-2.2-4A2.2 2.2 0 0 1 12 7.6z" fill="#121213"/></svg></span><span class="tab-nm">Cydcor</span><span class="tab-yr">2019</span></button><button class="tab" data-i="3"><span class="tab-ic"><!-- @license lucide-static v1.47.0 - ISC -->
 <svg
   class="lucide lucide-satellite"
@@ -618,7 +620,6 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       <label><input type="checkbox" id="l-stops" checked>Stops</label>
       <label><input type="checkbox" id="l-globe">Globe at low zoom</label>
     </div>
-    <div class="sec"><div class="k">Keys</div><div style="color:var(--muted);line-height:1.6">Space play &middot; &larr; &rarr; stops &middot; + &minus; zoom &middot; 0 fit &middot; arrows pan</div></div>
     <div class="sec"><div class="k">Sources</div><div style="color:var(--muted);line-height:1.6">Imagery: USGS The National Map (public domain) and EOX Sentinel-2 cloudless (Copernicus, CC BY-NC-SA). Labels and dark map: OpenFreeMap, OpenMapTiles, OpenStreetMap contributors. Terrain: Mapzen and AWS Terrain Tiles. Engine: MapLibre GL JS 6.</div></div>
   </aside>
 </div>
@@ -848,7 +849,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     typeEl.classList.toggle('mono', line.mono);
     var cs = chars(line.t), i = 0;
     typed.textContent = '';
-    if (reduce) { typed.textContent = line.t; setTimeout(nextLine, line.hold); return; }
+    if (reduce) { typed.textContent = line.t; return; }
     var tick = function () {
       if (i < cs.length) { typed.textContent += cs[i]; i += 1; setTimeout(tick, 42 + Math.random() * 40); }
       else { setTimeout(eraseLine, line.hold); }
@@ -884,8 +885,10 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     clearTimeout(timer);
     timer = setTimeout(flip, gi === greets.length - 1 ? 1100 : 520);
   };
-  if (reduce) { cards[0].querySelector('span').textContent = 'Welcome!'; lift(); }
+  var seen = false; try { seen = sessionStorage.getItem('mwm-welcome') === '1'; } catch (e) {}
+  if (reduce || seen) { lifted = true; curtain.classList.add('gone'); setTimeout(function () { gooStart(); }, 0); document.querySelector('.intro .stack').classList.add('show'); setTimeout(typeLine, reduce ? 0 : 200); }
   else {
+    try { sessionStorage.setItem('mwm-welcome', '1'); } catch (e) {}
     timer = setTimeout(flip, 700);
     curtain.addEventListener('click', function () { if (gi >= greets.length - 1) lift(); else flip(); });
   }
@@ -1015,12 +1018,16 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   var byKey = {}; STOPS.forEach(function (s) { byKey[s.k] = s; });
   // Everything that needs MapLibre runs here, once, after the module has been imported (see initMaps below)
   function run(maplibregl) {
+  if (window.innerWidth < 600) { var tabStrip = document.getElementById('tabs'); if (tabStrip) tabStrip.scrollLeft = 0; }
   var map = new maplibregl.Map({
     container: 'rt-mapcanvas',
     style: { version: 8, sources: {}, layers: [ { id: 'bg', type: 'background', paint: { 'background-color': '#0b0b0c' } } ] },
-    center: [-96, 38.5], zoom: 3.6, minZoom: 2.5, maxZoom: 19, attributionControl: true, dragRotate: false, pitchWithRotate: false, cooperativeGestures: true,
+    center: [-96, 38.5], zoom: 3.6, minZoom: 2.5, maxZoom: 19, attributionControl: { compact: true }, dragRotate: false, pitchWithRotate: false, cooperativeGestures: true,
     locale: { 'Map.Title': 'Roadmap map' }
   });
+  // compact attribution opens itself when the first attributions arrive; fold it once to the info button, then leave it to the visitor
+  var attrib = map.getContainer().querySelector('.maplibregl-ctrl-attrib');
+  if (attrib && 'MutationObserver' in window) { var attribMo = new MutationObserver(function () { if (attrib.classList.contains('maplibregl-compact-show')) { attrib.classList.remove('maplibregl-compact-show'); attrib.removeAttribute('open'); attribMo.disconnect(); } }); attribMo.observe(attrib, { attributes: true, attributeFilter: ['class'] }); }
   map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
   map.addControl(new maplibregl.FullscreenControl(), 'top-left');
   map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: 'imperial' }), 'bottom-left');
@@ -1108,7 +1115,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   // globe at low zoom
   document.getElementById('l-globe').addEventListener('change', function (e) { try { map.setProjection({ type: e.target.checked ? 'globe' : 'mercator' }); } catch (err) {} });
   map.on('mousemove', function (e) { document.getElementById('coords').textContent = Math.abs(e.lngLat.lat).toFixed(4) + (e.lngLat.lat >= 0 ? '°N ' : '°S ') + Math.abs(e.lngLat.lng).toFixed(4) + (e.lngLat.lng >= 0 ? '°E' : '°W') + ' · zoom ' + map.getZoom().toFixed(1); });
-  var hint = document.getElementById('hint'); ['mousedown', 'wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, function () { hint.classList.add('gone'); }, { once: true, passive: true }); });
+  var hint = document.getElementById('hint'); setTimeout(function () { hint.classList.add('gone'); }, 4000); ['mousedown', 'wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, function () { hint.classList.add('gone'); }, { once: true, passive: true }); });
   document.querySelectorAll('input[name="base"]').forEach(function (r) { r.addEventListener('change', function () { map.setLayoutProperty('imagery', 'visibility', r.value === 'imagery' ? 'visible' : 'none'); map.setLayoutProperty('imagery-eox', 'visibility', r.value === 'eox' ? 'visible' : 'none'); map.getStyle().layers.filter(function (l) { return l.id.indexOf('dk-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', r.value === 'dark' ? 'visible' : 'none'); }); }); });
   document.getElementById('l-labels').addEventListener('change', function (e) { map.getStyle().layers.filter(function (l) { return l.id.indexOf('lbl-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', e.target.checked ? 'visible' : 'none'); }); });
   document.getElementById('l-terrain').addEventListener('change', function (e) { terrainOn = e.target.checked; if (e.target.checked) { map.setTerrain({ source: 'dem', exaggeration: 1.3 }); map.setLayoutProperty('hillshade', 'visibility', 'visible'); try { if (!map.getLayer('sky')) map.addLayer({ id: 'sky', type: 'sky', paint: { 'sky-color': '#0b0b0c', 'horizon-color': '#1a1a1c', 'fog-color': '#0b0b0c', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.6, 'fog-ground-blend': 0.5 } }); } catch (err) {} map.easeTo({ pitch: 55, duration: 900 }); } else { map.setTerrain(null); map.setLayoutProperty('hillshade', 'visibility', 'none'); map.easeTo({ pitch: 0, duration: 700 }); } });
