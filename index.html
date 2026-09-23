@@ -53,8 +53,8 @@ a:hover { border-bottom-color: var(--link); }
 
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 /* links set inside running text are underlined, so they do not rely on colour alone */
-.bio a, .roadmap .card-body a, .roles .role a, .experience p a, .themes .line-v a, .papers .venue a { border-bottom: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); transition: text-decoration-color .15s ease, color .15s ease; }
-.bio a:hover, .roadmap .card-body a:hover, .roles .role a:hover, .experience p a:hover, .themes .line-v a:hover, .papers .venue a:hover { text-decoration-color: currentColor; }
+.bio a, .roadmap .card-body a, .roles-grid .role a, .experience p a, .themes .line-v a, .papers .venue a { border-bottom: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); transition: text-decoration-color .15s ease, color .15s ease; }
+.bio a:hover, .roadmap .card-body a:hover, .roles-grid .role a:hover, .experience p a:hover, .themes .line-v a:hover, .papers .venue a:hover { text-decoration-color: currentColor; }
 img { max-width: 100%; height: auto; }
 
 /* Liquid blob */
@@ -154,9 +154,8 @@ p { margin: 0 0 16px; }
 
 /* Hero */
 .hero { padding-top: 14px; padding-bottom: 8px; border-top: 1px solid var(--line); }
-.hero .row { display: grid; gap: clamp(24px, 4vw, 44px); align-items: start; grid-template-columns: 1fr; }
-@media (max-width: 640px) { .hero .row { grid-template-columns: 1fr; gap: 28px; } .hero .row > div:first-child { order: 1; } .band-wrap { order: 2; } .photo-col { order: 3; margin-top: 4px; } }
-.hero .role { color: var(--muted); font-size: 15px; margin: 0 0 22px; line-height: 1.5; }
+.hero .row { display: grid; gap: clamp(24px, 4vw, 44px); align-items: start; grid-template-columns: 1.7fr 1fr; }
+@media (max-width: 640px) { .hero .row { grid-template-columns: 1fr; gap: 28px; } .hero .row > div:first-child { order: 1; } .roles-col { order: 2; } .band-wrap { order: 3; } .photo-col { order: 3; margin-top: 4px; } }
 .hero p.bio { font-family: var(--font-mono); font-size: 13px; line-height: 1.75; letter-spacing: -0.005em; color: var(--body); max-width: 72ch; }
 .hero .links { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14.5px; margin-top: 12px; }
 
@@ -281,13 +280,11 @@ p { margin: 0 0 16px; }
 .map .caption { font-family: var(--font-mono); color: var(--muted); font-size: 12.5px; line-height: 1.65; max-width: 72ch; margin: 0 0 22px; }
 
 /* Roles */
-.roles { padding-top: 40px; padding-bottom: 24px; }
-.roles-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 24px; font-family: var(--font-mono); font-size: 12px; }
+.roles-grid { display: grid; grid-template-columns: 1fr; gap: 10px; font-family: var(--font-mono); font-size: 12px; }
 .roles-grid .role { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,0.03); line-height: 1.5; }
 .roles-grid .role strong { font-weight: 500; color: var(--text); }
 .roles-grid .role a { color: var(--link); }
 .roles-grid .aff-yr { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
-@media (max-width: 900px) { .roles-grid { grid-template-columns: 1fr; } }
 
 /* Roadmap app (MapLibre) */
 .roadmap .inner { margin-bottom: 18px; }
@@ -500,6 +497,18 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
         
       </div>
       
+      <div class="roles-col">
+        <div class="eyebrow">Roles</div>
+        <div class="roles-grid">
+          <div class="role"><strong>Environmental Data Scientist, Machine Learning</strong>, <a href="#rt-grc">Grassroots Carbon</a><span class="aff-yr">2025 to present</span></div>
+          <div class="role"><strong>Environmental Data Scientist</strong>, <a href="#rt-seekops">SeekOps</a><span class="aff-yr">2024</span></div>
+          <div class="role"><strong>MESc</strong>, <a href="#rt-yale">Yale School of the Environment</a><span class="aff-yr">2021 to 2023</span></div>
+          <div class="role"><strong>Visiting Research Scientist</strong>, <a href="#rt-umn">University of Minnesota</a><span class="aff-yr">2022</span></div>
+          <div class="role"><strong>Geospatial Analyst</strong>, <a href="#rt-cydcor">Cydcor</a><span class="aff-yr">2019 to 2020</span></div>
+          <div class="role"><strong>BA, Geography and Environmental Studies</strong>, <a href="#rt-ucla">UCLA</a><span class="aff-yr">2014 to 2018</span></div>
+        </div>
+      </div>
+
       <div class="band-wrap">
 <div class="band" id="band">
           <div class="links band-links">
@@ -613,21 +622,6 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     <div class="sec"><div class="k">Sources</div><div style="color:var(--muted);line-height:1.6">Imagery: USGS The National Map (public domain) and EOX Sentinel-2 cloudless (Copernicus, CC BY-NC-SA). Labels and dark map: OpenFreeMap, OpenMapTiles, OpenStreetMap contributors. Terrain: Mapzen and AWS Terrain Tiles. Engine: MapLibre GL JS 6.</div></div>
   </aside>
 </div>
-</section>
-<section id="roles" class="roles">
-  <div class="inner">
-    <div class="eyebrow">Roles</div>
-    <div class="roles-grid">
-          
-          <div class="role"><strong>Environmental Data Scientist, Machine Learning</strong>, <a href="#rt-grc">Grassroots Carbon</a><span class="aff-yr">2025 to present</span></div>
-          <div class="role"><strong>Environmental Data Scientist</strong>, <a href="#rt-seekops">SeekOps</a><span class="aff-yr">2024</span></div>
-          <div class="role"><strong>MESc</strong>, <a href="#rt-yale">Yale School of the Environment</a><span class="aff-yr">2021 to 2023</span></div>
-          <div class="role"><strong>Visiting Research Scientist</strong>, <a href="#rt-umn">University of Minnesota</a><span class="aff-yr">2022</span></div>
-          <div class="role"><strong>Geospatial Analyst</strong>, <a href="#rt-cydcor">Cydcor</a><span class="aff-yr">2019 to 2020</span></div>
-          <div class="role"><strong>BA, Geography and Environmental Studies</strong>, <a href="#rt-ucla">UCLA</a><span class="aff-yr">2014 to 2018</span></div>
-        </div>
-      </div>
-  </div>
 </section>
 
 <section id="experience" class="experience">
