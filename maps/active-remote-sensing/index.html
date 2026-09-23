@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Active Remote Sensing: Interpolation &amp; Analysis of SAR Imagery · Maps · Matt Duyst</title>
+<meta name="description" content="SAR and LiDAR with a Gaussian contrast stretch">
+<meta name="theme-color" content="#0f0f10">
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="../maps.css" rel="stylesheet">
+</head>
+<body>
+<header class="site"><a href="/">Matt Duyst</a><a href="/maps/">Maps</a></header>
+<main class="post">
+<p class="eyebrow">UCLA coursework, 2014 to 2020</p>
+<h1>Active Remote Sensing: Interpolation &amp; Analysis of SAR Imagery</h1>
+<div class="prose">
+<h2>Analysis of SAR Images &amp; LiDAR Data - Applications of a Gaussian Contrast Stretch</h2>
+<figure><img src="../images/active-rs.webp" alt="Active Remote Sensing: Interpolation &amp; Analysis of SAR Imagery, figure 1" width="844" height="688" loading="lazy" decoding="async"></figure>
+<p>This project emphasizes the strength in Active Remote Sensing - satellites capable of generating their own source of energy through electromagnetic radiation. The use of interpolation and analysis of SAR (Synthetic-aperture Radar) was used to obtain latitudinal and longitudinal coordinates for the image center.</p>
+<p>The application of a 'Gaussian Contrast Stretch' was used on the original image, which adds a gray filter to make darker pixels appear brighter and show less contrast. These contrasting representations of the same image highlight the basics of interpreting satellite imagery of urban centers. Rivers appear darker because a large portion of the radar's energy is being reflected away from the sensor - the flat surface acting like a mirror. Buildings, on the other hand, appear almost overwhelmingly bright. This common occurrence is often referred to as the "Corner Reflection Effect." When two smooth surfaces form a 90° angle that faces the beam shot from active satellites, it's as if twice the energy is being reflected off the object and reflected back to the sensor.</p>
+<figure><img src="../images/Gaussian-histogram.webp" alt="Active Remote Sensing: Interpolation &amp; Analysis of SAR Imagery, figure 2" width="668" height="190" loading="lazy" decoding="async"></figure>
+<p>Histograms are useful graphic representations for remotely sensed images, because they allow for the analysis of a single band. Analyzing the input and output histograms from the Gaussian Contrast image (left) to the original image (right) allows for a heightened understanding of 3 statistical variables: Range, Central Tendency, and Distribution. In the realm of remote sensing, the Range refers to frequency of pixels and is always a value between 0 and 255. The Central Tendency is represented as a single value that denotes an entire dataset by its center. In this case, the Central Tendency for the Gaussian Stretch image is 122, while the 2% Linear Stretch of the original image is 29. The Distribution of the Gaussian Stretch image appears normal, while the 2% Linear Stretch of the original image is skewed to the right.</p>
+</div>
+</main>
+</body>
+</html>

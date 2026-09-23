@@ -16,6 +16,9 @@ Then open http://localhost:8000.
 ## Contact form
 The form posts to Formspree (form mljdnobg) from the page's own script and shows a sent state without leaving the site. Submissions arrive at the site owner's email. Formspree's Formshield spam filter is on. The form is revealed by the chat control and requires JavaScript; without it, the email address beside the form remains the way to get in touch.
 
+## Maps archive
+maps/ holds 31 UCLA coursework projects from 2014 to 2020, converted from the original Jekyll site (archived on the archive-2020 branch of mapping-with-matt) to plain pages with WebP images. Basemap credits are shown where a project used an Esri basemap; a 1950 Sanborn sheet is described but not reproduced.
+
 ## Sources and licenses
 Imagery: USGS The National Map, USGSImageryOnly (public domain; NAIP 2017 to 2021 for the lower 48). EOX Sentinel-2 cloudless 2024 (contains modified Copernicus Sentinel data; CC BY-NC-SA 4.0, suitable for this non-commercial site). Labels and dark basemap: OpenFreeMap (no key, no request cap), OpenMapTiles schema, OpenStreetMap contributors (ODbL). Terrain: Mapzen and AWS Terrain Tiles (see tilezen/joerd attribution). Engine: MapLibre GL JS 6 (BSD-3). Icons: Lucide (ISC) and Phosphor (MIT). Fonts: Inter, JetBrains Mono (OFL).
 

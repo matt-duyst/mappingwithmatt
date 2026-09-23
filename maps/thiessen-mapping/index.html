@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LA County Criminal Mappings: Heat Mapping &amp; Thiessen Polygons of Reported Crimes · Maps · Matt Duyst</title>
+<meta name="description" content="LA County crime heat maps and Thiessen polygons">
+<meta name="theme-color" content="#0f0f10">
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="../maps.css" rel="stylesheet">
+</head>
+<body>
+<header class="site"><a href="/">Matt Duyst</a><a href="/maps/">Maps</a></header>
+<main class="post">
+<p class="eyebrow">UCLA coursework, 2014 to 2020</p>
+<h1>LA County Criminal Mappings: Heat Mapping &amp; Thiessen Polygons of Reported Crimes</h1>
+<div class="prose">
+<h2>Abstract:</h2>
+<p>To solve questions or ambiguities around proximity and predictive policing, various methods such as density maps and heat mappings are curated for distribution and analysis purposes. This project uses heat maps to illustrate crimes of the highest magnitude in Los Angeles County: Grand Theft Auto, Possession of Narcotics, and Driving Under the Influence. Maps that accentuate the need for predictive policing were curated through the addition of Thiessen Polygons - an analysis that focuses on proximity of crimes around police stations in Los Angeles County.</p>
+<h2>Methods:</h2>
+<p>Data for crime rates (and classification of crimes) was provided by the Los Angeles County Sheriff's department. This data was imported as a CSV into Arcmap as X,Y data and took the form of 'crime points' on the maps. These points were re-projected using 'CA State Plane V' for correct placing. ArcToolbox's density tool allowed for the computation of kernel density .tif's for each crime. These were overlaid on an unobtrusive, light-grey basemap. This process was done for each crime under investigation.</p>
+<p>The last two maps contain the same crime data - Grand Theft Auto, Possession of Narcotics, and Driving Under the Influence - but focus on predictive policing. A shapefile containing the amount of police stations within Los Angeles County was downloaded. Thiessen polygons around each police station were produced using the 'Analysis Proximity' feature in ArcToolbox. This creation allowed for an illustration of which zones were within closest proximity for the given police station’s response. Spatially joining the crimes with Thiessen polygons assessed the total number of crimes within each polygon. Through this, an analysis of which police station could use aided help or more resources available to reduce crime. The polygons were color schemed by lowest to highest density of crimes. The level of scale differentiates these two maps; the first map exemplifies Thiessen polygons around each station, while the last map illustrates the number of crimes per census tract in LA County. The census tracts have a color scheme denoting which tracts have the highest concentration of crime, alluding to which areas require a larger concentration of officers patrolling.</p>
+<p>Areas of improvement on the maps below can be seen in the count breakdown portion of the Legend. Instead of using numbers for the first three mappings - the heat maps representing specific crimes - a more informative breakdown should be presented (like 'Low,' 'Moderate,' and 'High'). The 'Count' breakdown for the last two maps should be something more symbolic: like 'Number of Crimes Committed.'</p>
+<h2>Results:</h2>
+<figure><img src="../images/Narcotics.webp" alt="LA County Criminal Mappings: Heat Mapping &amp; Thiessen Polygons of Reported Crimes, figure 1" width="1012" height="800" loading="lazy" decoding="async"><figcaption class="credit">Basemap: Esri</figcaption></figure>
+<figure><img src="../images/GTA.webp" alt="LA County Criminal Mappings: Heat Mapping &amp; Thiessen Polygons of Reported Crimes, figure 2" width="1005" height="800" loading="lazy" decoding="async"><figcaption class="credit">Basemap: Esri</figcaption></figure>
+<figure><img src="../images/DUI.webp" alt="LA County Criminal Mappings: Heat Mapping &amp; Thiessen Polygons of Reported Crimes, figure 3" width="1012" height="800" loading="lazy" decoding="async"><figcaption class="credit">Basemap: Esri</figcaption></figure>
+<figure><img src="../images/Crimes-Thiessen.webp" alt="LA County Criminal Mappings: Heat Mapping &amp; Thiessen Polygons of Reported Crimes, figure 4" width="1012" height="800" loading="lazy" decoding="async"><figcaption class="credit">Basemap: Esri</figcaption></figure>
+<figure><img src="../images/Crime-per-tract.webp" alt="LA County Criminal Mappings: Heat Mapping &amp; Thiessen Polygons of Reported Crimes, figure 5" width="1013" height="800" loading="lazy" decoding="async"><figcaption class="credit">Basemap: Esri</figcaption></figure>
+</div>
+</main>
+</body>
+</html>

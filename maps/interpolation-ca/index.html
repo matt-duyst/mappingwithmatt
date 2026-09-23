@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Statewide Precipitation Averages: California · Maps · Matt Duyst</title>
+<meta name="description" content="Two interpolation methods for California precipitation, IDW and kriging">
+<meta name="theme-color" content="#0f0f10">
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="../maps.css" rel="stylesheet">
+</head>
+<body>
+<header class="site"><a href="/">Matt Duyst</a><a href="/maps/">Maps</a></header>
+<main class="post">
+<p class="eyebrow">UCLA coursework, 2014 to 2020</p>
+<h1>Statewide Precipitation Averages: California</h1>
+<div class="prose">
+<h2>Abstract:</h2>
+<p>The analysis of statewide precipitation averages between two extremes - January (high) and August (low) - allows for an examination between two forms of Interpolation: IDW and Kriging. These differing methods of simulation grant a better understanding of how the same data values can be altered through representation. This project also highlights California's Mediterranean Climate; the state experiences its peak temperatures during the summer months (like August), and vast periods of coolness during its winter months (January).</p>
+<h2>Methods:</h2>
+<p>Temperature values in California for the months of January and August were accessed from NOAA. The provided CSV was then added into ArcGIS as XY data. The IDW interpolation method and Kriging interpolation method were then used to see which simulation did a better job at classifying the state's precipitation ranges.</p>
+<h2>Results:</h2>
+<p><strong>IDW Interpolation Mapping:</strong></p>
+<figure><img src="../images/january-interp-ca.webp" alt="Statewide Precipitation Averages: California, figure 1" width="1007" height="778" loading="lazy" decoding="async"></figure>
+<figure><img src="../images/California-August-Interpolation.webp" alt="Statewide Precipitation Averages: California, figure 2" width="1020" height="800" loading="lazy" decoding="async"></figure>
+<p><strong>Kriging Interpolation Mapping:</strong></p>
+<figure><img src="../images/kriging-august.webp" alt="Statewide Precipitation Averages: California, figure 3" width="1013" height="764" loading="lazy" decoding="async"></figure>
+<h2>Conclusion:</h2>
+<p>This study allowed for juxtaposing months' temperature values in the state of California to be witnessed. The temperature range of January was between 36°F and 72°F, while the range for the month of August was between 62°F and 114°F. January’s lowest average temperature was in Sunnyside-Tahoe City (39°F), and the month’s highest average temperature was in Mecca (72°F). This follows the trend of Northern California having a cooler climate than that of Southern California, where the contrasting cities reside. August’s lowest average temperature was in Westhaven-Moonstone (63°F), and the month’s highest average temperature was in Furnace Creek (114°F).</p>
+<p>The first two maps utilize the IDW interpolation method to create a quantile-based representation of temperature. In my opinion, the final map using the Kriging Bayesian method is more suitable for representation. When switching the Kriging method, the range of temperature in the month of August was adjusted from 62°F to 59°F. Although a change in 3°F may seem miniscule, it has huge implications with regards to climate change. The distribution of temperatures also appears less rigid and lends itself to a cleaner representation.</p>
+</div>
+</main>
+</body>
+</html>

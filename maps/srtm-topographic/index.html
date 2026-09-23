@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Analysis of Topographic Data: DEM of Mt. Whitney, CA using SRTM Imagery · Maps · Matt Duyst</title>
+<meta name="description" content="SRTM elevation model of Mt. Whitney: profiles, transect, hillshade">
+<meta name="theme-color" content="#0f0f10">
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="../maps.css" rel="stylesheet">
+</head>
+<body>
+<header class="site"><a href="/">Matt Duyst</a><a href="/maps/">Maps</a></header>
+<main class="post">
+<p class="eyebrow">UCLA coursework, 2014 to 2020</p>
+<h1>Analysis of Topographic Data: DEM of Mt. Whitney, CA using SRTM Imagery</h1>
+<div class="prose">
+<p>This project unveils the prevalence in using 3D representations of the Earth's surface: Digital Elevation Models (DEMs). Elevation data for MT. Whitney, CA was obtained through the Shuttle Radar Topography Mission (SRTM) - a mission that garnered a near-global scale, high-resolution digital topographic database of Earth. SRTM consisted of a specially modified radar system (C-Band and X-Band) that flew onboard the Space Shuttle Endeavor during an 11-day mission in February of 2000. As a result of this effort, three resolutions were produced: 30 arc second (1km), 3 arc second (90km), and 1 arc second (10m).</p>
+<h2>Preparing the Image:</h2>
+<p>The images produced below showcase DEM's prevalence for 2 types of modeling: Elevation and Hydrological. These are seen through the creation of Elevation Profiles for MT. Whitney - the highest summit in the contiguous U.S. - and a Transect Profile for the largest river in its vicinity (Kern River).</p>
+<p>At the center of the DEM is the Kern River (N-S direction), with Owen's Valley on the far right and MT. Whitney in-between the two. To highlight the highest elevations in the MT. Whitney area, a density slice was performed and overlayed on the original image. The default classification for the density slice was used; however, the ranges were customized to parallel the elevation of MT. Whitney. The range's starting point was set to 4,000, and its ending point was set to MT. Whitney's maximum elevation point.</p>
+<p>Elevation and Vertical Profiles were created to better understand the topography of MT. Whitney. An Elevation Transect was produced to get a closer look at the flow of water in the Kern River. A Hillshade Model was created to accentuate the elevation of MT. Whitney and grasp the sun's impact on remotely sensed images.</p>
+<h2>Analyzing Horizontal &amp; Vertical Profiles - Mt. Whitney, CA</h2>
+<figure><img src="../images/Topographic-Data-Profiles.webp" alt="Analysis of Topographic Data: DEM of Mt. Whitney, CA using SRTM Imagery, figure 1" width="837" height="801" loading="lazy" decoding="async"></figure>
+<p>The horizontal and vertical profiles in the graphs above are particular to MT. Whitney's topographical layout. They showcase the oscillations in elevation throughout a continuous distance, sharing the same topography. An analysis between the two profiles uncovers the relationship between elevation and distance. The horizontal profile indicates a decrease in elevation the further the distance from MT. Whitney's peak. The vertical profile proves its counterpart - an increase in elevation the closer to MT. Whitney's peak.</p>
+<h2>Elevation Transect - Kern River</h2>
+<figure><img src="../images/Elevation-Transect.webp" alt="Analysis of Topographic Data: DEM of Mt. Whitney, CA using SRTM Imagery, figure 2" width="803" height="463" loading="lazy" decoding="async"></figure>
+<p>The image extracted from SRTM is helpful in analyzing the elevation transect of the Kern River, because DEMs allow for easy extraction of drainage networks (hydrological modeling). Graphing the spatial profile of Kern River allows for a palpable representation of the water's flow - Southward.</p>
+<h2>Considerations for Sun Positioning - Application of Colored Hill Shade</h2>
+<figure><img src="../images/Colored-Hillshade.webp" alt="Analysis of Topographic Data: DEM of Mt. Whitney, CA using SRTM Imagery, figure 3" width="855" height="676" loading="lazy" decoding="async"></figure>
+<p>Hill Shade models are created for consideration of possible topographic changes due to the sun's positioning. The sun elevation angle is how high the sun is positioned in the sky. The sun azimuth angle describes which direction the sun is coming from - with North as 0° increasing clockwise to 360°. These two contrasting images of the same hill shade model illustrate the necessity in understanding the sun's impact on DEMs.</p>
+<p>The hill shade model on the left represents an elevation angle set to 90° and an azimuth angle set to 360°. With these parameters, the sun's setting is essentially on the horizon (the northern region). This is a plausible scenario for projecting the sun's impact on a remotely sensed image, given the sun's placement within a 90° incremental oscillation.</p>
+<p>The hill shade model on the right represents an elevation angle set to 10° and an azimuth angle set to 0°. These unrealistic parameters were set to emphasize the importance in comprehending practical scenarios for the sun's positioning. The image on the right is dark in color - no sun in sight. This makes sense, because the sun doesn't set in the North. </p>
+</div>
+</main>
+</body>
+</html>

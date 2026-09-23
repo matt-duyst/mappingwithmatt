@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S-Shaped Growth: Modeling the Natural System of a Flowered Area · Maps · Matt Duyst</title>
+<meta name="description" content="S-shaped growth of a flower population, with a disturbance">
+<meta name="theme-color" content="#0f0f10">
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="../maps.css" rel="stylesheet">
+</head>
+<body>
+<header class="site"><a href="/">Matt Duyst</a><a href="/maps/">Maps</a></header>
+<main class="post">
+<p class="eyebrow">UCLA coursework, 2014 to 2020</p>
+<h1>S-Shaped Growth: Modeling the Natural System of a Flowered Area</h1>
+<div class="prose">
+<h3>Flower Model - Intrinsic Growth vs. Actual Growth Rate</h3>
+<p>This model explores one of the six types of dynamic patterns: S-Shaped Growth graphing. S-Shaped graphs are crucial for describing patterns in natural systems. This project simulates the spread of flowers across a 1,000-acre landscape.</p>
+<figure><img src="../images/flower-model1.webp" alt="S-Shaped Growth: Modeling the Natural System of a Flowered Area, figure 1" width="446" height="284" loading="lazy" decoding="async"></figure>
+<p>There are two stocks in the model above: "Flowered Area" and "Empty Area." The initial value for the "Flowered Area" is 10 acres; the "Empty Area" is 990 acres. With 10 acres purely of flowers, there will be minimal limitations hindering their spread - the seeds will have open space to grow in all directions. The variable "Decay Rate" is set to 20% per year and is the product of the "Flowered Area" and rate of decay. The growth of the "Flowered Area" is dictated by the "Growth Rate" variable (a product of the Growth Rate and Flowered Area).</p>
+<p>If the model above only took the stated variables for simulation, the flowered area would expand by 80% per year. With no resource limitations, the model would assume an Intrinsic Growth Rate. To develop a more realistic model of the natural spread of flowers, an "Actual Growth Rate" variable will be introduced to the simulation. The "Actual Growth Rate" will be less than the Intrinsic Growth Rate of our first scenario - as the flowers spread across the landscape, the amount of "Empty Area" available will decrease and the flowers' possibility to germinate will be increasingly harder.</p>
+<figure><img src="../images/flower-model1-graph.webp" alt="S-Shaped Growth: Modeling the Natural System of a Flowered Area, figure 2" width="494" height="213" loading="lazy" decoding="async"></figure>
+<p>The graph above illustrates a remarkably quick spread of the "Flowered Area" within the first 10 years, but a dynamic equilibrium at 800 acres - not the full 1,000 acres available in the landscape. The "Flowered Area" starts with 10 acres, and within 6 years is covering 50 times its original breadth at a whopping 500 acres. This 6th year on the graph indicates the highest rate of growth in the "Flowered Area" as the growth exceeds the decay by the biggest margin. After this, the increasing trends starts to stabilize and eventually tapers off - an inverse of the first 6 years with a new decline in growth and increase in decay. Dynamic Equilibrium is met around the 12th year, 4/5th of the landscape completely covered in flowers. The flowers will never cover the entire landscape, because the "Decay Rate" is fixed at 20% throughout the simulation.</p>
+<h2>Introducing a Disturbance - The Implications of Equilibrium</h2>
+<figure><img src="../images/flower-disturbance.webp" alt="S-Shaped Growth: Modeling the Natural System of a Flowered Area, figure 3" width="695" height="474" loading="lazy" decoding="async"></figure>
+<figure><img src="../images/flower-disturbance-graph.webp" alt="S-Shaped Growth: Modeling the Natural System of a Flowered Area, figure 4" width="611" height="399" loading="lazy" decoding="async"></figure>
+<p>This model allows for a disturbance to remove 20% of the flowers. The "Disturbance" Converter is linked with a newly added "Disturbance Flow" that will enact on the 15th year of the simulation. The "Total Area" internal variable has been changed to a Stock in the model. The model was set for a duration of 20 years to indicate if equilibrium would be reached, but the added "Disturbance" only reduced the "Flowered Area" for the year it was enacted. The flowers gradually reached back to their apex of 800 acres 5 years after the "Disturbance" occurred.</p>
+</div>
+</main>
+</body>
+</html>

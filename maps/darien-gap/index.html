@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bridging the Darién Gap: A Cost-Distance Analysis of Yaviza to Chigorodo and Apartado · Maps · Matt Duyst</title>
+<meta name="description" content="Least-cost path through the Darién Gap, with a 3D view">
+<meta name="theme-color" content="#0f0f10">
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="../maps.css" rel="stylesheet">
+</head>
+<body>
+<header class="site"><a href="/">Matt Duyst</a><a href="/maps/">Maps</a></header>
+<main class="post">
+<p class="eyebrow">UCLA coursework, 2014 to 2020</p>
+<h1>Bridging the Darién Gap: A Cost-Distance Analysis of Yaviza to Chigorodo and Apartado</h1>
+<div class="prose">
+<h2>Abstract:</h2>
+<p>This study illustrates a cost-distance analysis potential to calculate the shortest (and most feasible cost affordability) from destination A to destination B. Or, in this case, an origin (Yaviza) to two countering destinations (Chigorodo and Apartado), also known as the Darién Gap in Colombia. 3 main variables were weighted when predicting the shortest path from Yaviza: total slope, amount of water present, and the flow accumulation of the present water in South America. Because these variables represent varying weights in influence — slope being weighted the highest in regard to the elevation gradient in South America — each constant was held at a different weight when calculating the path’s trajectory.</p>
+<h2>Methods:</h2>
+<p>The first map embodies the summation of this entire process: an illustration of the least cost path from an origin point (Yaviza) to two counter destination points (Chigorodo and Apartado), with consideration towards elevation terrain slope, bodies of water, and the flow accumulation of that water. The country’s border between Panama, as well as the most important road networks, are further accentuated in the map. A conglomerate of Digital Elevation Maps (4) were downloaded for the state of Colombia, and then combined into a single TIFF. A slope calculation was then run on the combined TIFF. To calculate the presence/influence of water in Colombia, a raster calculation was performed with a score of less than or equal to 0; this ultimately highlighted what was water (a score of 1) and what wasn’t water (a score of 0). The slope was then reclassified between two values — ‘Old’ (with a range of 0 to 60), and ‘New’ (with a range of 1 to 512). It is as follows below:</p>
+<figure><img src="../images/darien-reclass.webp" alt="Bridging the Darién Gap: A Cost-Distance Analysis of Yaviza to Chigorodo and Apartado, figure 1" width="789" height="360" loading="lazy" decoding="async"></figure>
+<p>With this reclassification, a raster calculation was again undergone. This time, considerations for both the presence of water and the terrain slope elevation were made. The reclassified terrain slope was added to the water calculation and multiplied by a value of 128. It was decided that the flow accumulation of water was another significant value to be analyzed when deciding the least cost-effective path between the origin and two destinations. The 'Spatial Fill' button was used to find the amount of accumulated water. The direction of water was realized, and further used to calculate the total accumulation of water in Colombia. The direction of water was divided into two classes - the first being of values between 0 and 536,711, and the second being values between 536,711 and 1,631,109. The final value was found using the following raster calculation: <strong>Con(“Flow_Accumulation” &gt;= 536,711, 1, 0)</strong>.</p>
+<p>The origin and destination points were found using an online data source (click2shp). This allowed for the cost distance between points to be made. Calculating this cost distance made finding the quickest cost path from Yaviza to Chigorodo and Apartado possible - the final product shown in both maps. This process was done for Chigorodo and Apartado separately, and then combined into a single layer. The elevation gradient for the road paths between the two destination locations was achieved through the ‘Stack Profile’ operation in the 3D Analyst toolbox. Regions with higher slopes, a more noticeable presence of water, and greater flow accumulation, are more expensive to build roads than areas where these variables are of lower values.</p>
+<h2>Least-Cost Path Analysis: Crossing the Darién Gap</h2>
+<figure><img src="../images/darien-least-cost.webp" alt="Bridging the Darién Gap: A Cost-Distance Analysis of Yaviza to Chigorodo and Apartado, figure 2" width="1538" height="1322" loading="lazy" decoding="async"></figure>
+<p>The map above illustrates the most affordable method of building a road between Yaviza to Chigorodo and Apartado: where the slope is least, the presence of water is bare to minimum, and the total flow accumulation of water is marginable.</p>
+<h2>3D Rendering of Least-Cost Path</h2>
+<figure><img src="../images/3d-darien.webp" alt="Bridging the Darién Gap: A Cost-Distance Analysis of Yaviza to Chigorodo and Apartado, figure 3" width="1788" height="908" loading="lazy" decoding="async"></figure>
+<p>ArcScene was used for creating this map - a 2D visualization of the least cost path between the points (the static, reference map). Base Heights were altered to emphasize the presence of mountains (slope) in Colombia, as well as the bodies of water and the least-cost path. The total elevation was changed to a value of 3, and the layers were offset to a degree of 50. Lighting was heightened through the ‘3D Effects’ feature, accentuating the presence of our variables of interest.</p>
+</div>
+</main>
+</body>
+</html>

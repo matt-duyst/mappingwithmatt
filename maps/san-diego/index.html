@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Site Suitability Analysis: San Diego Elevation Mappings for a Summer Campground · Maps · Matt Duyst</title>
+<meta name="description" content="Campground site suitability in the Laguna and Cuyamaca Mountains">
+<meta name="theme-color" content="#0f0f10">
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="../maps.css" rel="stylesheet">
+</head>
+<body>
+<header class="site"><a href="/">Matt Duyst</a><a href="/maps/">Maps</a></header>
+<main class="post">
+<p class="eyebrow">UCLA coursework, 2014 to 2020</p>
+<h1>Site Suitability Analysis: San Diego Elevation Mappings for a Summer Campground</h1>
+<div class="prose">
+<h2>Abstract:</h2>
+<p>This project delves into the complexities of site suitability analyses, through the acquisition of a DEM (10m resolution) and ground cover vegetation for the highest mountain range in Eastern San Diego County - Laguna and Cuyamaca Mountains. Several rasters were used to systematically identify the most optimal camping locations, and then reclassified using map algebra tools to meet the requested requirements for campsite locations (listed below). The process of selecting a campground site was facilitated through the development of a terrain-based scoring index (out of 10 points), wherein locations receiving higher scores are better suited for use as development areas of campgrounds.</p>
+<p>Improvements on the produced maps could be made on representation of the legend - the resolution of the export process compromises the understanding of elevation in the first map. The legend for the second map (San Diego Camping Locations) only needs to include a single symbol representing all camping locations that meet the required parameters.</p>
+<h2>Methods:</h2>
+<p>The parameters set for requested campsite locations were:</p>
+<ul>
+<li>An elevation equal or greater than 4,000 feet above sea level to ensure summer temperatures will be cool enough for comfortable camping.</li>
+<li>Within two miles of an existing road.</li>
+<li>Vegetation cover with one of the following classifications: Coniferous Forest, Oak Woodlands, or Mixed Forests.</li>
+</ul>
+<p>Rasters were reclassified using the following point values:</p>
+<figure><img src="../images/terrain-elevation.webp" alt="Site Suitability Analysis: San Diego Elevation Mappings for a Summer Campground, figure 1" width="755" height="197" loading="lazy" decoding="async"></figure>
+<figure><img src="../images/terrain-slope.webp" alt="Site Suitability Analysis: San Diego Elevation Mappings for a Summer Campground, figure 2" width="755" height="169" loading="lazy" decoding="async"></figure>
+<h2>Results:</h2>
+<figure><img src="../images/san-diego-dem.webp" alt="Site Suitability Analysis: San Diego Elevation Mappings for a Summer Campground, figure 3" width="1054" height="800" loading="lazy" decoding="async"></figure>
+<figure><img src="../images/camping-locations.webp" alt="Site Suitability Analysis: San Diego Elevation Mappings for a Summer Campground, figure 4" width="976" height="800" loading="lazy" decoding="async"></figure>
+</div>
+</main>
+</body>
+</html>

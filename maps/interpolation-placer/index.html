@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Precipitation Calculations of Ski Resorts in Placer County, CA · Maps · Matt Duyst</title>
+<meta name="description" content="Kriged precipitation and a least-cost path, Placer County">
+<meta name="theme-color" content="#0f0f10">
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="../maps.css" rel="stylesheet">
+</head>
+<body>
+<header class="site"><a href="/">Matt Duyst</a><a href="/maps/">Maps</a></header>
+<main class="post">
+<p class="eyebrow">UCLA coursework, 2014 to 2020</p>
+<h1>Precipitation Calculations of Ski Resorts in Placer County, CA</h1>
+<div class="prose">
+<h2>Abstract:</h2>
+<p>This project capitalizes on two core concepts - Interpolation (Kriging) and the multi-layered process of building a least-cost path. The study of interest is Placer County (North Shore Lake Tahoe), known for its popularity as a snowboarding/ski resort. Precipitation patterns in the months of January and August - typically California's coldest and hottest months - are cross-referenced with the distance traveled among Tahoe's most common ski resorts: Homewood, Alpine, Squaw, and NorthStar. Tahoma Meadows, another ski resort, was chosen as the origin for the path analysis portion of the study.</p>
+<h2>Methods:</h2>
+<p>The first two maps illustrating the precipitation values in Placer County showcase the effectiveness of Kriging interpolation for the months of January and August. Data for precipitation values were garnered through NOAA, and then added as XY data points in ArcMap.</p>
+<p>The three-dimensional rendering of the path analysis between ski resorts in Placer County, demonstrates the most affordable path from an origin location (Tahoma Meadows), to four counter destination locations (the 4 listed ski resorts).</p>
+<p>Considerations towards the added precipitation factor (the mean of both months divided by 2), slope, and bodies of water were accounted for. A total of 4 Digital Elevation Models were downloaded for the county of Placer and combined into a single TIFF. A calculation for slope interference was then performed. Slope was reclassified between two values (old and new), with ranges between 0 - 60 and 1 - 512 accordingly. The effect of water was  highlighted through a raster calculation — set with a score less than or equal to 1. Water was present in areas that assessed a score of '1' and absent in places receiving a score of '0.' Another raster classification was performed, this time incorporating the newly added presence of water and slope. The original slope was added to the total amount of water and then multiplied by 128.</p>
+<p>The ski resort locations were downloaded through the website ‘Click2shp.’ After calculating the cost distance between the locations, the quickest path between each resort was realized. Tahoma Meadows was chosen as the origin due to its placement with Homewood - the shortest distance between any ski resort in Placer County. This process was repeated three more times (for the remaining three ski resorts). The three-dimensional representation of this final product was performed in ArcScene. Adding an elevation gradient and altering the map's Base Heights minimized the impact of Lake Tahoe and prioritized the path as the map's main focus. Accentuation of detail was produced by setting the total elevation to 5, offsetting each layer by 50°, and adding lighting for visible contrast.</p>
+<h2>Results:</h2>
+<p><strong>Precipitation Values: Placer County, CA</strong></p>
+<figure><img src="../images/January-Interpolation.webp" alt="Precipitation Calculations of Ski Resorts in Placer County, CA, figure 1" width="1626" height="1324" loading="lazy" decoding="async"></figure>
+<figure><img src="../images/August-Interpolation.webp" alt="Precipitation Calculations of Ski Resorts in Placer County, CA, figure 2" width="1620" height="1334" loading="lazy" decoding="async"></figure>
+<p><strong>3D Rendering of Path Analysis to Ski Resorts</strong></p>
+<figure><img src="../images/3d-Placer.webp" alt="Precipitation Calculations of Ski Resorts in Placer County, CA, figure 3" width="1192" height="712" loading="lazy" decoding="async"></figure>
+</div>
+</main>
+</body>
+</html>
