@@ -9,6 +9,12 @@ Single static page (`index.html`) with an interactive roadmap built on MapLibre 
 2. Settings, Pages: deploy from `main`, root.
 3. Keep `CNAME` (mappingwithmatt.com) and point the domain's DNS at GitHub Pages.
 
+## Local preview
+```
+python3 -m http.server 8000
+```
+Then open http://localhost:8000.
+
 ## Contact form
 `#composer-form` opens the visitor's mail app. To send from the page, point the form at a Formspree (or similar) endpoint and remove the mailto handler in the script.
 

@@ -7,7 +7,7 @@
 <meta name="description" content="Environmental data scientist and machine learning engineer">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/6.10.0/maplibre-gl.min.css" rel="stylesheet">
+<link href="vendor/maplibre-gl-6.10.0/maplibre-gl.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -978,7 +978,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 })();
 </script>
 <script type="module">
-import * as maplibregl from "https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/6.10.0/maplibre-gl.mjs";
+import * as maplibregl from "./vendor/maplibre-gl-6.10.0/maplibre-gl.mjs";
 (function () {
   var STOPS = [{"k": "visalia", "name": "Visalia", "short": "Visalia", "yr": "origin", "years": "Hometown", "lon": -119.2921, "lat": 36.3302, "zoom": 9.2}, {"k": "ucla", "name": "Los Angeles", "short": "UCLA", "yr": "2014", "years": "2014 to 2018", "lon": -118.4452, "lat": 34.0689, "zoom": 11.5}, {"k": "cydcor", "name": "Los Angeles", "short": "Cydcor", "yr": "2019", "years": "2019 to 2020", "lon": -118.7627, "lat": 34.1566, "zoom": 10.5}, {"k": "yale", "name": "New Haven", "short": "Yale", "yr": "2021", "years": "2021 to 2023", "lon": -72.9223, "lat": 41.3163, "zoom": 11.5}, {"k": "umn", "name": "Marcell Experimental Forest", "short": "Minnesota", "yr": "2022", "years": "Summer 2022", "lon": -93.4893, "lat": 47.5051, "zoom": 10.5}, {"k": "seekops", "name": "Austin", "short": "SeekOps", "yr": "2024", "years": "2024", "lon": -97.7431, "lat": 30.2672, "zoom": 10.5}, {"k": "grc", "name": "San Antonio", "short": "Grassroots", "yr": "2025", "years": "2025 to present", "lon": -98.4936, "lat": 29.4241, "zoom": 9.6}];
   var SITES = [{"label": "Mendocino Complex, 2018", "from_": 1, "lon": -122.9, "lat": 39.3}, {"label": "West Campus solar array, 2022", "from_": 3, "lon": -72.98, "lat": 41.26}, {"label": "Yangtze River Delta, 2023", "from_": 3, "lon": 120.5, "lat": 31.2}, {"label": "Marcell peatland tower, 2022", "from_": 4, "lon": -93.4893, "lat": 47.5051}, {"label": "Bakken flare sites, 2024", "from_": 5, "lon": -102.8, "lat": 47.9}, {"label": "Permian flare sites, 2024", "from_": 5, "lon": -102.4, "lat": 31.9}, {"label": "US rangeland, 2025 to present", "from_": 6, "lon": -99.5, "lat": 31.6}];
