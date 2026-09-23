@@ -18,6 +18,8 @@ body {
 a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--line); transition: border-color .2s ease; }
 a:hover, a:focus-visible { border-bottom-color: var(--text); }
 :focus-visible { outline: 1px solid var(--text); outline-offset: 3px; }
+.prose a, .note a, .lede a { border-bottom: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); transition: text-decoration-color .2s ease; }
+.prose a:hover, .note a:hover, .lede a:hover { text-decoration-color: currentColor; }
 
 header.site { display: flex; gap: 20px; align-items: baseline; max-width: 1100px; margin: 0 auto; padding: 24px 0 20px; border-bottom: 1px solid var(--line); }
 header.site a { border-bottom: 0; color: var(--muted); }
