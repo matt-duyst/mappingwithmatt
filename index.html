@@ -383,6 +383,8 @@ p { margin: 0 0 16px; }
 .cta:hover, .cta[aria-expanded="true"] { border-color: rgba(255,255,255,0.35); }
 .cta:active { transform: scale(0.97) !important; }
 .cta.pressed { animation: press 380ms cubic-bezier(.34, 1.56, .64, 1); }
+.cta.sent .cta-fill { height: 0 !important; transition-duration: 900ms; }
+.cta.sent .cta-label { color: var(--text) !important; }
 @keyframes press { 40% { transform: scale(1.06); } }
 .pill-fill { position: absolute; left: 0; top: calc(50% + 28px); z-index: 2; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.02em; color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; cursor: pointer; transition: border-color .2s ease, transform .2s cubic-bezier(.65, 0, .35, 1); }
 .pill-fill:hover { border-color: rgba(255,255,255,0.35); transform: translateY(-1px); }
@@ -501,7 +503,9 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           </div>
         </div>
         
-        <form class="composer-form" id="composer-form" hidden novalidate>
+        <form class="composer-form" id="composer-form" action="https://formspree.io/f/mljdnobg" method="POST" hidden novalidate>
+          <input type="hidden" name="_subject" value="mappingwithmatt.com: new note">
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
           <div class="composer-fields">
             <input type="text" name="name" placeholder="Name" autocomplete="name" required>
             <input type="email" name="email" placeholder="Email" autocomplete="email" required>
@@ -947,8 +951,15 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       var f = new FormData(cformEl), name = (f.get('name') || '').toString().trim(), email = (f.get('email') || '').toString().trim(), msg = (f.get('message') || '').toString().trim();
       var note = document.getElementById('composer-note');
       if (!name || !email || !msg) { note.textContent = 'Name, email, and a note are all needed.'; return; }
-      window.location.href = 'mailto:matthew.duyst@gmail.com?subject=' + encodeURIComponent('mappingwithmatt.com: note from ' + name) + '&body=' + encodeURIComponent(msg + '\n\n' + name + '\n' + email);
-      note.textContent = 'Composing in your mail app.';
+      var btn = cformEl.querySelector('button[type="submit"]'), label = cta.querySelector('.cta-label');
+      var failed = function () { btn.disabled = false; note.textContent = "That didn't send. Email me directly at matthew.duyst@gmail.com."; };
+      btn.disabled = true; note.textContent = 'Sending';
+      fetch(cformEl.action, { method: 'POST', body: new FormData(cformEl), headers: { Accept: 'application/json' } }).then(function (res) {
+        if (!res.ok) { failed(); return; }
+        cformEl.reset(); cformEl.hidden = true; cta.setAttribute('aria-expanded', 'false');
+        label.textContent = 'sent!'; cta.classList.add('sent');
+        setTimeout(function () { label.textContent = "let's chat!"; cta.classList.remove('sent'); }, 2600);
+      }, failed);
     });
     if (window.matchMedia('(hover: hover)').matches && !reduce) {
       var mx = 0, my = 0, cx0 = 0, cy0 = 0, raf = null, inside = false, MAX = 18, PAD = 24;
