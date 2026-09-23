@@ -1,8 +1,6 @@
 # mappingwithmatt.com
 
-Personal site for Matt Duyst: environmental data scientist, machine learning.
-
-Single static page (`index.html`) with an interactive roadmap built on MapLibre GL JS 6.10.0 (ES module) over USGS National Map imagery (public domain), with EOX Sentinel-2 cloudless, an OpenFreeMap dark basemap and labels overlay, and AWS Terrain Tiles as switchable layers. Assets in `assets/`, the map engine vendored in `vendor/`.
+mappingwithmatt.com is the personal site of Matt Duyst, an environmental data scientist working at the intersection of remote sensing, field measurement, and carbon accounting. The site is one static page. Its centerpiece, "At a glance," is an interactive roadmap that follows the route from a citrus farm in California's Central Valley through UCLA, Yale, a summer at a peatland flux tower in Minnesota, drone-based methane work in Texas, and current work on rangeland soil carbon: each stop a card, each study site an arc, the whole route playable. The map runs on MapLibre GL JS over USGS National Map imagery, with Sentinel-2, an OpenFreeMap dark basemap, and AWS terrain as switchable layers, and it is built to the standards this repository documents: pinned and vendored dependencies, open and attributed data, keyboard and reduced-motion support, and content that traces to the public record.
 
 ## Deploy
 1. Push to the `main` branch of a public repo.
