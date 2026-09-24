@@ -101,10 +101,9 @@ section, footer { position: relative; z-index: 2; }
 #rail a span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.03em; opacity: 0; transform: translateX(6px); transition: opacity 200ms ease, transform 200ms cubic-bezier(.65, 0, .35, 1); white-space: nowrap; }
 #rail a i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--muted); background: transparent; box-sizing: border-box; transition: background 200ms ease, border-color 200ms ease, transform 200ms ease; }
 #rail a + a::before { content: ""; position: absolute; right: 3px; top: -9px; height: 18px; border-left: 1px dashed var(--line); }
-#rail a:hover span, #rail a.active span { opacity: 1; transform: none; color: var(--text); }
+#rail a:hover span, #rail a:focus-visible span { opacity: 1; transform: none; color: var(--text); }
 #rail a.active i { background: var(--text); border-color: var(--text); transform: scale(1.25); }
 #rail a:hover i { border-color: var(--text); }
-#rail:has(a.active[data-sec="map"]) a:not(:hover) span { opacity: 0; transform: translateX(6px); }
 #rail .rail-top { margin-top: 6px; }
 #rail .rail-top i { border-radius: 2px; }
 @media (max-width: 900px) { #rail { display: none; } }
@@ -247,11 +246,12 @@ p { margin: 0 0 16px; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
 
 /* Roles */
-.roles-grid { display: grid; grid-template-columns: 1fr; gap: 10px; font-family: var(--font-mono); font-size: 12px; }
-.roles-grid .role { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,0.03); line-height: 1.5; }
-.roles-grid .role strong { font-weight: 500; color: var(--text); }
-.roles-grid .role a { color: var(--link); }
-.roles-grid .aff-yr { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+.roles-grid { display: grid; grid-template-columns: 1fr; gap: 0; font-family: var(--font-mono); font-size: 12px; }
+.roles-grid .role { padding: 10px 0; line-height: 1.5; }
+.roles-grid .role + .role { border-top: 1px solid var(--line); }
+.roles-grid .role strong { display: block; font-weight: 500; color: var(--text); }
+.roles-grid .role-meta { display: block; color: var(--muted); }
+.roles-grid .role a { color: var(--muted); }
 
 /* Roadmap app (MapLibre) */
 .roadmap .inner { margin-bottom: 18px; }
@@ -339,6 +339,7 @@ p { margin: 0 0 16px; }
 .band { position: relative; margin: 8px 0 0; }
 .band-track { position: relative; height: 172px; border-bottom: 1px solid var(--line); }
 .hero .band-links { position: absolute; left: 0; bottom: calc(50% + 12px); z-index: 2; display: flex; flex-wrap: nowrap; gap: 8px; width: auto; margin: 0; }
+@media (min-width: 1000px) { .hero .band-links { width: 66%; justify-content: space-between; } }
 .hero .band-links a, .hero .band-links .docs-wrap > a { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; transition: border-color .15s ease, background .15s ease, transform .2s cubic-bezier(.34,1.56,.64,1); }
 .hero .band-links a:hover { color: var(--text); border-color: var(--text); background: var(--accent-soft); transform: translateY(-1px); }
 .hero .band-links a:active { transform: scale(0.97); }
@@ -350,8 +351,8 @@ p { margin: 0 0 16px; }
 .docs-menu a:hover, .docs-menu button:hover { background: var(--accent-soft); }
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .docs-menu { background: rgba(250,250,247,0.94); } }
 .band-line { position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--line); }
-.band-cta { position: absolute; right: 4%; top: 50%; transform: translateY(-50%); padding: 24px; margin: -24px; }
-.band-arrow { position: absolute; right: calc(100% - 14px); top: -2px; width: 18px; height: 18px; color: var(--muted); }
+.band-cta { position: absolute; right: 4%; top: 50%; transform: translateY(-50%); padding: 24px; margin: -24px; --cta-r: 85px; }
+.band-arrow { position: absolute; left: calc(24px + var(--cta-r) - (var(--cta-r) + 10px) * 0.7071 - 12.75px); top: calc(24px + var(--cta-r) - (var(--cta-r) + 10px) * 0.7071 - 12.75px); width: 18px; height: 18px; color: var(--muted); }
 .band-arrow svg { width: 100%; height: 100%; }
 .cta { position: relative; width: 170px; height: 170px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; font-size: 15px; font-weight: 500; cursor: pointer; overflow: hidden; display: grid; place-items: center; will-change: transform; transition: border-color .2s ease; }
 .cta-label { position: relative; z-index: 2; transition: color .3s ease; }
@@ -390,7 +391,7 @@ p { margin: 0 0 16px; }
 @media (max-width: 600px) { .composer-fields { grid-template-columns: 1fr; } .hero .band-links { width: calc(100% - 132px); max-width: none; justify-content: flex-start; gap: 2px 12px; bottom: calc(50% + 9px); flex-wrap: wrap; }
   .hero .band-links a, .hero .band-links .docs-wrap > a { font-size: 9.5px; letter-spacing: -0.02em; padding: 4px 0; gap: 3px; border: 0; border-radius: 0; border-bottom: 1px solid transparent; }
   .hero .band-links a:hover, .hero .band-links a:active { background: transparent; border-color: transparent; border-bottom-color: var(--text); transform: none; }
-  .hero .band-links a span { white-space: nowrap; } .hero .band-links .more { display: none; } .hero .band-links svg { width: 11px; height: 11px; } .band-track { height: 128px; } .cta { width: 102px; height: 102px; font-size: 12.5px; } .band-cta { right: 0; margin-right: 0; padding-right: 0; } .band-wrap { margin-bottom: 0; } .pill-fill { top: calc(50% + 23px); padding: 7px 12px; font-size: 10.5px; } .hero .row > div:first-child { order: 1; } }
+  .hero .band-links a span { white-space: nowrap; } .hero .band-links .more { display: none; } .hero .band-links svg { width: 11px; height: 11px; } .band-track { height: 128px; } .cta { width: 102px; height: 102px; font-size: 12.5px; } .band-cta { right: 0; margin-right: 0; padding-right: 0; --cta-r: 51px; } .band-wrap { margin-bottom: 0; } .pill-fill { top: calc(50% + 23px); padding: 7px 12px; font-size: 10.5px; } .hero .row > div:first-child { order: 1; } }
 @media (prefers-reduced-motion: reduce) { .composer-form { animation: none; } .cta, .cta-fill, .pill-blob { transition: none; } }
 footer.site { padding: 36px var(--pad); text-align: center; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
 footer.site .loc { display: inline-flex; align-items: center; gap: 5px; }
@@ -457,7 +458,9 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
         <p class="bio">
           I'm an environmental data scientist at <a href="https://www.grassrootscarbon.com/">Grassroots Carbon</a>, where I build the data systems and models that turn satellite imagery, soil samples, and climate records into the biomass and soil carbon estimates behind verified carbon credits.
           <br><br>
-          Before that I was at <a href="https://seekops.com/">SeekOps</a>, a NASA JPL spin-off, measuring methane from drones: I led a study of flare combustion efficiency across the Bakken and Permian basins and published it at SPE ATCE 2024. I hold a Master of Environmental Science from Yale in machine learning, remote sensing, and spatial statistics, fully funded as a Merit Research Scholar and Hixon Center Fellow, with a summer at the University of Minnesota's Marcell Experimental Forest forecasting methane from a peatland flux tower, and an <a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Honorable Mention at the 2022 Global Stocktake Climate Datathon</a> ahead of COP 27. My BA is from UCLA, in Geography and Environmental Studies with minors in GIS and English.
+          Before that I was at <a href="https://seekops.com/">SeekOps</a>, a NASA JPL spin-off, measuring methane from drones: I led a study of flare combustion efficiency across the Bakken and Permian basins and published it at SPE ATCE 2024.
+          <br><br>
+          I hold a Master of Environmental Science from Yale in machine learning, remote sensing, and spatial statistics, fully funded as a Merit Research Scholar and Hixon Center Fellow, with a summer at the University of Minnesota's Marcell Experimental Forest forecasting methane from a peatland flux tower, and an <a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Honorable Mention at the 2022 Global Stocktake Climate Datathon</a> ahead of COP 27. My BA is from UCLA, in Geography and Environmental Studies with minors in GIS and English.
           <br><br>
           I grew up on a small citrus farm near Sequoia National Park, where land, climate, and livelihood were never abstract.
         </p>
@@ -468,12 +471,12 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       <div class="roles-col">
         <div class="eyebrow">Roles</div>
         <div class="roles-grid">
-          <div class="role"><strong>Environmental Data Scientist, Machine Learning</strong>, <a href="#rt-grc">Grassroots Carbon</a><span class="aff-yr">2025 to present</span></div>
-          <div class="role"><strong>Environmental Data Scientist</strong>, <a href="#rt-seekops">SeekOps</a><span class="aff-yr">2024</span></div>
-          <div class="role"><strong>MESc</strong>, <a href="#rt-yale">Yale School of the Environment</a><span class="aff-yr">2021 to 2023</span></div>
-          <div class="role"><strong>Visiting Research Scientist</strong>, <a href="#rt-umn">University of Minnesota</a><span class="aff-yr">2022</span></div>
-          <div class="role"><strong>Geospatial Analyst</strong>, <a href="#rt-cydcor">Cydcor</a><span class="aff-yr">2019 to 2020</span></div>
-          <div class="role"><strong>BA, Geography and Environmental Studies</strong>, <a href="#rt-ucla">UCLA</a><span class="aff-yr">2014 to 2018</span></div>
+          <div class="role"><strong>Environmental Data Scientist, Machine Learning</strong><span class="role-meta"><a href="#rt-grc">Grassroots Carbon</a> &middot; <span class="aff-yr">2025 to present</span></span></div>
+          <div class="role"><strong>Environmental Data Scientist</strong><span class="role-meta"><a href="#rt-seekops">SeekOps</a> &middot; <span class="aff-yr">2024</span></span></div>
+          <div class="role"><strong>MESc</strong><span class="role-meta"><a href="#rt-yale">Yale School of the Environment</a> &middot; <span class="aff-yr">2021 to 2023</span></span></div>
+          <div class="role"><strong>Visiting Research Scientist</strong><span class="role-meta"><a href="#rt-umn">University of Minnesota</a> &middot; <span class="aff-yr">2022</span></span></div>
+          <div class="role"><strong>Geospatial Analyst</strong><span class="role-meta"><a href="#rt-cydcor">Cydcor</a> &middot; <span class="aff-yr">2019 to 2020</span></span></div>
+          <div class="role"><strong>BA, Geography and Environmental Studies</strong><span class="role-meta"><a href="#rt-ucla">UCLA</a> &middot; <span class="aff-yr">2014 to 2018</span></span></div>
         </div>
       </div>
 
