@@ -26,13 +26,18 @@
 <nav class="pills" aria-label="Project links"><a href="https://github.com/matt-duyst/UAV-PV-Assessment">Code</a></nav>
 <section>
 <h2>The site</h2>
-<p>Yale University’s West Campus straddles two coastal Connecticut townships, Orange and West Haven. The property has belonged to the University since 2007, when it purchased 136 acres of land and research space from Bayer Pharmaceuticals for $109 million. In 2015, Yale purchased solar power from Solar City, which has since been acquired by Tesla in 2016, and installed 4,400 solar photovoltaic panels covering close to two acres of rooftop on a storage and receiving facility. The installation now generates 1.6 million kilowatt-hours of electricity annually, which is over 20% of West Campus’s total energy demand.</p>
+<p>Yale University’s West Campus straddles two coastal Connecticut townships, Orange and West Haven. In 2015, Yale purchased solar power from Solar City, which has since been acquired by Tesla in 2016, and installed 4,400 solar photovoltaic panels covering close to two acres of rooftop on a storage and receiving facility. The installation now generates 1.6 million kilowatt-hours of electricity annually, which is over 20% of West Campus’s total energy demand.</p>
 <figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/uav/study_area.webp" width="1583" height="2048" alt="Yale University’s West Campus PV building, the study area at four nested scales" decoding="async"></div><figcaption>This diagram depicts the study area and PV solar arrays within four scales.</figcaption></figure>
 </section>
 <section>
 <h2>The flight and the measurements</h2>
 <p>The flight mission was performed on Wednesday, November 3rd, 2021 around 12:00 PM. The ambient air temperature was about 12°C and the relative humidity was 38%. DJI GS PRO was used to set up the flight path over the West Campus Storage and Receiving Center. The flight height was 60 meters above sea level–30 meter above the building. The entire flight took around 20 minutes. There were 3,463 total images—of which 1,733 were RGB photos and 1,730 were thermal photos. Additionally, temperature and GPS measurements were taken at 12 solar panels (Figure 6).</p>
 <figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/uav/measurement_locations.webp" width="397" height="522" alt="Solar panel measurement locations" loading="lazy" decoding="async"></div><figcaption>Temperature and GPS measurements were taken at these 12 solar panels.</figcaption></figure>
+</section>
+<section>
+<h2>Workflow</h2>
+<p>The FTM theoretical workflow is depicted in Figure 7. The MATLAB algorithm in Yang &amp; Lee (2019) up-samples the coarser thermal image so that the original pixel becomes a 9x9 matrix of smaller pixels, each with the same Digital Number (DN) values. The RGB image is then converted to a 16-bit TIFF image for consistency. Because the RGB and thermal images now have the same dimensions and bit depth, a 4-band band stack is created. The result is a TIFF image with the red, green, blue, and thermal band overlayed respectively.</p>
+<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/uav/workflow.webp" width="1600" height="560" alt="Four-band thermal mosaicking workflow" loading="lazy" decoding="async"></div><figcaption>Four-band Thermal Mosaicking Workflow.</figcaption></figure>
 </section>
 <section>
 <h2>The two mosaics</h2>
@@ -50,11 +55,6 @@
 <p>Yale’s West Campus solar energy output was provided by the university. Although there are 20 solar panel groups, the energy production is represented by 12 electrical meters. The energy output of the 12 solar arrays was quite consistent during the time of our flight mission–it ranged from about 14 kWh to 19 kWh (Figure 11). At the beginning of our flight (12:00PM), the skies were clear. By the end of our flight (12:15PM), there were several clouds overhead. This correlates well with the drop in energy production seen around this time (Figure 12).</p>
 <figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/uav/energy_readings.webp" width="751" height="452" alt="Solar energy readings during the flight, kWh" loading="lazy" decoding="async"></div><figcaption>The solar energy production from each of the 12 solar arrays between 12:00 PM and 12:15 PM is displayed.</figcaption></figure>
 <figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/uav/energy_production.webp" width="1600" height="954" alt="Total solar energy production during the flight, kWh" loading="lazy" decoding="async"></div><figcaption>The 12 solar arrays and their energy production on November 3rd, 2021 is displayed.</figcaption></figure>
-</section>
-<section>
-<h2>Workflow</h2>
-<p>The FTM theoretical workflow is depicted in Figure 7. The MATLAB algorithm in Yang &amp; Lee (2019) up-samples the coarser thermal image so that the original pixel becomes a 9x9 matrix of smaller pixels, each with the same Digital Number (DN) values. The RGB image is then converted to a 16-bit TIFF image for consistency. Because the RGB and thermal images now have the same dimensions and bit depth, a 4-band band stack is created. The result is a TIFF image with the red, green, blue, and thermal band overlayed respectively.</p>
-<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/uav/workflow.webp" width="1600" height="560" alt="Four-band thermal mosaicking workflow" loading="lazy" decoding="async"></div><figcaption>Four-band Thermal Mosaicking Workflow.</figcaption></figure>
 </section>
 </main>
 <footer class="site"><span class="loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Austin, TX</span> &middot; &copy; 2026 Matt Duyst &middot; <a href="https://github.com/matt-duyst/mappingwithmatt">Source on GitHub</a> &middot; <a href="/maps/">Maps archive</a> &middot; <a href="#">Top</a></footer>
