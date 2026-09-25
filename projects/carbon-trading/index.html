@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS · Matt Duyst</title>
+<meta name="description" content="Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS: a tool built for the 2022 Global Stocktake Climate Datathon">
+<meta name="theme-color" content="#0f0f10">
+<meta property="og:title" content="Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS">
+<meta property="og:description" content="Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS: a tool built for the 2022 Global Stocktake Climate Datathon">
+<meta property="og:image" content="https://mappingwithmatt.com/assets/video/carbon-trading.jpg">
+<meta property="og:url" content="https://mappingwithmatt.com/projects/carbon-trading/">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<link href="../../maps/maps.css" rel="stylesheet">
+<link href="../projects.css" rel="stylesheet">
+</head>
+<body>
+<header class="site"><a href="/">Matt Duyst</a><a href="/#work">Projects</a></header>
+<main class="project">
+<p class="eyebrow">Global Stocktake Climate Datathon, 2022</p>
+<h1>Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS</h1>
+<p class="lede">The EU Emissions Trading System caps the carbon that industry may emit and lets the allowances trade. This tool was built for the 2022 Global Stocktake Climate Datathon to make one lever of that system readable: how fast the freely allocated allowances are cut each year. Pick a country and a sector, set the annual reduction, and it draws historical emissions beside the emissions projected to 2030 under that cut, with the allowances behind each year on hover. It earned an Honorable Mention ahead of COP 27.</p>
+<nav class="pills" aria-label="Project links"><a href="https://github.com/matt-duyst/Carbon-Trading">Code</a><a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Datathon</a></nav>
+<figure class="pfig pvid"><div class="plate-frame"><video width="1440" height="900" muted loop playsinline preload="none" poster="../../assets/video/carbon-trading.jpg" aria-label="A recording of the tool: Germany and paper or cardboard are chosen, the annual reduction is raised from 5 to 10 percent and the projection falls, and a projected bar is hovered to show its emissions and allowances"><source src="../../assets/video/carbon-trading.webm" type="video/webm"><source src="../../assets/video/carbon-trading.mp4" type="video/mp4"></video><button type="button" class="vid-toggle" hidden>Pause</button></div><figcaption>The tool in use: Germany, paper and cardboard, historical emissions and the projection to 2030 under a 5 percent annual cut in free allowances.</figcaption></figure>
+<section>
+<h2>A pathway</h2>
+<p>Each bar is one year's emissions: historical in red, projected in blue.</p>
+<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/carbon-trading/allowance_pathway.webp" width="1600" height="415" alt="Annual emissions for German paper and cardboard, historical in red from 2005 to 2021 and projected in blue from 2022 to 2030" loading="lazy" decoding="async"></div><figcaption>Historical and projected emissions for German paper and cardboard.</figcaption></figure>
+</section>
+</main>
+<footer class="site"><span class="loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Austin, TX</span> &middot; &copy; 2026 Matt Duyst &middot; <a href="https://github.com/matt-duyst/mappingwithmatt">Source on GitHub</a> &middot; <a href="/maps/">Maps archive</a> &middot; <a href="#">Top</a></footer>
+<script>
+(function () {
+  var v = document.querySelector('.pvid video'), b = document.querySelector('.pvid .vid-toggle');
+  if (!v || !b) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches, userPaused = reduce, inView = false;
+  function sync() { b.textContent = v.paused ? 'Play' : 'Pause'; }
+  function update() { if (inView && !userPaused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } else if (!v.paused) v.pause(); }
+  v.addEventListener('play', sync); v.addEventListener('pause', sync);
+  b.addEventListener('click', function () { userPaused = !v.paused; if (userPaused) v.pause(); else { var p = v.play(); if (p && p.catch) p.catch(function () {}); } });
+  b.hidden = false; sync();
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; update(); }, { threshold: 0.25 }).observe(v);
+})();
+</script>
+</body>
+</html>

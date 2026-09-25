@@ -11,3 +11,7 @@ main.project section { margin-top: 44px; }
 .pfig img { display: block; width: 100%; height: auto; border: 0; background: transparent; }
 .pfig figcaption { margin-top: 8px; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.45; color: var(--muted); }
 @media (prefers-reduced-motion: reduce) { .pills a { transition: none; } }
+.pvid .plate-frame { position: relative; }
+.pvid video { display: block; width: 100%; height: auto; }
+.vid-toggle { position: absolute; right: 20px; bottom: 20px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); background: rgba(15,15,16,.85); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; cursor: pointer; }
+.vid-toggle:hover, .vid-toggle:focus-visible { border-color: var(--text); }
