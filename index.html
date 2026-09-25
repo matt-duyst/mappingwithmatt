@@ -998,10 +998,20 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   if (dock && introEl && 'IntersectionObserver' in window) {
     new IntersectionObserver(function (es) { dock.classList.toggle('show', !es[0].isIntersecting); }, { threshold: 0.05 }).observe(introEl);
     var secs = ['top', 'map', 'work', 'experience', 'research', 'code'].map(function (id) { return document.getElementById(id); }).filter(Boolean);
-    var links = dock.querySelectorAll('a');
-    new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { links.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id); }); } });
-    }, { rootMargin: '-40% 0px -55% 0px' }).observe && secs.forEach(function (sec) { new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) links.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id); }); }); }, { rootMargin: '-40% 0px -55% 0px' }).observe(sec); });
+    var links = dock.querySelectorAll('a'), railRaf = null;
+    // The section whose top has passed the band 40 to 45 percent down the viewport is current; the last section
+    // also becomes current once its top is in view or the page is at the bottom, since it is too short to reach the band
+    function railUpdate() {
+      railRaf = null;
+      var vh = window.innerHeight, cur = null, last = secs[secs.length - 1];
+      secs.forEach(function (sec) { if (sec.getBoundingClientRect().top <= vh * 0.45) cur = sec; });
+      if (last && (last.getBoundingClientRect().top < vh || window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2)) cur = last;
+      links.forEach(function (a) { a.classList.toggle('active', !!cur && a.getAttribute('href') === '#' + cur.id); });
+    }
+    function railQueue() { if (!railRaf) railRaf = requestAnimationFrame(railUpdate); }
+    window.addEventListener('scroll', railQueue, { passive: true });
+    window.addEventListener('resize', railQueue);
+    railUpdate();
   }
   // Section entrances: eyebrow, headline, then body rise in on the intro's curve
   document.querySelectorAll('section:not(.intro) .inner').forEach(function (inner) {
