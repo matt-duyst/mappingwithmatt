@@ -269,6 +269,12 @@ p { margin: 0 0 16px; }
 .strip-dots button::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--line); transition: background 200ms ease, transform 200ms ease; }
 .strip-dots button[aria-current="true"]::before { background: var(--text); transform: scale(1.2); }
 .strip-dots button:hover::before { background: var(--muted); }
+.strip-progress { margin-top: 16px; }
+.strip-pos { font-family: var(--font-mono); font-size: 11px; line-height: 1.45; letter-spacing: 0.03em; color: var(--muted); margin-bottom: 2px; font-variant-numeric: tabular-nums; }
+.strip-track { position: relative; height: 18px; cursor: pointer; touch-action: none; }
+.strip-track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--line); }
+.strip-fill { position: absolute; left: 0; top: calc(50% - 1px); height: 3px; width: 10%; border-radius: 2px; background: var(--text); transform-origin: 0 50%; }
+.strip-track:hover .strip-fill, .strip-track.scrubbing .strip-fill { background: var(--text); height: 5px; top: calc(50% - 2px); }
 @media (hover: none) { .strip-btn { display: none; } }
 @media (prefers-reduced-motion: reduce) { .strip-list { scroll-behavior: auto; } .plate figure, .plate-frame, .strip-btn, .strip-dots button::before { transition: none; } }
 .surface { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -852,7 +858,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
             <li class="plate"><a class="plate-link" href="/maps/digitizing/"><figure><div class="plate-frame" style="--ar: 4 / 3"><div class="plate-none">Source sheet not reproduced</div></div><div class="plate-cat">Digitizing</div><figcaption>Revitilization of a Sanborn Map: Digitizing Hollywood District</figcaption></figure></a></li>
           </ul>
           <button type="button" class="strip-btn strip-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-          <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 31" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 31"></button><button type="button" aria-label="Show figure 3 of 31"></button><button type="button" aria-label="Show figure 4 of 31"></button><button type="button" aria-label="Show figure 5 of 31"></button><button type="button" aria-label="Show figure 6 of 31"></button><button type="button" aria-label="Show figure 7 of 31"></button><button type="button" aria-label="Show figure 8 of 31"></button><button type="button" aria-label="Show figure 9 of 31"></button><button type="button" aria-label="Show figure 10 of 31"></button><button type="button" aria-label="Show figure 11 of 31"></button><button type="button" aria-label="Show figure 12 of 31"></button><button type="button" aria-label="Show figure 13 of 31"></button><button type="button" aria-label="Show figure 14 of 31"></button><button type="button" aria-label="Show figure 15 of 31"></button><button type="button" aria-label="Show figure 16 of 31"></button><button type="button" aria-label="Show figure 17 of 31"></button><button type="button" aria-label="Show figure 18 of 31"></button><button type="button" aria-label="Show figure 19 of 31"></button><button type="button" aria-label="Show figure 20 of 31"></button><button type="button" aria-label="Show figure 21 of 31"></button><button type="button" aria-label="Show figure 22 of 31"></button><button type="button" aria-label="Show figure 23 of 31"></button><button type="button" aria-label="Show figure 24 of 31"></button><button type="button" aria-label="Show figure 25 of 31"></button><button type="button" aria-label="Show figure 26 of 31"></button><button type="button" aria-label="Show figure 27 of 31"></button><button type="button" aria-label="Show figure 28 of 31"></button><button type="button" aria-label="Show figure 29 of 31"></button><button type="button" aria-label="Show figure 30 of 31"></button><button type="button" aria-label="Show figure 31 of 31"></button></div>
+          <div class="strip-progress"><div class="strip-pos">Remote Sensing &middot; 1 of 31</div><div class="strip-track" aria-hidden="true"><div class="strip-fill"></div></div></div>
         </div>
       </li>
     </ol>
@@ -1082,15 +1088,28 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     var list = strip.querySelector('.strip-list'), plates = Array.prototype.slice.call(list.children);
     if (plates.length < 2) return;
     var prev = strip.querySelector('.strip-prev'), next = strip.querySelector('.strip-next'), dots = Array.prototype.slice.call(strip.querySelectorAll('.strip-dots button'));
+    var pos = strip.querySelector('.strip-pos'), track = strip.querySelector('.strip-track'), fill = strip.querySelector('.strip-fill');
+    var cats = plates.map(function (p) { var c = p.querySelector('.plate-cat'); return c ? c.textContent.trim() : ''; });
+    for (var ci = 1; ci < cats.length; ci++) if (!cats[ci]) cats[ci] = cats[ci - 1];
     function stepW() { return plates[1].offsetLeft - plates[0].offsetLeft; }
     function index() { return Math.max(0, Math.min(plates.length - 1, Math.round(list.scrollLeft / stepW()))); }
     function go(i) { i = Math.max(0, Math.min(plates.length - 1, i)); list.scrollTo({ left: plates[i].offsetLeft - plates[0].offsetLeft, behavior: reduce ? 'auto' : 'smooth' }); }
     var raf = null;
-    function update() { raf = null; var max = list.scrollWidth - list.clientWidth, i = index(); prev.hidden = list.scrollLeft <= 2; next.hidden = list.scrollLeft >= max - 2; dots.forEach(function (d, j) { if (j === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current'); }); }
+    function update() { raf = null; var max = list.scrollWidth - list.clientWidth, i = index(); prev.hidden = list.scrollLeft <= 2; next.hidden = list.scrollLeft >= max - 2; dots.forEach(function (d, j) { if (j === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current'); });
+      if (fill) { var sw = list.scrollWidth || 1; fill.style.width = (100 * list.clientWidth / sw) + '%'; fill.style.left = (100 * list.scrollLeft / sw) + '%'; }
+      if (pos) { var k = list.scrollLeft >= max - 2 ? plates.length - 1 : i; pos.textContent = (cats[k] ? cats[k] + ' \u00b7 ' : '') + (k + 1) + ' of ' + plates.length; } }
     list.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
     prev.addEventListener('click', function () { go(index() - 1); });
     next.addEventListener('click', function () { go(index() + 1); });
     dots.forEach(function (d, j) { d.addEventListener('click', function () { go(j); }); });
+    if (track) {                                                         // scrub: the fill follows the pointer along the track
+      var scrub = null;
+      function scrubTo(x) { var r = track.getBoundingClientRect(), f = Math.max(0, Math.min(1, (x - r.left) / r.width)); list.scrollLeft = f * list.scrollWidth - list.clientWidth / 2; }
+      track.addEventListener('pointerdown', function (e) { if (e.button !== 0) return; e.preventDefault(); scrub = e.pointerId; try { track.setPointerCapture(e.pointerId); } catch (err) {} track.classList.add('scrubbing'); list.classList.add('dragging'); scrubTo(e.clientX); });
+      track.addEventListener('pointermove', function (e) { if (scrub === e.pointerId) scrubTo(e.clientX); });
+      function endScrub(e) { if (scrub !== e.pointerId) return; scrub = null; track.classList.remove('scrubbing'); list.classList.remove('dragging'); }
+      track.addEventListener('pointerup', endScrub); track.addEventListener('pointercancel', endScrub);
+    }
     list.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { e.preventDefault(); go(index() - 1); } else if (e.key === 'ArrowRight') { e.preventDefault(); go(index() + 1); } });
     var drag = null, glide = null;
     list.addEventListener('pointerdown', function (e) {
