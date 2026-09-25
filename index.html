@@ -89,10 +89,6 @@ section, footer { position: relative; z-index: 2; }
 .reveal.in { opacity: 1; transform: none; }
 .reveal.d1 { transition-delay: 60ms; } .reveal.d2 { transition-delay: 120ms; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
-.papers li { transition: transform 200ms cubic-bezier(.65, 0, .35, 1); }
-.papers li:hover { transform: translateY(-1px); }
-.papers .thumb { transition: filter 200ms ease; filter: brightness(0.85); }
-.papers li:hover .thumb { filter: brightness(1.05); }
 
 /* Rail: a vertical path of section markers on the right edge, visible once the intro scrolls away */
 #rail { position: fixed; right: clamp(14px, 2.4vw, 34px); top: 50%; transform: translate(12px, -50%); z-index: 40; display: flex; flex-direction: column; align-items: flex-end; gap: 0; opacity: 0; pointer-events: none; transition: opacity 420ms ease, transform 420ms cubic-bezier(.65, 0, .35, 1); }
@@ -222,25 +218,50 @@ p { margin: 0 0 16px; }
 
 /* Papers / work list */
 .papers ol { list-style: none; padding: 0; margin: 0; }
-.papers li { display: grid; grid-template-columns: 110px 1fr; gap: 22px; padding: 18px 0; border-top: 1px solid var(--line); align-items: start; }
-.papers li:last-child { border-bottom: 1px solid var(--line); }
-.papers .thumb { width: 110px; height: 78px; border-radius: 3px; background-size: cover; background-position: center; background-color: var(--surface); border: 1px solid var(--line); }
-.papers a.thumb { display: block; overflow: hidden; }
-.papers .thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .papers .title { font-weight: 600; font-size: 15.5px; line-height: 1.35; }
 .papers .authors { font-family: var(--font-mono); color: var(--body); font-size: 12.5px; margin: 4px 0 4px; line-height: 1.6; }
 .papers .venue { font-family: var(--font-mono); color: var(--muted); font-size: 12px; font-style: normal; }
 .papers .award { color: var(--link); font-style: normal; font-weight: 500; }
-.papers .links { font-size: 13px; margin-top: 8px; display: flex; gap: 14px; flex-wrap: wrap; }
-@media (max-width: 600px) { .papers li { grid-template-columns: 1fr; } .papers .thumb { width: 100%; height: 140px; } }
-.ph-peat { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
-.ph-yrd { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
-.ph-flare { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
-.ph-pv { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
-.ph-mend { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
-.ph-grc { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
-.ph-ets { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
-.ph-maps { background-image: linear-gradient(135deg, #1c1c1e, #3a3a3c); }
+.papers .links { font-family: var(--font-mono); font-size: 12.5px; margin-top: 10px; display: flex; gap: 14px; flex-wrap: wrap; }
+.papers .links a { border-bottom: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); }
+.papers .links a:hover { text-decoration-color: currentColor; }
+.papers .proj { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
+.papers .proj:last-child { border-bottom: 1px solid var(--line); }
+@media (min-width: 1200px) { .papers .proj { grid-template-columns: minmax(0, 4fr) minmax(0, 6fr); gap: 32px; } .papers .proj.no-figs { grid-template-columns: minmax(0, 1fr); } }
+.papers .proj-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.papers .proj-year { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.papers .proj-lines { font-family: var(--font-mono); font-size: 12px; color: var(--body); margin-top: 8px; display: grid; gap: 2px; }
+.papers .proj-lines .k { color: var(--muted); display: inline-block; min-width: 13ch; }
+.papers .proj-lines a { color: var(--link); border-bottom: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); }
+.papers .proj-none { font-family: var(--font-mono); font-size: 12px; color: var(--muted); margin-top: 10px; }
+.fig-strip { position: relative; min-width: 0; }
+.strip-list { list-style: none; margin: 0; padding: 0 0 4px; display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; }
+.strip-list::-webkit-scrollbar { display: none; }
+.strip-list:focus-visible { outline: 1px solid var(--text); outline-offset: 4px; }
+.strip-list.dragging { cursor: grabbing; scroll-snap-type: none; scroll-behavior: auto; user-select: none; }
+.fig-strip.single .strip-list { cursor: auto; overflow: visible; }
+.plate { flex: 0 0 calc(100% - 56px); min-width: 0; scroll-snap-align: start; }
+.fig-strip.single .plate { flex-basis: 100%; }
+.plate figure { margin: 0; transition: transform 200ms ease; }
+.plate-frame { border: 1px solid var(--line); padding: 12px; aspect-ratio: 16 / 10; background: rgba(255,255,255,0.02); transition: border-color 200ms ease; }
+.plate-frame img { display: block; width: 100%; height: 100%; object-fit: contain; -webkit-user-drag: none; }
+.plate:hover figure { transform: translateY(-2px); }
+.plate:hover .plate-frame { border-color: var(--muted); }
+.plate figcaption { margin-top: 8px; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.45; height: calc(2 * 1.45em); color: var(--muted); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+.strip-btn { position: absolute; top: calc(50% - 30px); z-index: 2; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); background: rgba(15,15,16,.85); color: var(--text); display: grid; place-items: center; padding: 0; cursor: pointer; opacity: 0; transition: opacity 200ms ease, border-color 200ms ease; }
+.strip-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.strip-prev { left: 8px; }
+.strip-next { right: 8px; }
+.fig-strip:hover .strip-btn, .strip-btn:focus-visible { opacity: 1; }
+.strip-btn:hover { border-color: var(--text); }
+.strip-btn[hidden] { display: none; }
+.strip-dots { display: flex; justify-content: center; gap: 0; margin-top: 6px; flex-wrap: wrap; }
+.strip-dots button { width: 24px; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+.strip-dots button::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--line); transition: background 200ms ease, transform 200ms ease; }
+.strip-dots button[aria-current="true"]::before { background: var(--text); transform: scale(1.2); }
+.strip-dots button:hover::before { background: var(--muted); }
+@media (hover: none) { .strip-btn { display: none; } }
+@media (prefers-reduced-motion: reduce) { .strip-list { scroll-behavior: auto; } .plate figure, .plate-frame, .strip-btn, .strip-dots button::before { transition: none; } }
 .surface { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 
 @keyframes draw { to { stroke-dashoffset: 0; } }
@@ -689,76 +710,112 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   <div class="inner">
     <div class="eyebrow">Selected projects</div>
     <h2>Projects. <span style="font-weight: 400; color: var(--muted); font-size: 14px;">Rebuilt repositories carry their 2026 findings; the rest carry the original result until their rebuild lands.</span></h2>
-    <ol>
-      <li>
-        <a class="thumb" href="https://github.com/matt-duyst/Peatland-Flux-Forecasting"><img src="assets/figures/peatland.webp" width="160" height="100" loading="lazy" decoding="async" alt="Observed and forecast monthly methane flux at Bog Lake Peatland, 2014 to 2021"></a>
-        <div>
-          <div class="title">Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland</div>
+    <ol class="proj-list">
+      <li class="proj">
+        <div class="proj-text">
+          <div class="proj-head"><div class="title">Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland</div><div class="proj-year">2022</div></div>
           <div class="authors">University of Minnesota, Griffis lab &middot; AmeriFlux US-MBP, 2009 to 2024</div>
-          <div class="venue">Visiting Research Scientist, 2022 &middot; <span class="award">Rebuilt 2026</span></div>
+          <div class="venue">Visiting Research Scientist, 2022</div>
+          <div class="proj-lines"><div><span class="k">Reproduction</span> Rebuilt 2026</div></div>
           <div class="links"><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting">code</a><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting/tree/main/notes">notes</a></div>
         </div>
-      </li>
-      <li>
-        <a class="thumb" href="https://github.com/matt-duyst/Yangtze-Landcover-Methane"><img src="assets/figures/yangtze.webp" width="160" height="100" loading="lazy" decoding="async" alt="Observed methane over the Yangtze River Delta beside the field a land-cover model produces"></a>
-        <div>
-          <div class="title">Urban expansion, paddy rice, and atmospheric methane over the Yangtze River Delta</div>
-          <div class="authors">Yale School of the Environment, Lee lab &middot; Landsat-derived land cover, Sentinel-5P TROPOMI</div>
-          <div class="venue">MESc thesis, 2023 &middot; <span class="award">Reproduced 2026, with errata</span></div>
-          <div class="links"><a href="https://github.com/matt-duyst/Yangtze-Landcover-Methane">code</a><a href="https://github.com/matt-duyst/Yangtze-Landcover-Methane/blob/main/ERRATA.md">errata</a></div>
+        <div class="fig-strip">
+          <button type="button" class="strip-btn strip-prev" aria-label="Previous figure" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <ul class="strip-list" role="list" aria-label="Figures: Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland" tabindex="0">
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/site_overview.webp" width="1600" height="1245" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="The flux tower and the wind directions it measures">The flux tower and the wind directions it measures</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/covariate_availability.webp" width="1600" height="1067" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Which months each measurement and each analysis cover">Which months each measurement and each analysis cover</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/seasonal_cycle.webp" width="1600" height="1322" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="The seasonal cycle in monthly flux">The seasonal cycle in monthly flux</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/forecast_error_by_horizon.webp" width="1600" height="1334" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Monthly methane and carbon dioxide forecast error">Monthly methane and carbon dioxide forecast error</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/observed_and_predicted.webp" width="1600" height="1334" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Observed and predicted monthly flux">Observed and predicted monthly flux</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/measurements_used_across_forecast_horizons.webp" width="1600" height="1245" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Which measurements the models used">Which measurements the models used</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/prediction_error_by_year.webp" width="1600" height="825" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Prediction error by year">Prediction error by year</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/water_table_support.webp" width="1600" height="800" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Monthly water table elevation">Monthly water table elevation</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/coefficient_stability.webp" width="1600" height="1334" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="The water table coefficient refitted on drier months">The water table coefficient refitted on drier months</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/reconstruction_series.webp" width="1600" height="1067" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Reconstructed methane emission">Reconstructed methane emission</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/residual_distribution_check.webp" width="1560" height="2065" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Diagnostic check on model errors">Diagnostic check on model errors</figcaption></figure></li>
+          </ul>
+          <button type="button" class="strip-btn strip-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 11" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 11"></button><button type="button" aria-label="Show figure 3 of 11"></button><button type="button" aria-label="Show figure 4 of 11"></button><button type="button" aria-label="Show figure 5 of 11"></button><button type="button" aria-label="Show figure 6 of 11"></button><button type="button" aria-label="Show figure 7 of 11"></button><button type="button" aria-label="Show figure 8 of 11"></button><button type="button" aria-label="Show figure 9 of 11"></button><button type="button" aria-label="Show figure 10 of 11"></button><button type="button" aria-label="Show figure 11 of 11"></button></div>
         </div>
       </li>
-      <li>
-        <div class="thumb ph-flare"></div>
-        <div>
-          <div class="title">Quantification of methane flare destruction removal efficiency across the Bakken and Permian basins using UAV-mounted TDLAS sensors</div>
+      <li class="proj">
+        <div class="proj-text">
+          <div class="proj-head"><div class="title">Urban expansion, paddy rice, and atmospheric methane over the Yangtze River Delta</div><div class="proj-year">2023</div></div>
+          <div class="authors">Yale School of the Environment, Lee lab &middot; Landsat-derived land cover, Sentinel-5P TROPOMI</div>
+          <div class="venue">MESc thesis, 2023</div>
+          <div class="proj-lines"><div><span class="k">Reproduction</span> Reproduced 2026, with errata</div></div>
+          <div class="links"><a href="https://github.com/matt-duyst/Yangtze-Landcover-Methane">code</a><a href="https://github.com/matt-duyst/Yangtze-Landcover-Methane/blob/main/ERRATA.md">errata</a></div>
+        </div>
+        <div class="fig-strip">
+          <button type="button" class="strip-btn strip-prev" aria-label="Previous figure" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <ul class="strip-list" role="list" aria-label="Figures: Urban expansion, paddy rice, and atmospheric methane over the Yangtze River Delta" tabindex="0">
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/yangtze/study_area.webp" width="1600" height="1316" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="The four Yangtze River Delta provinces on shaded relief, with a locator, a detail box showing the 0.25 degree analysis cells, and the neighbouring provinces named">The four Yangtze River Delta provinces on shaded relief, with a locator, a detail box showing the 0.25 degree analysis cells, and the neighbouring provinces named</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/yangtze/landcover_native.webp" width="1600" height="1331" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Impervious surface at 30 m from GISA and GAIA, rice at 10 m from NESDC, and the six 0.25 degree cell fractions those become">Impervious surface at 30 m from GISA and GAIA, rice at 10 m from NESDC, and the six 0.25 degree cell fractions those become</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/yangtze/urban_change.webp" width="1600" height="936" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Cumulative urban extent by year of first imperviousness for GAIA and GISA to 2019, and four-province totals for the thesis&#x27;s GAIA figures against both products recomputed">Cumulative urban extent by year of first imperviousness for GAIA and GISA to 2019, and four-province totals for the thesis&#x27;s GAIA figures against both products recomputed</figcaption></figure></li>
+          </ul>
+          <button type="button" class="strip-btn strip-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 3" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 3"></button><button type="button" aria-label="Show figure 3 of 3"></button></div>
+        </div>
+      </li>
+      <li class="proj no-figs">
+        <div class="proj-text">
+          <div class="proj-head"><div class="title">Quantification of methane flare destruction removal efficiency across the Bakken and Permian basins using UAV-mounted TDLAS sensors</div><div class="proj-year">2024</div></div>
           <div class="authors">Duyst, K. M., Smith, B. J., et al. &middot; SeekOps</div>
           <div class="venue">SPE Annual Technical Conference and Exhibition, 2024 &middot; SPE-221067-MS</div>
           <div class="links"><a href="https://doi.org/10.2118/221067-MS">paper</a></div>
+          <div class="proj-none">Figures forthcoming.</div>
         </div>
       </li>
-      <li>
-        <div class="thumb ph-pv"></div>
-        <div>
-          <div class="title">Toward UAV decision-support tools for photovoltaic arrays: a coastal Connecticut thermal mosaicking case study</div>
+      <li class="proj no-figs">
+        <div class="proj-text">
+          <div class="proj-head"><div class="title">Toward UAV decision-support tools for photovoltaic arrays: a coastal Connecticut thermal mosaicking case study</div><div class="proj-year">2022</div></div>
           <div class="authors">Anthony, Duyst, Verheyden, Zhao &middot; Yale ENV 704</div>
-          <div class="venue">Course research, 2022 &middot; rebuild pending</div>
+          <div class="venue">Course research, 2022</div>
+          <div class="proj-lines"><div><span class="k">Status</span> rebuild pending</div></div>
           <div class="links"><a href="https://github.com/matt-duyst/UAV-PV-Assessment">code</a></div>
+          <div class="proj-none">Figures forthcoming.</div>
         </div>
       </li>
-      <li>
-        <div class="thumb ph-mend"></div>
-        <div>
-          <div class="title">Mendocino Fire Complex: surface vegetation change through spectral indices (NDVI and NBR)</div>
+      <li class="proj no-figs">
+        <div class="proj-text">
+          <div class="proj-head"><div class="title">Mendocino Fire Complex: surface vegetation change through spectral indices (NDVI and NBR)</div><div class="proj-year">2018</div></div>
           <div class="authors">UCLA Geography &middot; Landsat 8 OLI, Google Earth Engine</div>
-          <div class="venue">Undergraduate thesis, 2018 &middot; <a href="https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program">Los Angeles Geospatial Summit, 2019</a> &middot; rebuild pending</div>
+          <div class="venue">Undergraduate thesis, 2018 &middot; <a href="https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program">Los Angeles Geospatial Summit, 2019</a></div>
+          <div class="proj-lines"><div><span class="k">Status</span> rebuild pending</div></div>
           <div class="links"><a href="/maps/mendocino-fire-complex/">write-up</a></div>
+          <div class="proj-none">Figures forthcoming.</div>
         </div>
       </li>
-      <li>
-        <a class="thumb" href="https://github.com/matt-duyst/Carbon-Trading"><img src="assets/figures/carbon-trading.webp" width="160" height="100" loading="lazy" decoding="async" alt="Historical and projected allowance pathway for German paper and cardboard under the EU ETS"></a>
-        <div>
-          <div class="title">Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS</div>
+      <li class="proj">
+        <div class="proj-text">
+          <div class="proj-head"><div class="title">Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS</div><div class="proj-year">2022</div></div>
           <div class="authors">Duyst, Bhardwaj &middot; Global Stocktake Climate Datathon</div>
-          <div class="venue">2022, ahead of COP 27 &middot; <span class="award"><a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Honorable Mention</a></span></div>
+          <div class="venue">2022, ahead of COP 27</div>
+          <div class="proj-lines"><div><span class="k">Result</span> <a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Honorable Mention</a></div></div>
           <div class="links"><a href="https://github.com/matt-duyst/Carbon-Trading">code</a></div>
         </div>
-      </li>
-      <li>
-        <div class="thumb ph-grc"></div>
-        <div>
-          <div class="title">Grassland growth across US rangeland for soil carbon verification</div>
-          <div class="authors">Grassroots Carbon &middot; process-based light use efficiency with a machine-learning correction</div>
-          <div class="venue">2025 to present &middot; publications forthcoming</div>
+        <div class="fig-strip single">
+          <ul class="strip-list" role="list" aria-label="Figures: Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS">
+            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/carbon-trading/allowance_pathway.webp" width="1600" height="415" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Historical and projected allowance pathway for German paper and cardboard under the EU ETS">Historical and projected allowance pathway for German paper and cardboard under the EU ETS</figcaption></figure></li>
+          </ul>
         </div>
       </li>
-      <li>
-        <div class="thumb ph-maps"></div>
-        <div>
-          <div class="title">Thirty-one coursework projects: classification, SAR, terrain, interpolation, and cartography</div>
+      <li class="proj no-figs">
+        <div class="proj-text">
+          <div class="proj-head"><div class="title">Grassland growth across US rangeland for soil carbon verification</div><div class="proj-year">2025</div></div>
+          <div class="authors">Grassroots Carbon &middot; process-based light use efficiency with a machine-learning correction</div>
+          <div class="venue">2025 to present</div>
+          <div class="proj-lines"><div><span class="k">Status</span> publications forthcoming</div></div>
+          <div class="proj-none">Figures forthcoming.</div>
+        </div>
+      </li>
+      <li class="proj no-figs">
+        <div class="proj-text">
+          <div class="proj-head"><div class="title">Thirty-one coursework projects: classification, SAR, terrain, interpolation, and cartography</div><div class="proj-year">2014 to 2018</div></div>
           <div class="authors">UCLA Geography, 2014 to 2018</div>
           <div class="venue">Archive</div>
           <div class="links"><a href="/maps/">archive</a></div>
+          <div class="proj-none">Figures forthcoming.</div>
         </div>
       </li>
     </ol>
@@ -972,6 +1029,62 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 
   var cvLink = document.getElementById('cv-link'), docsMenu = document.getElementById('docs-menu');
   if (cvLink && docsMenu) { cvLink.addEventListener('click', function (e) { e.preventDefault(); var open = !docsMenu.hidden; docsMenu.hidden = open; cvLink.setAttribute('aria-expanded', String(!open)); }); document.addEventListener('click', function (e) { if (!docsMenu.hidden && !e.target.closest('.docs-wrap')) { docsMenu.hidden = true; cvLink.setAttribute('aria-expanded', 'false'); } }); }
+})();
+</script>
+<script>
+// Project figure strips: scroll-snap lists with pointer drag (inertia on MapLibre's drag-pan defaults), arrows, dots and arrow keys
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var LINEARITY = 0.3, MAX_SPEED = 1400, DECELERATION = 2500;           // MapLibre dragPan inertia defaults, px/s and px/s^2
+  function bezier(x1, y1, x2, y2) {                                      // cubic-bezier easing, as MapLibre uses bezier(0, 0, 0.3, 1)
+    var cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+    return function (x) { var t = x; for (var i = 0; i < 8; i++) { var d = ((ax * t + bx) * t + cx) * t - x; var dd = (3 * ax * t + 2 * bx) * t + cx; if (Math.abs(d) < 1e-5 || !dd) break; t -= d / dd; } return ((ay * t + by) * t + cy) * t; };
+  }
+  var ease = bezier(0, 0, 0.3, 1);
+  document.querySelectorAll('.fig-strip').forEach(function (strip) {
+    var list = strip.querySelector('.strip-list'), plates = Array.prototype.slice.call(list.children);
+    if (plates.length < 2) return;
+    var prev = strip.querySelector('.strip-prev'), next = strip.querySelector('.strip-next'), dots = Array.prototype.slice.call(strip.querySelectorAll('.strip-dots button'));
+    function stepW() { return plates[1].offsetLeft - plates[0].offsetLeft; }
+    function index() { return Math.max(0, Math.min(plates.length - 1, Math.round(list.scrollLeft / stepW()))); }
+    function go(i) { i = Math.max(0, Math.min(plates.length - 1, i)); list.scrollTo({ left: plates[i].offsetLeft - plates[0].offsetLeft, behavior: reduce ? 'auto' : 'smooth' }); }
+    var raf = null;
+    function update() { raf = null; var max = list.scrollWidth - list.clientWidth, i = index(); prev.hidden = list.scrollLeft <= 2; next.hidden = list.scrollLeft >= max - 2; dots.forEach(function (d, j) { if (j === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current'); }); }
+    list.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+    prev.addEventListener('click', function () { go(index() - 1); });
+    next.addEventListener('click', function () { go(index() + 1); });
+    dots.forEach(function (d, j) { d.addEventListener('click', function () { go(j); }); });
+    list.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { e.preventDefault(); go(index() - 1); } else if (e.key === 'ArrowRight') { e.preventDefault(); go(index() + 1); } });
+    var drag = null, glide = null;
+    list.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'touch' || e.button !== 0) return;
+      if (glide) { cancelAnimationFrame(glide); glide = null; }
+      drag = { x: e.clientX, left: list.scrollLeft, samples: [[performance.now(), e.clientX]], moved: false, id: e.pointerId };
+      list.classList.add('dragging');
+    });
+    list.addEventListener('pointermove', function (e) {
+      if (!drag || e.pointerId !== drag.id) return;
+      var dx = e.clientX - drag.x;
+      if (!drag.moved && Math.abs(dx) > 4) { drag.moved = true; try { list.setPointerCapture(drag.id); } catch (err) {} }
+      if (!drag.moved) return;
+      list.scrollLeft = drag.left - dx;
+      var now = performance.now(); drag.samples.push([now, e.clientX]); while (drag.samples.length > 2 && now - drag.samples[0][0] > 160) drag.samples.shift();
+    });
+    function release() {
+      if (!drag) return;
+      var d = drag; drag = null;
+      var settle = function () { list.classList.remove('dragging'); };
+      if (!d.moved || reduce || d.samples.length < 2) { settle(); return; }
+      var a = d.samples[0], b = d.samples[d.samples.length - 1], dt = (b[0] - a[0]) / 1000;
+      if (dt <= 0 || performance.now() - b[0] > 100) { settle(); return; }
+      var v = -(b[1] - a[1]) / dt * LINEARITY, speed = Math.min(Math.abs(v), MAX_SPEED); v = Math.sign(v) * speed;
+      var duration = speed / (DECELERATION * LINEARITY), distance = v * duration / 2, start = list.scrollLeft, t0 = performance.now();
+      if (!duration) { settle(); return; }
+      (function frame(now) { var k = Math.min(1, (now - t0) / (duration * 1000)); list.scrollLeft = start + distance * ease(k); if (k < 1) glide = requestAnimationFrame(frame); else { glide = null; settle(); } })(t0);
+    }
+    list.addEventListener('pointerup', release); list.addEventListener('pointercancel', release);
+    update();
+  });
 })();
 </script>
 <script type="module">
