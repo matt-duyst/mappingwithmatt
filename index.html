@@ -245,6 +245,7 @@ p { margin: 0 0 16px; }
 .plate figure { margin: 0; transition: transform 200ms ease; }
 .plate-frame { border: 1px solid var(--line); padding: 12px; width: min(100%, calc((420px - 26px) * (var(--ar)) + 26px)); background: rgba(255,255,255,0.02); transition: border-color 200ms ease; }
 .plate-frame img { display: block; width: 100%; height: auto; -webkit-user-drag: none; }
+.plate-frame video { display: block; width: 100%; height: auto; }
 .plate:hover figure { transform: translateY(-2px); }
 .plate:hover .plate-frame { border-color: var(--muted); }
 .plate-link { display: block; color: inherit; border-bottom: 0; text-decoration: none; }
@@ -819,8 +820,8 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
         <div class="fig-strip">
           <button type="button" class="strip-btn strip-prev" aria-label="Previous figure" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
           <ul class="strip-list" role="list" aria-label="Figures: Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS" tabindex="0">
-            <li class="plate"><a class="plate-link" href="/projects/carbon-trading/"><figure><div class="plate-frame" style="--ar: 1440 / 900"><img src="assets/video/carbon-trading.jpg" width="1440" height="900" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption>The tool in use</figcaption></figure></a></li>
-            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 415"><img src="assets/figures/carbon-trading/allowance_pathway.webp" width="1600" height="415" alt="Historical and projected allowance pathway for German paper and cardboard under the EU ETS" loading="lazy" decoding="async" draggable="false"></div><figcaption>Historical and projected allowances for German paper and cardboard.</figcaption></figure></li>
+            <li class="plate"><a class="plate-link" href="/projects/carbon-trading/"><figure><div class="plate-frame" style="--ar: 1440 / 900"><video class="reel" width="1440" height="900" muted loop playsinline preload="metadata" poster="assets/video/carbon-trading.jpg" aria-hidden="true"><source src="assets/video/carbon-trading.webm" type="video/webm"><source src="assets/video/carbon-trading.mp4" type="video/mp4"></video></div><figcaption>The tool in use</figcaption></figure></a></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 415"><img src="assets/figures/carbon-trading/allowance_pathway.webp" width="1600" height="415" alt="Annual emissions for German paper and cardboard, historical in red from 2005 to 2021 and projected in blue from 2022 to 2030" loading="lazy" decoding="async" draggable="false"></div><figcaption>Historical and projected emissions for German paper and cardboard</figcaption></figure></li>
           </ul>
           <button type="button" class="strip-btn strip-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
           <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 2" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 2"></button></div>
@@ -1124,6 +1125,17 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     list.addEventListener('click', function (e) { if (list.dataset.dragged) { e.preventDefault(); e.stopPropagation(); delete list.dataset.dragged; } }, true);
     list.addEventListener('pointerdown', function () { delete list.dataset.dragged; }, true);
     update();
+  });
+  // Reel plates: a muted recording that plays on hover or focus, and while in view below 600px
+  if (!reduce) document.querySelectorAll('.plate video.reel').forEach(function (v) {
+    var plate = v.closest('.plate'), small = window.matchMedia('(max-width: 599px)'), inView = false, over = false;
+    function want() { return over || (small.matches && inView); }
+    function sync() { if (want()) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } else if (!v.paused) v.pause(); }
+    plate.addEventListener('pointerenter', function (e) { if (e.pointerType !== 'touch') { over = true; sync(); } });
+    plate.addEventListener('pointerleave', function (e) { if (e.pointerType !== 'touch') { over = false; sync(); } });
+    plate.addEventListener('focusin', function () { over = true; sync(); });
+    plate.addEventListener('focusout', function () { over = false; sync(); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; sync(); }, { threshold: 0.5 }).observe(v);
   });
 })();
 </script>

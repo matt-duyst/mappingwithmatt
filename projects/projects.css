@@ -13,5 +13,9 @@ main.project section { margin-top: 44px; }
 @media (prefers-reduced-motion: reduce) { .pills a { transition: none; } }
 .pvid .plate-frame { position: relative; }
 .pvid video { display: block; width: 100%; height: auto; }
-.vid-toggle { position: absolute; right: 20px; bottom: 20px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); background: rgba(15,15,16,.85); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; cursor: pointer; }
+.vid-ctl { position: absolute; right: 20px; bottom: 20px; display: flex; align-items: center; gap: 10px; }
+.vid-hint { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.03em; color: var(--text); background: rgba(15,15,16,.85); border-radius: 4px; padding: 4px 8px; }
+.vid-hint[hidden] { display: none; }
+.pvid video { cursor: pointer; }
+.vid-toggle { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); background: rgba(15,15,16,.85); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; cursor: pointer; }
 .vid-toggle:hover, .vid-toggle:focus-visible { border-color: var(--text); }
