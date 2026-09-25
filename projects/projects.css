@@ -1,0 +1,13 @@
+/* Project pages: the archive stylesheet (../maps/maps.css) plus the pieces below */
+main.project { max-width: 880px; }
+main.project > .eyebrow, main.project > h1, main.project > .lede, main.project h2, main.project section > p { max-width: 72ch; }
+main.project .lede { color: var(--text); margin-bottom: 20px; }
+main.project section { margin-top: 44px; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+.pills a { display: inline-flex; align-items: center; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; transition: border-color .15s ease, transform .15s ease; }
+.pills a:hover, .pills a:focus-visible { border-color: var(--text); transform: translateY(-1px); }
+.pfig { margin: 28px 0; max-width: 880px; }
+.pfig .plate-frame { border: 1px solid var(--line); padding: 12px; background: rgba(255,255,255,0.02); }
+.pfig img { display: block; width: 100%; height: auto; border: 0; background: transparent; }
+.pfig figcaption { margin-top: 8px; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.45; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .pills a { transition: none; } }
