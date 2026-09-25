@@ -235,7 +235,7 @@ p { margin: 0 0 16px; }
 .papers .proj-lines a { color: var(--link); border-bottom: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); }
 .papers .proj-none { font-family: var(--font-mono); font-size: 12px; color: var(--muted); margin-top: 10px; }
 .fig-strip { position: relative; min-width: 0; }
-.strip-list { list-style: none; margin: 0; padding: 0 0 4px; display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; }
+.strip-list { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-start; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; }
 .strip-list::-webkit-scrollbar { display: none; }
 .strip-list:focus-visible { outline: 1px solid var(--text); outline-offset: 4px; }
 .strip-list.dragging { cursor: grabbing; scroll-snap-type: none; scroll-behavior: auto; user-select: none; }
@@ -243,10 +243,12 @@ p { margin: 0 0 16px; }
 .plate { flex: 0 0 calc(100% - 56px); min-width: 0; scroll-snap-align: start; }
 .fig-strip.single .plate { flex-basis: 100%; }
 .plate figure { margin: 0; transition: transform 200ms ease; }
-.plate-frame { border: 1px solid var(--line); padding: 12px; aspect-ratio: 16 / 10; background: rgba(255,255,255,0.02); transition: border-color 200ms ease; }
-.plate-frame img { display: block; width: 100%; height: 100%; object-fit: contain; -webkit-user-drag: none; }
+.plate-frame { border: 1px solid var(--line); padding: 12px; width: min(100%, calc((420px - 26px) * (var(--ar)) + 26px)); background: rgba(255,255,255,0.02); transition: border-color 200ms ease; }
+.plate-frame img { display: block; width: 100%; height: auto; -webkit-user-drag: none; }
 .plate:hover figure { transform: translateY(-2px); }
 .plate:hover .plate-frame { border-color: var(--muted); }
+.plate-link { display: block; color: inherit; border-bottom: 0; text-decoration: none; }
+.plate-link:focus-visible { outline: 1px solid var(--text); outline-offset: 3px; }
 .plate figcaption { margin-top: 8px; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.45; height: calc(2 * 1.45em); color: var(--muted); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
 .strip-btn { position: absolute; top: calc(50% - 30px); z-index: 2; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); background: rgba(15,15,16,.85); color: var(--text); display: grid; place-items: center; padding: 0; cursor: pointer; opacity: 0; transition: opacity 200ms ease, border-color 200ms ease; }
 .strip-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -255,7 +257,7 @@ p { margin: 0 0 16px; }
 .fig-strip:hover .strip-btn, .strip-btn:focus-visible { opacity: 1; }
 .strip-btn:hover { border-color: var(--text); }
 .strip-btn[hidden] { display: none; }
-.strip-dots { display: flex; justify-content: center; gap: 0; margin-top: 6px; flex-wrap: wrap; }
+.strip-dots { display: flex; justify-content: center; gap: 0; margin-top: 20px; flex-wrap: wrap; }
 .strip-dots button { width: 24px; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
 .strip-dots button::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--line); transition: background 200ms ease, transform 200ms ease; }
 .strip-dots button[aria-current="true"]::before { background: var(--text); transform: scale(1.2); }
@@ -722,17 +724,17 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
         <div class="fig-strip">
           <button type="button" class="strip-btn strip-prev" aria-label="Previous figure" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
           <ul class="strip-list" role="list" aria-label="Figures: Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland" tabindex="0">
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/site_overview.webp" width="1600" height="1245" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="The flux tower and the wind directions it measures">The flux tower and the wind directions it measures</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/covariate_availability.webp" width="1600" height="1067" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Which months each measurement and each analysis cover">Which months each measurement and each analysis cover</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/seasonal_cycle.webp" width="1600" height="1322" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="The seasonal cycle in monthly flux">The seasonal cycle in monthly flux</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/forecast_error_by_horizon.webp" width="1600" height="1334" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Monthly methane and carbon dioxide forecast error">Monthly methane and carbon dioxide forecast error</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/observed_and_predicted.webp" width="1600" height="1334" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Observed and predicted monthly flux">Observed and predicted monthly flux</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/measurements_used_across_forecast_horizons.webp" width="1600" height="1245" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Which measurements the models used">Which measurements the models used</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/prediction_error_by_year.webp" width="1600" height="825" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Prediction error by year">Prediction error by year</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/water_table_support.webp" width="1600" height="800" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Monthly water table elevation">Monthly water table elevation</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/coefficient_stability.webp" width="1600" height="1334" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="The water table coefficient refitted on drier months">The water table coefficient refitted on drier months</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/reconstruction_series.webp" width="1600" height="1067" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Reconstructed methane emission">Reconstructed methane emission</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/peatland/residual_distribution_check.webp" width="1560" height="2065" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Diagnostic check on model errors">Diagnostic check on model errors</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1245"><img src="assets/figures/peatland/site_overview.webp" width="1600" height="1245" alt="The flux tower and the wind directions it measures" loading="lazy" decoding="async" draggable="false"></div><figcaption>The flux tower, its wetland, and the wind sectors it keeps.</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1067"><img src="assets/figures/peatland/covariate_availability.webp" width="1600" height="1067" alt="Which months each measurement and each analysis cover" loading="lazy" decoding="async" draggable="false"></div><figcaption>Which months each record covers, and where the model could run.</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1322"><img src="assets/figures/peatland/seasonal_cycle.webp" width="1600" height="1322" alt="The seasonal cycle in monthly flux" loading="lazy" decoding="async" draggable="false"></div><figcaption>The seasonal shape of the record, and what each year leaves over.</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1334"><img src="assets/figures/peatland/forecast_error_by_horizon.webp" width="1600" height="1334" alt="Monthly methane and carbon dioxide forecast error" loading="lazy" decoding="async" draggable="false"></div><figcaption>Fitted models rarely beat the seasonal average at any horizon.</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1334"><img src="assets/figures/peatland/observed_and_predicted.webp" width="1600" height="1334" alt="Observed and predicted monthly flux" loading="lazy" decoding="async" draggable="false"></div><figcaption>Forecasts follow the seasonal cycle; the size of each season escapes them.</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1245"><img src="assets/figures/peatland/measurements_used_across_forecast_horizons.webp" width="1600" height="1245" alt="Which measurements the models used" loading="lazy" decoding="async" draggable="false"></div><figcaption>Which inputs the models chose, against what the date already explains.</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 825"><img src="assets/figures/peatland/prediction_error_by_year.webp" width="1600" height="825" alt="Prediction error by year" loading="lazy" decoding="async" draggable="false"></div><figcaption>Prediction error by year: similar misses, in varying directions.</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 800"><img src="assets/figures/peatland/water_table_support.webp" width="1600" height="800" alt="Monthly water table elevation" loading="lazy" decoding="async" draggable="false"></div><figcaption>Water table beyond the fitted range, where the backcast must assume.</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1334"><img src="assets/figures/peatland/coefficient_stability.webp" width="1600" height="1334" alt="The water table coefficient refitted on drier months" loading="lazy" decoding="async" draggable="false"></div><figcaption>The water table coefficient climbs as the fit is restricted to drier months.</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1067"><img src="assets/figures/peatland/reconstruction_series.webp" width="1600" height="1067" alt="Reconstructed methane emission" loading="lazy" decoding="async" draggable="false"></div><figcaption>Reconstructed emission, 1990 to 2008, under three assumptions.</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1560 / 2065"><img src="assets/figures/peatland/residual_distribution_check.webp" width="1560" height="2065" alt="Diagnostic check on model errors" loading="lazy" decoding="async" draggable="false"></div><figcaption>The model&#x27;s errors against two distributions, weighted and unweighted.</figcaption></figure></li>
           </ul>
           <button type="button" class="strip-btn strip-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
           <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 11" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 11"></button><button type="button" aria-label="Show figure 3 of 11"></button><button type="button" aria-label="Show figure 4 of 11"></button><button type="button" aria-label="Show figure 5 of 11"></button><button type="button" aria-label="Show figure 6 of 11"></button><button type="button" aria-label="Show figure 7 of 11"></button><button type="button" aria-label="Show figure 8 of 11"></button><button type="button" aria-label="Show figure 9 of 11"></button><button type="button" aria-label="Show figure 10 of 11"></button><button type="button" aria-label="Show figure 11 of 11"></button></div>
@@ -749,9 +751,9 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
         <div class="fig-strip">
           <button type="button" class="strip-btn strip-prev" aria-label="Previous figure" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
           <ul class="strip-list" role="list" aria-label="Figures: Urban expansion, paddy rice, and atmospheric methane over the Yangtze River Delta" tabindex="0">
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/yangtze/study_area.webp" width="1600" height="1316" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="The four Yangtze River Delta provinces on shaded relief, with a locator, a detail box showing the 0.25 degree analysis cells, and the neighbouring provinces named">The four Yangtze River Delta provinces on shaded relief, with a locator, a detail box showing the 0.25 degree analysis cells, and the neighbouring provinces named</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/yangtze/landcover_native.webp" width="1600" height="1331" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Impervious surface at 30 m from GISA and GAIA, rice at 10 m from NESDC, and the six 0.25 degree cell fractions those become">Impervious surface at 30 m from GISA and GAIA, rice at 10 m from NESDC, and the six 0.25 degree cell fractions those become</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/yangtze/urban_change.webp" width="1600" height="936" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Cumulative urban extent by year of first imperviousness for GAIA and GISA to 2019, and four-province totals for the thesis&#x27;s GAIA figures against both products recomputed">Cumulative urban extent by year of first imperviousness for GAIA and GISA to 2019, and four-province totals for the thesis&#x27;s GAIA figures against both products recomputed</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1316"><img src="assets/figures/yangtze/study_area.webp" width="1600" height="1316" alt="The four Yangtze River Delta provinces on shaded relief, with a locator, a detail box showing the 0.25 degree analysis cells, and the neighbouring provinces named" loading="lazy" decoding="async" draggable="false"></div><figcaption>The four provinces on relief, with the 0.25 degree analysis cells.</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1331"><img src="assets/figures/yangtze/landcover_native.webp" width="1600" height="1331" alt="Impervious surface at 30 m from GISA and GAIA, rice at 10 m from NESDC, and the six 0.25 degree cell fractions those become" loading="lazy" decoding="async" draggable="false"></div><figcaption>What the analysis reads: 30 m impervious, 10 m rice, and the cell they share.</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 936"><img src="assets/figures/yangtze/urban_change.webp" width="1600" height="936" alt="Cumulative urban extent by year of first imperviousness for GAIA and GISA to 2019, and four-province totals for the thesis&#x27;s GAIA figures against both products recomputed" loading="lazy" decoding="async" draggable="false"></div><figcaption>Where the delta became impervious, and how much, 2000 to 2019.</figcaption></figure></li>
           </ul>
           <button type="button" class="strip-btn strip-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
           <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 3" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 3"></button><button type="button" aria-label="Show figure 3 of 3"></button></div>
@@ -776,14 +778,34 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           <div class="proj-none">Figures forthcoming.</div>
         </div>
       </li>
-      <li class="proj no-figs">
+      <li class="proj">
         <div class="proj-text">
           <div class="proj-head"><div class="title">Mendocino Fire Complex: surface vegetation change through spectral indices (NDVI and NBR)</div><div class="proj-year">2018</div></div>
           <div class="authors">UCLA Geography &middot; Landsat 8 OLI, Google Earth Engine</div>
           <div class="venue">Undergraduate thesis, 2018 &middot; <a href="https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program">Los Angeles Geospatial Summit, 2019</a></div>
           <div class="proj-lines"><div><span class="k">Status</span> rebuild pending</div></div>
           <div class="links"><a href="/maps/mendocino-fire-complex/">write-up</a></div>
-          <div class="proj-none">Figures forthcoming.</div>
+        </div>
+        <div class="fig-strip">
+          <button type="button" class="strip-btn strip-prev" aria-label="Previous figure" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <ul class="strip-list" role="list" aria-label="Figures: Mendocino Fire Complex: surface vegetation change through spectral indices (NDVI and NBR)" tabindex="0">
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1800 / 1440"><img src="maps/images/Posterboard.webp" width="1800" height="1440" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 1" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 1</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1800 / 1392"><img src="maps/images/Mendo-GIS.webp" width="1800" height="1392" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 2" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 2</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 302 / 269"><img src="maps/images/Mendo-July10.webp" width="302" height="269" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 3" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 3</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 303 / 268"><img src="maps/images/Mendo-Oct30.webp" width="303" height="268" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 4" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 4</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1800 / 1391"><img src="maps/images/Before-NDVI.webp" width="1800" height="1391" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 5" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 5</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 716 / 240"><img src="maps/images/before-fire-hist.webp" width="716" height="240" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 6" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 6</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 548 / 47"><img src="maps/images/before-fire-stats.webp" width="548" height="47" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 7" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 7</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1800 / 1391"><img src="maps/images/After-NDVI.webp" width="1800" height="1391" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 8" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 8</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 744 / 236"><img src="maps/images/after-fire-hist.webp" width="744" height="236" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 9" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 9</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 548 / 47"><img src="maps/images/after-fire-stats.webp" width="548" height="47" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 10" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 10</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1800 / 1391"><img src="maps/images/Total-NDVI.webp" width="1800" height="1391" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 11" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 11</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 744 / 240"><img src="maps/images/change-ndvi-hist.webp" width="744" height="240" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 12" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 12</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 547 / 54"><img src="maps/images/change-ndvi-stats.webp" width="547" height="54" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 13" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 13</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1800 / 1391"><img src="maps/images/NBR.webp" width="1800" height="1391" alt="Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI &amp; NBR), figure 14" loading="lazy" decoding="async" draggable="false"></div><figcaption>Figure 14</figcaption></figure></li>
+          </ul>
+          <button type="button" class="strip-btn strip-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 14" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 14"></button><button type="button" aria-label="Show figure 3 of 14"></button><button type="button" aria-label="Show figure 4 of 14"></button><button type="button" aria-label="Show figure 5 of 14"></button><button type="button" aria-label="Show figure 6 of 14"></button><button type="button" aria-label="Show figure 7 of 14"></button><button type="button" aria-label="Show figure 8 of 14"></button><button type="button" aria-label="Show figure 9 of 14"></button><button type="button" aria-label="Show figure 10 of 14"></button><button type="button" aria-label="Show figure 11 of 14"></button><button type="button" aria-label="Show figure 12 of 14"></button><button type="button" aria-label="Show figure 13 of 14"></button><button type="button" aria-label="Show figure 14 of 14"></button></div>
         </div>
       </li>
       <li class="proj">
@@ -796,7 +818,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
         </div>
         <div class="fig-strip single">
           <ul class="strip-list" role="list" aria-label="Figures: Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS">
-            <li class="plate"><figure><div class="plate-frame"><img src="assets/figures/carbon-trading/allowance_pathway.webp" width="1600" height="415" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption title="Historical and projected allowance pathway for German paper and cardboard under the EU ETS">Historical and projected allowance pathway for German paper and cardboard under the EU ETS</figcaption></figure></li>
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 415"><img src="assets/figures/carbon-trading/allowance_pathway.webp" width="1600" height="415" alt="Historical and projected allowance pathway for German paper and cardboard under the EU ETS" loading="lazy" decoding="async" draggable="false"></div><figcaption>Historical and projected allowances for German paper and cardboard.</figcaption></figure></li>
           </ul>
         </div>
       </li>
@@ -809,13 +831,25 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           <div class="proj-none">Figures forthcoming.</div>
         </div>
       </li>
-      <li class="proj no-figs">
+      <li class="proj">
         <div class="proj-text">
           <div class="proj-head"><div class="title">Thirty-one coursework projects: classification, SAR, terrain, interpolation, and cartography</div><div class="proj-year">2014 to 2018</div></div>
           <div class="authors">UCLA Geography, 2014 to 2018</div>
           <div class="venue">Archive</div>
           <div class="links"><a href="/maps/">archive</a></div>
-          <div class="proj-none">Figures forthcoming.</div>
+        </div>
+        <div class="fig-strip">
+          <button type="button" class="strip-btn strip-prev" aria-label="Previous figure" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <ul class="strip-list" role="list" aria-label="Figures: Thirty-one coursework projects: classification, SAR, terrain, interpolation, and cartography" tabindex="0">
+            <li class="plate"><a class="plate-link" href="/maps/sequoia-national-park/"><figure><div class="plate-frame" style="--ar: 3200 / 4142"><img src="maps/images/Sequoia-National-Park.webp" width="3200" height="4142" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption>A New Design for Sequoia National Park: The Ideal Cartographic Relief Map</figcaption></figure></a></li>
+            <li class="plate"><a class="plate-link" href="/maps/mendocino-fire-complex/"><figure><div class="plate-frame" style="--ar: 1800 / 1440"><img src="maps/images/Posterboard.webp" width="1800" height="1440" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption>Mendocino Fire Complex</figcaption></figure></a></li>
+            <li class="plate"><a class="plate-link" href="/maps/darien-gap/"><figure><div class="plate-frame" style="--ar: 1538 / 1322"><img src="maps/images/darien-least-cost.webp" width="1538" height="1322" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption>Bridging the Darién Gap</figcaption></figure></a></li>
+            <li class="plate"><a class="plate-link" href="/maps/leilani-estates/"><figure><div class="plate-frame" style="--ar: 1756 / 1202"><img src="maps/images/Leilani.webp" width="1756" height="1202" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption>Three-Dimensional Mapping of Natural Disaster Scenarios</figcaption></figure></a></li>
+            <li class="plate"><a class="plate-link" href="/maps/tubbs-fire/"><figure><div class="plate-frame" style="--ar: 1550 / 1166"><img src="maps/images/tubbs-map-1.webp" width="1550" height="1166" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption>California&#x27;s Most Destructive Wildfire: Mapping The Tubbs Fire (2017)</figcaption></figure></a></li>
+            <li class="plate"><a class="plate-link" href="/maps/dot-density/"><figure><div class="plate-frame" style="--ar: 1800 / 1364"><img src="maps/images/Racial-Dot-Density-LA.webp" width="1800" height="1364" alt="" loading="lazy" decoding="async" draggable="false"></div><figcaption>A Dot-Density Representation of LA&#x27;s Ethnic &amp; Racial Distribution</figcaption></figure></a></li>
+          </ul>
+          <button type="button" class="strip-btn strip-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 6" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 6"></button><button type="button" aria-label="Show figure 3 of 6"></button><button type="button" aria-label="Show figure 4 of 6"></button><button type="button" aria-label="Show figure 5 of 6"></button><button type="button" aria-label="Show figure 6 of 6"></button></div>
         </div>
       </li>
     </ol>
@@ -1065,7 +1099,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     list.addEventListener('pointermove', function (e) {
       if (!drag || e.pointerId !== drag.id) return;
       var dx = e.clientX - drag.x;
-      if (!drag.moved && Math.abs(dx) > 4) { drag.moved = true; try { list.setPointerCapture(drag.id); } catch (err) {} }
+      if (!drag.moved && Math.abs(dx) > 4) { drag.moved = true; list.dataset.dragged = '1'; try { list.setPointerCapture(drag.id); } catch (err) {} }
       if (!drag.moved) return;
       list.scrollLeft = drag.left - dx;
       var now = performance.now(); drag.samples.push([now, e.clientX]); while (drag.samples.length > 2 && now - drag.samples[0][0] > 160) drag.samples.shift();
@@ -1083,6 +1117,8 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       (function frame(now) { var k = Math.min(1, (now - t0) / (duration * 1000)); list.scrollLeft = start + distance * ease(k); if (k < 1) glide = requestAnimationFrame(frame); else { glide = null; settle(); } })(t0);
     }
     list.addEventListener('pointerup', release); list.addEventListener('pointercancel', release);
+    list.addEventListener('click', function (e) { if (list.dataset.dragged) { e.preventDefault(); e.stopPropagation(); delete list.dataset.dragged; } }, true);
+    list.addEventListener('pointerdown', function () { delete list.dataset.dragged; }, true);
     update();
   });
 })();
