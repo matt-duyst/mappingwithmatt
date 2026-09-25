@@ -22,7 +22,7 @@
 <main class="project">
 <p class="eyebrow">University of Minnesota, Griffis lab. 2022, rebuilt 2026.</p>
 <h1>Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland</h1>
-<p class="lede">Marcell Bog Lake Peatland is a poor fen in north-central Minnesota. A tower there has measured carbon dioxide since 2007 and methane since 2009, one of the longest peatland records of its kind. This project asks two questions of it. How far ahead can monthly flux be forecast from the tower's own history and four measured drivers (soil temperature, air temperature, precipitation, and water table)? And can relationships learned on the measured years reach back to 1990, when the drivers begin? The answers come from seasonal decomposition, machine learning forecasts tested against simple benchmarks, and a backcast checked for how far it strays from the data it learned on. What the peatland does each year is predictable; how much it does is not, and the record so far cannot say why.</p>
+<p class="lede">Marcell Bog Lake Peatland is a poor fen in north-central Minnesota. A tower there has measured carbon dioxide since 2007 and methane since 2009, at a site with one of the longest-running peatland monitoring programs. This project asks two questions of it. How far ahead can monthly flux be forecast from the tower's own history and four measured drivers (soil temperature, air temperature, precipitation, and water table)? And can relationships learned on the measured years reach back to 1990, when the drivers begin? The answers come from seasonal decomposition, machine learning forecasts tested against simple benchmarks, and a backcast checked for how far it strays from the data it learned on. What the peatland does each year is predictable; how much it does is not, and the record so far cannot say why.</p>
 <nav class="pills" aria-label="Project links"><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting">Code</a><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting/tree/main/notes">Notes</a><a href="https://ameriflux.lbl.gov/sites/siteinfo/US-MBP">Site record</a></nav>
 <section>
 <h2>The site</h2>
@@ -31,7 +31,7 @@
 </section>
 <section>
 <h2>The record</h2>
-<p>The environmental measurements begin in 1990, nineteen years before either flux does, and that gap is the span the reconstruction covers. Air temperature and precipitation stop at the end of 2019, which ends the months the models could learn from and leaves 60 months of methane the tower recorded but the models cannot use. Forecasts inherit the same limit.</p>
+<p>The environmental measurements begin in 1990, nineteen years before either flux record used here does, and that gap is the span the reconstruction covers. Air temperature and precipitation stop at the end of 2019, which ends the months the models could learn from and leaves 60 months of methane the tower recorded but the models cannot use. Forecasts inherit the same limit.</p>
 <figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/covariate_availability.webp" width="1600" height="1067" alt="Which months each measurement and each analysis cover" loading="lazy" decoding="async"></div><figcaption>Which months each record covers, and where the model could run.</figcaption></figure>
 </section>
 <section>
@@ -46,7 +46,7 @@
 <figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/observed_and_predicted.webp" width="1600" height="1334" alt="Observed and predicted monthly flux" loading="lazy" decoding="async"></div><figcaption>Forecasts follow the seasonal cycle; the size of each season escapes them.</figcaption></figure>
 <figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/measurements_used_across_forecast_horizons.webp" width="1600" height="1245" alt="Which measurements the models used" loading="lazy" decoding="async"></div><figcaption>Which inputs the models chose, against what the date already explains.</figcaption></figure>
 <figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/prediction_error_by_year.webp" width="1600" height="825" alt="Prediction error by year" loading="lazy" decoding="async"></div><figcaption>Prediction error by year: similar misses, in varying directions.</figcaption></figure>
-<p>The models reached for what the date already predicts and left alone what it does not, choosing temperature most and the water table least on methane. Across every evaluated year the misses are similar in size and vary in direction.</p>
+<p>The models reached for what the date already predicts and left alone what it does not, choosing temperature most and the water table least on methane. Across every evaluated year but methane in 2015 the misses are similar in size and vary in direction.</p>
 </section>
 <section>
 <h2>The backcast</h2>
@@ -57,7 +57,7 @@
 </section>
 <section>
 <h2>Diagnostic</h2>
-<p>Of the four error distributions tested, only Laplace on the unweighted residuals holds. Nothing here changes what the study concludes: its intervals are built from the residuals themselves and assume no distribution at all.</p>
+<p>Of the four checks, two distributions on weighted and unweighted residuals, only Laplace on the unweighted residuals holds. Nothing here changes what the study concludes: its intervals are built from the residuals themselves and assume no distribution at all.</p>
 <figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/residual_distribution_check.webp" width="1560" height="2065" alt="Diagnostic check on model errors" loading="lazy" decoding="async"></div><figcaption>The model&#x27;s errors against two distributions, weighted and unweighted.</figcaption></figure>
 </section>
 <section>
