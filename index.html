@@ -51,6 +51,7 @@
 @media (prefers-reduced-motion: reduce) { :root { --d-base: 120ms; --d-slow: 120ms; } }
 @font-face { font-family: 'Bricolage Grotesque'; font-style: normal; font-weight: 200 800; font-display: swap; src: url('vendor/fonts/bricolage-grotesque-v9-latin-variable.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 /* Grain: a fixed overlay of two-octave turbulence, blended over the page */
+html[data-grain="off"] body::after { display: none; }
 body::after { content: ""; position: fixed; inset: 0; z-index: 50; pointer-events: none; opacity: var(--grain-opacity); mix-blend-mode: overlay; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); background-size: 256px 256px; }
 /* Pressables: one press and one lift, both interruptible */
 a, button, [role="button"], summary, label { transition: transform var(--d-base) var(--ease); }
@@ -451,8 +452,10 @@ footer.site a { color: var(--muted); border-bottom: 1px dotted var(--muted); }
 footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--accent-text); }
 /* ===== 2.0 study: hero ===== */
 .intro .stack > * { opacity: 1; transform: none; transition: none; }
-.intro h1.name, .intro .type { opacity: 0; transform: translateY(8px); transition: opacity var(--d-base) var(--ease), transform var(--d-base) var(--ease); }
-.intro .stack.show h1.name, .intro .stack.show .type { opacity: 1; transform: none; }
+.intro h1.name { transform: translateY(8px); transition: transform var(--d-base) var(--ease); }
+.intro .type { opacity: 0; transform: translateY(8px); transition: opacity var(--d-base) var(--ease), transform var(--d-base) var(--ease); }
+.intro .stack.show h1.name { transform: none; }
+.intro .stack.show .type { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .intro h1.name, .intro .type { transform: none; } }
 .intro .stack.show > :nth-child(n) { transition-delay: 0ms; }
 .intro h1.name { font-family: var(--font-display); font-feature-settings: normal; font-weight: var(--w-title); font-size: clamp(56px, 9vw, 128px); letter-spacing: -0.045em; line-height: 0.95; margin: 0; color: var(--text); }
@@ -472,19 +475,19 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 /* ===== 2.0 study: one framed card row ===== */
 .papers .proj.card-row { display: block; position: relative; overflow: hidden; margin: 16px 0; padding: 20px 22px 18px; border: 1px solid var(--line); border-radius: 4px; background: var(--card); --mx: 50%; --my: 50%; transition: transform var(--d-fast) var(--ease), border-color var(--d-fast) var(--ease); }
 .papers .proj.card-row::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(200px circle at var(--mx) var(--my), rgba(255,255,255,0.06), transparent 70%); transition: opacity var(--d-fast) var(--ease); }
-.papers .proj.card-row:hover { transform: translateY(-2px); border-color: var(--border); }
+.papers .proj.card-row:hover { transform: translateY(-2px); border-color: var(--border-2); }
 .papers .proj.card-row:hover::before { opacity: 1; }
 .card-row > * { position: relative; }
 .card-row .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
 .card-row .card-head .title { font-size: 17px; }
 .card-row .claim { font-size: 17px; line-height: 1.5; color: var(--text); margin: 10px 0 8px; max-width: 65ch; }
 .card-row .stack-line { font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 12px; letter-spacing: 0.04em; color: var(--text-3); margin-bottom: 14px; }
-.card-row .card-strip .plate-frame { border-color: var(--border); width: 100%; }
+.card-row .card-strip .plate-frame { border-color: var(--border-2); width: 100%; }
 .card-row .plate-none { aspect-ratio: auto; height: 200px; }
 .card-row .fig-strip { margin-top: 4px; }
 .card-row .capbar[hidden] { display: none; }
 .card-row .strip-dots { margin-top: 14px; }
-.capbar { display: grid; grid-template-columns: 8ch minmax(0, 1fr); overflow-wrap: anywhere; gap: 3px 12px; margin-top: 0; padding: 10px 12px; border: 1px solid var(--border); border-top: 0; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11.5px; line-height: 1.5; color: var(--text); }
+.capbar { display: grid; grid-template-columns: 8ch minmax(0, 1fr); overflow-wrap: anywhere; gap: 3px 12px; margin-top: 0; padding: 10px 12px; border: 1px solid var(--border-2); border-top: 0; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11.5px; line-height: 1.5; color: var(--text); }
 .capbar .v { color: var(--text-3); } .capbar .v.f { color: var(--text); }
 .capbar .k { color: var(--text-3); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 3px; }
 .capbar a { color: var(--accent-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
@@ -745,7 +748,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
             <li class="plate" data-finding="The models chose temperature most and the water table least, taking what the date already explains." data-measure="Share of monthly rebuilds that selected each of six inputs, by horizon." data-source="Peatland-Flux-Forecasting README, figures/measurements_used_across_forecast_horizons.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 1245"><img src="assets/figures/peatland/measurements_used_across_forecast_horizons.webp" srcset="assets/figures/peatland/measurements_used_across_forecast_horizons-800.webp 800w, assets/figures/peatland/measurements_used_across_forecast_horizons-1200.webp 1200w, assets/figures/peatland/measurements_used_across_forecast_horizons.webp 1600w" sizes="(min-width: 1200px) 506px, (min-width: 600px) min(506px, calc(100vw - 82px)), min(506px, calc(100vw - 114px))" width="1600" height="1245" alt="Which measurements the models used" loading="lazy" decoding="async" draggable="false"></div><figcaption>Which inputs the models chose, against what the date already explains.</figcaption></figure></li>
             <li class="plate" data-finding="Across every evaluated year but methane in 2015 the misses are similar in size and vary in direction." data-measure="Scaled prediction error by evaluated year, methane and carbon dioxide." data-source="Peatland-Flux-Forecasting README, figures/prediction_error_by_year.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 825"><img src="assets/figures/peatland/prediction_error_by_year.webp" srcset="assets/figures/peatland/prediction_error_by_year-800.webp 800w, assets/figures/peatland/prediction_error_by_year-1200.webp 1200w, assets/figures/peatland/prediction_error_by_year.webp 1600w" sizes="(min-width: 1200px) 559px, (min-width: 600px) min(764px, calc(100vw - 82px)), min(764px, calc(100vw - 114px))" width="1600" height="825" alt="Prediction error by year" loading="lazy" decoding="async" draggable="false"></div><figcaption>Prediction error by year: similar misses, in varying directions.</figcaption></figure></li>
             <li class="plate" data-finding="Projecting back to 1990 needs water table levels 0.29 m above the 0.33 m band the model was fitted on." data-measure="Monthly water table elevation, 1990 to 2019, against the fitted range." data-source="Peatland-Flux-Forecasting README, figures/water_table_support.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 800"><img src="assets/figures/peatland/water_table_support.webp" srcset="assets/figures/peatland/water_table_support-800.webp 800w, assets/figures/peatland/water_table_support-1200.webp 1200w, assets/figures/peatland/water_table_support.webp 1600w" sizes="(min-width: 1200px) 559px, (min-width: 600px) min(788px, calc(100vw - 82px)), min(788px, calc(100vw - 114px))" width="1600" height="800" alt="Monthly water table elevation" loading="lazy" decoding="async" draggable="false"></div><figcaption>Water table beyond the fitted range, where the backcast must assume.</figcaption></figure></li>
-            <li class="plate" data-finding="The water table coefficient climbs at every step as the fit is restricted to drier months." data-measure="Fitted water table coefficient over four progressively drier subsets, weighted and unweighted." data-source="Peatland-Flux-Forecasting README, figures/coefficient_stability.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 1334"><img src="assets/figures/peatland/coefficient_stability.webp" srcset="assets/figures/peatland/coefficient_stability-800.webp 800w, assets/figures/peatland/coefficient_stability-1200.webp 1200w, assets/figures/peatland/coefficient_stability.webp 1600w" sizes="(min-width: 1200px) 473px, (min-width: 600px) min(473px, calc(100vw - 82px)), min(473px, calc(100vw - 114px))" width="1600" height="1334" alt="The water table coefficient refitted on drier months" loading="lazy" decoding="async" draggable="false"></div><figcaption>The water table coefficient climbs as the fit is restricted to drier months.</figcaption></figure></li>
+            <li class="plate" data-finding="The water table coefficient climbs at each of four steps as the fit is restricted to drier months, but every step&#x27;s interval overlaps the first." data-measure="Fitted water table coefficient over four progressively drier subsets, weighted and unweighted." data-source="Peatland-Flux-Forecasting README, figures/coefficient_stability.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 1334"><img src="assets/figures/peatland/coefficient_stability.webp" srcset="assets/figures/peatland/coefficient_stability-800.webp 800w, assets/figures/peatland/coefficient_stability-1200.webp 1200w, assets/figures/peatland/coefficient_stability.webp 1600w" sizes="(min-width: 1200px) 473px, (min-width: 600px) min(473px, calc(100vw - 82px)), min(473px, calc(100vw - 114px))" width="1600" height="1334" alt="The water table coefficient refitted on drier months" loading="lazy" decoding="async" draggable="false"></div><figcaption>The water table coefficient climbs as the fit is restricted to drier months.</figcaption></figure></li>
             <li class="plate" data-finding="Three treatments of the water table term give annual totals from 8 to 30 g C per square meter for 1990 to 2008." data-measure="Reconstructed monthly methane emission, 1990 to 2008, under three assumptions." data-source="Peatland-Flux-Forecasting README, figures/reconstruction_series.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 1067"><img src="assets/figures/peatland/reconstruction_series.webp" srcset="assets/figures/peatland/reconstruction_series-800.webp 800w, assets/figures/peatland/reconstruction_series-1200.webp 1200w, assets/figures/peatland/reconstruction_series.webp 1600w" sizes="(min-width: 1200px) 559px, (min-width: 600px) min(591px, calc(100vw - 82px)), min(591px, calc(100vw - 114px))" width="1600" height="1067" alt="Reconstructed methane emission" loading="lazy" decoding="async" draggable="false"></div><figcaption>Reconstructed emission, 1990 to 2008, under three assumptions.</figcaption></figure></li>
             <li class="plate" data-finding="Of four checks, only Laplace on the unweighted residuals holds, and the study&#x27;s intervals assume no distribution." data-measure="Model residuals against Laplace and Gaussian testing bands, weighted and unweighted." data-source="Peatland-Flux-Forecasting README, figures/residual_distribution_check.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1560 / 2065"><img src="assets/figures/peatland/residual_distribution_check.webp" srcset="assets/figures/peatland/residual_distribution_check-800.webp 800w, assets/figures/peatland/residual_distribution_check-1200.webp 1200w, assets/figures/peatland/residual_distribution_check.webp 1560w" sizes="(min-width: 1200px) 298px, (min-width: 600px) min(298px, calc(100vw - 82px)), min(298px, calc(100vw - 114px))" width="1560" height="2065" alt="Diagnostic check on model errors" loading="lazy" decoding="async" draggable="false"></div><figcaption>The model&#x27;s errors against two distributions, weighted and unweighted.</figcaption></figure></li>
           </ul>
@@ -975,19 +978,31 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   var typeEl = document.getElementById('type');
   var li = 0;
   function chars(str) { return Array.from(str); }
+  function mark(n) { try { performance.mark(n); } catch (e) {} }
   function typeLine() {
     var line = lines[li];
     typeEl.classList.toggle('mono', line.mono);
     var cs = chars(line.t), i = 0;
     typed.textContent = '';
-    if (reduce) { typed.textContent = line.t; drawRoute(); return; }
+    if (reduce) { typed.textContent = line.t; return; }
     var tick = function () {
       if (i < cs.length) { typed.textContent += cs[i]; i += 1; setTimeout(tick, 42 + Math.random() * 40); }
-      else { drawRoute(); setTimeout(eraseLine, line.hold); }
+      else { setTimeout(eraseLine, line.hold); }
     };
     tick();
   }
-  function drawRoute() { var st = document.querySelector('.intro .stack'); if (st && !st.classList.contains('drawn')) st.classList.add('drawn'); }  // the route draws once, when the first line has finished typing
+  // Each stage starts when the previous transition actually ends, so a slow frame delays the next stage instead of overlapping it; a timer backs each up
+  function showName() {
+    var st = document.querySelector('.intro .stack'), h1 = st.querySelector('h1.name'), settled = false;
+    var settle = function () { if (settled) return; settled = true; h1.removeEventListener('transitionend', onEnd); mark('intro:name-visible'); drawRoute(); typeLine(); };
+    var onEnd = function (e) { if (e.target === h1 && e.propertyName === 'transform') settle(); };
+    st.classList.add('show'); mark('intro:name-shown');
+    if (reduce) { settle(); return; }
+    h1.addEventListener('transitionend', onEnd); setTimeout(settle, 240 + 480);
+  }
+  var routeEnded = false;
+  function routeDone() { if (routeEnded) return; routeEnded = true; mark('intro:route-end'); setTimeout(function () { gooStart(); }, 0); }  // the blobs start only once the route has drawn, so their blur never competes with the sequence
+  function drawRoute() { var st = document.querySelector('.intro .stack'); if (st && !st.classList.contains('drawn')) { st.classList.add('drawn'); mark('intro:route-start'); var rp = document.querySelector('.route .reveal-path'); if (rp) rp.addEventListener('transitionend', routeDone, { once: true }); if (reduce) routeDone(); else setTimeout(routeDone, 1200); } }  // the route draws once, as the name settles; the timer only backs up a transitionend that never arrives
   function eraseLine() {
     var tick = function () {
       var cs = chars(typed.textContent);
@@ -997,32 +1012,28 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     tick();
   }
   function nextLine() { li = (li + 1) % lines.length; setTimeout(typeLine, 300); }
-  // Welcome curtain: greetings crossfade, then the curtain lifts and the typewriter begins. Plays on every load while iterating; gate on sessionStorage at launch.
-  var greets = ['¡Bienvenido!', 'ようこそ！', 'Willkommen!', '환영합니다!', 'Bienvenue !', '欢迎！', 'Benvenuto!', 'Welkom!', 'Bem-vindo!', 'Welcome!'];
+  // Welcome curtain: shows once per session and lifts at first contentful paint over --d-slow; the name and typed line rise as it ends, and the route draws as the name settles.
   try { history.scrollRestoration = 'manual'; } catch (e) {}
   window.scrollTo(0, 0);
   var curtain = document.getElementById('curtain');
-  var cards = [document.getElementById('card-a'), document.getElementById('card-b')], cur = 0, gi = 0, timer = null, lifted = false;
-  cards[1].classList.add('idle');
-  var lift = function () { if (lifted) return; lifted = true; clearTimeout(timer); window.scrollTo(0, 0); curtain.classList.add('lift'); gooStart(); var after = reduce ? 0 : 480; setTimeout(function () { curtain.classList.add('gone'); document.querySelector('.intro .stack').classList.add('show'); typeLine(); }, after); };
-  var flip = function () {
-    if (gi >= greets.length - 1) { lift(); return; }
-    gi += 1;
-    var outC = cards[cur], inC = cards[1 - cur];
-    inC.querySelector('span').textContent = greets[gi];
-    inC.classList.remove('idle', 'out'); inC.classList.add('in');
-    outC.classList.remove('in'); outC.classList.add('out');
-    cur = 1 - cur;
-    var fl = document.getElementById('flap'); fl.classList.remove('tick'); void fl.offsetWidth; fl.classList.add('tick');
-    clearTimeout(timer);
-    timer = setTimeout(flip, gi === greets.length - 1 ? 1100 : 520);
+  var timer = null, lifted = false;
+  document.getElementById('card-b').classList.add('idle');
+  var lift = function () {
+    if (lifted) return; lifted = true; clearTimeout(timer); window.scrollTo(0, 0);
+    var ended = false;
+    var end = function () { if (ended) return; ended = true; curtain.removeEventListener('transitionend', onEnd); mark('intro:curtain-lift-end'); curtain.classList.add('gone'); showName(); };
+    var onEnd = function (e) { if (e.target === curtain && e.propertyName === 'transform') end(); };
+    mark('intro:curtain-lift-start'); curtain.classList.add('lift');
+    if (reduce) { end(); return; }
+    curtain.addEventListener('transitionend', onEnd); setTimeout(end, 480 + 480);
   };
   var seen = false; try { seen = sessionStorage.getItem('mwm-welcome') === '1'; } catch (e) {}
-  if (reduce || seen) { lifted = true; curtain.classList.add('gone'); setTimeout(function () { gooStart(); }, 0); requestAnimationFrame(function () { requestAnimationFrame(function () { document.querySelector('.intro .stack').classList.add('show'); setTimeout(typeLine, reduce ? 0 : 240); }); }); }
+  if (reduce || seen) { lifted = true; curtain.classList.add('gone'); requestAnimationFrame(function () { requestAnimationFrame(function () { showName(); }); }); }
   else {
     try { sessionStorage.setItem('mwm-welcome', '1'); } catch (e) {}
-    timer = setTimeout(flip, 700);
-    curtain.addEventListener('click', function () { if (gi >= greets.length - 1) lift(); else flip(); });
+    // lift on the frame after the first contentful paint: the first frame after parse paints the curtain, the next starts the lift; a timer backs it up
+    requestAnimationFrame(function () { requestAnimationFrame(lift); }); timer = setTimeout(lift, 1500);
+    curtain.addEventListener('click', lift);
   }
 
   // Liquid blobs: seven discs drift slowly between a dispersed and a gathered arrangement; positions are blended, so speed stays even

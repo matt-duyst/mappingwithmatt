@@ -24,8 +24,8 @@ main.project section { margin-top: 44px; }
 .vid-toggle:hover, .vid-toggle:focus-visible { border-color: var(--text); }
 
 /* ===== 2.0 study: figure frames and caption bars ===== */
-.pfig .plate-frame { border-color: var(--border); }
-.pfig .capbar { display: grid; grid-template-columns: 8ch minmax(0, 1fr); overflow-wrap: anywhere; gap: 3px 12px; margin-top: 0; padding: 10px 12px; border: 1px solid var(--border); border-top: 0; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11.5px; line-height: 1.5; color: var(--text); box-sizing: border-box; width: fit-content; max-width: 100%; margin-inline: auto; }
+.pfig .plate-frame { border-color: var(--border-2); }
+.pfig .capbar { display: grid; grid-template-columns: 8ch minmax(0, 1fr); overflow-wrap: anywhere; gap: 3px 12px; margin-top: 0; padding: 10px 12px; border: 1px solid var(--border-2); border-top: 0; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11.5px; line-height: 1.5; color: var(--text); box-sizing: border-box; width: fit-content; max-width: 100%; margin-inline: auto; }
 .pfig .capbar a, .app-list a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
 .pfig .capbar .v { color: var(--text-3); } .pfig .capbar .v.f { color: var(--text); }
 .pfig .capbar .k { color: var(--text-3); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 3px; }
@@ -44,7 +44,7 @@ main.project section { margin-top: 44px; }
 .next-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 20px; align-items: center; margin-top: 40px; padding: 20px 22px; border: 1px solid var(--line); border-radius: 4px; background: var(--card); color: var(--text); transition: transform var(--d-fast) var(--ease), border-color var(--d-fast) var(--ease); }
 .next-card .k { grid-column: 1 / -1; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
 .next-card .t { font-family: var(--font-display); font-weight: var(--w-title); font-size: 22px; line-height: 1.2; letter-spacing: -0.02em; } .next-card .arrow { font-size: 22px; color: var(--text-3); }
-.next-card:hover { transform: translateY(-2px); border-color: var(--border); }
+.next-card:hover { transform: translateY(-2px); border-color: var(--border-2); }
 .secdex { display: none; }
 .pin { display: none; }
 @media (min-width: 1200px) {
