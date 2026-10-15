@@ -27,22 +27,23 @@ main.project section { margin-top: 44px; }
 .pfig .plate-frame { border-color: var(--border); }
 .pfig .capbar { display: grid; grid-template-columns: 8ch minmax(0, 1fr); overflow-wrap: anywhere; gap: 3px 12px; margin-top: 0; padding: 10px 12px; border: 1px solid var(--border); border-top: 0; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11.5px; line-height: 1.5; color: var(--text); box-sizing: border-box; width: fit-content; max-width: 100%; margin-inline: auto; }
 .pfig .capbar a, .app-list a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
-.pfig .capbar .k { color: var(--text-2); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 3px; }
+.pfig .capbar .v { color: var(--text-3); } .pfig .capbar .v.f { color: var(--text); }
+.pfig .capbar .k { color: var(--text-3); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 3px; }
 .pfig:not(.pvid) .plate-frame { margin-inline: auto; }
 .pfig .plate-frame + .capbar { width: 100%; }
 @media (max-width: 640px) { .pfig .capbar { grid-template-columns: 1fr; gap: 0; } .pfig .capbar .k { padding-top: 6px; } }
 /* ===== 2.0 study: Peatland anatomy ===== */
 .byline { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, max-content)); gap: 8px 32px; margin: 0 0 22px; padding: 14px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 12px; line-height: 1.6; color: var(--text); }
-.byline div { margin: 0; } .byline dd { margin: 0; } .byline .k { color: var(--text-2); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+.byline div { margin: 0; } .byline dd { margin: 0; } .byline .k { color: var(--text-3); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
 .pfig.fig-body { max-width: 65ch; }
 .pfig.fig-page { width: min(960px, 100vw - 2 * var(--pad)); max-width: none; margin-left: calc(50% - min(480px, 50vw - var(--pad))); }
 .pfig.fig-screen { width: 100vw; max-width: none; margin-left: calc(50% - 50vw); }
 .appendix { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); }
-.app-list { margin: 0; display: grid; gap: 14px; } .app-list div { display: grid; grid-template-columns: 18ch minmax(0, 1fr); gap: 12px; } .app-list dt { font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); padding-top: 4px; } .app-list dd { margin: 0; font-family: var(--font-body); font-feature-settings: var(--ff-read); font-size: 16px; line-height: 1.6; max-width: 65ch; }
+.app-list { margin: 0; display: grid; gap: 14px; } .app-list div { display: grid; grid-template-columns: 18ch minmax(0, 1fr); gap: 12px; } .app-list dt { font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); padding-top: 4px; } .app-list dd { margin: 0; font-family: var(--font-body); font-feature-settings: var(--ff-read); font-size: 16px; line-height: 1.6; max-width: 65ch; }
 @media (max-width: 640px) { .app-list div { grid-template-columns: 1fr; gap: 2px; } }
-.next-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 20px; align-items: center; margin-top: 40px; padding: 20px 22px; border: 1px solid var(--line); border-radius: 4px; background: var(--raised); color: var(--text); transition: transform var(--d-fast) var(--ease), border-color var(--d-fast) var(--ease); }
-.next-card .k { grid-column: 1 / -1; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); }
-.next-card .t { font-family: var(--font-display); font-weight: var(--w-title); font-size: 22px; line-height: 1.2; letter-spacing: -0.02em; } .next-card .arrow { font-size: 22px; color: var(--text-2); }
+.next-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 20px; align-items: center; margin-top: 40px; padding: 20px 22px; border: 1px solid var(--line); border-radius: 4px; background: var(--card); color: var(--text); transition: transform var(--d-fast) var(--ease), border-color var(--d-fast) var(--ease); }
+.next-card .k { grid-column: 1 / -1; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+.next-card .t { font-family: var(--font-display); font-weight: var(--w-title); font-size: 22px; line-height: 1.2; letter-spacing: -0.02em; } .next-card .arrow { font-size: 22px; color: var(--text-3); }
 .next-card:hover { transform: translateY(-2px); border-color: var(--border); }
 .secdex { display: none; }
 .pin { display: none; }
@@ -61,9 +62,9 @@ main.project section { margin-top: 44px; }
   .pin .slot.active:has(figure:nth-child(2)) img { max-height: calc((100vh - 160px) / 2 - 40px); width: auto; }
   .pin .slot.active:has(figure:nth-child(4)) img { max-height: calc((100vh - 160px) / 4 - 20px); }
   .secdex { display: flex; position: fixed; right: clamp(14px, 2.4vw, 34px); top: 50%; transform: translateY(-50%); flex-direction: column; align-items: flex-end; z-index: 40; }
-  .secdex a { position: relative; display: flex; align-items: center; gap: 12px; padding: 7px 0; color: var(--text-2); border: 0; }
+  .secdex a { position: relative; display: flex; align-items: center; gap: 12px; padding: 7px 0; color: var(--text-3); border: 0; }
   .secdex a span { font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11px; letter-spacing: 0.03em; opacity: 0; transform: translateX(6px); transition: opacity var(--d-fast) var(--ease), transform var(--d-fast) var(--ease); white-space: nowrap; }
-  .secdex a i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--text-2); box-sizing: border-box; transition: background var(--d-fast) var(--ease), transform var(--d-fast) var(--ease); }
+  .secdex a i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--text-3); box-sizing: border-box; transition: background var(--d-fast) var(--ease), transform var(--d-fast) var(--ease); }
   .secdex a + a::before { content: ""; position: absolute; right: 3px; top: -7px; height: 14px; border-left: 1px dashed var(--line); }
   .secdex a:hover span, .secdex a:focus-visible span { opacity: 1; transform: none; color: var(--text); }
   .secdex a.active i { background: var(--text); border-color: var(--text); transform: scale(1.25); }

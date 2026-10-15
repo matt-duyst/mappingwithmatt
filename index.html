@@ -6,7 +6,7 @@
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/favicon-m.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <meta name="description" content="Matt Duyst, environmental data scientist: remote sensing, field measurement, and carbon accounting. An interactive roadmap of the places the work was built.">
-<meta name="theme-color" content="#070504" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0f0d0b" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#fdf9f6" media="(prefers-color-scheme: light)">
 <meta property="og:title" content="mapping with matt">
 <meta property="og:description" content="Environmental data scientist: remote sensing, field measurement, and carbon accounting. An interactive roadmap of the places the work was built.">
@@ -20,15 +20,16 @@
 /* Self-hosted fonts (vendor/fonts/, SIL OFL 1.1): one variable latin file per family */
 @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400 600; font-display: swap; src: url('vendor/fonts/inter-v20-latin-variable.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('vendor/fonts/jetbrains-mono-v24-latin-variable.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-/* 2.0 tokens. One twelve-step OKLCH ramp (hue 60, chroma 0.006), one accent, translucent surfaces, one motion system. */
+/* 2.0 tokens. One twelve-step OKLCH ramp (hue 60, chroma 0.006; steps 1 and 2 at 0.16 and 0.19, steps 3 to 12 even from 0.22 to 0.96), --text-3 for muted text, one accent, translucent surfaces, one motion system. */
 :root {
-  --page: oklch(0.120 0.006 60); --page-2: oklch(0.196 0.006 60); --raised: oklch(0.273 0.006 60); --raised-2: oklch(0.349 0.006 60); --inset: oklch(0.425 0.006 60); --border: oklch(0.502 0.006 60); --border-2: oklch(0.578 0.006 60); --border-3: oklch(0.655 0.006 60); --solid: oklch(0.731 0.006 60); --solid-2: oklch(0.807 0.006 60); --text-2: oklch(0.884 0.006 60); --text: oklch(0.960 0.006 60);
+  --page: oklch(0.160 0.006 60); --page-2: oklch(0.190 0.006 60); --raised: oklch(0.220 0.006 60); --raised-2: oklch(0.302 0.006 60); --inset: oklch(0.384 0.006 60); --border: oklch(0.467 0.006 60); --border-2: oklch(0.549 0.006 60); --border-3: oklch(0.631 0.006 60); --solid: oklch(0.713 0.006 60); --solid-2: oklch(0.796 0.006 60); --text-2: oklch(0.878 0.006 60); --text: oklch(0.960 0.006 60); --text-3: oklch(0.640 0.006 60);
   --accent: oklch(0.68 0.16 45);
   --accent-hover: oklch(from var(--accent) calc(l + 0.08) c h);
   --accent-border: oklch(from var(--accent) l c h / 0.45);
   --accent-muted: oklch(from var(--accent) l calc(c * 0.6) h / 0.16);
   --accent-ink: var(--accent);
-  --surface-1: var(--surface-1); --surface-2: var(--surface-2); --surface-3: rgba(255,255,255,0.07);
+  --card: var(--raised);
+  --surface-1: rgba(255,255,255,0.03); --surface-2: rgba(255,255,255,0.05); --surface-3: rgba(255,255,255,0.07);
   --line: rgba(255,255,255,0.08);
   --grain-opacity: 0.035;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1); --d-fast: 120ms; --d-base: 240ms; --d-slow: 480ms;
@@ -38,15 +39,15 @@
   --ff-read: "cv01", "ss03"; --ff-mono: "tnum";
   --w-read: 400; --w-nav: 510; --w-title: 590;
   /* legacy names, mapped onto the ramp so every existing rule reads from it */
-  --bg: var(--page); --surface: var(--surface-1); --text-muted: var(--text-2); --muted: var(--text-2); --body: var(--text);
+  --bg: var(--page); --surface: var(--surface-1); --text-muted: var(--text-3); --muted: var(--text-3); --body: var(--text);
   --link: var(--accent-ink); --accent-soft: var(--surface-2); --accent-text: var(--text);
   color-scheme: dark;
 }
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) { --page: oklch(0.985 0.006 60); --page-2: oklch(0.912 0.006 60); --raised: oklch(0.839 0.006 60); --raised-2: oklch(0.765 0.006 60); --inset: oklch(0.692 0.006 60); --border: oklch(0.619 0.006 60); --border-2: oklch(0.546 0.006 60); --border-3: oklch(0.473 0.006 60); --solid: oklch(0.400 0.006 60); --solid-2: oklch(0.326 0.006 60); --text-2: oklch(0.253 0.006 60); --text: oklch(0.180 0.006 60); --accent-ink: oklch(from var(--accent) 0.46 c h); --surface-1: var(--surface-1); --surface-2: rgba(0,0,0,0.05); --surface-3: rgba(0,0,0,0.07); --line: rgba(0,0,0,0.1); --grain-opacity: 0.025; color-scheme: light; }
+  :root:not([data-theme="dark"]) { --page: oklch(0.985 0.006 60); --page-2: oklch(0.912 0.006 60); --raised: oklch(0.839 0.006 60); --raised-2: oklch(0.765 0.006 60); --inset: oklch(0.692 0.006 60); --border: oklch(0.619 0.006 60); --border-2: oklch(0.546 0.006 60); --border-3: oklch(0.473 0.006 60); --solid: oklch(0.400 0.006 60); --solid-2: oklch(0.326 0.006 60); --text-2: oklch(0.253 0.006 60); --text: oklch(0.180 0.006 60); --text-3: oklch(0.460 0.006 60); --accent-ink: oklch(from var(--accent) 0.46 c h); --surface-1: rgba(0,0,0,0.03); --surface-2: rgba(0,0,0,0.05); --surface-3: rgba(0,0,0,0.07); --line: rgba(0,0,0,0.1); --grain-opacity: 0.025; color-scheme: light; --card: var(--page-2); }
 }
-:root[data-theme="light"] { --page: oklch(0.985 0.006 60); --page-2: oklch(0.912 0.006 60); --raised: oklch(0.839 0.006 60); --raised-2: oklch(0.765 0.006 60); --inset: oklch(0.692 0.006 60); --border: oklch(0.619 0.006 60); --border-2: oklch(0.546 0.006 60); --border-3: oklch(0.473 0.006 60); --solid: oklch(0.400 0.006 60); --solid-2: oklch(0.326 0.006 60); --text-2: oklch(0.253 0.006 60); --text: oklch(0.180 0.006 60); --accent-ink: oklch(from var(--accent) 0.46 c h); --surface-1: var(--surface-1); --surface-2: rgba(0,0,0,0.05); --surface-3: rgba(0,0,0,0.07); --line: rgba(0,0,0,0.1); --grain-opacity: 0.025; color-scheme: light; }
-:root[data-theme="dark"] { --page: oklch(0.120 0.006 60); --page-2: oklch(0.196 0.006 60); --raised: oklch(0.273 0.006 60); --raised-2: oklch(0.349 0.006 60); --inset: oklch(0.425 0.006 60); --border: oklch(0.502 0.006 60); --border-2: oklch(0.578 0.006 60); --border-3: oklch(0.655 0.006 60); --solid: oklch(0.731 0.006 60); --solid-2: oklch(0.807 0.006 60); --text-2: oklch(0.884 0.006 60); --text: oklch(0.960 0.006 60); --accent-ink: var(--accent); --surface-1: var(--surface-1); --surface-2: var(--surface-2); --surface-3: rgba(255,255,255,0.07); --line: rgba(255,255,255,0.08); --grain-opacity: 0.035; color-scheme: dark; }
+:root[data-theme="light"] { --page: oklch(0.985 0.006 60); --page-2: oklch(0.912 0.006 60); --raised: oklch(0.839 0.006 60); --raised-2: oklch(0.765 0.006 60); --inset: oklch(0.692 0.006 60); --border: oklch(0.619 0.006 60); --border-2: oklch(0.546 0.006 60); --border-3: oklch(0.473 0.006 60); --solid: oklch(0.400 0.006 60); --solid-2: oklch(0.326 0.006 60); --text-2: oklch(0.253 0.006 60); --text: oklch(0.180 0.006 60); --text-3: oklch(0.460 0.006 60); --accent-ink: oklch(from var(--accent) 0.46 c h); --surface-1: rgba(0,0,0,0.03); --surface-2: rgba(0,0,0,0.05); --surface-3: rgba(0,0,0,0.07); --line: rgba(0,0,0,0.1); --grain-opacity: 0.025; color-scheme: light; --card: var(--page-2); }
+:root[data-theme="dark"] { --page: oklch(0.160 0.006 60); --page-2: oklch(0.190 0.006 60); --raised: oklch(0.220 0.006 60); --raised-2: oklch(0.302 0.006 60); --inset: oklch(0.384 0.006 60); --border: oklch(0.467 0.006 60); --border-2: oklch(0.549 0.006 60); --border-3: oklch(0.631 0.006 60); --solid: oklch(0.713 0.006 60); --solid-2: oklch(0.796 0.006 60); --text-2: oklch(0.878 0.006 60); --text: oklch(0.960 0.006 60); --text-3: oklch(0.640 0.006 60); --accent-ink: var(--accent); --surface-1: rgba(255,255,255,0.03); --surface-2: rgba(255,255,255,0.05); --surface-3: rgba(255,255,255,0.07); --line: rgba(255,255,255,0.08); --grain-opacity: 0.035; color-scheme: dark; --card: var(--raised); }
 @media (prefers-reduced-motion: reduce) { :root { --d-base: 120ms; --d-slow: 120ms; } }
 @font-face { font-family: 'Bricolage Grotesque'; font-style: normal; font-weight: 200 800; font-display: swap; src: url('vendor/fonts/bricolage-grotesque-v9-latin-variable.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 /* Grain: a fixed overlay of two-octave turbulence, blended over the page */
@@ -156,6 +157,8 @@ section { padding: 56px var(--pad); }
 section .inner { max-width: var(--max); margin: 0 auto; }
 .eyebrow { font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 12px; font-weight: var(--w-nav); letter-spacing: 0.06em; color: var(--muted); margin-bottom: 12px; display: inline-flex; align-items: center; gap: 10px; }
 h1, h2, h3 { letter-spacing: -0.015em; }
+h3 { color: var(--text-2); }
+.hero p.bio { color: var(--text-2); }
 h1, h2 { font-family: var(--font-display); font-feature-settings: normal; font-weight: var(--w-title); letter-spacing: -0.02em; }
 h1 { font-size: clamp(32px, 4.2vw, 44px); line-height: 1.1; margin: 0 0 8px; font-weight: var(--w-title); }
 h2 { font-size: 20px; margin: 0 0 20px; font-weight: var(--w-title); }
@@ -350,7 +353,7 @@ p { margin: 0 0 16px; }
 .tab-ic { width:22px; height:22px; display:flex; align-items:flex-end; justify-content:center; }
 .tab-ic .ic { width:17px; height:17px; stroke-width:1.5; } .tab-ic .ic.ph { width:17px; height:17px; }
 .tab-ic .ic-pair { display:flex; align-items:flex-end; gap:1px; } .tab-ic .ic-pair .ic { width:10px; height:10px; } .tab-ic .ic-pair .ic.ph { width:14px; height:14px; }
-.tab-nm { font-size:10.5px; font-weight: var(--w-nav); } .tab-yr { font-size:9.5px; opacity:.8; }
+.tab-nm { font-size:10.5px; font-weight: var(--w-nav); } .tab-yr { font-size:9.5px; }
 .scrub { width:100%; margin:0; accent-color:var(--text); height:18px; }
 .panel { border-left:1px solid var(--line); background:color-mix(in srgb, var(--page) 96%, transparent); overflow:auto; padding:14px 14px 18px; display:flex; flex-direction:column; gap:16px; }
 .k { font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
@@ -448,23 +451,26 @@ footer.site a { color: var(--muted); border-bottom: 1px dotted var(--muted); }
 footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--accent-text); }
 /* ===== 2.0 study: hero ===== */
 .intro .stack > * { opacity: 1; transform: none; transition: none; }
+.intro h1.name, .intro .type { opacity: 0; transform: translateY(8px); transition: opacity var(--d-base) var(--ease), transform var(--d-base) var(--ease); }
+.intro .stack.show h1.name, .intro .stack.show .type { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .intro h1.name, .intro .type { transform: none; } }
 .intro .stack.show > :nth-child(n) { transition-delay: 0ms; }
 .intro h1.name { font-family: var(--font-display); font-feature-settings: normal; font-weight: var(--w-title); font-size: clamp(56px, 9vw, 128px); letter-spacing: -0.045em; line-height: 0.95; margin: 0; color: var(--text); }
 .intro .route { width: 320px; max-width: 80vw; height: auto; display: block; margin: -6px auto 2px; overflow: visible; }  /* 47 user units across 320px, so 0.88 units is a 6px dash */
-.intro .route path { fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-.intro .route .dash { stroke: var(--text); stroke-width: 1.5; stroke-dasharray: 0.88 0.88; }
-.intro .route .reveal-path { stroke: #fff; stroke-width: 6; stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset var(--d-slow) var(--ease); }
-.intro .stack.show .route .reveal-path { stroke-dashoffset: 0; }
+.intro .route path { fill: none; stroke-linecap: round; }  /* user units: 47 units across 320px, so 0.22 is a 1.5px stroke and 0.88 a 6px dash */
+.intro .route .dash { stroke: var(--text); stroke-width: 0.22; stroke-dasharray: 0.88 0.88; }
+.intro .route .reveal-path { stroke: #fff; stroke-width: 1.2; stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset var(--d-slow) var(--ease); }
+.intro .stack.drawn .route .reveal-path { stroke-dashoffset: 0; }
 .hero .bio-wrap { display: grid; grid-template-columns: 96px 1fr; gap: 20px; align-items: start; }
 .hero img.portrait-sm { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); display: block; }
 @media (max-width: 640px) { .hero .bio-wrap { grid-template-columns: 1fr; gap: 14px; } }
 /* ===== 2.0 study: section grammar ===== */
 .sec-head { margin: 0 0 28px; }
-.sec-num { display: block; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 12px; letter-spacing: 0.08em; color: var(--text-2); margin-bottom: 10px; }
+.sec-num { display: block; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 12px; letter-spacing: 0.08em; color: var(--text-3); margin-bottom: 10px; }
 .sec-head h2 { font-size: clamp(28px, 3.2vw, 40px); line-height: 1.05; margin: 0 0 10px; }
-.standfirst { font-size: 17px; line-height: 1.5; color: var(--text-2); margin: 0; max-width: 60ch; }
+.standfirst { font-size: 17px; line-height: 1.5; color: var(--text-3); margin: 0; max-width: 60ch; }
 /* ===== 2.0 study: one framed card row ===== */
-.papers .proj.card-row { display: block; position: relative; overflow: hidden; margin: 16px 0; padding: 20px 22px 18px; border: 1px solid var(--line); border-radius: 4px; background: var(--raised); --mx: 50%; --my: 50%; transition: transform var(--d-fast) var(--ease), border-color var(--d-fast) var(--ease); }
+.papers .proj.card-row { display: block; position: relative; overflow: hidden; margin: 16px 0; padding: 20px 22px 18px; border: 1px solid var(--line); border-radius: 4px; background: var(--card); --mx: 50%; --my: 50%; transition: transform var(--d-fast) var(--ease), border-color var(--d-fast) var(--ease); }
 .papers .proj.card-row::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(200px circle at var(--mx) var(--my), rgba(255,255,255,0.06), transparent 70%); transition: opacity var(--d-fast) var(--ease); }
 .papers .proj.card-row:hover { transform: translateY(-2px); border-color: var(--border); }
 .papers .proj.card-row:hover::before { opacity: 1; }
@@ -472,11 +478,15 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 .card-row .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
 .card-row .card-head .title { font-size: 17px; }
 .card-row .claim { font-size: 17px; line-height: 1.5; color: var(--text); margin: 10px 0 8px; max-width: 65ch; }
-.card-row .stack-line { font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 12px; letter-spacing: 0.04em; color: var(--text-2); margin-bottom: 14px; }
+.card-row .stack-line { font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 12px; letter-spacing: 0.04em; color: var(--text-3); margin-bottom: 14px; }
 .card-row .card-strip .plate-frame { border-color: var(--border); width: 100%; }
 .card-row .plate-none { aspect-ratio: auto; height: 200px; }
+.card-row .fig-strip { margin-top: 4px; }
+.card-row .capbar[hidden] { display: none; }
+.card-row .strip-dots { margin-top: 14px; }
 .capbar { display: grid; grid-template-columns: 8ch minmax(0, 1fr); overflow-wrap: anywhere; gap: 3px 12px; margin-top: 0; padding: 10px 12px; border: 1px solid var(--border); border-top: 0; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11.5px; line-height: 1.5; color: var(--text); }
-.capbar .k { color: var(--text-2); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 3px; }
+.capbar .v { color: var(--text-3); } .capbar .v.f { color: var(--text); }
+.capbar .k { color: var(--text-3); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 3px; }
 .capbar a { color: var(--accent-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
 @media (max-width: 640px) { .capbar { grid-template-columns: 1fr; gap: 0; } .capbar .k { padding-top: 6px; } .card-row .card-head { flex-direction: column; gap: 4px; } }
 @media (prefers-reduced-motion: reduce) { .papers .proj.card-row:hover { transform: none; } }
@@ -692,20 +702,13 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           <div class="proj-none">Figures forthcoming.</div>
         </div>
       </li>
-      <li class="proj card-row" id="row-flare">
-        <div class="card-head"><div class="title">Methane Destruction Removal Efficiency Assessment in US Shale Basins Using UAV-Based TDLAS Measurements</div><div class="proj-year">2024</div></div>
-        <p class="claim">The result is a field measurement of how much methane flares actually let through, at the scale of an operating program rather than a single site.</p>
-        <div class="stack-line">UAV &middot; TDLAS &middot; Python</div>
-        <div class="fig-strip single card-strip">
-          <ul class="strip-list" role="list" aria-label="Figures: Methane Destruction Removal Efficiency Assessment in US Shale Basins Using UAV-Based TDLAS Measurements">
-            <li class="plate"><figure><div class="plate-frame" style="--ar: 16 / 7"><div class="plate-none">No figures. Survey data are not public.</div></div></figure></li>
-          </ul>
-        </div>
-        <div class="capbar">
-          <span class="k">Finding</span><span class="v">Destruction removal efficiency measured at 42 flare systems across 71 observations in the Bakken and Permian basins, including 27 revisits.</span>
-          <span class="k">Measure</span><span class="v">Methane leaving each flare, by mass balance and plume modeling from drone surveys with a laser spectrometer, an anemometer, and RTK positioning.</span>
-          <span class="k">Source</span><span class="v">Duyst, K. M., and Smith, B. J. &middot; SPE-221067-MS, SPE Annual Technical Conference and Exhibition, 2024 &middot; <a href="/projects/flare-efficiency/">Page</a> &middot; <a href="https://doi.org/10.2118/221067-MS">paper</a></span>
-          <span class="k">Credit</span><span class="v">SeekOps Science team</span>
+      <li class="proj no-figs">
+        <div class="proj-text">
+          <div class="proj-head"><div class="title">Methane Destruction Removal Efficiency Assessment in US Shale Basins Using UAV-Based TDLAS Measurements</div><div class="proj-year">2024</div></div>
+          <div class="authors">Duyst, K. M., and Smith, B. J. &middot; SeekOps</div>
+          <div class="venue">SPE Annual Technical Conference and Exhibition, 2024 &middot; SPE-221067-MS</div>
+          <div class="links"><a href="/projects/flare-efficiency/">Page</a><a href="https://doi.org/10.2118/221067-MS">paper</a></div>
+          <div class="proj-none">Figures forthcoming.</div>
         </div>
       </li>
       <li class="proj">
@@ -727,31 +730,33 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 3" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 3"></button><button type="button" aria-label="Show figure 3 of 3"></button></div>
         </div>
       </li>
-      <li class="proj">
-        <div class="proj-text">
-          <div class="proj-head"><div class="title">Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland</div><div class="proj-year">2022</div></div>
-          <div class="authors">University of Minnesota, Griffis lab &middot; AmeriFlux US-MBP, 2009 to 2024</div>
-          <div class="venue">Visiting Research Scientist, 2022</div>
-          <div class="proj-lines"><div><span class="k">Reproduction</span> Rebuilt 2026</div></div>
-          <div class="links"><a href="/projects/peatland/">Page</a><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting">code</a><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting/tree/main/notes">notes</a></div>
-        </div>
+      <li class="proj card-row" id="row-peatland">
+        <div class="card-head"><div class="title">Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland</div><div class="proj-year">2022</div></div>
+        <p class="claim">What the peatland does each year is predictable; how much it does is not, and the record so far cannot say why.</p>
+        <div class="stack-line">Python &middot; AmeriFlux US-MBP &middot; eddy covariance</div>
         <div class="fig-strip">
           <button type="button" class="strip-btn strip-prev" aria-label="Previous figure" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
           <ul class="strip-list" role="list" aria-label="Figures: Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland" tabindex="0">
-            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1245"><img src="assets/figures/peatland/site_overview.webp" srcset="assets/figures/peatland/site_overview-800.webp 800w, assets/figures/peatland/site_overview-1200.webp 1200w, assets/figures/peatland/site_overview.webp 1600w" sizes="(min-width: 1200px) 506px, (min-width: 600px) min(506px, calc(100vw - 82px)), min(506px, calc(100vw - 114px))" width="1600" height="1245" alt="The flux tower and the wind directions it measures" loading="lazy" decoding="async" draggable="false"></div><figcaption>The flux tower, its wetland, and the wind sectors it keeps.</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1067"><img src="assets/figures/peatland/covariate_availability.webp" srcset="assets/figures/peatland/covariate_availability-800.webp 800w, assets/figures/peatland/covariate_availability-1200.webp 1200w, assets/figures/peatland/covariate_availability.webp 1600w" sizes="(min-width: 1200px) 559px, (min-width: 600px) min(591px, calc(100vw - 82px)), min(591px, calc(100vw - 114px))" width="1600" height="1067" alt="Which months each measurement and each analysis cover" loading="lazy" decoding="async" draggable="false"></div><figcaption>Which months each record covers, and where the model could run.</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1322"><img src="assets/figures/peatland/seasonal_cycle.webp" srcset="assets/figures/peatland/seasonal_cycle-800.webp 800w, assets/figures/peatland/seasonal_cycle-1200.webp 1200w, assets/figures/peatland/seasonal_cycle.webp 1600w" sizes="(min-width: 1200px) 477px, (min-width: 600px) min(477px, calc(100vw - 82px)), min(477px, calc(100vw - 114px))" width="1600" height="1322" alt="The seasonal cycle in monthly flux" loading="lazy" decoding="async" draggable="false"></div><figcaption>The seasonal shape of the record, and what each year leaves over.</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1334"><img src="assets/figures/peatland/forecast_error_by_horizon.webp" srcset="assets/figures/peatland/forecast_error_by_horizon-800.webp 800w, assets/figures/peatland/forecast_error_by_horizon-1200.webp 1200w, assets/figures/peatland/forecast_error_by_horizon.webp 1600w" sizes="(min-width: 1200px) 473px, (min-width: 600px) min(473px, calc(100vw - 82px)), min(473px, calc(100vw - 114px))" width="1600" height="1334" alt="Monthly methane and carbon dioxide forecast error" loading="lazy" decoding="async" draggable="false"></div><figcaption>Fitted models rarely beat the seasonal average at any horizon.</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1334"><img src="assets/figures/peatland/observed_and_predicted.webp" srcset="assets/figures/peatland/observed_and_predicted-800.webp 800w, assets/figures/peatland/observed_and_predicted-1200.webp 1200w, assets/figures/peatland/observed_and_predicted.webp 1600w" sizes="(min-width: 1200px) 473px, (min-width: 600px) min(473px, calc(100vw - 82px)), min(473px, calc(100vw - 114px))" width="1600" height="1334" alt="Observed and predicted monthly flux" loading="lazy" decoding="async" draggable="false"></div><figcaption>Forecasts follow the seasonal cycle; the size of each season escapes them.</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1245"><img src="assets/figures/peatland/measurements_used_across_forecast_horizons.webp" srcset="assets/figures/peatland/measurements_used_across_forecast_horizons-800.webp 800w, assets/figures/peatland/measurements_used_across_forecast_horizons-1200.webp 1200w, assets/figures/peatland/measurements_used_across_forecast_horizons.webp 1600w" sizes="(min-width: 1200px) 506px, (min-width: 600px) min(506px, calc(100vw - 82px)), min(506px, calc(100vw - 114px))" width="1600" height="1245" alt="Which measurements the models used" loading="lazy" decoding="async" draggable="false"></div><figcaption>Which inputs the models chose, against what the date already explains.</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 825"><img src="assets/figures/peatland/prediction_error_by_year.webp" srcset="assets/figures/peatland/prediction_error_by_year-800.webp 800w, assets/figures/peatland/prediction_error_by_year-1200.webp 1200w, assets/figures/peatland/prediction_error_by_year.webp 1600w" sizes="(min-width: 1200px) 559px, (min-width: 600px) min(764px, calc(100vw - 82px)), min(764px, calc(100vw - 114px))" width="1600" height="825" alt="Prediction error by year" loading="lazy" decoding="async" draggable="false"></div><figcaption>Prediction error by year: similar misses, in varying directions.</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 800"><img src="assets/figures/peatland/water_table_support.webp" srcset="assets/figures/peatland/water_table_support-800.webp 800w, assets/figures/peatland/water_table_support-1200.webp 1200w, assets/figures/peatland/water_table_support.webp 1600w" sizes="(min-width: 1200px) 559px, (min-width: 600px) min(788px, calc(100vw - 82px)), min(788px, calc(100vw - 114px))" width="1600" height="800" alt="Monthly water table elevation" loading="lazy" decoding="async" draggable="false"></div><figcaption>Water table beyond the fitted range, where the backcast must assume.</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1334"><img src="assets/figures/peatland/coefficient_stability.webp" srcset="assets/figures/peatland/coefficient_stability-800.webp 800w, assets/figures/peatland/coefficient_stability-1200.webp 1200w, assets/figures/peatland/coefficient_stability.webp 1600w" sizes="(min-width: 1200px) 473px, (min-width: 600px) min(473px, calc(100vw - 82px)), min(473px, calc(100vw - 114px))" width="1600" height="1334" alt="The water table coefficient refitted on drier months" loading="lazy" decoding="async" draggable="false"></div><figcaption>The water table coefficient climbs as the fit is restricted to drier months.</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame" style="--ar: 1600 / 1067"><img src="assets/figures/peatland/reconstruction_series.webp" srcset="assets/figures/peatland/reconstruction_series-800.webp 800w, assets/figures/peatland/reconstruction_series-1200.webp 1200w, assets/figures/peatland/reconstruction_series.webp 1600w" sizes="(min-width: 1200px) 559px, (min-width: 600px) min(591px, calc(100vw - 82px)), min(591px, calc(100vw - 114px))" width="1600" height="1067" alt="Reconstructed methane emission" loading="lazy" decoding="async" draggable="false"></div><figcaption>Reconstructed emission, 1990 to 2008, under three assumptions.</figcaption></figure></li>
-            <li class="plate"><figure><div class="plate-frame" style="--ar: 1560 / 2065"><img src="assets/figures/peatland/residual_distribution_check.webp" srcset="assets/figures/peatland/residual_distribution_check-800.webp 800w, assets/figures/peatland/residual_distribution_check-1200.webp 1200w, assets/figures/peatland/residual_distribution_check.webp 1560w" sizes="(min-width: 1200px) 298px, (min-width: 600px) min(298px, calc(100vw - 82px)), min(298px, calc(100vw - 114px))" width="1560" height="2065" alt="Diagnostic check on model errors" loading="lazy" decoding="async" draggable="false"></div><figcaption>The model&#x27;s errors against two distributions, weighted and unweighted.</figcaption></figure></li>
+            <li class="plate" data-finding="Upland forest to the east and southeast puts 40 percent of the half-hours in a discarded wind sector." data-measure="Wind direction, half-hourly, 2009 to 2019, with the wetland outline from the National Wetlands Inventory." data-source="Peatland-Flux-Forecasting README, figures/site_overview.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 1245"><img src="assets/figures/peatland/site_overview.webp" srcset="assets/figures/peatland/site_overview-800.webp 800w, assets/figures/peatland/site_overview-1200.webp 1200w, assets/figures/peatland/site_overview.webp 1600w" sizes="(min-width: 1200px) 506px, (min-width: 600px) min(506px, calc(100vw - 82px)), min(506px, calc(100vw - 114px))" width="1600" height="1245" alt="The flux tower and the wind directions it measures" loading="lazy" decoding="async" draggable="false"></div><figcaption>The flux tower, its wetland, and the wind sectors it keeps.</figcaption></figure></li>
+            <li class="plate" data-finding="Air temperature and precipitation end in 2019, which leaves 60 months of measured methane that no model can use." data-measure="Months with data in each record, 1990 to 2024, and the span each analysis could use." data-source="Peatland-Flux-Forecasting README, figures/covariate_availability.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 1067"><img src="assets/figures/peatland/covariate_availability.webp" srcset="assets/figures/peatland/covariate_availability-800.webp 800w, assets/figures/peatland/covariate_availability-1200.webp 1200w, assets/figures/peatland/covariate_availability.webp 1600w" sizes="(min-width: 1200px) 559px, (min-width: 600px) min(591px, calc(100vw - 82px)), min(591px, calc(100vw - 114px))" width="1600" height="1067" alt="Which months each measurement and each analysis cover" loading="lazy" decoding="async" draggable="false"></div><figcaption>Which months each record covers, and where the model could run.</figcaption></figure></li>
+            <li class="plate" data-finding="One repeating seasonal shape explains 74 percent of the variation in methane and 71 percent in carbon dioxide." data-measure="Monthly mean flux and its residual, methane and carbon dioxide, 2009 to 2024." data-source="Peatland-Flux-Forecasting README, figures/seasonal_cycle.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 1322"><img src="assets/figures/peatland/seasonal_cycle.webp" srcset="assets/figures/peatland/seasonal_cycle-800.webp 800w, assets/figures/peatland/seasonal_cycle-1200.webp 1200w, assets/figures/peatland/seasonal_cycle.webp 1600w" sizes="(min-width: 1200px) 477px, (min-width: 600px) min(477px, calc(100vw - 82px)), min(477px, calc(100vw - 114px))" width="1600" height="1322" alt="The seasonal cycle in monthly flux" loading="lazy" decoding="async" draggable="false"></div><figcaption>The seasonal shape of the record, and what each year leaves over.</figcaption></figure></li>
+            <li class="plate" data-finding="No fitted method beats the seasonal average at any horizon on either gas." data-measure="Scaled forecast error at one to twelve months, four methods against four benchmarks." data-source="Peatland-Flux-Forecasting README, figures/forecast_error_by_horizon.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 1334"><img src="assets/figures/peatland/forecast_error_by_horizon.webp" srcset="assets/figures/peatland/forecast_error_by_horizon-800.webp 800w, assets/figures/peatland/forecast_error_by_horizon-1200.webp 1200w, assets/figures/peatland/forecast_error_by_horizon.webp 1600w" sizes="(min-width: 1200px) 473px, (min-width: 600px) min(473px, calc(100vw - 82px)), min(473px, calc(100vw - 114px))" width="1600" height="1334" alt="Monthly methane and carbon dioxide forecast error" loading="lazy" decoding="async" draggable="false"></div><figcaption>Fitted models rarely beat the seasonal average at any horizon.</figcaption></figure></li>
+            <li class="plate" data-finding="In 12 of the 57 evaluated methane months the measured flux fell below every fitted model." data-measure="Observed and predicted monthly flux from rolling-origin forecasts, methane and carbon dioxide." data-source="Peatland-Flux-Forecasting README, figures/observed_and_predicted.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 1334"><img src="assets/figures/peatland/observed_and_predicted.webp" srcset="assets/figures/peatland/observed_and_predicted-800.webp 800w, assets/figures/peatland/observed_and_predicted-1200.webp 1200w, assets/figures/peatland/observed_and_predicted.webp 1600w" sizes="(min-width: 1200px) 473px, (min-width: 600px) min(473px, calc(100vw - 82px)), min(473px, calc(100vw - 114px))" width="1600" height="1334" alt="Observed and predicted monthly flux" loading="lazy" decoding="async" draggable="false"></div><figcaption>Forecasts follow the seasonal cycle; the size of each season escapes them.</figcaption></figure></li>
+            <li class="plate" data-finding="The models chose temperature most and the water table least, taking what the date already explains." data-measure="Share of monthly rebuilds that selected each of six inputs, by horizon." data-source="Peatland-Flux-Forecasting README, figures/measurements_used_across_forecast_horizons.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 1245"><img src="assets/figures/peatland/measurements_used_across_forecast_horizons.webp" srcset="assets/figures/peatland/measurements_used_across_forecast_horizons-800.webp 800w, assets/figures/peatland/measurements_used_across_forecast_horizons-1200.webp 1200w, assets/figures/peatland/measurements_used_across_forecast_horizons.webp 1600w" sizes="(min-width: 1200px) 506px, (min-width: 600px) min(506px, calc(100vw - 82px)), min(506px, calc(100vw - 114px))" width="1600" height="1245" alt="Which measurements the models used" loading="lazy" decoding="async" draggable="false"></div><figcaption>Which inputs the models chose, against what the date already explains.</figcaption></figure></li>
+            <li class="plate" data-finding="Across every evaluated year but methane in 2015 the misses are similar in size and vary in direction." data-measure="Scaled prediction error by evaluated year, methane and carbon dioxide." data-source="Peatland-Flux-Forecasting README, figures/prediction_error_by_year.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 825"><img src="assets/figures/peatland/prediction_error_by_year.webp" srcset="assets/figures/peatland/prediction_error_by_year-800.webp 800w, assets/figures/peatland/prediction_error_by_year-1200.webp 1200w, assets/figures/peatland/prediction_error_by_year.webp 1600w" sizes="(min-width: 1200px) 559px, (min-width: 600px) min(764px, calc(100vw - 82px)), min(764px, calc(100vw - 114px))" width="1600" height="825" alt="Prediction error by year" loading="lazy" decoding="async" draggable="false"></div><figcaption>Prediction error by year: similar misses, in varying directions.</figcaption></figure></li>
+            <li class="plate" data-finding="Projecting back to 1990 needs water table levels 0.29 m above the 0.33 m band the model was fitted on." data-measure="Monthly water table elevation, 1990 to 2019, against the fitted range." data-source="Peatland-Flux-Forecasting README, figures/water_table_support.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 800"><img src="assets/figures/peatland/water_table_support.webp" srcset="assets/figures/peatland/water_table_support-800.webp 800w, assets/figures/peatland/water_table_support-1200.webp 1200w, assets/figures/peatland/water_table_support.webp 1600w" sizes="(min-width: 1200px) 559px, (min-width: 600px) min(788px, calc(100vw - 82px)), min(788px, calc(100vw - 114px))" width="1600" height="800" alt="Monthly water table elevation" loading="lazy" decoding="async" draggable="false"></div><figcaption>Water table beyond the fitted range, where the backcast must assume.</figcaption></figure></li>
+            <li class="plate" data-finding="The water table coefficient climbs at every step as the fit is restricted to drier months." data-measure="Fitted water table coefficient over four progressively drier subsets, weighted and unweighted." data-source="Peatland-Flux-Forecasting README, figures/coefficient_stability.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 1334"><img src="assets/figures/peatland/coefficient_stability.webp" srcset="assets/figures/peatland/coefficient_stability-800.webp 800w, assets/figures/peatland/coefficient_stability-1200.webp 1200w, assets/figures/peatland/coefficient_stability.webp 1600w" sizes="(min-width: 1200px) 473px, (min-width: 600px) min(473px, calc(100vw - 82px)), min(473px, calc(100vw - 114px))" width="1600" height="1334" alt="The water table coefficient refitted on drier months" loading="lazy" decoding="async" draggable="false"></div><figcaption>The water table coefficient climbs as the fit is restricted to drier months.</figcaption></figure></li>
+            <li class="plate" data-finding="Three treatments of the water table term give annual totals from 8 to 30 g C per square meter for 1990 to 2008." data-measure="Reconstructed monthly methane emission, 1990 to 2008, under three assumptions." data-source="Peatland-Flux-Forecasting README, figures/reconstruction_series.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1600 / 1067"><img src="assets/figures/peatland/reconstruction_series.webp" srcset="assets/figures/peatland/reconstruction_series-800.webp 800w, assets/figures/peatland/reconstruction_series-1200.webp 1200w, assets/figures/peatland/reconstruction_series.webp 1600w" sizes="(min-width: 1200px) 559px, (min-width: 600px) min(591px, calc(100vw - 82px)), min(591px, calc(100vw - 114px))" width="1600" height="1067" alt="Reconstructed methane emission" loading="lazy" decoding="async" draggable="false"></div><figcaption>Reconstructed emission, 1990 to 2008, under three assumptions.</figcaption></figure></li>
+            <li class="plate" data-finding="Of four checks, only Laplace on the unweighted residuals holds, and the study&#x27;s intervals assume no distribution." data-measure="Model residuals against Laplace and Gaussian testing bands, weighted and unweighted." data-source="Peatland-Flux-Forecasting README, figures/residual_distribution_check.png, from AmeriFlux US-MBP" data-credit="Figure: M. Duyst"><figure><div class="plate-frame" style="--ar: 1560 / 2065"><img src="assets/figures/peatland/residual_distribution_check.webp" srcset="assets/figures/peatland/residual_distribution_check-800.webp 800w, assets/figures/peatland/residual_distribution_check-1200.webp 1200w, assets/figures/peatland/residual_distribution_check.webp 1560w" sizes="(min-width: 1200px) 298px, (min-width: 600px) min(298px, calc(100vw - 82px)), min(298px, calc(100vw - 114px))" width="1560" height="2065" alt="Diagnostic check on model errors" loading="lazy" decoding="async" draggable="false"></div><figcaption>The model&#x27;s errors against two distributions, weighted and unweighted.</figcaption></figure></li>
           </ul>
           <button type="button" class="strip-btn strip-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
           <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 11" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 11"></button><button type="button" aria-label="Show figure 3 of 11"></button><button type="button" aria-label="Show figure 4 of 11"></button><button type="button" aria-label="Show figure 5 of 11"></button><button type="button" aria-label="Show figure 6 of 11"></button><button type="button" aria-label="Show figure 7 of 11"></button><button type="button" aria-label="Show figure 8 of 11"></button><button type="button" aria-label="Show figure 9 of 11"></button><button type="button" aria-label="Show figure 10 of 11"></button><button type="button" aria-label="Show figure 11 of 11"></button></div>
+        </div>
+        <div class="capbar" data-links="&lt;a href=&quot;/projects/peatland/&quot;&gt;Page&lt;/a&gt; &middot; &lt;a href=&quot;https://github.com/matt-duyst/Peatland-Flux-Forecasting&quot;&gt;code&lt;/a&gt; &middot; &lt;a href=&quot;https://github.com/matt-duyst/Peatland-Flux-Forecasting/tree/main/notes&quot;&gt;notes&lt;/a&gt;">
+          <span class="k">Finding</span><span class="v f"></span>
+          <span class="k">Measure</span><span class="v m"></span>
+          <span class="k">Source</span><span class="v s"></span>
+          <span class="k">Credit</span><span class="v c"></span>
         </div>
       </li>
       <li class="proj">
@@ -975,13 +980,14 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     typeEl.classList.toggle('mono', line.mono);
     var cs = chars(line.t), i = 0;
     typed.textContent = '';
-    if (reduce) { typed.textContent = line.t; return; }
+    if (reduce) { typed.textContent = line.t; drawRoute(); return; }
     var tick = function () {
       if (i < cs.length) { typed.textContent += cs[i]; i += 1; setTimeout(tick, 42 + Math.random() * 40); }
-      else { setTimeout(eraseLine, line.hold); }
+      else { drawRoute(); setTimeout(eraseLine, line.hold); }
     };
     tick();
   }
+  function drawRoute() { var st = document.querySelector('.intro .stack'); if (st && !st.classList.contains('drawn')) st.classList.add('drawn'); }  // the route draws once, when the first line has finished typing
   function eraseLine() {
     var tick = function () {
       var cs = chars(typed.textContent);
@@ -998,7 +1004,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   var curtain = document.getElementById('curtain');
   var cards = [document.getElementById('card-a'), document.getElementById('card-b')], cur = 0, gi = 0, timer = null, lifted = false;
   cards[1].classList.add('idle');
-  var lift = function () { if (lifted) return; lifted = true; clearTimeout(timer); window.scrollTo(0, 0); curtain.classList.add('lift'); gooStart(); document.querySelector('.intro .stack').classList.add('show'); setTimeout(function () { curtain.classList.add('gone'); }, reduce ? 0 : 950); setTimeout(typeLine, reduce ? 100 : 520); };
+  var lift = function () { if (lifted) return; lifted = true; clearTimeout(timer); window.scrollTo(0, 0); curtain.classList.add('lift'); gooStart(); var after = reduce ? 0 : 480; setTimeout(function () { curtain.classList.add('gone'); document.querySelector('.intro .stack').classList.add('show'); typeLine(); }, after); };
   var flip = function () {
     if (gi >= greets.length - 1) { lift(); return; }
     gi += 1;
@@ -1012,7 +1018,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     timer = setTimeout(flip, gi === greets.length - 1 ? 1100 : 520);
   };
   var seen = false; try { seen = sessionStorage.getItem('mwm-welcome') === '1'; } catch (e) {}
-  if (reduce || seen) { lifted = true; curtain.classList.add('gone'); setTimeout(function () { gooStart(); }, 0); requestAnimationFrame(function () { requestAnimationFrame(function () { document.querySelector('.intro .stack').classList.add('show'); }); }); setTimeout(typeLine, reduce ? 0 : 200); }
+  if (reduce || seen) { lifted = true; curtain.classList.add('gone'); setTimeout(function () { gooStart(); }, 0); requestAnimationFrame(function () { requestAnimationFrame(function () { document.querySelector('.intro .stack').classList.add('show'); setTimeout(typeLine, reduce ? 0 : 240); }); }); }
   else {
     try { sessionStorage.setItem('mwm-welcome', '1'); } catch (e) {}
     timer = setTimeout(flip, 700);
@@ -1240,6 +1246,17 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   document.querySelectorAll('.card-row').forEach(function (card) {
     card.addEventListener('pointermove', function (e) { var r = card.getBoundingClientRect(); card.style.setProperty('--mx', (e.clientX - r.left) + 'px'); card.style.setProperty('--my', (e.clientY - r.top) + 'px'); });
     card.addEventListener('pointerenter', function (e) { if (e.pointerType === 'touch') return; var next = card.querySelector('.strip-next'); if (next && !next.hidden) next.click(); });
+    var list = card.querySelector('.strip-list'), bar = card.querySelector('.capbar');
+    if (list && bar) {
+      var plates = Array.prototype.slice.call(list.children), raf = null;
+      function fill() {
+        raf = null; var step = plates.length > 1 ? plates[1].offsetLeft - plates[0].offsetLeft : 1, i = Math.max(0, Math.min(plates.length - 1, Math.round(list.scrollLeft / step))), p = plates[i];
+        if (!p.querySelector('img') || !p.dataset.finding) { bar.hidden = true; return; }
+        bar.hidden = false; bar.querySelector('.f').textContent = p.dataset.finding; bar.querySelector('.m').textContent = p.dataset.measure;
+        bar.querySelector('.s').innerHTML = p.dataset.source + (bar.dataset.links ? ' &middot; ' + bar.dataset.links : ''); bar.querySelector('.c').textContent = p.dataset.credit || '';
+      }
+      list.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(fill); }, { passive: true }); fill();
+    }
   });
 })();
 </script>

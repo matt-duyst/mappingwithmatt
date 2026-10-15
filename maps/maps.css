@@ -1,15 +1,16 @@
 /* Self-hosted fonts (vendor/fonts/, SIL OFL 1.1); url() resolves against this stylesheet, so ../vendor/fonts/ serves /maps/ and every /maps/<slug>/ page */
 @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400 600; font-display: swap; src: url('../vendor/fonts/inter-v20-latin-variable.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('../vendor/fonts/jetbrains-mono-v24-latin-variable.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-/* 2.0 tokens. One twelve-step OKLCH ramp (hue 60, chroma 0.006), one accent, translucent surfaces, one motion system. */
+/* 2.0 tokens. One twelve-step OKLCH ramp (hue 60, chroma 0.006; steps 1 and 2 at 0.16 and 0.19, steps 3 to 12 even from 0.22 to 0.96), --text-3 for muted text, one accent, translucent surfaces, one motion system. */
 :root {
-  --page: oklch(0.120 0.006 60); --page-2: oklch(0.196 0.006 60); --raised: oklch(0.273 0.006 60); --raised-2: oklch(0.349 0.006 60); --inset: oklch(0.425 0.006 60); --border: oklch(0.502 0.006 60); --border-2: oklch(0.578 0.006 60); --border-3: oklch(0.655 0.006 60); --solid: oklch(0.731 0.006 60); --solid-2: oklch(0.807 0.006 60); --text-2: oklch(0.884 0.006 60); --text: oklch(0.960 0.006 60);
+  --page: oklch(0.160 0.006 60); --page-2: oklch(0.190 0.006 60); --raised: oklch(0.220 0.006 60); --raised-2: oklch(0.302 0.006 60); --inset: oklch(0.384 0.006 60); --border: oklch(0.467 0.006 60); --border-2: oklch(0.549 0.006 60); --border-3: oklch(0.631 0.006 60); --solid: oklch(0.713 0.006 60); --solid-2: oklch(0.796 0.006 60); --text-2: oklch(0.878 0.006 60); --text: oklch(0.960 0.006 60); --text-3: oklch(0.640 0.006 60);
   --accent: oklch(0.68 0.16 45);
   --accent-hover: oklch(from var(--accent) calc(l + 0.08) c h);
   --accent-border: oklch(from var(--accent) l c h / 0.45);
   --accent-muted: oklch(from var(--accent) l calc(c * 0.6) h / 0.16);
   --accent-ink: var(--accent);
-  --surface-1: var(--surface-1); --surface-2: var(--surface-2); --surface-3: rgba(255,255,255,0.07);
+  --card: var(--raised);
+  --surface-1: rgba(255,255,255,0.03); --surface-2: rgba(255,255,255,0.05); --surface-3: rgba(255,255,255,0.07);
   --line: rgba(255,255,255,0.08);
   --grain-opacity: 0.035;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1); --d-fast: 120ms; --d-base: 240ms; --d-slow: 480ms;
@@ -19,15 +20,15 @@
   --ff-read: "cv01", "ss03"; --ff-mono: "tnum";
   --w-read: 400; --w-nav: 510; --w-title: 590;
   /* legacy names, mapped onto the ramp so every existing rule reads from it */
-  --bg: var(--page); --surface: var(--surface-1); --text-muted: var(--text-2); --muted: var(--text-2); --body: var(--text);
+  --bg: var(--page); --surface: var(--surface-1); --text-muted: var(--text-3); --muted: var(--text-3); --body: var(--text);
   --link: var(--accent-ink); --accent-soft: var(--surface-2); --accent-text: var(--text);
   color-scheme: dark;
 }
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) { --page: oklch(0.985 0.006 60); --page-2: oklch(0.912 0.006 60); --raised: oklch(0.839 0.006 60); --raised-2: oklch(0.765 0.006 60); --inset: oklch(0.692 0.006 60); --border: oklch(0.619 0.006 60); --border-2: oklch(0.546 0.006 60); --border-3: oklch(0.473 0.006 60); --solid: oklch(0.400 0.006 60); --solid-2: oklch(0.326 0.006 60); --text-2: oklch(0.253 0.006 60); --text: oklch(0.180 0.006 60); --accent-ink: oklch(from var(--accent) 0.46 c h); --surface-1: var(--surface-1); --surface-2: rgba(0,0,0,0.05); --surface-3: rgba(0,0,0,0.07); --line: rgba(0,0,0,0.1); --grain-opacity: 0.025; color-scheme: light; }
+  :root:not([data-theme="dark"]) { --page: oklch(0.985 0.006 60); --page-2: oklch(0.912 0.006 60); --raised: oklch(0.839 0.006 60); --raised-2: oklch(0.765 0.006 60); --inset: oklch(0.692 0.006 60); --border: oklch(0.619 0.006 60); --border-2: oklch(0.546 0.006 60); --border-3: oklch(0.473 0.006 60); --solid: oklch(0.400 0.006 60); --solid-2: oklch(0.326 0.006 60); --text-2: oklch(0.253 0.006 60); --text: oklch(0.180 0.006 60); --text-3: oklch(0.460 0.006 60); --accent-ink: oklch(from var(--accent) 0.46 c h); --surface-1: rgba(0,0,0,0.03); --surface-2: rgba(0,0,0,0.05); --surface-3: rgba(0,0,0,0.07); --line: rgba(0,0,0,0.1); --grain-opacity: 0.025; color-scheme: light; --card: var(--page-2); }
 }
-:root[data-theme="light"] { --page: oklch(0.985 0.006 60); --page-2: oklch(0.912 0.006 60); --raised: oklch(0.839 0.006 60); --raised-2: oklch(0.765 0.006 60); --inset: oklch(0.692 0.006 60); --border: oklch(0.619 0.006 60); --border-2: oklch(0.546 0.006 60); --border-3: oklch(0.473 0.006 60); --solid: oklch(0.400 0.006 60); --solid-2: oklch(0.326 0.006 60); --text-2: oklch(0.253 0.006 60); --text: oklch(0.180 0.006 60); --accent-ink: oklch(from var(--accent) 0.46 c h); --surface-1: var(--surface-1); --surface-2: rgba(0,0,0,0.05); --surface-3: rgba(0,0,0,0.07); --line: rgba(0,0,0,0.1); --grain-opacity: 0.025; color-scheme: light; }
-:root[data-theme="dark"] { --page: oklch(0.120 0.006 60); --page-2: oklch(0.196 0.006 60); --raised: oklch(0.273 0.006 60); --raised-2: oklch(0.349 0.006 60); --inset: oklch(0.425 0.006 60); --border: oklch(0.502 0.006 60); --border-2: oklch(0.578 0.006 60); --border-3: oklch(0.655 0.006 60); --solid: oklch(0.731 0.006 60); --solid-2: oklch(0.807 0.006 60); --text-2: oklch(0.884 0.006 60); --text: oklch(0.960 0.006 60); --accent-ink: var(--accent); --surface-1: var(--surface-1); --surface-2: var(--surface-2); --surface-3: rgba(255,255,255,0.07); --line: rgba(255,255,255,0.08); --grain-opacity: 0.035; color-scheme: dark; }
+:root[data-theme="light"] { --page: oklch(0.985 0.006 60); --page-2: oklch(0.912 0.006 60); --raised: oklch(0.839 0.006 60); --raised-2: oklch(0.765 0.006 60); --inset: oklch(0.692 0.006 60); --border: oklch(0.619 0.006 60); --border-2: oklch(0.546 0.006 60); --border-3: oklch(0.473 0.006 60); --solid: oklch(0.400 0.006 60); --solid-2: oklch(0.326 0.006 60); --text-2: oklch(0.253 0.006 60); --text: oklch(0.180 0.006 60); --text-3: oklch(0.460 0.006 60); --accent-ink: oklch(from var(--accent) 0.46 c h); --surface-1: rgba(0,0,0,0.03); --surface-2: rgba(0,0,0,0.05); --surface-3: rgba(0,0,0,0.07); --line: rgba(0,0,0,0.1); --grain-opacity: 0.025; color-scheme: light; --card: var(--page-2); }
+:root[data-theme="dark"] { --page: oklch(0.160 0.006 60); --page-2: oklch(0.190 0.006 60); --raised: oklch(0.220 0.006 60); --raised-2: oklch(0.302 0.006 60); --inset: oklch(0.384 0.006 60); --border: oklch(0.467 0.006 60); --border-2: oklch(0.549 0.006 60); --border-3: oklch(0.631 0.006 60); --solid: oklch(0.713 0.006 60); --solid-2: oklch(0.796 0.006 60); --text-2: oklch(0.878 0.006 60); --text: oklch(0.960 0.006 60); --text-3: oklch(0.640 0.006 60); --accent-ink: var(--accent); --surface-1: rgba(255,255,255,0.03); --surface-2: rgba(255,255,255,0.05); --surface-3: rgba(255,255,255,0.07); --line: rgba(255,255,255,0.08); --grain-opacity: 0.035; color-scheme: dark; --card: var(--raised); }
 @media (prefers-reduced-motion: reduce) { :root { --d-base: 120ms; --d-slow: 120ms; } }
 @font-face { font-family: 'Bricolage Grotesque'; font-style: normal; font-weight: 200 800; font-display: swap; src: url('../vendor/fonts/bricolage-grotesque-v9-latin-variable.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 /* Grain: a fixed overlay of two-octave turbulence, blended over the page */
