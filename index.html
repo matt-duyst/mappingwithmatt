@@ -126,7 +126,6 @@ section, footer { position: relative; z-index: 2; }
 .intro .stack.show > * { opacity: 1; transform: none; }
 .intro .stack.show > :nth-child(1) { transition-delay: 0ms; } .intro .stack.show > :nth-child(2) { transition-delay: calc(var(--d-fast) / 2); } .intro .stack.show > :nth-child(3) { transition-delay: var(--d-fast); } .intro .stack.show > :nth-child(4) { transition-delay: calc(var(--d-fast) * 1.5); } .intro .stack.show > :nth-child(5) { transition-delay: calc(var(--d-fast) * 2); }
 @media (prefers-reduced-motion: reduce) { .intro .stack > * { transform: none; transition: opacity var(--d-fast) var(--ease); } }
-.intro img.round { width: 156px; height: 156px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); display: block; position: relative; z-index: 30; }
 .intro .kicker { font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 12px; letter-spacing: 0.04em; color: var(--text); font-weight: var(--w-nav); }
 .intro .loc svg { width: 13px; height: 13px; }
 .intro .loc { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 12px; font-weight: var(--w-nav); color: var(--muted); margin-top: -12px; letter-spacing: 0.04em; }
@@ -447,6 +446,40 @@ footer.site .loc { display: inline-flex; align-items: center; gap: 5px; }
 footer.site .loc svg { width: 13px; height: 13px; }
 footer.site a { color: var(--muted); border-bottom: 1px dotted var(--muted); }
 footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--accent-text); }
+/* ===== 2.0 study: hero ===== */
+.intro .stack > * { opacity: 1; transform: none; transition: none; }
+.intro .stack.show > :nth-child(n) { transition-delay: 0ms; }
+.intro h1.name { font-family: var(--font-display); font-feature-settings: normal; font-weight: var(--w-title); font-size: clamp(56px, 9vw, 128px); letter-spacing: -0.045em; line-height: 0.95; margin: 0; color: var(--text); }
+.intro .route { width: 320px; max-width: 80vw; height: auto; display: block; margin: -6px auto 2px; overflow: visible; }  /* 47 user units across 320px, so 0.88 units is a 6px dash */
+.intro .route path { fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.intro .route .dash { stroke: var(--text); stroke-width: 1.5; stroke-dasharray: 0.88 0.88; }
+.intro .route .reveal-path { stroke: #fff; stroke-width: 6; stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset var(--d-slow) var(--ease); }
+.intro .stack.show .route .reveal-path { stroke-dashoffset: 0; }
+.hero .bio-wrap { display: grid; grid-template-columns: 96px 1fr; gap: 20px; align-items: start; }
+.hero img.portrait-sm { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); display: block; }
+@media (max-width: 640px) { .hero .bio-wrap { grid-template-columns: 1fr; gap: 14px; } }
+/* ===== 2.0 study: section grammar ===== */
+.sec-head { margin: 0 0 28px; }
+.sec-num { display: block; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 12px; letter-spacing: 0.08em; color: var(--text-2); margin-bottom: 10px; }
+.sec-head h2 { font-size: clamp(28px, 3.2vw, 40px); line-height: 1.05; margin: 0 0 10px; }
+.standfirst { font-size: 17px; line-height: 1.5; color: var(--text-2); margin: 0; max-width: 60ch; }
+/* ===== 2.0 study: one framed card row ===== */
+.papers .proj.card-row { display: block; position: relative; overflow: hidden; margin: 16px 0; padding: 20px 22px 18px; border: 1px solid var(--line); border-radius: 4px; background: var(--raised); --mx: 50%; --my: 50%; transition: transform var(--d-fast) var(--ease), border-color var(--d-fast) var(--ease); }
+.papers .proj.card-row::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(200px circle at var(--mx) var(--my), rgba(255,255,255,0.06), transparent 70%); transition: opacity var(--d-fast) var(--ease); }
+.papers .proj.card-row:hover { transform: translateY(-2px); border-color: var(--border); }
+.papers .proj.card-row:hover::before { opacity: 1; }
+.card-row > * { position: relative; }
+.card-row .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.card-row .card-head .title { font-size: 17px; }
+.card-row .claim { font-size: 17px; line-height: 1.5; color: var(--text); margin: 10px 0 8px; max-width: 65ch; }
+.card-row .stack-line { font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 12px; letter-spacing: 0.04em; color: var(--text-2); margin-bottom: 14px; }
+.card-row .card-strip .plate-frame { border-color: var(--border); width: 100%; }
+.card-row .plate-none { aspect-ratio: auto; height: 200px; }
+.capbar { display: grid; grid-template-columns: 8ch minmax(0, 1fr); overflow-wrap: anywhere; gap: 3px 12px; margin-top: 0; padding: 10px 12px; border: 1px solid var(--border); border-top: 0; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11.5px; line-height: 1.5; color: var(--text); }
+.capbar .k { color: var(--text-2); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 3px; }
+.capbar a { color: var(--accent-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+@media (max-width: 640px) { .capbar { grid-template-columns: 1fr; gap: 0; } .capbar .k { padding-top: 6px; } .card-row .card-head { flex-direction: column; gap: 4px; } }
+@media (prefers-reduced-motion: reduce) { .papers .proj.card-row:hover { transform: none; } }
 </style>
 </head>
 <body>
@@ -481,9 +514,9 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 </nav>
 <main>
 <section class="intro" id="intro">
-  <h1 class="visually-hidden">Matt Duyst</h1>
   <div class="stack">
-    <img class="round" alt="Matt Duyst" src="assets/portrait.jpg">
+    <h1 class="name">Matt Duyst</h1>
+    <svg class="route" viewBox="9 47 47 12" aria-hidden="true"><defs><mask id="route-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><path class="reveal-path" pathLength="100" d="M11 55 C 21 50, 26 59, 36 55 S 48 50, 54 55"/></mask></defs><path class="dash" mask="url(#route-mask)" d="M11 55 C 21 50, 26 59, 36 55 S 48 50, 54 55"/></svg>
     <div class="kicker">Environmental Data Scientist, Machine Learning</div>
     <div class="loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Austin, TX</div>
     <div class="type" id="type" aria-live="polite"><span id="typed"></span><span class="cursor" aria-hidden="true"></span></div>
@@ -501,9 +534,11 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 
 <section class="hero" id="top">
   <div class="inner">
+    <div class="sec-head"><span class="sec-num">01</span><h2>About.</h2><p class="standfirst">Environmental data scientist: remote sensing, field measurement, and carbon accounting.</p></div>
     <div class="row">
       <div>
-        <div class="eyebrow">About</div>
+        <div class="bio-wrap">
+        <img class="portrait-sm" alt="Matt Duyst" src="assets/portrait.jpg" width="96" height="96" loading="lazy" decoding="async">
         <p class="bio">
           I'm an environmental data scientist at <a href="https://grassrootscarbon.com/">Grassroots Carbon</a>, where I build the data systems and models that turn satellite imagery, soil samples, and climate records into the biomass and soil carbon estimates behind verified carbon credits.
           <br><br>
@@ -513,6 +548,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           <br><br>
           I grew up on a small citrus farm near Sequoia National Park, where land, climate, and livelihood were never abstract.
         </p>
+        </div>
                 
         
       </div>
@@ -569,9 +605,8 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 
 <section id="map" class="roadmap">
   <div class="inner">
-    <div class="eyebrow">At a glance</div>
-    <h2>The route so far.</h2>
-    <p class="caption">A map you drive. Press play to travel the route in time order, or pick a stop. Zoom, pan, and read as you go; nothing here waits on the page scroll.</p>
+    <div class="sec-head"><span class="sec-num">02</span><h2>The route so far.</h2><p class="standfirst">A map you drive. Press play to travel the route in time order, or pick a stop.</p></div>
+    <p class="caption">Zoom, pan, and read as you go; nothing here waits on the page scroll.</p>
   </div>
   <div class="rt-app app" id="rt-app" tabindex="0">
   <div class="mapwrap">
@@ -645,8 +680,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 
 <section id="work" class="papers">
   <div class="inner">
-    <div class="eyebrow">Selected projects</div>
-    <h2>Projects.</h2>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Projects.</h2><p class="standfirst">How well can what happens on the land be measured from above?</p></div>
     <p class="proj-intro">One question runs through all of it: how well can what happens on the land be measured from above? The work moves across scales, from satellite estimates of carbon on about three million acres of rangeland and methane over a river delta of 150 million people, through drone surveys of gas flares and solar arrays, to a single tower in a Minnesota peatland measured half-hour by half-hour. Each project carries its figures and code where they can be shown. The oldest are the maps that taught the craft.</p>
     <ol class="proj-list">
       <li class="proj no-figs">
@@ -658,13 +692,20 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           <div class="proj-none">Figures forthcoming.</div>
         </div>
       </li>
-      <li class="proj no-figs">
-        <div class="proj-text">
-          <div class="proj-head"><div class="title">Methane Destruction Removal Efficiency Assessment in US Shale Basins Using UAV-Based TDLAS Measurements</div><div class="proj-year">2024</div></div>
-          <div class="authors">Duyst, K. M., and Smith, B. J. &middot; SeekOps</div>
-          <div class="venue">SPE Annual Technical Conference and Exhibition, 2024 &middot; SPE-221067-MS</div>
-          <div class="links"><a href="/projects/flare-efficiency/">Page</a><a href="https://doi.org/10.2118/221067-MS">paper</a></div>
-          <div class="proj-none">Figures forthcoming.</div>
+      <li class="proj card-row" id="row-flare">
+        <div class="card-head"><div class="title">Methane Destruction Removal Efficiency Assessment in US Shale Basins Using UAV-Based TDLAS Measurements</div><div class="proj-year">2024</div></div>
+        <p class="claim">The result is a field measurement of how much methane flares actually let through, at the scale of an operating program rather than a single site.</p>
+        <div class="stack-line">UAV &middot; TDLAS &middot; Python</div>
+        <div class="fig-strip single card-strip">
+          <ul class="strip-list" role="list" aria-label="Figures: Methane Destruction Removal Efficiency Assessment in US Shale Basins Using UAV-Based TDLAS Measurements">
+            <li class="plate"><figure><div class="plate-frame" style="--ar: 16 / 7"><div class="plate-none">No figures. Survey data are not public.</div></div></figure></li>
+          </ul>
+        </div>
+        <div class="capbar">
+          <span class="k">Finding</span><span class="v">Destruction removal efficiency measured at 42 flare systems across 71 observations in the Bakken and Permian basins, including 27 revisits.</span>
+          <span class="k">Measure</span><span class="v">Methane leaving each flare, by mass balance and plume modeling from drone surveys with a laser spectrometer, an anemometer, and RTK positioning.</span>
+          <span class="k">Source</span><span class="v">Duyst, K. M., and Smith, B. J. &middot; SPE-221067-MS, SPE Annual Technical Conference and Exhibition, 2024 &middot; <a href="/projects/flare-efficiency/">Page</a> &middot; <a href="https://doi.org/10.2118/221067-MS">paper</a></span>
+          <span class="k">Credit</span><span class="v">SeekOps Science team</span>
         </div>
       </li>
       <li class="proj">
@@ -800,8 +841,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 
 <section id="experience" class="experience">
   <div class="inner">
-    <div class="eyebrow">Experience and education</div>
-    <h2>Where the work happened.</h2>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Where the work happened.</h2><p class="standfirst">Five entries, from UCLA to Grassroots Carbon, with what was built at each.</p></div>
 
     <article class="exp" id="exp-grc">
       <div class="exp-head">
@@ -857,8 +897,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 
 <section id="research" class="themes surface">
   <div class="inner">
-    <div class="eyebrow">Research</div>
-    <h2>Research themes.</h2>
+    <div class="sec-head"><span class="sec-num">05</span><h2>Research themes.</h2><p class="standfirst">Four questions that run through the projects, and the methods behind them.</p></div>
     <div class="grid">
       <div class="theme">
         <h3>Measuring what you cannot see directly</h3>
@@ -891,8 +930,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 
 <section id="code" class="oss">
   <div class="inner">
-    <div class="eyebrow">Code &amp; data</div>
-    <h2>Open repositories.</h2>
+    <div class="sec-head"><span class="sec-num">06</span><h2>Open repositories.</h2><p class="standfirst">Three repositories, with their data where it can be shared, and an errata where a reproduction disagrees.</p></div>
     <div class="grid">
       <div class="card">
         <h3>Peatland-Flux-Forecasting</h3>
@@ -974,7 +1012,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     timer = setTimeout(flip, gi === greets.length - 1 ? 1100 : 520);
   };
   var seen = false; try { seen = sessionStorage.getItem('mwm-welcome') === '1'; } catch (e) {}
-  if (reduce || seen) { lifted = true; curtain.classList.add('gone'); setTimeout(function () { gooStart(); }, 0); document.querySelector('.intro .stack').classList.add('show'); setTimeout(typeLine, reduce ? 0 : 200); }
+  if (reduce || seen) { lifted = true; curtain.classList.add('gone'); setTimeout(function () { gooStart(); }, 0); requestAnimationFrame(function () { requestAnimationFrame(function () { document.querySelector('.intro .stack').classList.add('show'); }); }); setTimeout(typeLine, reduce ? 0 : 200); }
   else {
     try { sessionStorage.setItem('mwm-welcome', '1'); } catch (e) {}
     timer = setTimeout(flip, 700);
@@ -1193,6 +1231,15 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     plate.addEventListener('focusin', function () { over = true; sync(); });
     plate.addEventListener('focusout', function () { over = false; sync(); });
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; sync(); }, { threshold: 0.5 }).observe(v);
+  });
+})();
+</script>
+<script>
+// 2.0 study: the card row's spotlight follows the cursor, and entering the card advances its strip by one plate
+(function () {
+  document.querySelectorAll('.card-row').forEach(function (card) {
+    card.addEventListener('pointermove', function (e) { var r = card.getBoundingClientRect(); card.style.setProperty('--mx', (e.clientX - r.left) + 'px'); card.style.setProperty('--my', (e.clientY - r.top) + 'px'); });
+    card.addEventListener('pointerenter', function (e) { if (e.pointerType === 'touch') return; var next = card.querySelector('.strip-next'); if (next && !next.hidden) next.click(); });
   });
 })();
 </script>
