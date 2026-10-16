@@ -1,0 +1,37 @@
+name: live
+
+on:
+  deployment_status:
+
+jobs:
+  verify:
+    if: github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'github-pages'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.deployment.sha }}
+      - name: Verify the live site
+        env:
+          SHA: ${{ github.event.deployment.sha }}
+        run: |
+          set -u
+          host=https://mappingwithmatt.com
+          short=${SHA:0:7}
+          fail=0
+          {
+            echo "## Live check of $host at $short"
+            echo
+            echo "| check | result |"
+            echo "|---|---|"
+          } >> "$GITHUB_STEP_SUMMARY"
+          note() { echo "| $1 | $2 |" >> "$GITHUB_STEP_SUMMARY"; }
+          for p in / /maps/ /projects/peatland/ /projects/yangtze/ /projects/carbon-trading/ /projects/pv-thermal/ /projects/flare-efficiency/; do
+            code=$(curl -s -o "page$(echo "$p" | tr / _).html" -w '%{http_code}' -H 'Cache-Control: no-cache' "$host$p")
+            if [ "$code" = 200 ]; then note "GET $p" "200"; else note "GET $p" "**$code**"; fail=1; fi
+          done
+          if grep -q "<meta name=\"build\" content=\"$short\">" page_.html; then note "/ carries build $short" "yes"; else note "/ carries build $short" "**no: $(grep -o '<meta name="build" content="[^"]*">' page_.html || echo 'no build meta')**"; fail=1; fi
+          bad=$(grep -l -E 'fonts\.googleapis\.com|fonts\.gstatic\.com|tiles\.openfreemap\.org/fonts' page*.html || true)
+          if [ -z "$bad" ]; then note "no page references fonts.googleapis.com, fonts.gstatic.com or tiles.openfreemap.org/fonts" "yes"; else note "forbidden font hosts referenced" "**$bad**"; fail=1; fi
+          if [ "$(tr -d '[:space:]' < CNAME)" = "mappingwithmatt.com" ]; then note "CNAME reads mappingwithmatt.com" "yes"; else note "CNAME" "**$(cat CNAME)**"; fail=1; fi
+          exit $fail
