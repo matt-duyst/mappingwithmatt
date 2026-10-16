@@ -357,6 +357,9 @@ p { margin: 0 0 16px; }
 .card .rt-note { font-size:11.5px; line-height:1.6; color:var(--muted); margin:0 0 8px; }
 .card .g-role { margin:6px 0 0; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:var(--surface-1); font-size:11px; line-height:1.6; }
 .card-body[hidden] { display:none; }
+.s2-years { margin: 6px 0 10px; } .s2-years .k { font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.s2-years .years { display: flex; flex-wrap: wrap; gap: 2px; } .s2-years .years button { font: inherit; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11.5px; letter-spacing: 0.02em; color: var(--text-3); background: transparent; border: 1px solid transparent; border-radius: 4px; padding: 3px 6px; cursor: pointer; transition: color var(--d-fast) var(--ease), border-color var(--d-fast) var(--ease), background var(--d-fast) var(--ease); }
+.s2-years .years button:hover { color: var(--text); } .s2-years .years button[aria-checked="true"] { color: var(--text); background: var(--surface-2); border-color: var(--border-2); } .s2-years .years button:focus-visible { outline: 1px solid var(--text); outline-offset: 2px; }
 .sec { border-top:1px solid var(--line); padding-top:12px; display:flex; flex-direction:column; gap:8px; font-size:11px; }
 .sec label { display:flex; align-items:center; gap:8px; cursor:pointer; }
 .sec input { margin:0; accent-color:var(--text); }
@@ -698,6 +701,7 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
     <div class="sec">
       <div class="k">Basemap</div>
       <div class="row"><label><input type="radio" name="base" value="imagery" checked>USGS imagery</label><label><input type="radio" name="base" value="eox">Sentinel-2</label><label><input type="radio" name="base" value="dark">Dark map</label><label><input type="radio" name="base" value="none">None</label></div>
+      <div class="s2-years" id="s2-years" hidden><div class="k">Sentinel-2 cloudless <span id="s2-year">2024</span>, EOX</div><div class="years" role="radiogroup" aria-label="Sentinel-2 mosaic year"></div></div>
       <label><input type="checkbox" id="l-labels" checked>Place labels</label>
       <label><input type="checkbox" id="l-terrain">3D terrain and hillshade</label>
       <label><input type="checkbox" id="l-route" checked>Route</label>
@@ -705,7 +709,7 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
       <label><input type="checkbox" id="l-stops" checked>Stops</label>
       <label><input type="checkbox" id="l-globe">Globe at low zoom</label>
     </div>
-    <div class="sec"><div class="k">Sources</div><div style="color:var(--muted);line-height:1.6">Imagery: USGS The National Map (public domain) and EOX Sentinel-2 cloudless (Copernicus, CC BY-NC-SA). Labels and dark map: OpenFreeMap, OpenMapTiles, OpenStreetMap contributors. Terrain: Mapzen and AWS Terrain Tiles. Engine: MapLibre GL JS 6.</div></div>
+    <div class="sec"><div class="k">Sources</div><div style="color:var(--muted);line-height:1.6">Imagery: USGS The National Map (public domain) and EOX Sentinel-2 cloudless, one mosaic for each year from 2016 to 2025 (Copernicus, CC BY-NC-SA). Labels and dark map: OpenFreeMap, OpenMapTiles, OpenStreetMap contributors. Terrain: Mapzen and AWS Terrain Tiles. Engine: MapLibre GL JS 6.</div></div>
   </aside>
 </div>
 </section>
@@ -1390,12 +1394,18 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
   var full = [].concat.apply([], legs);
   function arcLine(s, e) { return { type: 'Feature', geometry: { type: 'LineString', coordinates: gc(s, e, 80) } }; }
   var markers = [], siteMarkers = [], xmark = null, cursorM = null, ready = false;
+  // Sentinel-2 cloudless by year: EOX publishes a mosaic for every year since 2016 (WMTS layers s2cloudless_3857 for 2016, s2cloudless-YYYY_3857 after); two sources let a year change crossfade
+  var S2_YEARS = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], s2Year = 2024, s2Front = 'a', s2Fading = null;
+  var s2Tiles = function (y) { return ['https://tiles.maps.eox.at/wmts/1.0.0/' + (y === 2016 ? 's2cloudless_3857' : 's2cloudless-' + y + '_3857') + '/default/g/{z}/{y}/{x}.jpg']; };
+  var S2_ATTR = 'Sentinel-2 cloudless 2016 to 2025 by <a href="https://cloudless.eox.at/preview">EOX IT Services</a> (contains modified Copernicus Sentinel data), CC BY-NC-SA 4.0';
   map.on('load', function () {
     map.addSource('usgs', { type: 'raster', tiles: ['https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}'], tileSize: 256, maxzoom: 16, attribution: 'Imagery: USGS The National Map (NAIP), public domain' });
-    map.addSource('eox', { type: 'raster', tiles: ['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg'], tileSize: 256, maxzoom: 15, attribution: 'Sentinel-2 cloudless 2024 by <a href="https://cloudless.eox.at/preview">EOX IT Services</a> (contains modified Copernicus Sentinel data), CC BY-NC-SA 4.0' });
+    map.addSource('eox', { type: 'raster', tiles: s2Tiles(2024), tileSize: 256, maxzoom: 15, attribution: S2_ATTR });
+    map.addSource('eox-b', { type: 'raster', tiles: s2Tiles(2024), tileSize: 256, maxzoom: 15, attribution: S2_ATTR });
     map.addSource('dem', { type: 'raster-dem', tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'], encoding: 'terrarium', tileSize: 256, maxzoom: 15, attribution: 'Terrain: Mapzen, AWS Terrain Tiles' });
     map.addLayer({ id: 'imagery', type: 'raster', source: 'usgs', layout: { visibility: arrive ? 'none' : 'visible' }, paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08, 'raster-opacity': arrive ? 0 : 1, 'raster-opacity-transition': { duration: 480, delay: 0 } } });
-    map.addLayer({ id: 'imagery-eox', type: 'raster', source: 'eox', layout: { visibility: 'none' }, paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08 } });
+    map.addLayer({ id: 'imagery-eox', type: 'raster', source: 'eox', layout: { visibility: 'none' }, paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08, 'raster-opacity': 1, 'raster-opacity-transition': { duration: 240, delay: 0 } } });
+    map.addLayer({ id: 'imagery-eox-b', type: 'raster', source: 'eox-b', layout: { visibility: 'none' }, paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08, 'raster-opacity': 0, 'raster-opacity-transition': { duration: 240, delay: 0 } } });
     map.addSource('slot', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } }); map.addLayer({ id: 'plan', type: 'circle', source: 'slot' });
     map.addLayer({ id: 'hillshade', type: 'hillshade', source: 'dem', layout: { visibility: 'none' }, paint: { 'hillshade-exaggeration': 0.35, 'hillshade-shadow-color': '#000', 'hillshade-highlight-color': '#666' } });
     // OpenFreeMap (OpenStreetMap vector tiles, no key, no cap): the dark basemap and a labels-only overlay derived from the liberty style
@@ -1486,7 +1496,22 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
   document.getElementById('l-globe').addEventListener('change', function (e) { try { map.setProjection({ type: e.target.checked ? 'globe' : 'mercator' }); } catch (err) {} });
   map.on('mousemove', function (e) { document.getElementById('coords').textContent = Math.abs(e.lngLat.lat).toFixed(4) + (e.lngLat.lat >= 0 ? '°N ' : '°S ') + Math.abs(e.lngLat.lng).toFixed(4) + (e.lngLat.lng >= 0 ? '°E' : '°W') + ' · zoom ' + map.getZoom().toFixed(1); });
   var hint = document.getElementById('hint'); setTimeout(function () { hint.classList.add('gone'); }, 4000); ['mousedown', 'wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, function () { hint.classList.add('gone'); }, { once: true, passive: true }); });
-  document.querySelectorAll('input[name="base"]').forEach(function (r) { r.addEventListener('change', function () { map.setLayoutProperty('imagery', 'visibility', r.value === 'imagery' ? 'visible' : 'none'); map.setLayoutProperty('imagery-eox', 'visibility', r.value === 'eox' ? 'visible' : 'none'); map.getStyle().layers.filter(function (l) { return l.id.indexOf('dk-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', r.value === 'dark' ? 'visible' : 'none'); }); }); });
+  document.querySelectorAll('input[name="base"]').forEach(function (r) { r.addEventListener('change', function () { map.setLayoutProperty('imagery', 'visibility', r.value === 'imagery' ? 'visible' : 'none'); map.setLayoutProperty('imagery-eox', 'visibility', r.value === 'eox' ? 'visible' : 'none'); map.setLayoutProperty('imagery-eox-b', 'visibility', r.value === 'eox' ? 'visible' : 'none'); document.getElementById('s2-years').hidden = r.value !== 'eox'; map.getStyle().layers.filter(function (l) { return l.id.indexOf('dk-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', r.value === 'dark' ? 'visible' : 'none'); }); }); });
+  // Sentinel-2 year control: a row of years in mono, the active one lit; arrow keys move between years
+  var s2Box = document.getElementById('s2-years'), s2Row = s2Box.querySelector('.years'), s2Label = document.getElementById('s2-year');
+  S2_YEARS.forEach(function (y) { var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'radio'); b.textContent = y; b.dataset.year = y; b.setAttribute('aria-checked', y === s2Year ? 'true' : 'false'); b.tabIndex = y === s2Year ? 0 : -1; s2Row.appendChild(b); });
+  function setS2Year(y) {
+    if (y === s2Year || S2_YEARS.indexOf(y) < 0) return;
+    var front = s2Front === 'a' ? 'imagery-eox' : 'imagery-eox-b', back = s2Front === 'a' ? 'imagery-eox-b' : 'imagery-eox', backSrc = s2Front === 'a' ? 'eox-b' : 'eox';
+    map.getSource(backSrc).setTiles(s2Tiles(y));
+    var swap = function () { map.setPaintProperty(back, 'raster-opacity', 1); map.setPaintProperty(front, 'raster-opacity', 0); s2Front = s2Front === 'a' ? 'b' : 'a'; };
+    if (s2Fading) clearTimeout(s2Fading);
+    map.once('idle', swap); s2Fading = setTimeout(swap, 1500);  // the fade starts once the new year's tiles are in, or after 1.5 s regardless
+    s2Year = y; s2Label.textContent = y;
+    Array.prototype.forEach.call(s2Row.children, function (b) { var on = +b.dataset.year === y; b.setAttribute('aria-checked', on ? 'true' : 'false'); b.tabIndex = on ? 0 : -1; if (on) b.focus(); });
+  }
+  s2Row.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) setS2Year(+b.dataset.year); });
+  s2Row.addEventListener('keydown', function (e) { var i = S2_YEARS.indexOf(s2Year); if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); setS2Year(S2_YEARS[Math.min(S2_YEARS.length - 1, i + 1)]); } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); setS2Year(S2_YEARS[Math.max(0, i - 1)]); } else if (e.key === 'Home') { e.preventDefault(); setS2Year(S2_YEARS[0]); } else if (e.key === 'End') { e.preventDefault(); setS2Year(S2_YEARS[S2_YEARS.length - 1]); } });
   document.getElementById('l-labels').addEventListener('change', function (e) { map.getStyle().layers.filter(function (l) { return l.id.indexOf('lbl-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', e.target.checked ? 'visible' : 'none'); }); });
   document.getElementById('l-terrain').addEventListener('change', function (e) { terrainOn = e.target.checked; if (e.target.checked) { map.setTerrain({ source: 'dem', exaggeration: 1.3 }); map.setLayoutProperty('hillshade', 'visibility', 'visible'); try { if (!map.getLayer('sky')) map.addLayer({ id: 'sky', type: 'sky', paint: { 'sky-color': '#0b0b0c', 'horizon-color': '#1a1a1c', 'fog-color': '#0b0b0c', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.6, 'fog-ground-blend': 0.5 } }); } catch (err) {} map.easeTo({ pitch: 55, duration: 900 }); } else { map.setTerrain(null); map.setLayoutProperty('hillshade', 'visibility', 'none'); map.easeTo({ pitch: 0, duration: 700 }); } });
   document.getElementById('l-route').addEventListener('change', function (e) { ['plan-line', 'done', 'done-glow'].forEach(function (l) { map.setLayoutProperty(l, 'visibility', e.target.checked ? 'visible' : 'none'); }); });
