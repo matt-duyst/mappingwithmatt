@@ -474,7 +474,8 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 .card-row .card-strip .plate-frame { border-color: var(--border-2); width: 100%; }
 .card-row .plate-none { aspect-ratio: auto; height: 200px; }
 .card-row .fig-strip { margin-top: 4px; }
-.card-row .capbar[hidden] { display: none; }
+.card-row .capbar[hidden], .capbar [hidden] { display: none; }
+.card-row .links { margin-top: 2px; }
 .card-row .strip-dots { margin-top: 14px; }
 .capbar { display: grid; grid-template-columns: 8ch minmax(0, 1fr); overflow-wrap: anywhere; gap: 3px 12px; margin-top: 0; padding: 10px 12px; border: 1px solid var(--border-2); border-top: 0; font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11.5px; line-height: 1.5; color: var(--text); }
 .capbar .v { color: var(--text-3); } .capbar .v.f { color: var(--text); }
@@ -710,32 +711,23 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
     <div class="sec-head"><span class="sec-num">03</span><h2>Projects.</h2><p class="standfirst">How well can what happens on the land be measured from above?</p></div>
     <p class="proj-intro">One question runs through all of it: how well can what happens on the land be measured from above? The work moves across scales, from satellite estimates of carbon on about three million acres of rangeland and methane over a river delta of 150 million people, through drone surveys of gas flares and solar arrays, to a single tower in a Minnesota peatland measured half-hour by half-hour. Each project carries its figures and code where they can be shown. The oldest are the maps that taught the craft.</p>
     <ol class="proj-list">
-      <li class="proj no-figs">
-        <div class="proj-text">
-          <div class="proj-head"><div class="title">Grassland growth across US rangeland for soil carbon verification</div><div class="proj-year">2025</div></div>
-          <div class="authors">Grassroots Carbon &middot; process-based light use efficiency with a machine-learning correction</div>
-          <div class="venue">2025 to present</div>
-          <div class="proj-lines"><div><span class="k">Status</span> publications forthcoming</div></div>
-          <div class="proj-none">Figures forthcoming.</div>
-        </div>
+      <li class="proj card-row" id="row-grc">
+        <div class="card-head"><div class="title">Grassland growth across US rangeland for soil carbon verification</div><div class="proj-year">2025</div></div>
+        <p class="claim">Publications forthcoming.</p>
+        <div class="stack-line">Grassroots Carbon &middot; process-based light use efficiency with a machine-learning correction &middot; 2025 to present</div>
       </li>
-      <li class="proj no-figs">
-        <div class="proj-text">
-          <div class="proj-head"><div class="title">Methane Destruction Removal Efficiency Assessment in US Shale Basins Using UAV-Based TDLAS Measurements</div><div class="proj-year">2024</div></div>
-          <div class="authors">Duyst, K. M., and Smith, B. J. &middot; SeekOps</div>
-          <div class="venue">SPE Annual Technical Conference and Exhibition, 2024 &middot; SPE-221067-MS</div>
-          <div class="links"><a href="/projects/flare-efficiency/">Page</a><a href="https://doi.org/10.2118/221067-MS">paper</a></div>
-          <div class="proj-none">Figures forthcoming.</div>
-        </div>
+      
+<li class="proj card-row" id="row-flare">
+        <div class="card-head"><div class="title">Methane Destruction Removal Efficiency Assessment in US Shale Basins Using UAV-Based TDLAS Measurements</div><div class="proj-year">2024</div></div>
+        <p class="claim">The result is a field measurement of how much methane flares actually let through, at the scale of an operating program rather than a single site.</p>
+        <div class="stack-line">SeekOps, Science team. SPE Annual Technical Conference and Exhibition, 2024.</div>
+        <div class="links"><a href="/projects/flare-efficiency/">Page</a><a href="https://doi.org/10.2118/221067-MS">paper</a></div>
       </li>
-      <li class="proj">
-        <div class="proj-text">
-          <div class="proj-head"><div class="title">Urban expansion, paddy rice, and atmospheric methane over the Yangtze River Delta</div><div class="proj-year">2023</div></div>
-          <div class="authors">Yale School of the Environment, Lee lab &middot; Landsat-derived land cover, Sentinel-5P TROPOMI</div>
-          <div class="venue">MESc thesis, 2023</div>
-          <div class="proj-lines"><div><span class="k">Reproduction</span> Reproduced 2026, with errata</div></div>
-          <div class="links"><a href="/projects/yangtze/">Page</a><a href="https://github.com/matt-duyst/Yangtze-Landcover-Methane">code</a><a href="https://github.com/matt-duyst/Yangtze-Landcover-Methane/blob/main/ERRATA.md">errata</a></div>
-        </div>
+      
+<li class="proj card-row" id="row-yangtze">
+        <div class="card-head"><div class="title">Urban expansion, paddy rice, and atmospheric methane over the Yangtze River Delta</div><div class="proj-year">2023</div></div>
+        <p class="claim">This thesis asks a question that only became askable with that satellite: when the land below changes from paddy to pavement, does the methane above change with it, and can the change be seen from space?</p>
+        <div class="stack-line">Yale School of the Environment, Lee lab. MESc thesis, 2023.</div>
         <div class="fig-strip">
           <button type="button" class="strip-btn strip-prev" aria-label="Previous figure" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
           <ul class="strip-list" role="list" aria-label="Figures: Urban expansion, paddy rice, and atmospheric methane over the Yangtze River Delta" tabindex="0">
@@ -746,8 +738,15 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
           <button type="button" class="strip-btn strip-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
           <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 3" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 3"></button><button type="button" aria-label="Show figure 3 of 3"></button></div>
         </div>
+        <div class="capbar" data-links="&lt;a href=&quot;/projects/yangtze/&quot;&gt;Page&lt;/a&gt; &amp;middot; &lt;a href=&quot;https://github.com/matt-duyst/Yangtze-Landcover-Methane&quot;&gt;code&lt;/a&gt; &amp;middot; &lt;a href=&quot;https://github.com/matt-duyst/Yangtze-Landcover-Methane/blob/main/ERRATA.md&quot;&gt;errata&lt;/a&gt;">
+          <span class="k kf">Finding</span><span class="v f"></span>
+          <span class="k km">Measure</span><span class="v m"></span>
+          <span class="k ks">Source</span><span class="v s"></span>
+          <span class="k kc">Credit</span><span class="v c"></span>
+        </div>
       </li>
-      <li class="proj card-row" id="row-peatland">
+      
+<li class="proj card-row" id="row-peatland">
         <div class="card-head"><div class="title">Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland</div><div class="proj-year">2022</div></div>
         <p class="claim">What the peatland does each year is predictable; how much it does is not, and the record so far cannot say why.</p>
         <div class="stack-line">Python &middot; AmeriFlux US-MBP &middot; eddy covariance</div>
@@ -770,34 +769,33 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
           <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 11" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 11"></button><button type="button" aria-label="Show figure 3 of 11"></button><button type="button" aria-label="Show figure 4 of 11"></button><button type="button" aria-label="Show figure 5 of 11"></button><button type="button" aria-label="Show figure 6 of 11"></button><button type="button" aria-label="Show figure 7 of 11"></button><button type="button" aria-label="Show figure 8 of 11"></button><button type="button" aria-label="Show figure 9 of 11"></button><button type="button" aria-label="Show figure 10 of 11"></button><button type="button" aria-label="Show figure 11 of 11"></button></div>
         </div>
         <div class="capbar" data-links="&lt;a href=&quot;/projects/peatland/&quot;&gt;Page&lt;/a&gt; &middot; &lt;a href=&quot;https://github.com/matt-duyst/Peatland-Flux-Forecasting&quot;&gt;code&lt;/a&gt; &middot; &lt;a href=&quot;https://github.com/matt-duyst/Peatland-Flux-Forecasting/tree/main/notes&quot;&gt;notes&lt;/a&gt;">
-          <span class="k">Finding</span><span class="v f"></span>
-          <span class="k">Measure</span><span class="v m"></span>
-          <span class="k">Source</span><span class="v s"></span>
-          <span class="k">Credit</span><span class="v c"></span>
+          <span class="k kf">Finding</span><span class="v f"></span>
+          <span class="k km">Measure</span><span class="v m"></span>
+          <span class="k ks">Source</span><span class="v s"></span>
+          <span class="k kc">Credit</span><span class="v c"></span>
         </div>
       </li>
-      <li class="proj">
-        <div class="proj-text">
-          <div class="proj-head"><div class="title">Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS</div><div class="proj-year">2022</div></div>
-          <div class="authors">Duyst, Bhardwaj &middot; Global Stocktake Climate Datathon</div>
-          <div class="venue">2022, ahead of COP 27</div>
-          <div class="proj-lines"><div><span class="k">Result</span> <a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Honorable Mention</a></div></div>
-          <div class="links"><a href="/projects/carbon-trading/">Page</a><a href="https://github.com/matt-duyst/Carbon-Trading">code</a></div>
-        </div>
+      <li class="proj card-row" id="row-carbon-trading">
+        <div class="card-head"><div class="title">Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS</div><div class="proj-year">2022</div></div>
+        <p class="claim">This tool was built for the 2022 Global Stocktake Climate Datathon to make one lever of that system readable: how fast the freely allocated allowances are cut each year.</p>
+        <div class="stack-line">Global Stocktake Climate Datathon, 2022</div>
         <div class="fig-strip single">
           <ul class="strip-list" role="list" aria-label="Figures: Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS">
-            <li class="plate"><a class="plate-link" href="/projects/carbon-trading/"><figure><div class="plate-frame" style="--ar: 1440 / 900"><video class="reel" width="1440" height="900" muted loop playsinline preload="none" data-poster="assets/video/carbon-trading.jpg" aria-hidden="true"><source src="assets/video/carbon-trading.webm" type="video/webm"><source src="assets/video/carbon-trading.mp4" type="video/mp4"></video></div><figcaption>The tool in use. Hover to play, click to open.</figcaption></figure></a></li>
+            <li class="plate" data-finding="The tool in use: Germany, paper and cardboard, historical emissions and the projection to 2030, which falls as the annual cut in free allowances is raised from 5 to 10 percent." data-measure="Pick a country and a sector, set the annual reduction, and it draws historical emissions beside the emissions projected to 2030 under that cut, with the allowances behind each year on hover." data-source="Carbon Trading project page, the tool recorded in use"><a class="plate-link" href="/projects/carbon-trading/"><figure><div class="plate-frame" style="--ar: 1440 / 900"><video class="reel" width="1440" height="900" muted loop playsinline preload="none" data-poster="assets/video/carbon-trading.jpg" aria-hidden="true"><source src="assets/video/carbon-trading.webm" type="video/webm"><source src="assets/video/carbon-trading.mp4" type="video/mp4"></video></div><figcaption>The tool in use. Hover to play, click to open.</figcaption></figure></a></li>
           </ul>
         </div>
-      </li>
-      <li class="proj">
-        <div class="proj-text">
-          <div class="proj-head"><div class="title">Toward UAV decision-support tools for photovoltaic arrays: a coastal Connecticut thermal mosaicking case study</div><div class="proj-year">2021</div></div>
-          <div class="authors">Anthony, Duyst, Verheyden, Zhao &middot; Yale ENV 704</div>
-          <div class="venue">Course research</div>
-          <div class="proj-lines"><div><span class="k">Status</span> Report published</div></div>
-          <div class="links"><a href="/projects/pv-thermal/">Page</a><a href="https://github.com/matt-duyst/UAV-PV-Assessment">code</a></div>
+        <div class="capbar" data-links="&lt;a href=&quot;/projects/carbon-trading/&quot;&gt;Page&lt;/a&gt; &amp;middot; &lt;a href=&quot;https://github.com/matt-duyst/Carbon-Trading&quot;&gt;code&lt;/a&gt; &amp;middot; &lt;a href=&quot;https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27&quot;&gt;Honorable Mention&lt;/a&gt;">
+          <span class="k kf">Finding</span><span class="v f"></span>
+          <span class="k km">Measure</span><span class="v m"></span>
+          <span class="k ks">Source</span><span class="v s"></span>
+          <span class="k kc">Credit</span><span class="v c"></span>
         </div>
+      </li>
+      
+<li class="proj card-row" id="row-uav">
+        <div class="card-head"><div class="title">Toward UAV decision-support tools for photovoltaic arrays: a coastal Connecticut thermal mosaicking case study</div><div class="proj-year">2021</div></div>
+        <p class="claim">This study asks whether a drone can do it instead: fly a thermal camera and an ordinary camera over the array, stitch the images into two maps, calibrate the thermal map against panels measured on the ground, and read the temperature of every panel at once.</p>
+        <div class="stack-line">Yale ENV 704, course research. Flight of 3 November 2021.</div>
         <div class="fig-strip uav-strip">
           <button type="button" class="strip-btn strip-prev" aria-label="Previous figure" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
           <ul class="strip-list" role="list" aria-label="Figures: Toward UAV decision-support tools for photovoltaic arrays: a coastal Connecticut thermal mosaicking case study" tabindex="0">
@@ -810,14 +808,18 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
           <button type="button" class="strip-btn strip-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
           <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 5" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 5"></button><button type="button" aria-label="Show figure 3 of 5"></button><button type="button" aria-label="Show figure 4 of 5"></button><button type="button" aria-label="Show figure 5 of 5"></button></div>
         </div>
-      </li>
-      <li class="proj">
-        <div class="proj-text">
-          <div class="proj-head"><div class="title">Thirty coursework projects and the undergraduate thesis</div><div class="proj-year">2014 to 2018</div></div>
-          <div class="authors">UCLA Geography &middot; 2014 to 2018</div>
-          <div class="venue">Archive</div>
-          <div class="links"><a href="/maps/">archive</a><a href="/maps/mendocino-fire-complex/">Mendocino write-up</a><a href="https://web.archive.org/web/20251216180226/https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program/">Los Angeles Geospatial Summit, 2019</a></div>
+        <div class="capbar" data-links="&lt;a href=&quot;/projects/pv-thermal/&quot;&gt;Page&lt;/a&gt; &amp;middot; &lt;a href=&quot;https://github.com/matt-duyst/UAV-PV-Assessment&quot;&gt;code&lt;/a&gt;">
+          <span class="k kf">Finding</span><span class="v f"></span>
+          <span class="k km">Measure</span><span class="v m"></span>
+          <span class="k ks">Source</span><span class="v s"></span>
+          <span class="k kc">Credit</span><span class="v c"></span>
         </div>
+      </li>
+      
+<li class="proj card-row" id="row-archive">
+        <div class="card-head"><div class="title">Thirty coursework projects and the undergraduate thesis</div><div class="proj-year">2014 to 2018</div></div>
+        <p class="claim">Thirty coursework projects and the undergraduate thesis from UCLA&#x27;s geography and GIS program, 2014 to 2018, kept largely as they were made.</p>
+        <div class="stack-line">UCLA coursework, 2014 to 2018</div>
         <div class="fig-strip archive-strip">
           <button type="button" class="strip-btn strip-prev" aria-label="Previous figure" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
           <ul class="strip-list" role="list" aria-label="Figures: Thirty coursework projects and the undergraduate thesis" tabindex="0">
@@ -856,9 +858,14 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
           <button type="button" class="strip-btn strip-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
           <div class="strip-progress"><div class="strip-pos">Remote Sensing &middot; 1 of 31</div><div class="strip-track" aria-hidden="true"><div class="strip-fill"></div></div></div>
         </div>
+        <div class="capbar" data-links="&lt;a href=&quot;/maps/&quot;&gt;archive&lt;/a&gt; &amp;middot; &lt;a href=&quot;/maps/mendocino-fire-complex/&quot;&gt;Mendocino write-up&lt;/a&gt; &amp;middot; &lt;a href=&quot;https://web.archive.org/web/20251216180226/https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program/&quot;&gt;Los Angeles Geospatial Summit, 2019&lt;/a&gt;">
+          <span class="k kf">Finding</span><span class="v f"></span>
+          <span class="k km">Measure</span><span class="v m"></span>
+          <span class="k ks">Source</span><span class="v s"></span>
+          <span class="k kc">Credit</span><span class="v c"></span>
+        </div>
       </li>
-    </ol>
-  </div>
+      
 </section>
 
 <section id="experience" class="experience">
@@ -1285,9 +1292,15 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
       var plates = Array.prototype.slice.call(list.children), raf = null;
       function fill() {
         raf = null; var step = plates.length > 1 ? plates[1].offsetLeft - plates[0].offsetLeft : 1, i = Math.max(0, Math.min(plates.length - 1, Math.round(list.scrollLeft / step))), p = plates[i];
-        if (!p.querySelector('img') || !p.dataset.finding) { bar.hidden = true; return; }
-        bar.hidden = false; bar.querySelector('.f').textContent = p.dataset.finding; bar.querySelector('.m').textContent = p.dataset.measure;
-        bar.querySelector('.s').innerHTML = p.dataset.source + (bar.dataset.links ? ' &middot; ' + bar.dataset.links : ''); bar.querySelector('.c').textContent = p.dataset.credit || '';
+        var fc = p.querySelector('figcaption');
+        if (!p.querySelector('img, video') || (!p.dataset.finding && !fc)) { bar.hidden = true; return; }
+        bar.hidden = false;
+        var row = function (k, v, txt, html) { var kEl = bar.querySelector('.' + k), vEl = bar.querySelector('.' + v); kEl.hidden = vEl.hidden = !txt; if (html) vEl.innerHTML = txt; else vEl.textContent = txt; };
+        bar.querySelector('.kf').textContent = p.dataset.finding ? 'Finding' : 'Figure';  // a plate without a finding shows its figure caption
+        row('kf', 'f', p.dataset.finding || fc.textContent);
+        row('km', 'm', p.dataset.measure || '');
+        row('ks', 's', (p.dataset.source ? p.dataset.source + (bar.dataset.links ? ' &middot; ' : '') : '') + (bar.dataset.links || ''), true);
+        row('kc', 'c', p.dataset.credit || '');
       }
       list.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(fill); }, { passive: true }); fill();
     }
