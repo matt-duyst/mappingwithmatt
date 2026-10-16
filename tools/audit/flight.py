@@ -53,7 +53,7 @@ def main():
             im = shoot(); t1 = time.time()
             while time.time() - t1 < 20:
                 c.pump(1.0); nxt = shoot()
-                if ImageChops.difference(im, nxt).getbbox() is None: break
+                if ImageChops.difference(im, nxt).convert('L').point(lambda v: 255 if v > 24 else 0).getbbox() is None: break  # the same threshold as the run-to-run check; GPU antialiasing never gives bit-identical frames
                 im = nxt
             im.save(os.path.join(a.out, f'flight-start-{W}-{a.theme}-run{k + 1}.png')); imgs.append(im)
             print(f"run {k + 1}: settled after {time.time() - t0:.2f} s, scale {r['scale']}, canvas {round(r['w'])}x{round(r['h'])}", flush=True)
