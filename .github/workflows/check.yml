@@ -1,0 +1,34 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install websocket-client
+      - name: Chromium
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q chromium-browser || true
+          if [ -x /usr/bin/google-chrome ]; then echo "CHROME=/usr/bin/google-chrome" >> "$GITHUB_ENV"; else echo "CHROME=$(command -v chromium-browser || command -v chromium)" >> "$GITHUB_ENV"; fi
+          "$(grep CHROME= "$GITHUB_ENV" | cut -d= -f2)" --version
+      - name: Serve the site
+        run: |
+          python3 -m http.server 8000 >/dev/null 2>&1 &
+          sleep 1
+          curl -sf -o /dev/null http://localhost:8000/
+      - name: Claims
+        run: python3 tools/claims/check.py
+      - name: Links and accessibility
+        run: |
+          python3 tools/audit/run.py http://localhost:8000 --checks-only --software --chrome "$CHROME" --out audit.json
+          python3 tools/audit/compare.py --checks-only audit.json

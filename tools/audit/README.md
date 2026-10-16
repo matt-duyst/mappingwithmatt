@@ -16,3 +16,7 @@ Two network profiles are recorded for every page. The throttled profile (40 ms R
 To accept a new state as the baseline, copy `audit.json` over `baseline.json` in the same commit as the change that moved the numbers.
 
 `vendor/axe.min.js` is axe-core, Mozilla Public License 2.0, used only by the audit; the site itself does not load it.
+
+## Continuous integration
+
+`.github/workflows/check.yml` runs on every push and pull request to `main`: it serves the site, runs `tools/claims/check.py`, then `run.py --checks-only` (one load per page, width and theme, software rendering, no performance measurement) and `compare.py --checks-only`, failing the job on any unsourced sentence without a ledger row, broken internal link, axe violation, console error or horizontal overflow. Performance numbers are never taken in CI; they come from `run.py` on a workstation with GPU rendering, three throttled runs per page, the median quoted.

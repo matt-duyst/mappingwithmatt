@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Site audit: cold load, full scroll, hero marks, axe and internal links for the seven pages at 1440 and 390 in both themes.
 
-Writes audit.json. Two network profiles per page: "throttled" (40 ms RTT, 10 Mbps, DPR 1) is the quoted figure;
-"local" (no throttling, DPR 2 at 1440 and 3 at 390) is recorded beside it. Chrome renders with the GPU unless --software is given.
+Writes audit.json. Two network profiles per page: "throttled" (40 ms RTT, 10 Mbps, DPR 1) is the quoted figure and is run three
+times, each metric's median standing as the figure with all three runs kept beside it; "local" (no throttling, DPR 2 at 1440 and 3 at 390)
+is run once and recorded beside it. Chrome renders with the GPU unless --software is given. --checks-only loads each page once,
+runs axe and the link sweep and skips every performance measurement, which is what CI runs.
 
     python3 tools/audit/run.py http://localhost:8000 --out tools/audit/audit.json
 """
@@ -40,7 +42,8 @@ class Chrome:
         shutil.rmtree(profile, ignore_errors=True)
         flags = [binary, '--headless=new', f'--remote-debugging-port={port}', f'--user-data-dir={profile}', '--no-first-run',
                  '--disable-background-networking', '--disable-component-update', '--disable-sync', f'--window-size={w},{h}']
-        if software: flags += ['--use-angle=swiftshader', '--enable-unsafe-swiftshader']
+        if software: flags += ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--disable-gpu']
+        if os.environ.get('CI'): flags += ['--no-sandbox']  # the hosted runner forbids the sandbox's user namespaces
         self.p = subprocess.Popen(flags + ['about:blank'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         tabs = None
         for _ in range(80):
@@ -91,7 +94,7 @@ def errors(c):
            [f"HTTP {e['params']['response']['status']} {e['params']['response']['url']}" for e in c.ev if e.get('method') == 'Network.responseReceived' and e['params']['response']['status'] >= 400]
 
 
-def audit_page(args, path, width, theme, profile, port, axe_src):
+def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=False):
     h, dpr = WIDTHS[width]
     if profile == 'throttled': dpr = 1
     c = Chrome(args.chrome, port, os.path.join(args.tmp, f'prof-{width}-{theme}-{profile}'), width, h, args.software)
@@ -112,7 +115,12 @@ def audit_page(args, path, width, theme, profile, port, axe_src):
                 if c.js(done): break
             except Exception: pass
             c.pump(0.1)
-        c.pump(3.0)
+        c.pump(1.0 if checks_only else 3.0)
+        if checks_only:
+            c.send('Runtime.evaluate', {'expression': axe_src})
+            out['axe'] = json.loads(c.js("axe.run(document, {resultTypes: ['violations']}).then(r => JSON.stringify(r.violations.map(v => ({id: v.id, impact: v.impact, nodes: v.nodes.map(n => n.target.join(' '))}))))", wait=True))
+            out['overflow'] = c.js('document.documentElement.scrollWidth > document.documentElement.clientWidth'); out['errors'] = errors(c)
+            return out
         out['cold'] = json.loads(c.js(METRICS)); out['cold'].update(network(c))
         if path == '/':
             out['hero'] = json.loads(c.js("JSON.stringify(Object.fromEntries(performance.getEntriesByType('mark').filter(m => m.name.startsWith('intro:')).map(m => [m.name.slice(6), Math.round(m.startTime)])))"))
@@ -125,6 +133,18 @@ def audit_page(args, path, width, theme, profile, port, axe_src):
         out['errors'] = errors(c)
     finally:
         c.close()
+    return out
+
+
+def median_of(dicts):
+    """Per-metric median across runs; the by_type breakdown is taken from the median-bytes run."""
+    import statistics
+    keys = [k for k in dicts[0] if isinstance(dicts[0][k], (int, float)) and not isinstance(dicts[0][k], bool)]
+    out = {k: (statistics.median([d[k] for d in dicts if d.get(k) is not None]) if any(d.get(k) is not None for d in dicts) else None) for k in keys}
+    for k in out:
+        if out[k] is not None and all(isinstance(d.get(k), int) for d in dicts): out[k] = int(round(out[k]))
+    mid = sorted(dicts, key=lambda d: d['bytes'])[len(dicts) // 2]
+    out['by_type'] = mid.get('by_type'); out['lcpElement'] = mid.get('lcpElement')
     return out
 
 
@@ -162,11 +182,13 @@ def main():
     ap.add_argument('--pages', default=','.join(PAGES))
     ap.add_argument('--tmp', default=os.path.join(HERE, '.tmp'))
     ap.add_argument('--port', type=int, default=9950)
+    ap.add_argument('--runs', type=int, default=3, help='runs of the throttled profile; the median of each metric is the quoted figure')
+    ap.add_argument('--checks-only', action='store_true', help='axe, errors, overflow and links only; no performance measurement')
     args = ap.parse_args()
     args.root = args.root.rstrip('/')
     axe_src = open(os.path.join(HERE, 'vendor', 'axe.min.js')).read()
     commit = subprocess.run(['git', '-C', SITE, 'rev-parse', '--short', 'HEAD'], capture_output=True, text=True).stdout.strip()
-    result = {'meta': {'date': time.strftime('%Y-%m-%d'), 'commit': commit, 'root': args.root, 'renderer': 'software' if args.software else 'gpu',
+    result = {'meta': {'date': time.strftime('%Y-%m-%d'), 'commit': commit, 'root': args.root, 'renderer': 'software' if args.software else 'gpu', 'runs': 1 if args.checks_only else args.runs, 'checks_only': args.checks_only,
                        'profiles': {'throttled': '40 ms RTT, 10 Mbps, DPR 1 (the quoted figure)', 'local': 'no throttling, DPR 2 at 1440 and 3 at 390'}},
               'pages': {}, 'links': check_links()}
     port = args.port
@@ -176,13 +198,24 @@ def main():
             result['pages'][path][str(width)] = {}
             for theme in ('dark', 'light'):
                 entry = {}
-                for profile in args.profiles.split(','):
+                if args.checks_only:
                     port += 1
-                    r = audit_page(args, path, width, theme, profile, port, axe_src)
-                    entry[profile] = {'cold': r['cold'], 'scroll': r['scroll'], 'errors': r['errors'], 'overflow': r['overflow']}
-                    if 'hero' in r: entry[profile]['hero'] = r['hero']
-                    if 'axe' in r: entry['axe'] = r['axe']
-                    print(f"{path} {width} {theme} {profile}: cold {r['cold']['requests']} req {r['cold']['bytes'] // 1024} KB FCP {r['cold']['fcp']} LCP {r['cold']['lcp']} TBT {r['cold']['tbt']} CLS {r['cold']['cls']} | scroll {r['scroll']['requests']} req {r['scroll']['bytes'] // 1024} KB TBT {r['scroll']['tbt']}" + (f" | axe {len(r['axe'])}" if 'axe' in r else '') + (f" | errors {len(r['errors'])}" if r['errors'] else ''), flush=True)
+                    r = audit_page(args, path, width, theme, 'local', port, axe_src, checks_only=True)
+                    entry = {'axe': r['axe'], 'errors': r['errors'], 'overflow': r['overflow']}
+                    print(f"{path} {width} {theme}: axe {len(r['axe'])} errors {len(r['errors'])} overflow {r['overflow']}", flush=True)
+                    result['pages'][path][str(width)][theme] = entry; continue
+                for profile in args.profiles.split(','):
+                    runs = []
+                    for k in range(args.runs if profile == 'throttled' else 1):
+                        port += 1
+                        r = audit_page(args, path, width, theme, profile, port, axe_src)
+                        runs.append(r)
+                        print(f"{path} {width} {theme} {profile} run {k + 1}: cold {r['cold']['requests']} req {r['cold']['bytes'] // 1024} KB FCP {r['cold']['fcp']} LCP {r['cold']['lcp']} TBT {r['cold']['tbt']} CLS {r['cold']['cls']} | scroll {r['scroll']['requests']} req {r['scroll']['bytes'] // 1024} KB TBT {r['scroll']['tbt']} CLS {r['scroll']['cls']}" + (f" | axe {len(r['axe'])}" if 'axe' in r else '') + (f" | errors {len(r['errors'])}" if r['errors'] else ''), flush=True)
+                    entry[profile] = {'cold': median_of([r['cold'] for r in runs]), 'scroll': median_of([r['scroll'] for r in runs]),
+                                      'runs': [{'cold': r['cold'], 'scroll': r['scroll']} for r in runs],
+                                      'errors': [e for r in runs for e in r['errors']], 'overflow': any(r['overflow'] for r in runs)}
+                    if 'hero' in runs[0]: entry[profile]['hero'] = runs[0]['hero']
+                    if 'axe' in runs[0]: entry['axe'] = runs[0]['axe']
                 result['pages'][path][str(width)][theme] = entry
     shutil.rmtree(args.tmp, ignore_errors=True)
     json.dump(result, open(args.out, 'w'), indent=1)
