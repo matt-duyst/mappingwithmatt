@@ -228,3 +228,6 @@ maps	2016 presidential results map	maps/images/2016-Election.webp	the map shown 
 maps	The Spatial Dynamics of Presidential Elections: An Autocorrelation Analysis of Voter Behavior in 2012 & 2016	maps/images/pres-2012.webp	the map shown on /maps/presidential-election-autocorrelation/
 maps	Revitilization of a Sanborn Map: Digitizing Hollywood District	maps/digitizing/index.html	the map shown on /maps/digitizing/
 maps	Hollywood blocks digitized from a 1950 Sanborn map	maps/digitizing/index.html	the map shown on /maps/digitizing/
+yangtze	Urban extent in 2000 and in 2018 from the thesis's source maps, the later one revealed by the handle.	github.com/matt-duyst/Yangtze-Landcover-Methane legacy/data/Urban_2000.jpg and legacy/data/Urban_2018.jpg	the two files; legacy/README.md line 7: "data/ holds the nine source JPGs the thesis figures were built from"
+yangtze	Yangtze-Landcover-Methane legacy/data/Urban_2000.jpg and Urban_2018.jpg, the maps the thesis figures were built from	github.com/matt-duyst/Yangtze-Landcover-Methane legacy/README.md	line 7
+yangtze	Maps: Matt Duyst, thesis of 2023	assets/Duyst_CV.pdf	line 35: Yale University, School of the Environment 2021–2023

@@ -6,7 +6,7 @@
   var prev = dlg.querySelector('.lb-prev'), next = dlg.querySelector('.lb-next'), close = dlg.querySelector('.lb-close');
   var group = [], at = 0, opener = null;
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-  function eligible(f) { return !!f.querySelector('img') && !f.closest('a') && !f.querySelector('video') && !dlg.contains(f); }
+  function eligible(f) { return !!f.querySelector('img') && !f.closest('a') && !f.querySelector('video') && !f.classList.contains('swipe') && !dlg.contains(f); }  // a swipe figure keeps its handle
   function groupOf(f) {
     var list = f.closest('.strip-list');
     return Array.prototype.filter.call(list ? list.querySelectorAll('.plate figure') : document.querySelectorAll('figure.pfig'), eligible);
