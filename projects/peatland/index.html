@@ -112,5 +112,13 @@
   var raf = null; window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(function () { raf = null; track(); }); }, { passive: true }); track();
 })();
 </script>
+<dialog class="lightbox" id="lightbox" aria-label="Figure at full size">
+  <div class="lb-box"><figure class="lb-fig"><div class="lb-frame"><img alt=""></div><figcaption class="capbar"></figcaption></figure></div>
+  <div class="lb-count" aria-live="polite"></div>
+  <button type="button" class="lb-btn lb-prev" aria-label="Previous figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button type="button" class="lb-btn lb-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+  <button type="button" class="lb-btn lb-close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</dialog>
+<script src="../../assets/lightbox.js" defer></script>
 </body>
 </html>

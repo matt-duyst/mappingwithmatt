@@ -487,6 +487,30 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 ::view-transition-group(*), ::view-transition-old(root), ::view-transition-new(root) { animation-duration: var(--d-base); animation-timing-function: var(--ease); }
 ::view-transition-old(hero-figure), ::view-transition-new(hero-figure) { height: 100%; object-fit: contain; }
 @media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
+/* Figure lightbox: a native dialog, full-viewport so a click outside the figure lands on the dialog itself and closes it */
+dialog.lightbox { position: fixed; inset: 0; width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; overflow: hidden; background: transparent; color: var(--text); opacity: 0; transition: opacity var(--d-base) var(--ease), overlay var(--d-base) var(--ease) allow-discrete, display var(--d-base) var(--ease) allow-discrete; }
+dialog.lightbox[open] { opacity: 1; }
+@starting-style { dialog.lightbox[open] { opacity: 0; } }
+dialog.lightbox::backdrop { background: rgba(0, 0, 0, 0.72); opacity: 0; transition: opacity var(--d-base) var(--ease), overlay var(--d-base) var(--ease) allow-discrete, display var(--d-base) var(--ease) allow-discrete; }
+dialog.lightbox[open]::backdrop { opacity: 1; }
+@starting-style { dialog.lightbox[open]::backdrop { opacity: 0; } }
+.lb-box { position: absolute; inset: 0; display: grid; place-items: center; padding: 56px clamp(16px, 5vw, 72px) 24px; pointer-events: none; }
+.lb-fig { pointer-events: auto; margin: 0; max-width: min(1600px, 100%); max-height: 100%; display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+.lb-frame { border: 1px solid var(--border-2); padding: 12px; background: var(--page-2); display: grid; place-items: center; min-height: 0; }
+.lb-frame img { display: block; width: auto; height: auto; max-width: 100%; max-height: calc(100vh - 240px); }
+.lb-fig .capbar { background: var(--page-2); margin-top: 0; }
+.lb-fig .capbar[hidden] { display: none; }
+.lb-btn { position: absolute; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-2); background: color-mix(in srgb, var(--page) 85%, transparent); color: var(--text); display: grid; place-items: center; cursor: pointer; padding: 0; font: inherit; }
+.lb-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.lb-btn:hover { border-color: var(--text); }
+.lb-btn:focus-visible { outline: 1px solid var(--text); outline-offset: 3px; }
+.lb-btn[hidden] { display: none; }
+.lb-prev { left: 12px; top: calc(50% - 20px); } .lb-next { right: 12px; top: calc(50% - 20px); } .lb-close { right: 12px; top: 12px; }
+.lb-count { position: absolute; left: 50%; top: 20px; transform: translateX(-50%); font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--text-3); }
+.lb-open { cursor: zoom-in; }
+.lb-open:focus-visible { outline: 1px solid var(--text); outline-offset: 3px; }
+@media (max-width: 640px) { .lb-box { padding: 56px 12px 20px; } .lb-prev { left: 6px; } .lb-next { right: 6px; } }
+@media (prefers-reduced-motion: reduce) { dialog.lightbox, dialog.lightbox::backdrop { transition: none; } }
 </style>
 </head>
 <body>
@@ -1517,5 +1541,13 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   } else initMaps();
 })();
 </script>
+<dialog class="lightbox" id="lightbox" aria-label="Figure at full size">
+  <div class="lb-box"><figure class="lb-fig"><div class="lb-frame"><img alt=""></div><figcaption class="capbar"></figcaption></figure></div>
+  <div class="lb-count" aria-live="polite"></div>
+  <button type="button" class="lb-btn lb-prev" aria-label="Previous figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button type="button" class="lb-btn lb-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+  <button type="button" class="lb-btn lb-close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</dialog>
+<script src="assets/lightbox.js" defer></script>
 </body>
 </html>
