@@ -1,0 +1,4369 @@
+{
+ "meta": {
+  "date": "2026-10-16",
+  "commit": "71fc068",
+  "root": "http://localhost:8000",
+  "renderer": "gpu",
+  "profiles": {
+   "throttled": "40 ms RTT, 10 Mbps, DPR 1 (the quoted figure)",
+   "local": "no throttling, DPR 2 at 1440 and 3 at 390"
+  }
+ },
+ "pages": {
+  "/": {
+   "1440": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 128,
+       "lcp": 152,
+       "lcpElement": "H1.name",
+       "tbt": 0,
+       "cls": 0.006,
+       "requests": 10,
+       "bytes": 463871,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 98403
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 5243
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 128,
+       "lcp": 6792,
+       "lcpElement": "VIDEO.reel",
+       "tbt": 0,
+       "cls": 0.006,
+       "requests": 38,
+       "bytes": 2381446,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Fetch": {
+         "requests": 11,
+         "bytes": 146726
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 17,
+         "bytes": 687188
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1103925
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83382
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "curtain-lift-start": 273,
+       "curtain-lift-end": 756,
+       "name-shown": 756,
+       "name-visible": 1007,
+       "route-start": 1007,
+       "route-end": 1490
+      }
+     },
+     "local": {
+      "cold": {
+       "fcp": 100,
+       "lcp": 100,
+       "lcpElement": "H1.name",
+       "tbt": 0,
+       "cls": 0.003,
+       "requests": 10,
+       "bytes": 463871,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 98403
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 5243
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 100,
+       "lcp": 6580,
+       "lcpElement": "VIDEO.reel",
+       "tbt": 0,
+       "cls": 0.023,
+       "requests": 71,
+       "bytes": 3566092,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Fetch": {
+         "requests": 44,
+         "bytes": 906727
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 17,
+         "bytes": 1111833
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1103925
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83382
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "curtain-lift-start": 80,
+       "curtain-lift-end": 580,
+       "name-shown": 580,
+       "name-visible": 830,
+       "route-start": 830,
+       "route-end": 1313
+      }
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 112,
+       "lcp": 136,
+       "lcpElement": "H1.name",
+       "tbt": 0,
+       "cls": 0.007,
+       "requests": 10,
+       "bytes": 463871,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 98403
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 5243
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 112,
+       "lcp": 7088,
+       "lcpElement": "VIDEO.reel",
+       "tbt": 0,
+       "cls": 0.007,
+       "requests": 38,
+       "bytes": 2381434,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Fetch": {
+         "requests": 11,
+         "bytes": 146714
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 17,
+         "bytes": 687188
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1103925
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83382
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "curtain-lift-start": 321,
+       "curtain-lift-end": 804,
+       "name-shown": 805,
+       "name-visible": 1055,
+       "route-start": 1055,
+       "route-end": 1539
+      }
+     },
+     "local": {
+      "cold": {
+       "fcp": 96,
+       "lcp": 96,
+       "lcpElement": "H1.name",
+       "tbt": 0,
+       "cls": 0.005,
+       "requests": 10,
+       "bytes": 463871,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 98403
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 5243
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 96,
+       "lcp": 6576,
+       "lcpElement": "VIDEO.reel",
+       "tbt": 0,
+       "cls": 0.025,
+       "requests": 71,
+       "bytes": 3566034,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Fetch": {
+         "requests": 44,
+         "bytes": 906669
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 17,
+         "bytes": 1111833
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1103925
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83382
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "curtain-lift-start": 72,
+       "curtain-lift-end": 558,
+       "name-shown": 558,
+       "name-visible": 808,
+       "route-start": 808,
+       "route-end": 1292
+      }
+     },
+     "axe": []
+    }
+   },
+   "390": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 124,
+       "lcp": 136,
+       "lcpElement": "H1.name",
+       "tbt": 0,
+       "cls": 0.004,
+       "requests": 10,
+       "bytes": 463871,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 98403
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 5243
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 124,
+       "lcp": 7736,
+       "lcpElement": "VIDEO.reel",
+       "tbt": 0,
+       "cls": 0.004,
+       "requests": 46,
+       "bytes": 3085243,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Fetch": {
+         "requests": 11,
+         "bytes": 146703
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 24,
+         "bytes": 1128034
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1103925
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83382
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "curtain-lift-start": 318,
+       "curtain-lift-end": 803,
+       "name-shown": 803,
+       "name-visible": 1053,
+       "route-start": 1053,
+       "route-end": 1536
+      }
+     },
+     "local": {
+      "cold": {
+       "fcp": 76,
+       "lcp": 76,
+       "lcpElement": "H1.name",
+       "tbt": 0,
+       "cls": 0.004,
+       "requests": 10,
+       "bytes": 463871,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 98403
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 5243
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 76,
+       "lcp": 7268,
+       "lcpElement": "VIDEO.reel",
+       "tbt": 0,
+       "cls": 0.004,
+       "requests": 46,
+       "bytes": 3956680,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Fetch": {
+         "requests": 11,
+         "bytes": 216280
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 24,
+         "bytes": 1929894
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1103925
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83382
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "curtain-lift-start": 62,
+       "curtain-lift-end": 552,
+       "name-shown": 552,
+       "name-visible": 802,
+       "route-start": 802,
+       "route-end": 1285
+      }
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 116,
+       "lcp": 128,
+       "lcpElement": "H1.name",
+       "tbt": 0,
+       "cls": 0.004,
+       "requests": 10,
+       "bytes": 463871,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 98403
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 5243
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 116,
+       "lcp": 7712,
+       "lcpElement": "VIDEO.reel",
+       "tbt": 0,
+       "cls": 0.004,
+       "requests": 46,
+       "bytes": 3085257,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Fetch": {
+         "requests": 11,
+         "bytes": 146717
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 24,
+         "bytes": 1128034
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1103925
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83382
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "curtain-lift-start": 310,
+       "curtain-lift-end": 794,
+       "name-shown": 794,
+       "name-visible": 1044,
+       "route-start": 1044,
+       "route-end": 1527
+      }
+     },
+     "local": {
+      "cold": {
+       "fcp": 76,
+       "lcp": 76,
+       "lcpElement": "H1.name",
+       "tbt": 0,
+       "cls": 0.004,
+       "requests": 10,
+       "bytes": 463871,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 98403
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 5243
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 76,
+       "lcp": 7256,
+       "lcpElement": "VIDEO.reel",
+       "tbt": 0,
+       "cls": 0.004,
+       "requests": 46,
+       "bytes": 3956691,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202291
+        },
+        "Fetch": {
+         "requests": 11,
+         "bytes": 216291
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 24,
+         "bytes": 1929894
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1103925
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83382
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "curtain-lift-start": 57,
+       "curtain-lift-end": 551,
+       "name-shown": 551,
+       "name-visible": 803,
+       "route-start": 803,
+       "route-end": 1286
+      }
+     },
+     "axe": []
+    }
+   }
+  },
+  "/projects/peatland/": {
+   "1440": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 176,
+       "lcp": 176,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.027,
+       "requests": 11,
+       "bytes": 443869,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 233890
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 176,
+       "lcp": 4384,
+       "lcpElement": "IMG",
+       "tbt": 0,
+       "cls": 0.027,
+       "requests": 21,
+       "bytes": 1652276,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 12,
+         "bytes": 1442297
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 60,
+       "lcp": 60,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.001,
+       "requests": 11,
+       "bytes": 443869,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 233890
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 60,
+       "lcp": 60,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.001,
+       "requests": 21,
+       "bytes": 1652276,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 12,
+         "bytes": 1442297
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 160,
+       "lcp": 160,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.027,
+       "requests": 11,
+       "bytes": 443869,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 233890
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 160,
+       "lcp": 4108,
+       "lcpElement": "IMG",
+       "tbt": 0,
+       "cls": 0.031,
+       "requests": 21,
+       "bytes": 1652276,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 12,
+         "bytes": 1442297
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 60,
+       "lcp": 60,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.001,
+       "requests": 11,
+       "bytes": 443869,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 233890
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 60,
+       "lcp": 60,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.001,
+       "requests": 21,
+       "bytes": 1652276,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 12,
+         "bytes": 1442297
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    }
+   },
+   "390": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 148,
+       "lcp": 148,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 11,
+       "bytes": 443869,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 233890
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 148,
+       "lcp": 148,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 21,
+       "bytes": 1652276,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 12,
+         "bytes": 1442297
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 68,
+       "lcp": 68,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 11,
+       "bytes": 443869,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 233890
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 68,
+       "lcp": 68,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 21,
+       "bytes": 1652276,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 12,
+         "bytes": 1442297
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 152,
+       "lcp": 152,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 11,
+       "bytes": 443869,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 233890
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 152,
+       "lcp": 152,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 21,
+       "bytes": 1652276,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 12,
+         "bytes": 1442297
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 56,
+       "lcp": 56,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 11,
+       "bytes": 443869,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 233890
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 56,
+       "lcp": 56,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 21,
+       "bytes": 1652276,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 20808
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 12,
+         "bytes": 1442297
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    }
+   }
+  },
+  "/projects/yangtze/": {
+   "1440": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 164,
+       "lcp": 164,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 12,
+       "bytes": 546718,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 348810
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 164,
+       "lcp": 164,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 13,
+       "bytes": 726866,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 528958
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 56,
+       "lcp": 56,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 12,
+       "bytes": 546718,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 348810
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 56,
+       "lcp": 56,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 13,
+       "bytes": 726866,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 528958
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 160,
+       "lcp": 160,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 12,
+       "bytes": 546718,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 348810
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 160,
+       "lcp": 160,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 13,
+       "bytes": 726866,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 528958
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 52,
+       "lcp": 52,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 12,
+       "bytes": 546718,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 348810
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 52,
+       "lcp": 52,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 13,
+       "bytes": 726866,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 528958
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    }
+   },
+   "390": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 156,
+       "lcp": 156,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 11,
+       "bytes": 360370,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 162462
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 156,
+       "lcp": 156,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 13,
+       "bytes": 726866,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 528958
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 48,
+       "lcp": 48,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 11,
+       "bytes": 360370,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 162462
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 48,
+       "lcp": 48,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 13,
+       "bytes": 726866,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 528958
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 168,
+       "lcp": 168,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 11,
+       "bytes": 360370,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 162462
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 168,
+       "lcp": 168,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 13,
+       "bytes": 726866,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 528958
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 56,
+       "lcp": 56,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 11,
+       "bytes": 360370,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 162462
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 56,
+       "lcp": 56,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 13,
+       "bytes": 726866,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 8737
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 4,
+         "bytes": 528958
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    }
+   }
+  },
+  "/projects/carbon-trading/": {
+   "1440": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 172,
+       "lcp": 212,
+       "lcpElement": "VIDEO",
+       "tbt": 0,
+       "cls": 0.006,
+       "requests": 13,
+       "bytes": 550435,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 172,
+       "lcp": 212,
+       "lcpElement": "VIDEO",
+       "tbt": 0,
+       "cls": 0.006,
+       "requests": 13,
+       "bytes": 550435,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 56,
+       "lcp": 56,
+       "lcpElement": "VIDEO",
+       "tbt": 0,
+       "cls": 0.006,
+       "requests": 13,
+       "bytes": 550435,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 56,
+       "lcp": 56,
+       "lcpElement": "VIDEO",
+       "tbt": 0,
+       "cls": 0.006,
+       "requests": 13,
+       "bytes": 550435,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 180,
+       "lcp": 208,
+       "lcpElement": "VIDEO",
+       "tbt": 0,
+       "cls": 0.006,
+       "requests": 13,
+       "bytes": 550435,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 180,
+       "lcp": 208,
+       "lcpElement": "VIDEO",
+       "tbt": 0,
+       "cls": 0.006,
+       "requests": 13,
+       "bytes": 550435,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 64,
+       "lcp": 64,
+       "lcpElement": "VIDEO",
+       "tbt": 0,
+       "cls": 0.006,
+       "requests": 13,
+       "bytes": 550435,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 64,
+       "lcp": 64,
+       "lcpElement": "VIDEO",
+       "tbt": 0,
+       "cls": 0.006,
+       "requests": 13,
+       "bytes": 550435,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    }
+   },
+   "390": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 160,
+       "lcp": 160,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 13,
+       "bytes": 287461,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 160,
+       "lcp": 160,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.001,
+       "requests": 13,
+       "bytes": 550435,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 52,
+       "lcp": 52,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 13,
+       "bytes": 287461,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 52,
+       "lcp": 52,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.001,
+       "requests": 13,
+       "bytes": 550435,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 160,
+       "lcp": 160,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 13,
+       "bytes": 287461,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 160,
+       "lcp": 160,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.001,
+       "requests": 13,
+       "bytes": 550435,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 84,
+       "lcp": 84,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 13,
+       "bytes": 287461,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 84,
+       "lcp": 84,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.001,
+       "requests": 13,
+       "bytes": 550435,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 6979
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 3,
+         "bytes": 91311
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    }
+   }
+  },
+  "/projects/pv-thermal/": {
+   "1440": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 164,
+       "lcp": 164,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.012,
+       "requests": 11,
+       "bytes": 755266,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 555604
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 164,
+       "lcp": 164,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.012,
+       "requests": 18,
+       "bytes": 1002191,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 9,
+         "bytes": 802529
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 68,
+       "lcp": 68,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.012,
+       "requests": 11,
+       "bytes": 755266,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 555604
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 68,
+       "lcp": 68,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.012,
+       "requests": 18,
+       "bytes": 1002191,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 9,
+         "bytes": 802529
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 184,
+       "lcp": 184,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.012,
+       "requests": 11,
+       "bytes": 755266,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 555604
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 184,
+       "lcp": 184,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.012,
+       "requests": 18,
+       "bytes": 1002191,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 9,
+         "bytes": 802529
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 60,
+       "lcp": 60,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.056,
+       "requests": 15,
+       "bytes": 919018,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 6,
+         "bytes": 719356
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 60,
+       "lcp": 60,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.056,
+       "requests": 18,
+       "bytes": 1002191,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 9,
+         "bytes": 802529
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    }
+   },
+   "390": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 184,
+       "lcp": 184,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 11,
+       "bytes": 755266,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 555604
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 184,
+       "lcp": 184,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 18,
+       "bytes": 1002191,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 9,
+         "bytes": 802529
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 60,
+       "lcp": 60,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 11,
+       "bytes": 755266,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 555604
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 60,
+       "lcp": 60,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 18,
+       "bytes": 1002191,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 9,
+         "bytes": 802529
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 160,
+       "lcp": 160,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 11,
+       "bytes": 755266,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 555604
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 160,
+       "lcp": 160,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 18,
+       "bytes": 1002191,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 9,
+         "bytes": 802529
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 64,
+       "lcp": 64,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 11,
+       "bytes": 755266,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 555604
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 64,
+       "lcp": 64,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 18,
+       "bytes": 1002191,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 10491
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 9,
+         "bytes": 802529
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 2,
+         "bytes": 6050
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    }
+   }
+  },
+  "/projects/flare-efficiency/": {
+   "1440": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 176,
+       "lcp": 176,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.031,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 176,
+       "lcp": 176,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.031,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 52,
+       "lcp": 52,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.005,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 52,
+       "lcp": 52,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.005,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 152,
+       "lcp": 152,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.031,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 152,
+       "lcp": 152,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.031,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 108,
+       "lcp": 108,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.005,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 108,
+       "lcp": 108,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0.005,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    }
+   },
+   "390": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 140,
+       "lcp": 140,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 140,
+       "lcp": 140,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 60,
+       "lcp": 60,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 60,
+       "lcp": 60,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 152,
+       "lcp": 152,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 152,
+       "lcp": 152,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 104,
+       "lcp": 104,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 104,
+       "lcp": 104,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 9,
+       "bytes": 188209,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 4281
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 807
+        },
+        "Stylesheet": {
+         "requests": 2,
+         "bytes": 25187
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    }
+   }
+  },
+  "/maps/": {
+   "1440": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 180,
+       "lcp": 180,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 7,
+       "bytes": 189045,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 180,
+       "lcp": 7232,
+       "lcpElement": "IMG",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 37,
+       "bytes": 5826581,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 31,
+         "bytes": 5637536
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 64,
+       "lcp": 64,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 7,
+       "bytes": 189045,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 64,
+       "lcp": 64,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 37,
+       "bytes": 5826581,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 31,
+         "bytes": 5637536
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 140,
+       "lcp": 140,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 7,
+       "bytes": 189045,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 140,
+       "lcp": 7512,
+       "lcpElement": "IMG",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 37,
+       "bytes": 5826581,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 31,
+         "bytes": 5637536
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 80,
+       "lcp": 80,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 7,
+       "bytes": 189045,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 80,
+       "lcp": 80,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 37,
+       "bytes": 5826581,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 31,
+         "bytes": 5637536
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    }
+   },
+   "390": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 148,
+       "lcp": 148,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 7,
+       "bytes": 189045,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 148,
+       "lcp": 148,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 37,
+       "bytes": 5826581,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 31,
+         "bytes": 5637536
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 68,
+       "lcp": 68,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 7,
+       "bytes": 189045,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 68,
+       "lcp": 68,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 37,
+       "bytes": 5826581,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 31,
+         "bytes": 5637536
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 144,
+       "lcp": 144,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 7,
+       "bytes": 189045,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 144,
+       "lcp": 144,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 37,
+       "bytes": 5826581,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 31,
+         "bytes": 5637536
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "local": {
+      "cold": {
+       "fcp": 56,
+       "lcp": 56,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 7,
+       "bytes": 189045,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "scroll": {
+       "fcp": 56,
+       "lcp": 56,
+       "lcpElement": "P.lede",
+       "tbt": 0,
+       "cls": 0,
+       "requests": 37,
+       "bytes": 5826581,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 17984
+        },
+        "Font": {
+         "requests": 3,
+         "bytes": 157207
+        },
+        "Image": {
+         "requests": 31,
+         "bytes": 5637536
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 13127
+        }
+       }
+      },
+      "errors": [],
+      "overflow": false
+     },
+     "axe": []
+    }
+   }
+  }
+ },
+ "links": {
+  "pages": 38,
+  "references": 775,
+  "problems": []
+ }
+}
