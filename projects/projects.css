@@ -31,6 +31,7 @@ main.project section { margin-top: 44px; }
 .pfig .capbar .k, .lb-fig .capbar .k { color: var(--text-3); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 3px; }
 .pfig:not(.pvid) .plate-frame { margin-inline: auto; }
 .pfig .plate-frame + .capbar { width: 100%; }
+.pin .slot .plate-frame { width: 100%; }  /* a pinned figure keeps its full height before its image arrives; fit-content gave an unloaded image no height */
 @media (max-width: 640px) { .pfig .capbar, .lb-fig .capbar { grid-template-columns: 1fr; gap: 0; } .pfig .capbar .k { padding-top: 6px; } }
 /* ===== 2.0 study: Peatland anatomy ===== */
 .byline { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, max-content)); gap: 8px 32px; margin: 0 0 22px; padding: 14px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 12px; line-height: 1.6; color: var(--text); }
@@ -59,8 +60,8 @@ main.project section { margin-top: 44px; }
   .pin .slot.active.in { opacity: 1; transform: none; }
   .pin .slot[data-sec] figure { margin: 0; }
   .pin .slot.active:has(figure:nth-child(2)) .capbar { display: none; }
-  .pin .slot.active:has(figure:nth-child(2)) img { max-height: calc((100vh - 160px) / 2 - 40px); width: auto; }
-  .pin .slot.active:has(figure:nth-child(4)) img { max-height: calc((100vh - 160px) / 4 - 20px); }
+  .pin .slot.active:has(figure:nth-child(2)) img { height: calc((100vh - 160px) / 2 - 40px); width: auto; max-width: 100%; object-fit: contain; }  /* a definite height, not a max, so the box exists before the image loads */
+  .pin .slot.active:has(figure:nth-child(4)) img { height: calc((100vh - 160px) / 4 - 20px); }
   .secdex { display: flex; position: fixed; right: clamp(14px, 2.4vw, 34px); top: 50%; transform: translateY(-50%); flex-direction: column; align-items: flex-end; z-index: 40; }
   .secdex a { position: relative; display: flex; align-items: center; gap: 12px; padding: 7px 0; color: var(--text-3); border: 0; }
   .secdex a span { font-family: var(--font-mono); font-feature-settings: var(--ff-mono); font-size: 11px; letter-spacing: 0.03em; opacity: 0; transform: translateX(6px); transition: opacity var(--d-fast) var(--ease), transform var(--d-fast) var(--ease); white-space: nowrap; }
