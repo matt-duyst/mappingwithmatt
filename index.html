@@ -482,6 +482,11 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 .capbar a { color: var(--accent-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
 @media (max-width: 640px) { .capbar { grid-template-columns: 1fr; gap: 0; } .capbar .k { padding-top: 6px; } .card-row .card-head { flex-direction: column; gap: 4px; } }
 @media (prefers-reduced-motion: reduce) { .papers .proj.card-row:hover { transform: none; } }
+/* Cross-document view transitions: a cross-fade at --d-base, the header held in place, and the clicked plate carried into its project page as hero-figure */
+@view-transition { navigation: auto; }
+::view-transition-group(*), ::view-transition-old(root), ::view-transition-new(root) { animation-duration: var(--d-base); animation-timing-function: var(--ease); }
+::view-transition-old(hero-figure), ::view-transition-new(hero-figure) { height: 100%; object-fit: contain; }
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
 </style>
 </head>
 <body>
@@ -1237,6 +1242,17 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 <script>
 // 2.0 study: the card row's spotlight follows the cursor, and entering the card advances its strip by one plate
 (function () {
+  // Cross-document view transition: the plate last clicked in a row carries into that row's project page as hero-figure; the name is cleared again if the page comes back from the cache
+  var lastPlate = null;
+  document.addEventListener('click', function (e) { var p = e.target.closest && e.target.closest('.plate'); if (p) lastPlate = p; });
+  window.addEventListener('pageswap', function (e) {
+    if (!e.viewTransition || !e.activation || !e.activation.entry || !lastPlate) return;
+    var to = new URL(e.activation.entry.url, location.href), row = lastPlate.closest('.proj');
+    if (!/^\/projects\//.test(to.pathname) || !row || !row.querySelector('a[href="' + to.pathname + '"]')) return;
+    var media = lastPlate.querySelector('img, video');
+    if (media) media.style.viewTransitionName = 'hero-figure';
+  });
+  window.addEventListener('pagereveal', function () { Array.prototype.forEach.call(document.querySelectorAll('.plate img, .plate video'), function (el) { el.style.viewTransitionName = ''; }); lastPlate = null; });
   document.querySelectorAll('.card-row').forEach(function (card) {
     card.addEventListener('pointermove', function (e) { var r = card.getBoundingClientRect(); card.style.setProperty('--mx', (e.clientX - r.left) + 'px'); card.style.setProperty('--my', (e.clientY - r.top) + 'px'); });
     card.addEventListener('pointerenter', function (e) { if (e.pointerType === 'touch') return; var next = card.querySelector('.strip-next'); if (next && !next.hidden) next.click(); });

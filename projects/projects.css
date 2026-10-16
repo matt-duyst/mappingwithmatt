@@ -70,3 +70,5 @@ main.project section { margin-top: 44px; }
   .secdex a.active i { background: var(--text); border-color: var(--text); transform: scale(1.25); }
 }
 @media (prefers-reduced-motion: reduce) { .pin .slot { transform: none; } .next-card:hover { transform: none; } .secdex a span { transform: none; } }
+/* Cross-document view transitions (the timing and the hero-figure group are in ../maps/maps.css, which every project page loads first) */
+@view-transition { navigation: auto; }

@@ -52,7 +52,7 @@ a:hover, a:focus-visible { border-bottom-color: var(--text); }
 .prose a, .note a, .lede a { border-bottom: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); transition: text-decoration-color var(--d-base) var(--ease); }
 .prose a:hover, .note a:hover, .lede a:hover { text-decoration-color: currentColor; }
 
-header.site { display: flex; gap: 20px; align-items: baseline; max-width: 1100px; margin: 0 auto; padding: 24px 0 20px; border-bottom: 1px solid var(--line); }
+header.site { view-transition-name: header; display: flex; gap: 20px; align-items: baseline; max-width: 1100px; margin: 0 auto; padding: 24px 0 20px; border-bottom: 1px solid var(--line); }
 header.site a { border-bottom: 0; color: var(--muted); }
 header.site a:first-child { color: var(--text); font-family: var(--font-body); font-feature-settings: var(--ff-read); font-weight: var(--w-title); font-size: 15px; }
 header.site a:hover { color: var(--text); }
@@ -107,3 +107,8 @@ footer.site .loc { display: inline-flex; align-items: center; gap: 5px; }
 footer.site .loc svg { width: 13px; height: 13px; }
 footer.site a { color: var(--muted); border-bottom: 1px dotted var(--muted); }
 footer.site a:hover { color: var(--text); border-bottom-color: var(--text); }
+/* Cross-document view transitions: a cross-fade at --d-base, the header held in place, and the clicked plate carried into its project page as hero-figure */
+@view-transition { navigation: auto; }
+::view-transition-group(*), ::view-transition-old(root), ::view-transition-new(root) { animation-duration: var(--d-base); animation-timing-function: var(--ease); }
+::view-transition-old(hero-figure), ::view-transition-new(hero-figure) { height: 100%; object-fit: contain; }
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
