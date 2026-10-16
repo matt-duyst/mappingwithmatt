@@ -1397,8 +1397,9 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
     map.addLayer({ id: 'hillshade', type: 'hillshade', source: 'dem', layout: { visibility: 'none' }, paint: { 'hillshade-exaggeration': 0.35, 'hillshade-shadow-color': '#000', 'hillshade-highlight-color': '#666' } });
     // OpenFreeMap (OpenStreetMap vector tiles, no key, no cap): the dark basemap and a labels-only overlay derived from the liberty style
     var OFM_DARK = 'https://tiles.openfreemap.org/styles/dark', OFM_LIBERTY = 'https://tiles.openfreemap.org/styles/liberty';
+    var lblIds = [];  // the label layers, for the arrival's label check
     var ofmReady = fetch(OFM_LIBERTY).then(function (r) { return r.json(); }).then(function (st) {
-      if (st.glyphs) map.setGlyphs(st.glyphs); if (st.sprite) map.setSprite(st.sprite);
+      map.setGlyphs('/vendor/glyphs/{fontstack}/{range}.pbf'); if (st.sprite) map.setSprite(st.sprite);  // the label glyph ranges are vendored (vendor/glyphs/README.md), so labels never wait on the font server
       Object.keys(st.sources).forEach(function (k) { if (!map.getSource('ofm-' + k)) map.addSource('ofm-' + k, st.sources[k]); });
       // only place and water-name labels, in one font and Latin script, so few glyph ranges are fetched
       var latin = JSON.stringify(st.layers).indexOf('name:latin') !== -1;
@@ -1407,14 +1408,15 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
         L.paint['text-color'] = 'rgba(236,236,234,0.9)'; L.paint['text-halo-color'] = 'rgba(11,11,12,0.85)'; L.paint['text-halo-width'] = 1.2; delete L.paint['icon-color'];
         L.layout = L.layout || {}; L.layout.visibility = 'visible'; L.layout['text-font'] = ['Noto Sans Regular'];
         L.layout['text-field'] = latin ? ['coalesce', ['get', 'name:latin'], ['get', 'name']] : ['get', 'name'];
-        map.addLayer(L, 'plan');
+        map.addLayer(L, 'plan'); lblIds.push(L.id);
       });
     }).catch(function () {});
     var darkReady = fetch(OFM_DARK).then(function (r) { return r.json(); }).then(function (st) {
       makeMini(st);
       Object.keys(st.sources).forEach(function (k) { if (!map.getSource('dk-' + k)) map.addSource('dk-' + k, st.sources[k]); });
       st.layers.filter(function (l) { return l.type !== 'symbol'; }).forEach(function (l) {
-        var L = JSON.parse(JSON.stringify(l)); L.id = 'dk-' + l.id; if (L.source) L.source = 'dk-' + l.source; L.layout = L.layout || {}; L.layout.visibility = arrive && !landed ? 'visible' : 'none'; map.addLayer(L, 'plan');
+        var L = JSON.parse(JSON.stringify(l)); L.id = 'dk-' + l.id; if (L.source) L.source = 'dk-' + l.source; L.layout = L.layout || {}; L.layout.visibility = arrive && !landed ? 'visible' : 'none';
+        map.addLayer(L, lblIds.length && map.getLayer(lblIds[0]) ? lblIds[0] : 'plan');  // beneath the labels whichever style arrives first; both fetches race
       });
     }).catch(function () { makeMini(null); });
     map.addSource('plan', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: full } } });
@@ -1435,8 +1437,20 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
       requestAnimationFrame(function () {
         map.setProjection({ type: 'globe' });
         var ready = function () { pmark('map:globe-ready'); tilesIn = true; maybeFly(); };
+        // the labels must have rendered too: their glyphs can arrive after the idle; after 2.5 s the flight goes anyway and the marks say so
+        var labelCount = function () { try { var ids = lblIds.filter(function (id) { return map.getLayer(id); }); return ids.length ? map.queryRenderedFeatures({ layers: ids }).length : 0; } catch (e) { return -1; } };
+        var waitLabels = function () {
+          var t0 = performance.now();
+          var poll = function () {
+            var n = labelCount();
+            if (n !== 0) { pmark('map:labels-' + n); map.once('idle', ready); map.triggerRepaint(); return; }  // the labels are placed; the idle after a repaint is the settled frame
+            if (performance.now() - t0 > 2500) { pmark('map:globe-ready-timeout'); ready(); return; }
+            setTimeout(poll, 100);
+          };
+          poll();
+        };
         // the dark basemap and the labels arrive asynchronously; the start is settled only once they are in and every tile has loaded
-        Promise.allSettled([ofmReady, darkReady]).then(function () { map.once('idle', ready); map.triggerRepaint(); });  // a repaint guarantees an idle, and that idle comes only after the tiles and labels have faded in
+        Promise.allSettled([ofmReady, darkReady]).then(function () { map.once('idle', waitLabels); map.triggerRepaint(); });  // a repaint guarantees an idle, and that idle comes only after the tiles and labels have faded in
       });
     }
     // deep link

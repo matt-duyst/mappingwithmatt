@@ -61,7 +61,8 @@ def main():
             c.close()
     fails = 0
     for k, im in enumerate(imgs[1:], 2):
-        diff = ImageChops.difference(imgs[0], im).convert('L').point(lambda v: 255 if v > 24 else 0)
+        inner = (2, 2, imgs[0].width - 2, imgs[0].height - 2)  # the clip's outermost pixels round into the controls beneath the canvas
+        diff = ImageChops.difference(imgs[0].crop(inner), im.crop(inner)).convert('L').point(lambda v: 255 if v > 24 else 0)
         n = sum(1 for v in (diff.get_flattened_data() if hasattr(diff, 'get_flattened_data') else diff.getdata()) if v); pct = 100 * n / (diff.width * diff.height)
         print(f"run 1 vs run {k}: {pct:.3f}% of pixels differ" + (f", within {diff.getbbox()}" if n else ''))
         if n: fails += 1
