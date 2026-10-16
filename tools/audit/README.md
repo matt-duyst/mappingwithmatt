@@ -20,3 +20,5 @@ To accept a new state as the baseline, run `compare.py audit.json baseline.json 
 ## Continuous integration
 
 `.github/workflows/check.yml` runs on every push and pull request to `main`: it serves the site, runs `tools/claims/check.py`, then `run.py --checks-only` (one load per page, width and theme, software rendering, no performance measurement) and `compare.py --checks-only`, failing the job on any unsourced sentence without a ledger row, broken internal link, axe violation, console error or horizontal overflow. Performance numbers are never taken in CI; they come from `run.py` on a workstation with GPU rendering, three throttled runs per page, the median quoted.
+
+The place of the audit in the wider process is described in [docs/WORKFLOW.md](../../docs/WORKFLOW.md).

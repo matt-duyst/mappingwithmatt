@@ -5,3 +5,5 @@
     python3 tools/claims/check.py
 
 extracts every sentence with a digit or a percent sign from the seven pages and exits 1 when one has no ledger row. It passes with unsourced rows present; the report, not the check, tracks those. When a sentence changes on a page, its ledger row must change with it.
+
+The place of the ledger in the wider process is described in [docs/WORKFLOW.md](../../docs/WORKFLOW.md).

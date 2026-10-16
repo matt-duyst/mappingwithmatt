@@ -24,3 +24,5 @@ Imagery: USGS The National Map, USGSImageryOnly (public domain; NAIP 2017 to 202
 
 ## Browser support and accessibility
 MapLibre GL JS 6 requires WebGL 2; the map does not render on browsers without it, and the page's Experience section carries the same content as text. Flights and transitions are skipped when the operating system's reduce-motion setting is on. Cooperative gestures are enabled: on a phone the page scrolls over the map with one finger and the map pans with two; on desktop, scroll-zoom needs Ctrl or Cmd. Keyboard: Space plays, arrow keys step between stops, plus and minus zoom, 0 fits the route, P collapses the panel.
+
+How a change moves through the checks, from branch to baseline, is described in [docs/WORKFLOW.md](docs/WORKFLOW.md).
