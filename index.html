@@ -1344,11 +1344,19 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
   var EASE = bez(0.2, 0.8, 0.2, 1);  // the site's --ease curve
   var tilesIn = false, inView = false, viewTimer = null, flown = !arrive;
   function pmark(n) { try { performance.mark(n); } catch (e) {} }
+  var landed = !arrive;
+  // Landing: the imagery is switched on and fades in over --d-slow, then the dark basemap beneath it is hidden again so later panning loads one basemap, as today
+  function land() {
+    if (landed) return; landed = true;
+    if (!map.getLayer('imagery')) return;
+    map.setLayoutProperty('imagery', 'visibility', 'visible'); map.setPaintProperty('imagery', 'raster-opacity', 1);
+    setTimeout(function () { var base = document.querySelector('input[name="base"]:checked'); if (base && base.value === 'imagery') map.getStyle().layers.filter(function (l) { return l.id.indexOf('dk-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', 'none'); }); pmark('map:landed'); }, 700);
+  }
   function settleArrival() { if (flown) return; flown = true; try { sessionStorage.setItem('mwm-arrived', '1'); } catch (e) {} }
   function maybeFly() {
     if (flown || !tilesIn || !inView) return;
     settleArrival(); pmark('map:arrival-start');
-    map.once('moveend', function () { map.setProjection({ type: 'mercator' }); map.setMinZoom(2.5); pmark('map:arrival-end'); });
+    map.once('moveend', function () { map.setProjection({ type: 'mercator' }); map.setMinZoom(2.5); pmark('map:arrival-end'); land(); });
     map.flyTo({ center: HOME.center, zoom: HOME.zoom, bearing: HOME.bearing, pitch: HOME.pitch, duration: 2200, easing: EASE, essential: true });
   }
   if (arrive && 'IntersectionObserver' in window) {
@@ -1382,7 +1390,7 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
     map.addSource('usgs', { type: 'raster', tiles: ['https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}'], tileSize: 256, maxzoom: 16, attribution: 'Imagery: USGS The National Map (NAIP), public domain' });
     map.addSource('eox', { type: 'raster', tiles: ['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg'], tileSize: 256, maxzoom: 15, attribution: 'Sentinel-2 cloudless 2024 by <a href="https://cloudless.eox.at/preview">EOX IT Services</a> (contains modified Copernicus Sentinel data), CC BY-NC-SA 4.0' });
     map.addSource('dem', { type: 'raster-dem', tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'], encoding: 'terrarium', tileSize: 256, maxzoom: 15, attribution: 'Terrain: Mapzen, AWS Terrain Tiles' });
-    map.addLayer({ id: 'imagery', type: 'raster', source: 'usgs', paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08 } });
+    map.addLayer({ id: 'imagery', type: 'raster', source: 'usgs', layout: { visibility: arrive ? 'none' : 'visible' }, paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08, 'raster-opacity': arrive ? 0 : 1, 'raster-opacity-transition': { duration: 480, delay: 0 } } });
     map.addLayer({ id: 'imagery-eox', type: 'raster', source: 'eox', layout: { visibility: 'none' }, paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08 } });
     map.addSource('slot', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } }); map.addLayer({ id: 'plan', type: 'circle', source: 'slot' });
     map.addLayer({ id: 'hillshade', type: 'hillshade', source: 'dem', layout: { visibility: 'none' }, paint: { 'hillshade-exaggeration': 0.35, 'hillshade-shadow-color': '#000', 'hillshade-highlight-color': '#666' } });
@@ -1405,7 +1413,7 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
       makeMini(st);
       Object.keys(st.sources).forEach(function (k) { if (!map.getSource('dk-' + k)) map.addSource('dk-' + k, st.sources[k]); });
       st.layers.filter(function (l) { return l.type !== 'symbol'; }).forEach(function (l) {
-        var L = JSON.parse(JSON.stringify(l)); L.id = 'dk-' + l.id; if (L.source) L.source = 'dk-' + l.source; L.layout = L.layout || {}; L.layout.visibility = 'none'; map.addLayer(L, 'plan');
+        var L = JSON.parse(JSON.stringify(l)); L.id = 'dk-' + l.id; if (L.source) L.source = 'dk-' + l.source; L.layout = L.layout || {}; L.layout.visibility = arrive && !landed ? 'visible' : 'none'; map.addLayer(L, 'plan');
       });
     }).catch(function () { makeMini(null); });
     map.addSource('plan', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: full } } });
@@ -1483,7 +1491,7 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
   }
   var CAM = [ { b: 55, p: 55 }, { b: 20, p: 45 }, { b: 35, p: 40 }, { b: 175, p: 50 }, { b: 0, p: 40 }, { b: 270, p: 50 }, { b: 315, p: 50 } ];
   function flyStop(i, ms) { var s = STOPS[i], c = CAM[i]; map.flyTo({ center: [s.lon, s.lat], zoom: s.zoom, bearing: c.b, pitch: terrainOn ? c.p : Math.min(c.p, 35), duration: reduce ? 0 : (ms || 1800), curve: 1.4 }); history.replaceState(null, '', '#map-stop-' + i); }
-  function goStop(i) { settleArrival(); stopPlay(); setProgress(i); flyStop(i); }
+  function goStop(i) { settleArrival(); land(); stopPlay(); setProgress(i); flyStop(i); }
   tabs.forEach(function (t) { t.addEventListener('click', function () { goStop(+t.getAttribute('data-i')); }); });
   scrub.addEventListener('input', function () { stopPlay(); setProgress(+scrub.value, false); });
   var playing = false, raf = null, playBtn = document.getElementById('play');
@@ -1492,7 +1500,7 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
   var legMs = 3400, holdMs = 2600, travelZoom = 5.2;
   function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
   function play() {
-    settleArrival();
+    settleArrival(); land();
     if (playing) { stopPlay(); return; }
     playing = true; ui(); if (progress >= N - 1) progress = 0;
     var from = Math.floor(progress), phase = 'hold', t0 = null, h0 = null;
@@ -1507,7 +1515,7 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
     raf = requestAnimationFrame(step);
   }
   playBtn.addEventListener('click', play);
-  map.on('dragstart', stopPlay); map.on('wheel', stopPlay); map.on('dragstart', settleArrival); map.on('wheel', settleArrival);
+  map.on('dragstart', stopPlay); map.on('wheel', stopPlay); map.on('dragstart', function () { settleArrival(); land(); }); map.on('wheel', function () { settleArrival(); land(); });
   document.getElementById('rt-app').addEventListener('keydown', function (e) {
     if (e.target.tagName === 'INPUT') return;
     if (e.key === ' ') { e.preventDefault(); play(); }
