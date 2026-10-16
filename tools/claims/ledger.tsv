@@ -1,0 +1,230 @@
+page	sentence	source	line
+main	I'm an environmental data scientist at Grassroots Carbon	assets/Duyst_CV.pdf	line 91
+main	Before that I was at SeekOps	assets/Duyst_CV.pdf	line 130
+main	, a NASA JPL spin-off, measuring methane from drones: I led a study of flare destruction removal efficiency across the Bakken and Permian basins and published it at SPE ATCE 2024.	assets/Duyst_CV.pdf	line 81
+main	I hold a Master of Environmental Science from Yale in machine learning, remote sensing, and spatial statistics, fully funded as a Merit Research Scholar and Hixon Center Fellow, with a summer at the University of Minnesota's Marcell Experimental Forest forecasting methane from a peatland flux tower, and an Honorable Mention at the 2022 Global Stocktake Climate Datathon	assets/Duyst_CV.pdf	line 229
+main	ahead of COP 27.	assets/Duyst_CV.pdf	line 231
+main	My BA is from UCLA, in Geography and Environmental Studies with minors in GIS and English.	assets/Duyst_CV.pdf	line 58
+main	Environmental Data Scientist, Machine Learning Grassroots Carbon	assets/Duyst_CV.pdf	line 91
+main	Environmental Data Scientist SeekOps	assets/Duyst_CV.pdf	line 92
+main	MESc Yale School of the Environment	assets/Duyst_CV.pdf	line 35
+main	Visiting Research Scientist University of Minnesota	assets/Duyst_CV.pdf	line 197
+main	Geospatial Analyst Cydcor	UNSOURCED	the CV has no Cydcor entry
+main	BA, Geography and Environmental Studies UCLA	assets/Duyst_CV.pdf	line 58
+main	2014 to 2018 · Los Angeles	assets/Duyst_CV.pdf	line 57
+main	BA, Geography and Environmental Studies, UCLA	assets/Duyst_CV.pdf	line 58
+main	Regents Scholar and Undergraduate Research Scholars Program recipient.	assets/Duyst_CV.pdf	line 71
+main	The geospatial foundation: image classification, spectral indices, SAR, terrain, interpolation, spatial querying, and cartography.	assets/Duyst_CV.pdf	line 76
+main	A thesis on burn severity across the Mendocino Complex from Landsat 8, presented at the 2019 LA Geospatial Summit	assets/Duyst_CV.pdf	line 61
+main	2019 to 2020 · Los Angeles	UNSOURCED	the Cydcor years are not in the CV
+main	Geospatial Analyst, Cydcor	UNSOURCED	the CV has no Cydcor entry
+main	2021 to 2023 · New Haven	assets/Duyst_CV.pdf	line 35
+main	MESc, Yale School of the Environment	assets/Duyst_CV.pdf	line 35
+main	Master of Environmental Science in machine learning, remote sensing, and spatial statistics, fully funded as a Merit Research Scholar and Hixon Center Fellow	assets/Duyst_CV.pdf	line 46
+main	A thesis on urbanization, paddy rice, and satellite methane over the Yangtze River Delta, reproduced in 2026 with an errata; a calibrated thermal and RGB drone survey of Yale's West Campus solar array; teaching regression modeling of environmental data; and a carbon trading analysis tool built for the Global Stocktake Climate Datathon	github.com/matt-duyst/Yangtze-Landcover-Methane README.md	line 1
+main	ahead of COP 27 with Abhinav Bhardwaj.	assets/Duyst_CV.pdf	line 231
+main	Summer 2022 · Marcell Experimental Forest	assets/Duyst_CV.pdf	line 197
+main	Visiting Research Scientist, University of Minnesota	assets/Duyst_CV.pdf	line 197
+main	One of the longest-running peatland monitoring programs in the world, with methane flux measured by eddy covariance under AmeriFlux	assets/Duyst_CV.pdf	line 199
+main	Eddy covariance instrumentation in the Griffis lab, then an ensemble forecast of methane flux at Bog Lake Peatland in 2022, rebuilt in 2026 as a monthly study of the full 2009 to 2024 record.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 1
+main	Environmental Data Scientist, SeekOps	assets/Duyst_CV.pdf	line 92
+main	A NASA JPL spin-off	assets/Duyst_CV.pdf	line 130
+main	that put a drone version of the Mars Curiosity rover's laser spectrometer in the air: detection, localization, and quantification of methane leaks for oil and gas operators onshore and offshore, feeding leak detection and repair programs and OGMP and EPA reporting.	https://spinoff.nasa.gov/Spinoff2019/ps_7.html	paragraph: NASA installed a methane detector on the Curiosity rover, designing a brand-new tunable laser spectrometer
+main	Drone-based methane surveys with laser spectrometers, anemometers, and RTK positioning; mass balance and plume modeling for flare destruction removal efficiency across the Bakken and Permian; the QA/QC workflow of terrain, roughness, and wind corrections behind the company's emission maps; an object detection model for oil and gas equipment in aerial imagery; and the mapping and reporting tools used by clients and the team.	UNSOURCED	CV line 134 covers the TDLAS drone campaign; anemometers, RTK positioning and the object detection model are not in the CV
+main	2025 to present · San Antonio and Austin	assets/Duyst_CV.pdf	line 91
+main	Environmental Data Scientist, Machine Learning, Grassroots Carbon	assets/Duyst_CV.pdf	line 91
+main	Based in San Antonio, Grassroots Carbon works with US ranchers to store carbon in grassland soil under regenerative grazing.	assets/Duyst_CV.pdf	line 91
+main	The program covers about three million acres across 22 states	UNSOURCED	https://grassrootscarbon.com/ no longer states it; the site now gives 659 million acres of US grazing land
+main	The data infrastructure that joins soil sampling with satellite, terrain, soil, and climate inputs; the shared extraction tooling the team pulls covariates through; and the biomass, baseline, and soil carbon models used for crediting under SEP v2, VM0042, and CAR-SEP.	UNSOURCED	CV lines 91 to 129 describe the Grassroots Carbon work but name neither soil sampling nor SEP v2 or VM0042; CAR-SEP is at line 94
+main	Imagery: USGS The National Map (public domain) and EOX Sentinel-2 cloudless (Copernicus, CC BY-NC-SA).	https://basemap.nationalmap.gov/ and https://s2maps.eu/	the tile services the map requests
+main	Labels and dark map: OpenFreeMap, OpenMapTiles, OpenStreetMap contributors.	https://openfreemap.org/	the style served from tiles.openfreemap.org
+main	Terrain: Mapzen and AWS Terrain Tiles.	https://registry.opendata.aws/terrain-tiles/	the terrarium tiles the map requests
+main	Engine: MapLibre GL JS 6.	vendor/maplibre-gl-6.10.0/	the vendored library
+main	The work moves across scales, from satellite estimates of carbon on about three million acres of rangeland and methane over a river delta of 150 million people, through drone surveys of gas flares and solar arrays, to a single tower in a Minnesota peatland measured half-hour by half-hour.	UNSOURCED	three million acres is no longer on https://grassrootscarbon.com/; 150 million people is in no source
+main	Grassroots Carbon · process-based light use efficiency with a machine-learning correction · 2025 to present	assets/Duyst_CV.pdf	line 91
+main	SeekOps, Science team.	assets/Duyst_CV.pdf	line 130
+main	SPE Annual Technical Conference and Exhibition, 2024.	assets/Duyst_CV.pdf	line 82
+main	Yale School of the Environment, Lee lab.	assets/Duyst_CV.pdf	line 167
+main	The four provinces on relief, with the 0.25 degree analysis cells.	github.com/matt-duyst/Yangtze-Landcover-Methane README.md	line 20
+main	What the analysis reads: 30 m impervious, 10 m rice, and the cell they share.	github.com/matt-duyst/Yangtze-Landcover-Methane README.md	lines 66 to 67 (GAIA and GISA) and 220 (the 10 m rice product)
+main	Where the delta became impervious, and how much, 2000 to 2019.	github.com/matt-duyst/Yangtze-Landcover-Methane README.md	line 404
+main	Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 1
+main	Python · AmeriFlux US-MBP · eddy covariance	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 13
+main	Reconstructed emission, 1990 to 2008, under three assumptions.	github.com/matt-duyst/Peatland-Flux-Forecasting figures/reconstruction_series.png	the figure file
+main	Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS	github.com/matt-duyst/Carbon-Trading README.md	line 1
+main	This tool was built for the 2022 Global Stocktake Climate Datathon to make one lever of that system readable: how fast a sector's allowance allocation decays each year, and what that does to its projected emissions.	assets/Duyst_CV.pdf	line 229
+main	Global Stocktake Climate Datathon, 2022	assets/Duyst_CV.pdf	line 229
+main	Yale ENV 704, course research.	assets/Duyst_CV.pdf	line 46
+main	Flight of 3 November 2021.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 105
+main	Temperature and GPS measurements were taken at these 12 solar panels.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 105
+main	Agisoft Metashape was used to generate this RGB orthomosaic.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 146
+main	Agisoft Metashape was used to generate this thermal orthomosaic.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 150
+main	Thirty coursework projects and the undergraduate thesis from UCLA's geography and GIS program, 2014 to 2018, kept largely as they were made.	maps/images/Posterboard.webp	the map shown on /maps/mendocino-fire-complex/
+main	UCLA coursework, 2014 to 2018	assets/Duyst_CV.pdf	line 57
+main	Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI & NBR)	maps/images/Posterboard.webp	the map shown on /maps/mendocino-fire-complex/
+main	California's Most Destructive Wildfire: Mapping The Tubbs Fire (2017)	maps/images/tubbs-map-1.webp	the map shown on /maps/tubbs-fire/
+main	Urban Applications of Supervised Classification: Landsat vs.	maps/images/Supervised-Landsat.webp	the map shown on /maps/supervised-classification/
+main	Three-Dimensional Mapping of Natural Disaster Scenarios: Leilani Estates, HI (2018)	maps/images/Leilani.webp	the map shown on /maps/leilani-estates/
+main	Re-Designing LA's Bus Routes: Big Blue Bus #44	maps/images/Bus-Route-1.webp	the map shown on /maps/bus-route/
+main	Recreating the 2016 Presidential Election: A Nation Divided	maps/images/2016-Election.webp	the map shown on /maps/presidential-election/
+main	The Spatial Dynamics of Presidential Elections: An Autocorrelation Analysis of Voter Behavior in 2012 & 2016	maps/images/pres-2012.webp	the map shown on /maps/presidential-election-autocorrelation/
+main	Revitilization of a Sanborn Map: Digitizing Hollywood District	maps/digitizing/index.html	the map shown on /maps/digitizing/
+main	Five entries, from UCLA to Grassroots Carbon, with what was built at each.	assets/Duyst_CV.pdf	lines 34 and 90, the EDUCATION and RESEARCH EXPERIENCE sections the five entries are drawn from
+main	San Antonio and Austin, Texas · February 2025 to present	assets/Duyst_CV.pdf	line 91
+main	I benchmark biomass and structural vegetation architectures spanning deep learning, ensemble methods, and process-based ecological models, with outputs supporting quantification under the Regenerative Standard, VM0042, and CAR-SEP, and extend them into counterfactual baselines that reconstruct expected productivity under business-as-usual management, a required step under each methodology.	assets/Duyst_CV.pdf	line 105
+main	Ranch-level stratification is designed around SEP v2, where clustering geophysically similar ground directly reduces the sampling uncertainty that drives credit deductions.	assets/Duyst_CV.pdf	line 109
+main	Austin, Texas · January to December 2024	assets/Duyst_CV.pdf	line 130
+main	As one of three scientists on the Science team, reporting to the co-founder and CTO, I led a quantitative assessment of flare destruction removal efficiency across the Bakken and Permian basins.	assets/Duyst_CV.pdf	line 81
+main	The result covered 42 flare systems across 71 observations, including 27 revisits, and was published as first author and presented at SPE ATCE 2024 (SPE-221067-MS), contributing to enhanced leak detection and repair programs in two major shale basins.	assets/Duyst_CV.pdf	lines 132 to 133
+main	I trained a fine-tuned YOLOv8 detector to classify wellheads, compressors, storage tanks, and flare stacks from aerial imagery for autonomous site characterization, managing the full cycle from annotation to held-out validation, and built the client-facing and internal visualization suites in Python and GIS platforms that communicated spatial emissions distributions across survey campaigns.	assets/Duyst_CV.pdf	line 151
+main	Yale School of the Environment	assets/Duyst_CV.pdf	line 35
+main	New Haven, Connecticut · 2021 to 2023	assets/Duyst_CV.pdf	line 35
+main	In the Lee Lab I investigated the relationship between urbanization, rice cultivation, and methane across China's Yangtze River Delta, home to more than 150 million people: multi-decadal land cover classified from 30 m Landsat in Google Earth Engine, with urban extent from the GAIA dataset and paddy rice from the Phenology and Pixel-Based Paddy Mapping algorithm, set against Sentinel-5P TROPOMI column methane and tested for spatial clustering with Getis-Ord Gi* and Global Moran's I.	UNSOURCED	CV line 167 places the work in the Lee Lab; the 150 million population figure is in no source
+main	The thesis proposed a DeepLabV3+ network to extend the emissions record before the satellite era.	assets/Duyst_CV.pdf	line 39
+main	A 2026 reproduction of the analysis does not reach the thesis conclusion: no land-cover model outperforms a spatial null at 0.25 degrees, and both the original thesis and the reproduction are published together with an errata.	github.com/matt-duyst/Yangtze-Landcover-Methane README.md	line 4
+main	University of Minnesota	assets/Duyst_CV.pdf	line 197
+main	Visiting Research Scientist, Griffis Lab	assets/Duyst_CV.pdf	line 198
+main	Marcell Experimental Forest, Minnesota · Summer 2022	assets/Duyst_CV.pdf	line 197
+main	The 2022 work applied feature importance and seasonal decomposition to isolate the environmental drivers of flux and built an ensemble of LightGBM, SARIMAX, Prophet, and XGBoost over OLS regression, reported at the time to explain 87 percent of variance with forecasts extended to 52 weeks.	UNSOURCED	CV lines 211 to 212 give r = 0.87 for soil temperature and R² = 0.78 for the OLS fit, not 87 percent of variance; 52 weeks is in no source
+main	The project was rebuilt from source in 2026 as a monthly study of the full 2009 to 2024 record, forecasting one to twelve months ahead against seasonal benchmarks and projecting the fitted relationships back two decades.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 1
+main	University of California, Los Angeles	assets/Duyst_CV.pdf	line 57
+main	Los Angeles, California · 2014 to 2018	assets/Duyst_CV.pdf	line 57
+main	The coursework covered the full geospatial stack: supervised and unsupervised image classification, spectral index analysis, SAR interpretation, DEM construction, spatial interpolation and autocorrelation, SQL spatial querying, cartographic design, and predictive environmental modeling.	assets/Duyst_CV.pdf	line 76
+main	The undergraduate thesis measured surface vegetation change across the Mendocino Complex, at the time the largest wildfire in California history, from Landsat 8 pre- and post-fire scenes in Google Earth Engine using NDVI and NBR, and was presented at the 2019 Los Angeles Geospatial Summit, hosted by the USC Spatial Sciences Institute.	assets/Duyst_CV.pdf	line 70
+main	SPE-221067-MS, SPE ATCE 2024, first author	assets/Duyst_CV.pdf	line 82
+main	· Global Stocktake Climate Datathon, Honorable Mention, 2022	assets/Duyst_CV.pdf	line 229
+main	· Hixon Center Fellow, 2022	assets/Duyst_CV.pdf	line 85
+main	· Los Angeles Geospatial Summit, poster, 2019	assets/Duyst_CV.pdf	line 70
+main	Python, R, SQL · PyTorch, TensorFlow, scikit-learn, XGBoost, LightGBM · Google Earth Engine, GDAL, Rasterio, GeoPandas · QGIS, ArcGIS Pro · Landsat, Sentinel-5P TROPOMI, LiDAR, UAV photogrammetry · eddy covariance, spatial statistics, time series forecasting · Docker, Azure	assets/Duyst_CV.pdf	line 247
+main	Monthly methane and carbon dioxide flux at Marcell Bog Lake Peatland, 2009 to 2024: forecasts against seasonal benchmarks and a backward reconstruction.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 1
+main	AmeriFlux US-MBP	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 13
+main	A 2023 thesis preserved as submitted, a 2026 reproduction with a working pipeline, and an errata recording where they disagree.	github.com/matt-duyst/Yangtze-Landcover-Methane README.md	line 441
+main	Sector emissions and allowance pathways under the EU ETS, with a Dash tool for user-set allowance decay rates.	github.com/matt-duyst/Carbon-Trading README.md	line 21
+main	EU ETS, 2005 to 2021	github.com/matt-duyst/Carbon-Trading README.md	line 17
+peatland	University of Minnesota, Griffis lab.	assets/Duyst_CV.pdf	lines 197 to 198
+peatland	Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 1
+peatland	Timothy Griffis Lab	assets/Duyst_CV.pdf	line 198
+peatland	Python, AmeriFlux BASE and FLUXNET data	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	lines 31 and 127
+peatland	Marcell Bog Lake Peatland is a poor fen in north-central Minnesota.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 13
+peatland	A tower there has measured carbon dioxide since 2007 and methane since 2009, at a site with one of the longest-running peatland monitoring programs.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 15
+peatland	And can relationships learned on the measured years reach back to 1990, when the drivers begin?	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 79
+peatland	The tower stands in a poor fen at 47.5051 N, 93.4893 W, with upland forest to the east and southeast.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 13
+peatland	Flux arriving from 30 to 200 degrees is discarded before publication, which removes 40 percent of the record.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 19
+peatland	The site was left out of the FLUXNET-CH4 synthesis, so no community gap-filled product exists for it; this study works from the tower's own published record.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 127
+peatland	Upland forest to the east and southeast puts 40 percent of the half-hours in a discarded wind sector.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 19
+peatland	Wind direction, half-hourly, 2009 to 2019, with the wetland outline from the National Wetlands Inventory.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 15
+peatland	Peatland-Flux-Forecasting README, figures/site_overview.png, from AmeriFlux US-MBP	github.com/matt-duyst/Peatland-Flux-Forecasting figures/site_overview.png	the figure file the caption bar cites
+peatland	The environmental measurements begin in 1990, nineteen years before either flux record used here does, and that gap is the span the reconstruction covers.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 15
+peatland	Air temperature and precipitation stop at the end of 2019, which ends the months the models could learn from and leaves 60 months of methane the tower recorded but the models cannot use.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 23
+peatland	Air temperature and precipitation end in 2019, which leaves 60 months of measured methane that no model can use.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 23
+peatland	Months with data in each record, 1990 to 2024, and the span each analysis could use.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 25
+peatland	Peatland-Flux-Forecasting README, figures/covariate_availability.png, from AmeriFlux US-MBP	github.com/matt-duyst/Peatland-Flux-Forecasting figures/covariate_availability.png	the figure file the caption bar cites
+peatland	One average shape for the whole record, the same twelve values repeated every year, accounts for 74 percent of the variation in methane and 71 percent in carbon dioxide.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 43
+peatland	One repeating seasonal shape explains 74 percent of the variation in methane and 71 percent in carbon dioxide.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 43
+peatland	Monthly mean flux and its residual, methane and carbon dioxide, 2009 to 2024.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 1
+peatland	Peatland-Flux-Forecasting README, figures/seasonal_cycle.png, from AmeriFlux US-MBP	github.com/matt-duyst/Peatland-Flux-Forecasting figures/seasonal_cycle.png	the figure file the caption bar cites
+peatland	What they miss is how large each season will be: in 12 of the 57 evaluated methane months the measured flux fell below every fitted model.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 61
+peatland	Peatland-Flux-Forecasting README, figures/forecast_error_by_horizon.png, from AmeriFlux US-MBP	github.com/matt-duyst/Peatland-Flux-Forecasting figures/forecast_error_by_horizon.png	the figure file the caption bar cites
+peatland	In 12 of the 57 evaluated methane months the measured flux fell below every fitted model.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 61
+peatland	Peatland-Flux-Forecasting README, figures/observed_and_predicted.png, from AmeriFlux US-MBP	github.com/matt-duyst/Peatland-Flux-Forecasting figures/observed_and_predicted.png	the figure file the caption bar cites
+peatland	Peatland-Flux-Forecasting README, figures/measurements_used_across_forecast_horizons.png, from AmeriFlux US-MBP	github.com/matt-duyst/Peatland-Flux-Forecasting figures/measurements_used_across_forecast_horizons.png	the figure file the caption bar cites
+peatland	Across every evaluated year but methane in 2015 the misses are similar in size and vary in direction.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 71
+peatland	Peatland-Flux-Forecasting README, figures/prediction_error_by_year.png, from AmeriFlux US-MBP	github.com/matt-duyst/Peatland-Flux-Forecasting figures/prediction_error_by_year.png	the figure file the caption bar cites
+peatland	The model only ever saw the water table across a 0.33 meter band; projecting back to 1990 asks for 0.29 meters above it.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 83
+peatland	The three assumptions drawn give annual totals from 8 to 30 grams of carbon per square meter, and almost none of it can be checked, because methane measurement stopped in 1992 and did not resume until 2009.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 93
+peatland	Projecting back to 1990 needs water table levels 0.29 m above the 0.33 m band the model was fitted on.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 83
+peatland	Monthly water table elevation, 1990 to 2019, against the fitted range.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 93
+peatland	Peatland-Flux-Forecasting README, figures/water_table_support.png, from AmeriFlux US-MBP	github.com/matt-duyst/Peatland-Flux-Forecasting figures/water_table_support.png	the figure file the caption bar cites
+peatland	Peatland-Flux-Forecasting README, figures/coefficient_stability.png, from AmeriFlux US-MBP	github.com/matt-duyst/Peatland-Flux-Forecasting figures/coefficient_stability.png	the figure file the caption bar cites
+peatland	Three treatments of the water table term give annual totals from 8 to 30 g C per square meter for 1990 to 2008.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 93; the span ends in 2008 because the flux record begins in 2009, line 15
+peatland	Reconstructed monthly methane emission, 1990 to 2008, under three assumptions.	github.com/matt-duyst/Peatland-Flux-Forecasting figures/reconstruction_series.png	the figure file
+peatland	Peatland-Flux-Forecasting README, figures/reconstruction_series.png, from AmeriFlux US-MBP	github.com/matt-duyst/Peatland-Flux-Forecasting figures/reconstruction_series.png	the figure file the caption bar cites
+peatland	Peatland-Flux-Forecasting README, figures/residual_distribution_check.png, from AmeriFlux US-MBP	github.com/matt-duyst/Peatland-Flux-Forecasting figures/residual_distribution_check.png	the figure file the caption bar cites
+peatland	The 2022 study built an ensemble of LightGBM, SARIMAX, Prophet, and XGBoost over ordinary least squares and reported at the time that it explained 87 percent of variance, with forecasts extended to 52 weeks.	UNSOURCED	CV lines 211 to 212 give r = 0.87 for soil temperature and R² = 0.78 for the OLS fit, not 87 percent of variance; 52 weeks is in no source
+peatland	It was rebuilt from source in 2026 as a monthly study of the full 2009 to 2024 record.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 1
+peatland	The tower's published record at AmeriFlux US-MBP	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 13
+peatland	, Marcell Bog Lake Peatland: the BASE product and the FLUXNET 2009 to 2024 release.	github.com/matt-duyst/Peatland-Flux-Forecasting README.md	line 1
+peatland	The Griffis lab at the University of Minnesota, where the 2022 work was done, and the USDA Forest Service, which runs the Marcell Experimental Forest and the tower.	assets/Duyst_CV.pdf	line 197
+yangtze	Yale School of the Environment, Lee lab.	assets/Duyst_CV.pdf	line 167
+yangtze	The Yangtze River Delta has both in abundance, and both are changing fast: four provinces (Shanghai, Jiangsu, Zhejiang, and Anhui), home to more than 150 million people, where farmland has become city for two decades.	UNSOURCED	the four provinces are in the README; the 150 million population figure and the two decades are in no source
+yangtze	Since late 2017 a satellite, Sentinel-5P, has measured the methane in the air column above every part of the delta.	UNSOURCED	CV line 178 names TROPOMI; the late 2017 start of the record is in no source
+yangtze	The work is done in a grid of 0.25 degree cells, each about 24 by 28 kilometers, because that is the scale the analysis grids the satellite's methane to; every land cover product is averaged into the same cells so that like is compared with like.	assets/figures/yangtze/study_area.webp	panel text: one cell is 24 by 28 km at 31.7 N; README line 20 for 0.25 degrees
+yangtze	The four provinces on relief, with the 0.25 degree analysis cells.	github.com/matt-duyst/Yangtze-Landcover-Methane README.md	line 20
+yangtze	Built surface comes from two independent Landsat products at 30 meters, GISA and GAIA, which agree on the broad picture and disagree block by block, so both are carried through.	assets/Duyst_CV.pdf	line 171
+yangtze	Rice comes from a 10 meter product built from Sentinel-1 radar and Sentinel-2 optical imagery, which recognizes paddies by the timing of flooding and growth.	github.com/matt-duyst/Yangtze-Landcover-Methane README.md	line 220
+yangtze	What the analysis reads: 30 m impervious, 10 m rice, and the cell they share.	github.com/matt-duyst/Yangtze-Landcover-Methane README.md	lines 66 to 67 (GAIA and GISA) and 220 (the 10 m rice product)
+yangtze	Between 2000 and 2018 the delta's built-over area grew by a factor of two to three, depending on the product.	github.com/matt-duyst/Yangtze-Landcover-Methane README.md	line 68
+yangtze	Where the delta became impervious, and how much, 2000 to 2019.	github.com/matt-duyst/Yangtze-Landcover-Methane README.md	line 404
+yangtze	Sentinel-5P's TROPOMI instrument measures the column of methane above each point it passes over, in a footprint of 7 by 7 kilometers.	assets/Duyst_CV.pdf	line 178
+yangtze	The study uses 2018, the first full year of usable data.	github.com/matt-duyst/Yangtze-Landcover-Methane README.md	line 20
+yangtze	At 24 kilometer cells, a city and the paddies around it fall in the same box, and their signals cannot be told apart.	assets/figures/yangtze/study_area.webp	panel text: one cell is 24 by 28 km at 31.7 N
+yangtze	To reach years before the satellite record begins, the thesis proposes a DeepLabV3+ network that predicts the methane column from three inputs, a basemap, the urban mask, and the rice mask.	assets/Duyst_CV.pdf	line 39
+yangtze	Trained on 2018, when both the land cover and the methane exist, it would estimate the methane field for earlier years from their land cover alone, extending the emissions record backward.	assets/Duyst_CV.pdf	line 37
+yangtze	The analysis was rebuilt from source in 2026, and the repository's errata records what changed.	github.com/matt-duyst/Yangtze-Landcover-Methane README.md	line 375
+carbon-trading	Global Stocktake Climate Datathon, 2022	assets/Duyst_CV.pdf	line 229
+carbon-trading	Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS	github.com/matt-duyst/Carbon-Trading README.md	line 1
+carbon-trading	The EU Emissions Trading System caps the carbon that power plants, industry, and aviation may emit and lets the allowances trade.	github.com/matt-duyst/Carbon-Trading README.md	line 37
+carbon-trading	This tool was built for the 2022 Global Stocktake Climate Datathon to make one lever of that system readable: how fast a sector's allowance allocation decays each year, and what that does to its projected emissions.	assets/Duyst_CV.pdf	line 229
+carbon-trading	Pick a country and a sector, set the annual reduction, and it draws historical emissions beside the emissions projected to 2030 under that cut, with the allowances behind each year on hover.	github.com/matt-duyst/Carbon-Trading README.md	line 27
+carbon-trading	It earned an Honorable Mention ahead of COP 27.	assets/Duyst_CV.pdf	line 231
+carbon-trading	The tool in use: Germany, paper and cardboard, historical emissions and the projection to 2030, which falls as the annual decay in allowance allocation is raised from 5 to 10 percent.	assets/video/carbon-trading.webm	the recording itself
+pv-thermal	Yale ENV 704, course research.	assets/Duyst_CV.pdf	line 46
+pv-thermal	Flight of 3 November 2021.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 105
+pv-thermal	The array is Yale's West Campus installation on the Connecticut coast, flown on a single November afternoon, with twelve panels measured by hand to calibrate the rest.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 11
+pv-thermal	Yale University’s West Campus straddles two coastal Connecticut townships, Orange and West Haven.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 41
+pv-thermal	In 2015, Yale purchased solar power from Solar City, which has since been acquired by Tesla in 2016, and installed 4,400 solar photovoltaic panels covering close to two acres of rooftop on a storage and receiving facility.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 43
+pv-thermal	The installation now generates 1.6 million kilowatt-hours of electricity annually, which is over 20% of West Campus’s total energy demand.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 43
+pv-thermal	The flight mission was performed on Wednesday, November 3rd, 2021 around 12:00 PM.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 105
+pv-thermal	The ambient air temperature was about 12°C and the relative humidity was 38%.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 105
+pv-thermal	DJI GS PRO was used to set up the flight path over the West Campus Storage and Receiving Center.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 105
+pv-thermal	The flight height was 60 meters above sea level–30 meter above the building.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 105
+pv-thermal	The entire flight took around 20 minutes.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 105
+pv-thermal	There were 3,463 total images—of which 1,733 were RGB photos and 1,730 were thermal photos.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 105
+pv-thermal	Additionally, temperature and GPS measurements were taken at 12 solar panels (Figure 6).	github.com/matt-duyst/UAV-PV-Assessment README.md	line 105
+pv-thermal	Temperature and GPS measurements were taken at these 12 solar panels.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 105
+pv-thermal	The FTM theoretical workflow is depicted in Figure 7.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 120
+pv-thermal	The MATLAB algorithm in Yang & Lee (2019) up-samples the coarser thermal image so that the original pixel becomes a 9x9 matrix of smaller pixels, each with the same Digital Number (DN) values.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 120
+pv-thermal	The RGB image is then converted to a 16-bit TIFF image for consistency.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 122
+pv-thermal	Because the RGB and thermal images now have the same dimensions and bit depth, a 4-band band stack is created.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 122
+pv-thermal	The result is a TIFF image with the red, green, blue, and thermal band overlayed respectively.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 122
+pv-thermal	The processed four-band drone camera photos were then added to Agisoft Metashape Professional Version 1.7.4 build 13028 (64 bit) for processing.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 137
+pv-thermal	After the final screen of cameras, the structure for motion (SfM) algorithm was performed in standard sequence: Align Photos, Build Dense Cloud, and Build Orthomosaic (Figure 8 and 9).	github.com/matt-duyst/UAV-PV-Assessment README.md	line 137
+pv-thermal	The orthomosaic pixel size for the FLIR was calculated to 3.3 cm based off of the RGB component size.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 142
+pv-thermal	Agisoft Metashape was used to generate this RGB orthomosaic.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 146
+pv-thermal	Agisoft Metashape was used to generate this thermal orthomosaic.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 150
+pv-thermal	The linear regression model analyzed from single thermal images correlating to our calibration points which were directly from FLIR Camera images is Temperature (C) = 0.016(DN) - 36.2 with an R2 = 0.84 and p<0.01.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 158
+pv-thermal	Whereas the linear regression model composed from Agisoft in orthomosaic form correlating to the calibration points is Temperature (C) = 0.017(DN) - 41.0 with an R2 = 0.81 and p<0.01.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 158
+pv-thermal	Yale’s West Campus solar energy output was provided by the university.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 166
+pv-thermal	Although there are 20 solar panel groups, the energy production is represented by 12 electrical meters.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 166
+pv-thermal	The energy output of the 12 solar arrays was quite consistent during the time of our flight mission–it ranged from about 14 kWh to 19 kWh (Figure 11).	github.com/matt-duyst/UAV-PV-Assessment README.md	line 168
+pv-thermal	At the beginning of our flight (12:00PM), the skies were clear.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 168
+pv-thermal	By the end of our flight (12:15PM), there were several clouds overhead.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 168
+pv-thermal	This correlates well with the drop in energy production seen around this time (Figure 12).	github.com/matt-duyst/UAV-PV-Assessment README.md	line 168
+pv-thermal	The solar energy production from each of the 12 solar arrays between 12:00 PM and 12:15 PM is displayed.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 168
+pv-thermal	The 12 solar arrays and their energy production on November 3rd, 2021 is displayed.	github.com/matt-duyst/UAV-PV-Assessment README.md	line 168
+flare-efficiency	SeekOps, Science team.	assets/Duyst_CV.pdf	line 130
+flare-efficiency	SPE Annual Technical Conference and Exhibition, 2024.	assets/Duyst_CV.pdf	line 82
+flare-efficiency	This study measured it: drones carrying tunable diode laser absorption spectrometers, the same instrument family that flew on the Mars Curiosity rover, sampled the plumes of working flares across two major shale basins in the United States.	assets/Duyst_CV.pdf	line 134; the Curiosity lineage: https://spinoff.nasa.gov/Spinoff2019/ps_7.html
+flare-efficiency	The campaign covered 42 flare systems across 71 observations in the Bakken and Permian basins, including 27 revisits, made where a first measurement was flagged, which let the same source be compared across time.	assets/Duyst_CV.pdf	lines 132 to 133
+flare-efficiency	Each observation is a drone survey with a laser spectrometer, an anemometer, and RTK positioning, from which the methane leaving the flare is quantified by mass balance and plume modeling.	UNSOURCED	CV line 134 covers the TDLAS drone campaign; the anemometer and RTK positioning are not in the CV
+flare-efficiency	The measurements informed operators' leak detection and repair programs and reporting aligned with OGMP 2.0 and EPA inventory standards.	assets/Duyst_CV.pdf	line 148
+flare-efficiency	The paper was presented at SPE ATCE 2024 in New Orleans as SPE-221067-MS, with Matt Duyst as first author.	assets/Duyst_CV.pdf	line 82
+maps	Thirty coursework projects and the undergraduate thesis from UCLA's geography and GIS program, 2014 to 2018, kept largely as they were made.	maps/images/Posterboard.webp	the map shown on /maps/mendocino-fire-complex/
+maps	Mendocino Fire Complex: Calculating Surface Vegetation Fluctuations through Spectral Indices (NDVI & NBR)	maps/images/Posterboard.webp	the map shown on /maps/mendocino-fire-complex/
+maps	NDVI before and after the fire, and burn severity, from Landsat	maps/images/Posterboard.webp	the map shown on /maps/mendocino-fire-complex/
+maps	California's Most Destructive Wildfire: Mapping The Tubbs Fire (2017)	maps/images/tubbs-map-1.webp	the map shown on /maps/tubbs-fire/
+maps	Urban Applications of Supervised Classification: Landsat vs.	maps/images/Supervised-Landsat.webp	the map shown on /maps/supervised-classification/
+maps	Maximum-likelihood classification of Los Angeles, Landsat 8 against MODIS	maps/images/Supervised-Landsat.webp	the map shown on /maps/supervised-classification/
+maps	Landsat lake change detection, Tibetan Plateau	maps/images/lake-detection.webp	the map shown on /maps/lake-change-detection/
+maps	Landsat 7 ISODATA land-cover classes and NDVI, Los Angeles	maps/images/unsupervised-ndvi-2.webp	the map shown on /maps/unsupervised-classification/
+maps	CO2 model of an electric-vehicle feebate, with Monte Carlo runs	maps/images/feebate-model.webp	the map shown on /maps/feebate-program/
+maps	Three-Dimensional Mapping of Natural Disaster Scenarios: Leilani Estates, HI (2018)	maps/images/Leilani.webp	the map shown on /maps/leilani-estates/
+maps	3D maps of the Leilani Estates lava flows	maps/images/Leilani.webp	the map shown on /maps/leilani-estates/
+maps	Least-cost path through the Darién Gap, with a 3D view	maps/images/darien-reclass.webp	the map shown on /maps/darien-gap/
+maps	Re-Designing LA's Bus Routes: Big Blue Bus #44	maps/images/Bus-Route-1.webp	the map shown on /maps/bus-route/
+maps	Redesigned map of Big Blue Bus route 44	maps/images/Bus-Route-1.webp	the map shown on /maps/bus-route/
+maps	Recreating the 2016 Presidential Election: A Nation Divided	maps/images/2016-Election.webp	the map shown on /maps/presidential-election/
+maps	2016 presidential results map	maps/images/2016-Election.webp	the map shown on /maps/presidential-election/
+maps	The Spatial Dynamics of Presidential Elections: An Autocorrelation Analysis of Voter Behavior in 2012 & 2016	maps/images/pres-2012.webp	the map shown on /maps/presidential-election-autocorrelation/
+maps	Revitilization of a Sanborn Map: Digitizing Hollywood District	maps/digitizing/index.html	the map shown on /maps/digitizing/
+maps	Hollywood blocks digitized from a 1950 Sanborn map	maps/digitizing/index.html	the map shown on /maps/digitizing/
