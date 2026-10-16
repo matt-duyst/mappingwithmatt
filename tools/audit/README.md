@@ -13,7 +13,7 @@ Two network profiles are recorded for every page. The throttled profile (40 ms R
 
 `run.py` needs Google Chrome (`--chrome` points at another binary) and takes about fifteen minutes. `compare.py` prints every metric beside the baseline and exits 1 when, on the throttled profile, requests or bytes rise more than 10 percent, FCP or LCP rise more than 100 ms, CLS exceeds 0.05 or TBT exceeds 50 ms, or when any page has an axe violation, a console error, horizontal overflow, or a broken internal link.
 
-To accept a new state as the baseline, copy `audit.json` over `baseline.json` in the same commit as the change that moved the numbers.
+To accept a new state as the baseline, run `compare.py audit.json baseline.json --write-baseline` in the same commit as the change that moved the numbers; it refuses when any gate fails. `--force-baseline "reason"` writes it anyway and records the reason and the failing metrics under `meta.forced` in the file. `flight.py` captures the map's flight start several times (after the `map:globe-ready` mark and the 300 ms tile and label fade) and fails when the frames differ.
 
 `vendor/axe.min.js` is axe-core, Mozilla Public License 2.0, used only by the audit; the site itself does not load it.
 

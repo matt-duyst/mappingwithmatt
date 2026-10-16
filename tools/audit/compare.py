@@ -3,6 +3,8 @@
 
     python3 tools/audit/compare.py tools/audit/audit.json [tools/audit/baseline.json]
     python3 tools/audit/compare.py --checks-only audit.json      # axe, errors, overflow and links only; no baseline
+    python3 tools/audit/compare.py audit.json baseline.json --write-baseline            # copies audit.json over baseline.json, only when every gate passes
+    python3 tools/audit/compare.py audit.json baseline.json --force-baseline "reason"    # writes it anyway, recording the reason and the failing metrics in the file
 
 The quoted figure for each throttled metric is the median of the audit's runs (three by default); all runs are printed beside it.
 
@@ -13,7 +15,12 @@ The local profile is printed beside the quoted figure and does not gate.
 import json, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-argv = [a for a in sys.argv[1:] if a != '--checks-only']; CHECKS = '--checks-only' in sys.argv
+args = sys.argv[1:]; CHECKS = '--checks-only' in args; WRITE = '--write-baseline' in args; FORCE = None
+if '--force-baseline' in args:
+    i = args.index('--force-baseline'); FORCE = args[i + 1] if i + 1 < len(args) else ''
+    if not FORCE.strip(): sys.exit('--force-baseline needs a reason')
+    del args[i:i + 2]
+argv = [a for a in args if a not in ('--checks-only', '--write-baseline')]
 cur = json.load(open(argv[0] if argv else os.path.join(HERE, 'audit.json')))
 fails = []
 if CHECKS:
@@ -56,6 +63,15 @@ for path, widths in cur['pages'].items():
                 if e.get(profile, {}).get('overflow'): fails.append(f"{path} {width} {theme} {profile}: horizontal overflow")
 for p in cur['links']['problems']: fails.append(f"link: {p['page']} {p['url']} {p['problem']}")
 print(f"links: {cur['links']['references']} references, {len(cur['links']['problems'])} problems")
-if fails:
-    print('\nREGRESSIONS'); [print(' -', f) for f in fails]; sys.exit(1)
-print('\nno regressions')
+if fails: print('\nREGRESSIONS'); [print(' -', f) for f in fails]
+else: print('\nno regressions')
+baseline_path = argv[1] if len(argv) > 1 else os.path.join(HERE, 'baseline.json')
+if WRITE or FORCE is not None:
+    if fails and FORCE is None:
+        print(f'\nbaseline not written: {len(fails)} gate(s) fail; pass --force-baseline "reason" to write it anyway'); sys.exit(1)
+    cur['meta']['note'] = f"Baseline taken at commit {cur['meta']['commit']} on {cur['meta']['date']}: {cur['meta']['renderer']} rendering, {cur['meta'].get('runs', 1)} throttled run(s) per page with the median quoted."
+    if FORCE is not None and fails: cur['meta']['forced'] = {'reason': FORCE, 'failing': fails}
+    elif 'forced' in cur['meta']: del cur['meta']['forced']
+    json.dump(cur, open(baseline_path, 'w'), indent=1)
+    print(f"baseline written to {baseline_path}" + (f" (forced: {FORCE}; {len(fails)} failing metric(s) recorded)" if FORCE is not None and fails else ''))
+sys.exit(1 if fails else 0)
