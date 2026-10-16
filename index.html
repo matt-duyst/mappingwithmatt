@@ -1280,12 +1280,38 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   // Everything that needs MapLibre runs here, once, after the module has been imported (see initMaps below)
   function run(maplibregl) {
   if (window.innerWidth < 600) { var tabStrip = document.getElementById('tabs'); if (tabStrip) tabStrip.scrollLeft = 0; }
+  // Arrival: the first time the map is made in a session it starts on a globe over the Pacific and flies to Visalia once its tiles are in and the section has been in view for 300 ms.
+  // Reduced motion starts at Visalia; a #map-stop- deep link keeps its own camera; the flag keeps later visits in the session at today's behaviour.
+  var arrived = false; try { arrived = sessionStorage.getItem('mwm-arrived') === '1'; } catch (e) {}
+  var deepLink = /map-stop-(\d)/.test(location.hash);
+  var arrive = !reduce && !arrived && !deepLink;
+  var HOME = { center: [-119.2921, 36.3302], zoom: 9.8, bearing: 55, pitch: 35 };  // Visalia's tuned camera with terrain off (STOPS[0], CAM[0])
+  var start = arrive ? { center: [-155, 30], zoom: 1.4 } : reduce && !deepLink ? HOME : { center: [-96, 38.5], zoom: 3.6 };
   var map = new maplibregl.Map({
     container: 'rt-mapcanvas',
-    style: { version: 8, sources: {}, layers: [ { id: 'bg', type: 'background', paint: { 'background-color': '#0b0b0c' } } ] },
-    center: [-96, 38.5], zoom: 3.6, minZoom: 2.5, maxZoom: 19, attributionControl: { compact: true }, dragRotate: false, pitchWithRotate: false, cooperativeGestures: true,
+    style: { version: 8, sources: {}, layers: [ { id: 'bg', type: 'background', paint: { 'background-color': '#0b0b0c' } } ], projection: arrive ? { type: 'globe' } : { type: 'mercator' } },
+    center: start.center, zoom: start.zoom, bearing: start.bearing || 0, pitch: start.pitch || 0, minZoom: 1.2, maxZoom: 19, attributionControl: { compact: true }, dragRotate: false, pitchWithRotate: false, cooperativeGestures: true,
     locale: { 'Map.Title': 'Roadmap map' }
   });
+  function bez(x1, y1, x2, y2) { return function (t) { var lo = 0, hi = 1, u = t; for (var k = 0; k < 24; k++) { u = (lo + hi) / 2; var x = 3 * (1 - u) * (1 - u) * u * x1 + 3 * (1 - u) * u * u * x2 + u * u * u; if (x < t) lo = u; else hi = u; } return 3 * (1 - u) * (1 - u) * u * y1 + 3 * (1 - u) * u * u * y2 + u * u * u; }; }
+  var EASE = bez(0.2, 0.8, 0.2, 1);  // the site's --ease curve
+  var tilesIn = false, inView = false, viewTimer = null, flown = !arrive;
+  function pmark(n) { try { performance.mark(n); } catch (e) {} }
+  function settleArrival() { if (flown) return; flown = true; try { sessionStorage.setItem('mwm-arrived', '1'); } catch (e) {} }
+  function maybeFly() {
+    if (flown || !tilesIn || !inView) return;
+    settleArrival(); pmark('map:arrival-start');
+    map.once('moveend', function () { map.setProjection({ type: 'mercator' }); map.setMinZoom(2.5); pmark('map:arrival-end'); });
+    map.flyTo({ center: HOME.center, zoom: HOME.zoom, bearing: HOME.bearing, pitch: HOME.pitch, duration: 2200, easing: EASE, essential: true });
+  }
+  if (arrive && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      var on = es.some(function (e) { return e.isIntersecting; });
+      clearTimeout(viewTimer);
+      if (on) viewTimer = setTimeout(function () { inView = true; maybeFly(); }, 300); else inView = false;
+    }, { threshold: 0.5 }).observe(document.getElementById('rt-mapcanvas'));
+  } else if (arrive) { inView = true; }
+  if (!arrive) map.setMinZoom(2.5);
   // compact attribution opens itself when the first attributions arrive; fold it once to the info button, then leave it to the visitor
   var attrib = map.getContainer().querySelector('.maplibregl-ctrl-attrib');
   if (attrib && 'MutationObserver' in window) { var attribMo = new MutationObserver(function () { if (attrib.classList.contains('maplibregl-compact-show')) { attrib.classList.remove('maplibregl-compact-show'); attrib.removeAttribute('open'); attribMo.disconnect(); } }); attribMo.observe(attrib, { attributes: true, attributeFilter: ['class'] }); }
@@ -1347,6 +1373,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     var xe = document.createElement('div'); xe.className = 'xmark'; xe.textContent = 'X'; xe.style.opacity = 0; xmark = new maplibregl.Marker({ element: xe }).setLngLat([STOPS[6].lon, STOPS[6].lat]).addTo(map);
     var ce = document.createElement('div'); ce.className = 'cursor'; ce.style.opacity = 0; cursorM = new maplibregl.Marker({ element: ce }).setLngLat([STOPS[0].lon, STOPS[0].lat]).addTo(map);
     ready = true; activate(0); setProgress(0);
+    if (arrive) map.once('idle', function () { tilesIn = true; maybeFly(); });
     // deep link
     var m = /map-stop-(\d)/.exec(location.hash); if (m) { var si = +m[1]; if (si >= 0 && si < N) { setProgress(si); flyStop(si, 0); } }
     // hover tooltips on stop markers with the one-line role
@@ -1409,7 +1436,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   }
   var CAM = [ { b: 55, p: 55 }, { b: 20, p: 45 }, { b: 35, p: 40 }, { b: 175, p: 50 }, { b: 0, p: 40 }, { b: 270, p: 50 }, { b: 315, p: 50 } ];
   function flyStop(i, ms) { var s = STOPS[i], c = CAM[i]; map.flyTo({ center: [s.lon, s.lat], zoom: s.zoom, bearing: c.b, pitch: terrainOn ? c.p : Math.min(c.p, 35), duration: reduce ? 0 : (ms || 1800), curve: 1.4 }); history.replaceState(null, '', '#map-stop-' + i); }
-  function goStop(i) { stopPlay(); setProgress(i); flyStop(i); }
+  function goStop(i) { settleArrival(); stopPlay(); setProgress(i); flyStop(i); }
   tabs.forEach(function (t) { t.addEventListener('click', function () { goStop(+t.getAttribute('data-i')); }); });
   scrub.addEventListener('input', function () { stopPlay(); setProgress(+scrub.value, false); });
   var playing = false, raf = null, playBtn = document.getElementById('play');
@@ -1418,6 +1445,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   var legMs = 3400, holdMs = 2600, travelZoom = 5.2;
   function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
   function play() {
+    settleArrival();
     if (playing) { stopPlay(); return; }
     playing = true; ui(); if (progress >= N - 1) progress = 0;
     var from = Math.floor(progress), phase = 'hold', t0 = null, h0 = null;
@@ -1432,7 +1460,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     raf = requestAnimationFrame(step);
   }
   playBtn.addEventListener('click', play);
-  map.on('dragstart', stopPlay); map.on('wheel', stopPlay);
+  map.on('dragstart', stopPlay); map.on('wheel', stopPlay); map.on('dragstart', settleArrival); map.on('wheel', settleArrival);
   document.getElementById('rt-app').addEventListener('keydown', function (e) {
     if (e.target.tagName === 'INPUT') return;
     if (e.key === ' ') { e.preventDefault(); play(); }
