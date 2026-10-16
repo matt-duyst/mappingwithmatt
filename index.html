@@ -1338,7 +1338,7 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
   var start = arrive ? { center: [-155, 30], zoom: 1.4 } : reduce && !deepLink ? HOME : { center: [-96, 38.5], zoom: 3.6 };
   var map = new maplibregl.Map({
     container: 'rt-mapcanvas',
-    style: { version: 8, sources: {}, layers: [ { id: 'bg', type: 'background', paint: { 'background-color': '#0b0b0c' } } ], projection: arrive ? { type: 'globe' } : { type: 'mercator' } },
+    style: { version: 8, sources: {}, layers: [ { id: 'bg', type: 'background', paint: { 'background-color': '#0b0b0c' } } ], projection: { type: 'mercator' } },
     center: start.center, zoom: start.zoom, bearing: start.bearing || 0, pitch: start.pitch || 0, minZoom: 1.2, maxZoom: 19, attributionControl: { compact: true }, dragRotate: false, pitchWithRotate: false, cooperativeGestures: true,
     locale: { 'Map.Title': 'Roadmap map' }
   });
@@ -1411,7 +1411,7 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
         map.addLayer(L, 'plan');
       });
     }).catch(function () {});
-    fetch(OFM_DARK).then(function (r) { return r.json(); }).then(function (st) {
+    var darkReady = fetch(OFM_DARK).then(function (r) { return r.json(); }).then(function (st) {
       makeMini(st);
       Object.keys(st.sources).forEach(function (k) { if (!map.getSource('dk-' + k)) map.addSource('dk-' + k, st.sources[k]); });
       st.layers.filter(function (l) { return l.type !== 'symbol'; }).forEach(function (l) {
@@ -1430,7 +1430,16 @@ dialog.lightbox[open]::backdrop { opacity: 1; }
     var xe = document.createElement('div'); xe.className = 'xmark'; xe.textContent = 'X'; xe.style.opacity = 0; xmark = new maplibregl.Marker({ element: xe }).setLngLat([STOPS[6].lon, STOPS[6].lat]).addTo(map);
     var ce = document.createElement('div'); ce.className = 'cursor'; ce.style.opacity = 0; cursorM = new maplibregl.Marker({ element: ce }).setLngLat([STOPS[0].lon, STOPS[0].lat]).addTo(map);
     ready = true; activate(0); setProgress(0);
-    if (arrive) map.once('idle', function () { tilesIn = true; maybeFly(); });
+    // The globe is set only once the map has been sized and painted a frame in mercator; the flight waits for the idle that follows the projection change
+    if (arrive) {
+      map.resize();
+      requestAnimationFrame(function () {
+        map.setProjection({ type: 'globe' });
+        var ready = function () { pmark('map:globe-ready'); tilesIn = true; maybeFly(); };
+        // the dark basemap and the labels arrive asynchronously; the start is settled only once they are in and every tile has loaded
+        Promise.allSettled([ofmReady, darkReady]).then(function () { map.once('idle', ready); map.triggerRepaint(); });  // a repaint guarantees an idle, and that idle comes only after the tiles and labels have faded in
+      });
+    }
     // deep link
     var m = /map-stop-(\d)/.exec(location.hash); if (m) { var si = +m[1]; if (si >= 0 && si < N) { setProgress(si); flyStop(si, 0); } }
     // hover tooltips on stop markers with the one-line role
