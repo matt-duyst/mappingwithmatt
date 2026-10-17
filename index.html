@@ -78,8 +78,8 @@ img { max-width: 100%; height: auto; }
 #flap { position: relative; width: min(92vw, 720px); height: 1.4em; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); font-weight: 600; font-size: clamp(36px, 6vw, 72px); letter-spacing: -0.02em; line-height: 1.4; perspective: 1200px; cursor: pointer; }
 #flap .card { position: absolute; inset: 0; display: grid; place-items: center; backface-visibility: hidden; transform-origin: 50% 50%; will-change: transform, opacity; }
 #flap .card span { display: block; white-space: nowrap; }
-#flap .card.out { animation: flapOut 460ms cubic-bezier(.65, 0, .35, 1) forwards; }
-#flap .card.in { animation: flapIn 460ms cubic-bezier(.65, 0, .35, 1) forwards; }
+#flap .card.out { animation: flapOut 340ms cubic-bezier(.65, 0, .35, 1) forwards; }
+#flap .card.in { animation: flapIn 340ms cubic-bezier(.65, 0, .35, 1) forwards; }
 #flap .card.idle { opacity: 0; transform: rotateX(90deg); }
 @keyframes flapOut { from { transform: rotateX(0deg); opacity: 1; } 60% { opacity: 1; } to { transform: rotateX(-90deg); opacity: 0; } }
 @keyframes flapIn { from { transform: rotateX(90deg); opacity: 0; } 40% { opacity: 1; } to { transform: rotateX(0deg); opacity: 1; } }
@@ -122,7 +122,13 @@ section, footer { position: relative; z-index: 2; }
 .intro .loc svg { width: 13px; height: 13px; }
 .intro .loc { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--muted); margin-top: -12px; letter-spacing: 0.04em; }
 .intro .kicker.mono { font-family: var(--font-mono); text-transform: none; letter-spacing: 0.04em; font-size: 14px; }
-.intro .type { font-size: clamp(22px, 3vw, 36px); font-weight: 600; letter-spacing: -0.01em; min-height: 1.4em; color: var(--text); }
+.intro .type { font-size: clamp(22px, 3vw, 36px); font-weight: 600; letter-spacing: -0.01em; min-height: 1.4em; color: var(--text); display: grid; width: 100%; }
+/* every phrase in the rotation sits invisibly in the same grid cell, so the block is as tall as the longest at this width from the first frame */
+.intro .type > * { grid-area: 1 / 1; }
+.intro .type .sizer { visibility: hidden; display: grid; }
+.intro .type .sizer > span { grid-area: 1 / 1; }
+.intro .type .sizer .sans { font-family: var(--font-body); font-weight: 600; }
+.intro .type .sizer .mono { font-family: var(--font-mono); font-weight: 500; }
 .intro .type.mono { font-family: var(--font-mono); font-weight: 500; }
 
 .intro .type .cursor { display: inline-block; width: 0.08em; height: 1em; background: var(--accent); vertical-align: -0.12em; margin-left: 0.12em; animation: blink 1s steps(1) infinite; }
@@ -479,7 +485,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     <img class="round" alt="Matt Duyst" src="assets/portrait.jpg" width="640" height="640">
     <div class="kicker">Environmental Data Scientist, Machine Learning</div>
     <div class="loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Austin, TX</div>
-    <div class="type" id="type" aria-live="polite"><span id="typed"></span><span class="cursor" aria-hidden="true"></span></div>
+    <div class="type" id="type" aria-live="polite"><span class="sizer" aria-hidden="true"><span class="sans" data-hold="1600">hey, hey! name's matt.</span><span class="mono" data-hold="1400">i_like_to_code.py</span><span class="sans" data-hold="2000">i train models to read satellite imagery 🛰️</span><span class="sans" data-hold="1800">i lift 🏋️ i snowboard 🏂 i hit 🎾</span><span class="sans" data-hold="2200">i grew up on a citrus farm in california 🍊</span><span class="sans" data-hold="2000">sco' bruins &amp; boola, boola baby!</span></span><span class="live"><span id="typed"></span><span class="cursor" aria-hidden="true"></span></span></div>
     <div class="jump">
       <a href="#top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>About</a>
       <a href="#map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/></svg>At a glance</a>
@@ -913,27 +919,22 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 <script>
 (function () {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var lines = [
-    { t: "hey, hey! name's matt.", mono: false, hold: 1600 },
-    { t: 'i_like_to_code.py', mono: true, hold: 1400 },
-    { t: 'i train models to read satellite imagery 🛰️', mono: false, hold: 2000 },
-    { t: 'i lift 🏋️ i snowboard 🏂 i hit 🎾', mono: false, hold: 1800 },
-    { t: 'i grew up on a citrus farm in california 🍊', mono: false, hold: 2200 },
-    { t: "sco' bruins & boola, boola baby!", mono: false, hold: 2000 }
-  ];
+  // the phrases live in the sizer markup, which reserves the block's height; read them from there so there is one list
+  var lines = Array.prototype.map.call(document.querySelectorAll('#type .sizer span'), function (s) { return { t: s.textContent, mono: s.classList.contains('mono'), hold: +s.getAttribute('data-hold') }; });
   var typed = document.getElementById('typed');
   var typeEl = document.getElementById('type');
-  var li = 0;
+  var li = 0, ready = false;
+  var heroReady = function () { if (!ready) { ready = true; try { performance.mark('hero-ready'); } catch (e) {} } };
   function chars(str) { return Array.from(str); }
   function typeLine() {
     var line = lines[li];
     typeEl.classList.toggle('mono', line.mono);
     var cs = chars(line.t), i = 0;
     typed.textContent = '';
-    if (reduce) { typed.textContent = line.t; return; }
+    if (reduce) { typed.textContent = line.t; heroReady(); return; }
     var tick = function () {
       if (i < cs.length) { typed.textContent += cs[i]; i += 1; setTimeout(tick, 42 + Math.random() * 40); }
-      else { setTimeout(eraseLine, line.hold); }
+      else { heroReady(); setTimeout(eraseLine, line.hold); }
     };
     tick();
   }
@@ -953,7 +954,10 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   var curtain = document.getElementById('curtain');
   var cards = [document.getElementById('card-a'), document.getElementById('card-b')], cur = 0, gi = 0, timer = null, lifted = false;
   cards[1].classList.add('idle');
-  var lift = function () { if (lifted) return; lifted = true; clearTimeout(timer); window.scrollTo(0, 0); curtain.classList.add('lift'); gooStart(); document.querySelector('.intro .stack').classList.add('show'); setTimeout(function () { curtain.classList.add('gone'); }, reduce ? 0 : 950); setTimeout(typeLine, reduce ? 100 : 520); };
+  var stack = document.querySelector('.intro .stack'), stackShown = false;
+  var stackVisible = function () { if (!stackShown) { stackShown = true; try { performance.mark('hero-stack'); } catch (e) {} } };
+  stack.addEventListener('transitionend', function (e) { if (e.propertyName === 'opacity' && e.target === stack.lastElementChild) stackVisible(); });
+  var lift = function () { if (lifted) return; lifted = true; clearTimeout(timer); window.scrollTo(0, 0); try { performance.mark('hero-lift'); } catch (e) {} curtain.classList.add('lift'); gooStart(); stack.classList.add('show'); setTimeout(function () { curtain.classList.add('gone'); }, reduce ? 0 : 950); setTimeout(typeLine, reduce ? 100 : 520); };
   var flip = function () {
     if (gi >= greets.length - 1) { lift(); return; }
     gi += 1;
@@ -964,13 +968,13 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     cur = 1 - cur;
     var fl = document.getElementById('flap'); fl.classList.remove('tick'); void fl.offsetWidth; fl.classList.add('tick');
     clearTimeout(timer);
-    timer = setTimeout(flip, gi === greets.length - 1 ? 1100 : 520);
+    timer = setTimeout(flip, gi === greets.length - 1 ? 300 : 380);
   };
   var seen = false; try { seen = sessionStorage.getItem('mwm-welcome') === '1'; } catch (e) {}
-  if (reduce || seen) { lifted = true; curtain.classList.add('gone'); setTimeout(function () { gooStart(); }, 0); document.querySelector('.intro .stack').classList.add('show'); setTimeout(typeLine, reduce ? 0 : 200); }
+  if (reduce || seen) { lifted = true; curtain.classList.add('gone'); try { performance.mark('hero-lift'); } catch (e) {} setTimeout(function () { gooStart(); }, 0); stack.classList.add('show'); if (reduce) stackVisible(); setTimeout(typeLine, reduce ? 0 : 200); }
   else {
     try { sessionStorage.setItem('mwm-welcome', '1'); } catch (e) {}
-    timer = setTimeout(flip, 700);
+    timer = setTimeout(flip, 380);
     curtain.addEventListener('click', function () { if (gi >= greets.length - 1) lift(); else flip(); });
   }
 

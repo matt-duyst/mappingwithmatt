@@ -127,8 +127,8 @@ def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=Fal
         src = OBSERVERS + (" (function f() { if (document.documentElement) document.documentElement.setAttribute('data-theme', 'light'); else setTimeout(f, 0); })();" if theme == 'light' else '')
         c.send('Page.addScriptToEvaluateOnNewDocument', {'source': src})
         c.send('Page.navigate', {'url': args.root + path}); t0 = time.time()
-        # the main page's first visit ends when its route has drawn; other pages when loaded
-        done = "performance.getEntriesByName('intro:route-end').length > 0" if path == '/' else "document.readyState === 'complete'"
+        # the main page's first visit ends when the first typed phrase completes (the hero-ready mark); other pages when loaded
+        done = "performance.getEntriesByName('hero-ready').length > 0" if path == '/' else "document.readyState === 'complete'"
         while time.time() - t0 < 30:
             try:
                 if c.js(done): break
@@ -142,7 +142,7 @@ def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=Fal
             return out
         out['cold'] = json.loads(c.js(METRICS)); out['cold'].update(network(c))
         if path == '/':
-            out['hero'] = json.loads(c.js("JSON.stringify(Object.fromEntries(performance.getEntriesByType('mark').filter(m => m.name.startsWith('intro:')).map(m => [m.name.slice(6), Math.round(m.startTime)])))"))
+            out['hero'] = json.loads(c.js("JSON.stringify(Object.fromEntries(performance.getEntriesByType('mark').filter(m => m.name.startsWith('hero-')).map(m => [m.name.slice(5), Math.round(m.startTime)])))"))
         c.js("(async () => { for (let y = 0; y < document.body.scrollHeight; y += 450) { scrollTo(0, y); await new Promise(r => setTimeout(r, 220)); } return true; })()", wait=True); c.pump(8.0)
         out['scroll'] = json.loads(c.js(METRICS)); out['scroll'].update(network(c))
         out['overflow'] = c.js('document.documentElement.scrollWidth > document.documentElement.clientWidth')
