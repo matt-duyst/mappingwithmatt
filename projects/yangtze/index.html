@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Urban expansion, paddy rice, and atmospheric methane over the Yangtze River Delta · mapping with matt</title>
 <meta name="description" content="Urban expansion, paddy rice, and atmospheric methane over the Yangtze River Delta: a Yale MESc thesis">
-<meta name="theme-color" content="#0f0d0b" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#fdf9f6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f0f10">
 <meta property="og:title" content="Urban expansion, paddy rice, and atmospheric methane over the Yangtze River Delta">
 <meta property="og:description" content="Urban expansion, paddy rice, and atmospheric methane over the Yangtze River Delta: a Yale MESc thesis">
 <meta property="og:image" content="https://mappingwithmatt.com/assets/figures/yangtze/study_area.webp">
@@ -17,8 +16,6 @@
 <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32.png">
 <link href="../../maps/maps.css" rel="stylesheet">
 <link href="../projects.css" rel="stylesheet">
-<link rel="expect" href="#hero-figure" blocking="render">
-<script src="../projects.js"></script>
 </head>
 <body>
 <header class="site"><a href="/">Matt Duyst</a><a href="/#work">Projects</a></header>
@@ -30,7 +27,7 @@
 <section>
 <h2>The delta</h2>
 <p>The study covers the four provinces, with Shanghai at the river's mouth and the provincial capitals of Nanjing, Hefei, and Hangzhou inland. The work is done in a grid of 0.25 degree cells, each about 24 by 28 kilometers, because that is the scale the analysis grids the satellite's methane to; every land cover product is averaged into the same cells so that like is compared with like.</p>
-<figure class="pfig" id="hero-figure"><div class="plate-frame"><img src="../../assets/figures/yangtze/study_area.webp" width="1600" height="1316" alt="The four Yangtze River Delta provinces on shaded relief, with a locator, a detail box showing the 0.25 degree analysis cells, and the neighbouring provinces named" decoding="async"></div><figcaption>The four provinces on relief, with the 0.25 degree analysis cells.</figcaption></figure>
+<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/yangtze/study_area.webp" width="1600" height="1316" alt="The four Yangtze River Delta provinces on shaded relief, with a locator, a detail box showing the 0.25 degree analysis cells, and the neighbouring provinces named" decoding="async"></div><figcaption>The four provinces on relief, with the 0.25 degree analysis cells.</figcaption></figure>
 </section>
 <section>
 <h2>Reading the land</h2>
@@ -41,12 +38,6 @@
 <h2>How the delta changed</h2>
 <p>Between 2000 and 2018 the delta's built-over area grew by a factor of two to three, depending on the product. The maps show where the growth concentrated. Because the products count a cell as built once a quarter of it is, the early years are under-drawn and the late years over-drawn, so the totals come from the areas, not the maps.</p>
 <figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/yangtze/urban_change.webp" width="1600" height="936" alt="Cumulative urban extent by year of first imperviousness for GAIA and GISA to 2019, and four-province totals for the thesis&#x27;s GAIA figures against both products recomputed" loading="lazy" decoding="async"></div><figcaption>Where the delta became impervious, and how much, 2000 to 2019.</figcaption></figure>
-<figure class="pfig swipe" id="swipe-urban"><div class="plate-frame"><div class="swipe-stage" style="--ar: 1600 / 1080; --pos: 50%">
-<img src="../../assets/figures/yangtze/urban_2000.webp" srcset="../../assets/figures/yangtze/urban_2000-854.webp 854w, ../../assets/figures/yangtze/urban_2000.webp 1600w" sizes="(min-width: 900px) 854px, calc(100vw - 2 * var(--pad))" width="1600" height="1080" alt="Urban extent across the four provinces in 2000, black on grey" loading="lazy" decoding="async">
-<img class="after" src="../../assets/figures/yangtze/urban_2018.webp" srcset="../../assets/figures/yangtze/urban_2018-854.webp 854w, ../../assets/figures/yangtze/urban_2018.webp 1600w" sizes="(min-width: 900px) 854px, calc(100vw - 2 * var(--pad))" width="1600" height="1080" alt="Urban extent across the four provinces in 2018, black on grey" loading="lazy" decoding="async">
-<div class="swipe-handle" role="slider" tabindex="0" aria-label="Reveal 2018 over 2000" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></div>
-<span class="yr yr-l">2000</span><span class="yr yr-r">2018</span>
-</div></div><figcaption class="capbar"><span class="k">Finding</span><span class="v f">Between 2000 and 2018 the delta&#x27;s built-over area grew by a factor of two to three, depending on the product.</span><span class="k">Measure</span><span class="v">Urban extent in 2000 and in 2018 from the thesis&#x27;s source maps, the later one revealed by the handle.</span><span class="k">Source</span><span class="v">Yangtze-Landcover-Methane legacy/data/Urban_2000.jpg and Urban_2018.jpg, the maps the thesis figures were built from</span><span class="k">Credit</span><span class="v">Maps: Matt Duyst, thesis of 2023</span></figcaption></figure>
 </section>
 <section>
 <h2>Reading the air</h2>
@@ -66,13 +57,5 @@
 </section>
 </main>
 <footer class="site"><span class="loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Austin, TX</span> &middot; &copy; 2026 Matt Duyst &middot; <a href="https://github.com/matt-duyst/mappingwithmatt">Source on GitHub</a> &middot; <a href="/maps/">Maps archive</a> &middot; <a href="#">Top</a></footer>
-<dialog class="lightbox" id="lightbox" aria-label="Figure at full size">
-  <div class="lb-box"><figure class="lb-fig"><div class="lb-frame"><img alt=""></div><figcaption class="capbar"></figcaption></figure></div>
-  <div class="lb-count" aria-live="polite"></div>
-  <button type="button" class="lb-btn lb-prev" aria-label="Previous figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-  <button type="button" class="lb-btn lb-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-  <button type="button" class="lb-btn lb-close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-</dialog>
-<script src="../../assets/lightbox.js" defer></script>
 </body>
 </html>

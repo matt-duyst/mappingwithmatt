@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS · mapping with matt</title>
 <meta name="description" content="Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS: a tool built for the 2022 Global Stocktake Climate Datathon">
-<meta name="theme-color" content="#0f0d0b" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#fdf9f6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f0f10">
 <meta property="og:title" content="Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS">
 <meta property="og:description" content="Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS: a tool built for the 2022 Global Stocktake Climate Datathon">
 <meta property="og:image" content="https://mappingwithmatt.com/assets/video/carbon-trading.jpg">
@@ -17,8 +16,6 @@
 <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32.png">
 <link href="../../maps/maps.css" rel="stylesheet">
 <link href="../projects.css" rel="stylesheet">
-<link rel="expect" href="#hero-figure" blocking="render">
-<script src="../projects.js"></script>
 </head>
 <body>
 <header class="site"><a href="/">Matt Duyst</a><a href="/#work">Projects</a></header>
@@ -27,7 +24,7 @@
 <h1>Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS</h1>
 <p class="lede">The EU Emissions Trading System caps the carbon that power plants, industry, and aviation may emit and lets the allowances trade. This tool was built for the 2022 Global Stocktake Climate Datathon to make one lever of that system readable: how fast a sector&#x27;s allowance allocation decays each year, and what that does to its projected emissions. Pick a country and a sector, set the annual reduction, and it draws historical emissions beside the emissions projected to 2030 under that cut, with the allowances behind each year on hover. It earned an Honorable Mention ahead of COP 27.</p>
 <nav class="pills" aria-label="Project links"><a href="https://github.com/matt-duyst/Carbon-Trading">Code</a><a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Datathon</a></nav>
-<figure class="pfig pvid" id="hero-figure"><div class="plate-frame"><video width="1440" height="900" muted loop playsinline preload="metadata" poster="../../assets/video/carbon-trading.jpg" aria-label="A recording of the tool: Germany and paper or cardboard are chosen, the annual reduction is raised from 5 to 10 percent and the projection falls, and a projected bar is hovered to show its emissions and allowances"><source src="../../assets/video/carbon-trading.webm" type="video/webm"><source src="../../assets/video/carbon-trading.mp4" type="video/mp4"></video><div class="vid-ctl"><span class="vid-hint" hidden>Tap to play</span><button type="button" class="vid-toggle" hidden>Pause</button></div></div><figcaption>The tool in use: Germany, paper and cardboard, historical emissions and the projection to 2030, which falls as the annual decay in allowance allocation is raised from 5 to 10 percent.</figcaption></figure>
+<figure class="pfig pvid"><div class="plate-frame"><video width="1440" height="900" muted loop playsinline preload="metadata" poster="../../assets/video/carbon-trading.jpg" aria-label="A recording of the tool: Germany and paper or cardboard are chosen, the annual reduction is raised from 5 to 10 percent and the projection falls, and a projected bar is hovered to show its emissions and allowances"><source src="../../assets/video/carbon-trading.webm" type="video/webm"><source src="../../assets/video/carbon-trading.mp4" type="video/mp4"></video><div class="vid-ctl"><span class="vid-hint" hidden>Tap to play</span><button type="button" class="vid-toggle" hidden>Pause</button></div></div><figcaption>The tool in use: Germany, paper and cardboard, historical emissions and the projection to 2030, which falls as the annual decay in allowance allocation is raised from 5 to 10 percent.</figcaption></figure>
 <section>
 <h2>A pathway</h2>
 <p>Each bar is one year's emissions: historical in red, projected in blue.</p>
@@ -56,13 +53,5 @@
   if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; update(); }, { threshold: 0.25 }).observe(v);
 })();
 </script>
-<dialog class="lightbox" id="lightbox" aria-label="Figure at full size">
-  <div class="lb-box"><figure class="lb-fig"><div class="lb-frame"><img alt=""></div><figcaption class="capbar"></figcaption></figure></div>
-  <div class="lb-count" aria-live="polite"></div>
-  <button type="button" class="lb-btn lb-prev" aria-label="Previous figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-  <button type="button" class="lb-btn lb-next" aria-label="Next figure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-  <button type="button" class="lb-btn lb-close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-</dialog>
-<script src="../../assets/lightbox.js" defer></script>
 </body>
 </html>
