@@ -8,7 +8,7 @@ runs axe and the link sweep and skips every performance measurement, which is wh
 
     python3 tools/audit/run.py http://localhost:8000 --out tools/audit/audit.json
 """
-import argparse, base64, glob, html, json, os, re, shutil, subprocess, sys, time, urllib.request
+import argparse, base64, collections, glob, html, json, os, re, shutil, subprocess, sys, threading, time, urllib.request
 try:
     import websocket
 except ImportError:
@@ -36,6 +36,25 @@ METRICS = """JSON.stringify((() => {
 })())"""
 
 
+CHILDREN = []          # every Chrome started, so a watchdog can kill what is still running
+LOG = collections.deque(maxlen=12)  # the last progress lines, printed when the watchdog fires
+
+def say(*parts, **_):
+    line = ' '.join(str(p) for p in parts); LOG.append(line); print(line, flush=True)
+
+
+def watchdog(seconds):
+    """Kill every Chrome and exit non-zero if the run takes longer than it should; a hung page must not hold the run open for hours."""
+    def fire():
+        say(f'TIMEOUT after {seconds} s; killing {len(CHILDREN)} Chrome process(es) and exiting')
+        for p in CHILDREN:
+            try: p.kill()
+            except Exception: pass
+        print('last progress lines:\n  ' + '\n  '.join(LOG), flush=True)
+        os._exit(2)
+    t = threading.Timer(seconds, fire); t.daemon = True; t.start(); return t
+
+
 class Chrome:
     """One headless Chrome with a fresh profile, driven over the DevTools protocol."""
     def __init__(self, binary, port, profile, w, h, software):
@@ -44,7 +63,7 @@ class Chrome:
                  '--disable-background-networking', '--disable-component-update', '--disable-sync', f'--window-size={w},{h}']
         if software: flags += ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--disable-gpu']
         if os.environ.get('CI'): flags += ['--no-sandbox']  # the hosted runner forbids the sandbox's user namespaces
-        self.p = subprocess.Popen(flags + ['about:blank'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        self.p = subprocess.Popen(flags + ['about:blank'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); CHILDREN.append(self.p)
         tabs = None
         for _ in range(80):
             try: tabs = json.load(urllib.request.urlopen(f'http://127.0.0.1:{port}/json')); break
@@ -184,8 +203,10 @@ def main():
     ap.add_argument('--port', type=int, default=9950)
     ap.add_argument('--runs', type=int, default=3, help='runs of the throttled profile; the median of each metric is the quoted figure')
     ap.add_argument('--checks-only', action='store_true', help='axe, errors, overflow and links only; no performance measurement')
+    ap.add_argument('--timeout', type=int, default=7200, help='seconds before the run is abandoned, its Chrome processes killed and the exit code set to 2')
     args = ap.parse_args()
     args.root = args.root.rstrip('/')
+    watchdog(args.timeout)
     axe_src = open(os.path.join(HERE, 'vendor', 'axe.min.js')).read()
     commit = subprocess.run(['git', '-C', SITE, 'rev-parse', '--short', 'HEAD'], capture_output=True, text=True).stdout.strip()
     result = {'meta': {'date': time.strftime('%Y-%m-%d'), 'commit': commit, 'root': args.root, 'renderer': 'software' if args.software else 'gpu', 'runs': 1 if args.checks_only else args.runs, 'checks_only': args.checks_only,
@@ -202,7 +223,7 @@ def main():
                     port += 1
                     r = audit_page(args, path, width, theme, 'local', port, axe_src, checks_only=True)
                     entry = {'axe': r['axe'], 'errors': r['errors'], 'overflow': r['overflow']}
-                    print(f"{path} {width} {theme}: axe {len(r['axe'])} errors {len(r['errors'])} overflow {r['overflow']}", flush=True)
+                    say(f"{path} {width} {theme}: axe {len(r['axe'])} errors {len(r['errors'])} overflow {r['overflow']}", flush=True)
                     result['pages'][path][str(width)][theme] = entry; continue
                 for profile in args.profiles.split(','):
                     runs = []
@@ -210,7 +231,7 @@ def main():
                         port += 1
                         r = audit_page(args, path, width, theme, profile, port, axe_src)
                         runs.append(r)
-                        print(f"{path} {width} {theme} {profile} run {k + 1}: cold {r['cold']['requests']} req {r['cold']['bytes'] // 1024} KB FCP {r['cold']['fcp']} LCP {r['cold']['lcp']} TBT {r['cold']['tbt']} CLS {r['cold']['cls']} | scroll {r['scroll']['requests']} req {r['scroll']['bytes'] // 1024} KB TBT {r['scroll']['tbt']} CLS {r['scroll']['cls']}" + (f" | axe {len(r['axe'])}" if 'axe' in r else '') + (f" | errors {len(r['errors'])}" if r['errors'] else ''), flush=True)
+                        say(f"{path} {width} {theme} {profile} run {k + 1}: cold {r['cold']['requests']} req {r['cold']['bytes'] // 1024} KB FCP {r['cold']['fcp']} LCP {r['cold']['lcp']} TBT {r['cold']['tbt']} CLS {r['cold']['cls']} | scroll {r['scroll']['requests']} req {r['scroll']['bytes'] // 1024} KB TBT {r['scroll']['tbt']} CLS {r['scroll']['cls']}" + (f" | axe {len(r['axe'])}" if 'axe' in r else '') + (f" | errors {len(r['errors'])}" if r['errors'] else ''), flush=True)
                     entry[profile] = {'cold': median_of([r['cold'] for r in runs]), 'scroll': median_of([r['scroll'] for r in runs]),
                                       'runs': [{'cold': r['cold'], 'scroll': r['scroll']} for r in runs],
                                       'errors': [e for r in runs for e in r['errors']], 'overflow': any(r['overflow'] for r in runs)}
@@ -219,7 +240,7 @@ def main():
                 result['pages'][path][str(width)][theme] = entry
     shutil.rmtree(args.tmp, ignore_errors=True)
     json.dump(result, open(args.out, 'w'), indent=1)
-    print('wrote', args.out, '| links:', result['links']['references'], 'references,', len(result['links']['problems']), 'problems')
+    say('wrote', args.out, '| links:', result['links']['references'], 'references,', len(result['links']['problems']), 'problems')
 
 
 if __name__ == '__main__':
