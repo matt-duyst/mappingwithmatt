@@ -1,0 +1,215 @@
+{
+ "horizons": [
+  1,
+  3,
+  6,
+  12
+ ],
+ "source": "github.com/matt-duyst/Peatland-Flux-Forecasting data/processed/forecasts_{gas}_{family}.csv, aggregated as src/study/figures.forecast_panel does",
+ "gases": {
+  "methane": {
+   "label": "Methane",
+   "unit": "nmol m\u207b\u00b2 s\u207b\u00b9",
+   "n": [
+    57,
+    60,
+    61,
+    65
+   ],
+   "fitted_low": [
+    7.006,
+    8.478,
+    6.893,
+    8.893
+   ],
+   "fitted_high": [
+    9.98,
+    11.133,
+    9.375,
+    15.059
+   ],
+   "margin": [
+    3.273,
+    0.798,
+    0.381,
+    1.177
+   ],
+   "methods": {
+    "benchmarks/climatology": [
+     8.106,
+     7.915,
+     6.91,
+     8.002
+    ],
+    "benchmarks/naive": [
+     12.206,
+     29.228,
+     41.42,
+     10.521
+    ],
+    "benchmarks/seasonal naive": [
+     11.346,
+     11.023,
+     9.405,
+     10.521
+    ],
+    "benchmarks/seasonal naive with drift": [
+     11.375,
+     11.127,
+     9.566,
+     10.651
+    ],
+    "autoregressive/gradient boosting": [
+     9.98,
+     8.478,
+     7.388,
+     9.078
+    ],
+    "autoregressive/ordinary least squares": [
+     7.046,
+     8.916,
+     7.784,
+     8.975
+    ],
+    "autoregressive/random forest": [
+     8.336,
+     11.133,
+     9.375,
+     11.046
+    ],
+    "autoregressive/ridge": [
+     7.006,
+     8.829,
+     7.643,
+     8.934
+    ],
+    "exogenous/gradient boosting": [
+     9.757,
+     9.172,
+     6.893,
+     8.893
+    ],
+    "exogenous/ordinary least squares": [
+     8.899,
+     9.518,
+     8.606,
+     15.059
+    ],
+    "exogenous/random forest": [
+     8.488,
+     10.399,
+     8.331,
+     11.304
+    ],
+    "exogenous/ridge": [
+     7.175,
+     8.997,
+     7.433,
+     10.257
+    ]
+   }
+  },
+  "carbon_dioxide": {
+   "label": "Carbon dioxide",
+   "unit": "\u00b5mol m\u207b\u00b2 s\u207b\u00b9",
+   "n": [
+    85,
+    85,
+    85,
+    85
+   ],
+   "fitted_low": [
+    0.206,
+    0.224,
+    0.224,
+    0.238
+   ],
+   "fitted_high": [
+    0.215,
+    0.245,
+    0.247,
+    0.269
+   ],
+   "margin": [
+    0.02,
+    0.022,
+    0.024,
+    0.029
+   ],
+   "methods": {
+    "benchmarks/climatology": [
+     0.22,
+     0.221,
+     0.217,
+     0.224
+    ],
+    "benchmarks/naive": [
+     0.3,
+     0.618,
+     0.797,
+     0.236
+    ],
+    "benchmarks/seasonal naive": [
+     0.259,
+     0.258,
+     0.254,
+     0.236
+    ],
+    "benchmarks/seasonal naive with drift": [
+     0.259,
+     0.259,
+     0.257,
+     0.245
+    ],
+    "autoregressive/gradient boosting": [
+     0.206,
+     0.231,
+     0.23,
+     0.238
+    ],
+    "autoregressive/ordinary least squares": [
+     0.211,
+     0.235,
+     0.234,
+     0.245
+    ],
+    "autoregressive/random forest": [
+     0.215,
+     0.245,
+     0.242,
+     0.244
+    ],
+    "autoregressive/ridge": [
+     0.211,
+     0.228,
+     0.225,
+     0.239
+    ],
+    "exogenous/gradient boosting": [
+     0.208,
+     0.237,
+     0.226,
+     0.239
+    ],
+    "exogenous/ordinary least squares": [
+     0.21,
+     0.227,
+     0.23,
+     0.269
+    ],
+    "exogenous/random forest": [
+     0.213,
+     0.242,
+     0.247,
+     0.258
+    ],
+    "exogenous/ridge": [
+     0.21,
+     0.224,
+     0.224,
+     0.24
+    ]
+   }
+  }
+ }
+}

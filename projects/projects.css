@@ -3,6 +3,17 @@ main.project { max-width: 880px; }
 main.project > .eyebrow, main.project > h1, main.project > .lede, main.project h2, main.project section > p { max-width: 72ch; }
 main.project .lede { color: var(--text); margin-bottom: 20px; }
 main.project section { margin-top: 44px; }
+/* The header block under the title: role, timeline and links in mono; then the outcome strip, one to three figures drawn from the page's own sourced sentences */
+.phead { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px 28px; margin: 18px 0 20px; padding: 14px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.03em; }
+.phead div { display: grid; gap: 4px; }
+.phead dt { color: var(--muted); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; }
+.phead dd { margin: 0; color: var(--text); line-height: 1.5; }
+.phead-links { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.outcomes { list-style: none; margin: 0 0 28px; padding: 0; display: flex; flex-wrap: wrap; gap: 14px 36px; }
+.outcomes li { display: grid; gap: 2px; }
+.outcomes .o-n { font-family: var(--font-mono); font-size: clamp(22px, 3vw, 30px); font-weight: 700; letter-spacing: -0.01em; color: var(--text); line-height: 1.1; }
+.outcomes .o-l { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.03em; color: var(--muted); max-width: 24ch; }
+.fig-n { color: var(--text); font-weight: 700; margin-right: 2px; }
 .pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
 .pills a { display: inline-flex; align-items: center; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; transition: border-color .15s ease, transform .15s ease; }
 .pills a:focus-visible { border-color: var(--text); }
@@ -20,3 +31,18 @@ main.project section { margin-top: 44px; }
 .pvid video { cursor: pointer; }
 .vid-toggle { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); background: rgba(15,15,16,.85); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; cursor: pointer; }
 .vid-toggle:hover, .vid-toggle:focus-visible { border-color: var(--text); }
+
+/* The live figure on the Peatland page: a white plate like the pictures, a gas toggle in mono, the readout line beneath */
+.pfig-live .plate-frame { background: #fff; }
+.live { display: grid; gap: 10px; }
+.live-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
+.live-toggle { display: flex; gap: 6px; }
+.live-gas { font: 500 11px/1 var(--font-mono); letter-spacing: 0.03em; color: #595959; background: transparent; border: 1px solid #D9D9D9; border-radius: 999px; padding: 6px 11px; cursor: pointer; transition: border-color .15s ease, color .15s ease; }
+.live-gas:hover, .live-gas:focus-visible { border-color: #1A1A1A; color: #1A1A1A; }
+.live-gas.active { border-color: #1A1A1A; color: #1A1A1A; background: #F2F2F2; }
+.live-gas:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 2px; }
+.live-read { font: 500 11px/1.5 var(--font-mono); letter-spacing: 0.02em; color: #595959; flex: 1 1 320px; min-height: 2.9em; }
+.live-svg { display: block; width: 100%; height: auto; }
+.live-svg rect[tabindex]:focus { outline: none; }
+.live-svg rect[tabindex]:focus-visible { stroke: #1A1A1A; stroke-width: 2; stroke-dasharray: 6 4; }
+.live-fallback[hidden] { display: none; }
