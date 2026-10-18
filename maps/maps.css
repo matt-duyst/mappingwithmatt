@@ -23,15 +23,17 @@ body {
   padding: env(safe-area-inset-top, 0px) var(--pad) calc(64px + env(safe-area-inset-bottom, 0px));
 }
 a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--line); transition: border-color .2s ease; }
-a:hover, a:focus-visible { border-bottom-color: var(--text); }
+/* Two link gestures sitewide: outbound links carry a small corner arrow in the muted color that slides 2 px up and right on hover; inbound links grow an underline from the left on hover. The tiles keep their frame state. */
+a[href^="http"]:not([href*="mappingwithmatt.com"])::after { content: ""; display: inline-block; width: 0.62em; height: 0.62em; margin-left: 0.22em; vertical-align: 0.08em; background: var(--muted); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M9 7h8v8'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M9 7h8v8'/%3E%3C/svg%3E") center / contain no-repeat; transition: transform 240ms ease; }
+a[href^="http"]:not([href*="mappingwithmatt.com"]):hover::after { transform: translate(2px, -2px); }
+a:not([href^="http"]):not(.tiles a):not(.projects a), a[href*="mappingwithmatt.com"] { background-image: linear-gradient(currentColor, currentColor); background-repeat: no-repeat; background-size: 0% 1px; background-position: 0 100%; transition: background-size 240ms ease, color .15s ease; }
+a:not([href^="http"]):not(.tiles a):not(.projects a):hover, a[href*="mappingwithmatt.com"]:hover { background-size: 100% 1px; }
 :focus-visible { outline: 1px solid var(--text); outline-offset: 3px; }
 .prose a, .note a, .lede a { border-bottom: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); transition: text-decoration-color .2s ease; }
-.prose a:hover, .note a:hover, .lede a:hover { text-decoration-color: currentColor; }
 
 header.site { display: flex; gap: 20px; align-items: baseline; max-width: 1100px; margin: 0 auto; padding: 24px 0 20px; border-bottom: 1px solid var(--line); }
 header.site a { border-bottom: 0; color: var(--muted); }
 header.site a:first-child { color: var(--text); font-family: var(--font-body); font-weight: 600; font-size: 15px; }
-header.site a:hover { color: var(--text); }
 
 main { max-width: 760px; margin: 0 auto; padding-top: 48px; }
 .eyebrow { margin: 0 0 10px; color: var(--muted); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
@@ -71,16 +73,14 @@ figcaption { margin-top: 8px; color: var(--muted); font-size: 12px; }
 .tile-frame img { position: absolute; inset: 8px; display: block; width: calc(100% - 16px); height: calc(100% - 16px); object-fit: contain; border: 0; background: transparent; }
 .tile-none { font-family: var(--font-mono); font-size: 11px; color: var(--muted); text-align: center; padding: 8px; }
 .tile-t { overflow-wrap: anywhere; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.45; color: var(--muted); }
-.tiles a:hover .tile-frame, .tiles a:focus-visible .tile-frame { border-color: var(--text); }
-.tiles a:hover .tile-t, .tiles a:focus-visible .tile-t { color: var(--text); }
+.tiles a:focus-visible .tile-frame { border-color: var(--text); }
 @media (prefers-reduced-motion: reduce) { .tile-frame { transition: none; } }
-.projects a:hover .t, .projects a:focus-visible .t { text-decoration: underline; text-decoration-color: var(--muted); text-underline-offset: 3px; }
+.projects a:focus-visible .t { text-decoration: underline; text-decoration-color: var(--muted); text-underline-offset: 3px; }
 
-@media (prefers-reduced-motion: reduce) { a { transition: none; } }
+@media (prefers-reduced-motion: reduce) { a, a::after { transition: none; } }
 
 /* footer shared with the main page */
 footer.site { max-width: 1100px; margin: 64px auto 0; padding: 36px 0 0; border-top: 1px solid var(--line); text-align: center; font-family: var(--font-body); font-size: 13px; line-height: 1.6; color: var(--muted); }
 footer.site .loc { display: inline-flex; align-items: center; gap: 5px; }
 footer.site .loc svg { width: 13px; height: 13px; }
 footer.site a { color: var(--muted); border-bottom: 1px dotted var(--muted); }
-footer.site a:hover { color: var(--text); border-bottom-color: var(--text); }
