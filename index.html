@@ -257,9 +257,22 @@ p { margin: 0 0 16px; }
 .photo-col .affiliations strong { color: var(--text); font-weight: 500; }
 
 /* Experience */
-.exp { display: grid; grid-template-columns: 300px 1fr; gap: 32px; padding: 28px 0; border-top: 1px solid var(--line); }
-.exp:last-child { border-bottom: 1px solid var(--line); }
+/* Role cards: dates in a mono column, title and company, the existing summary, and skill pills from the CV's lines for the role.
+   Hover or focus lifts a card 2 px and brightens it one surface step while its siblings dim; two entries hold the rest of their text behind "more". */
+.exp-list { display: grid; gap: 14px; }
+.exp { display: grid; grid-template-columns: 150px 1fr; gap: 28px; padding: 22px 24px; border: 1px solid var(--line); border-radius: 3px; background: var(--surface); transition: transform 240ms ease, background 240ms ease, opacity 240ms ease, border-color 240ms ease; }
+.exp:hover, .exp:focus-within { transform: translateY(-2px); background: color-mix(in srgb, var(--surface), var(--text) 4%); border-color: color-mix(in srgb, var(--line), var(--text) 18%); }
+.exp-list:hover .exp:not(:hover), .exp-list:focus-within .exp:not(:focus-within) { opacity: 0.85; }
+.exp-dates { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.03em; color: var(--muted); line-height: 1.6; padding-top: 3px; }
 .exp-head h3 { font-size: 17px; margin: 0 0 6px; }
+.exp-skills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.exp-skills .tag { font: 500 10.5px/1 var(--font-mono); letter-spacing: 0.04em; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 8px; }
+.exp-more[hidden] { display: none; }
+.exp-toggle { font: 500 11px/1 var(--font-mono); letter-spacing: 0.03em; color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 4px 9px; cursor: pointer; margin-left: 2px; transition: border-color .15s ease; }
+.exp-toggle:hover, .exp-toggle:focus-visible { border-color: var(--text); }
+.exp-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 700px) { .exp { grid-template-columns: 1fr; gap: 10px; padding: 18px 16px; } }
+@media (prefers-reduced-motion: reduce) { .exp { transition: none; } .exp:hover, .exp:focus-within { transform: none; } }
 .exp-head h3 a { border-bottom: 1px solid var(--line); }
 .exp-meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted); line-height: 1.55; }
 .exp-body p { font-family: var(--font-mono); color: var(--body); font-size: 12.5px; line-height: 1.75; margin: 0 0 12px; }
@@ -860,55 +873,90 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     <div class="eyebrow">Experience and education</div>
     <h2>Where the work happened.</h2>
 
+    <div class="exp-list">
     <article class="exp" id="exp-grc">
-      <div class="exp-head">
-        <h3><a href="https://grassrootscarbon.com/">Grassroots Carbon</a></h3>
-        <div class="exp-meta">Environmental Data Scientist, Machine Learning<br>San Antonio and Austin, Texas &middot; February 2025 to present</div>
-      </div>
-      <div class="exp-body">
-        <p>I engineered the team's shared covariate extraction tooling, a Python client that queries five authoritative geospatial sources through one interface and consolidates what were previously fragmented workflows into a single maintained codebase. I benchmark biomass and structural vegetation architectures spanning deep learning, ensemble methods, and process-based ecological models, with outputs supporting quantification under the Regenerative Standard, VM0042, and CAR-SEP, and extend them into counterfactual baselines that reconstruct expected productivity under business-as-usual management, a required step under each methodology. Ranch-level stratification is designed around SEP v2, where clustering geophysically similar ground directly reduces the sampling uncertainty that drives credit deductions. This work is under active development and unpublished; publications are forthcoming.</p>
+      <div class="exp-dates">February 2025 to present</div>
+      <div class="exp-main">
+        <div class="exp-head">
+          <h3><a href="https://grassrootscarbon.com/">Grassroots Carbon</a></h3>
+          <div class="exp-meta">Environmental Data Scientist, Machine Learning<br>San Antonio and Austin, Texas</div>
+        </div>
+        <div class="exp-body">
+          <p>I engineered the team's shared covariate extraction tooling, a Python client that queries five authoritative geospatial sources through one interface and consolidates what were previously fragmented workflows into a single maintained codebase. I benchmark biomass and structural vegetation architectures spanning deep learning, ensemble methods, and process-based ecological models, with outputs supporting quantification under the Regenerative Standard, VM0042, and CAR-SEP, and extend them into counterfactual baselines that reconstruct expected productivity under business-as-usual management, a required step under each methodology. <span class="exp-more" id="exp-grc-more" hidden>Ranch-level stratification is designed around SEP v2, where clustering geophysically similar ground directly reduces the sampling uncertainty that drives credit deductions. This work is under active development and unpublished; publications are forthcoming.</span> <button type="button" class="exp-toggle" aria-expanded="false" aria-controls="exp-grc-more">more</button></p>
+        </div>
+        <div class="exp-skills" aria-label="Skills"><span class="tag">Light Use Efficiency</span><span class="tag">RothC</span><span class="tag">CAR-SEP</span><span class="tag">Harmonized Landsat-Sentinel</span><span class="tag">AWS S3</span><span class="tag">Cloud Optimized GeoTIFF</span><span class="tag">Uber H3</span><span class="tag">Python</span></div>
       </div>
     </article>
 
     <article class="exp" id="exp-seekops">
-      <div class="exp-head">
-        <h3><a href="https://seekops.com/">SeekOps</a></h3>
-        <div class="exp-meta">Environmental Data Scientist<br>Austin, Texas &middot; January to December 2024</div>
-      </div>
-      <div class="exp-body">
-        <p>As one of three scientists on the Science team, reporting to the co-founder and CTO, I led a quantitative assessment of flare destruction removal efficiency across the Bakken and Permian basins. The result covered 42 flare systems across 71 observations, including 27 revisits, and was published as first author and presented at SPE ATCE 2024 (SPE-221067-MS), contributing to enhanced leak detection and repair programs in two major shale basins. I trained a fine-tuned YOLOv8 detector to classify wellheads, compressors, storage tanks, and flare stacks from aerial imagery for autonomous site characterization, managing the full cycle from annotation to held-out validation, and built the client-facing and internal visualization suites in Python and GIS platforms that communicated spatial emissions distributions across survey campaigns.</p>
+      <div class="exp-dates">January to December 2024</div>
+      <div class="exp-main">
+        <div class="exp-head">
+          <h3><a href="https://seekops.com/">SeekOps</a></h3>
+          <div class="exp-meta">Environmental Data Scientist<br>Austin, Texas</div>
+        </div>
+        <div class="exp-body">
+          <p>As one of three scientists on the Science team, reporting to the co-founder and CTO, I led a quantitative assessment of flare destruction removal efficiency across the Bakken and Permian basins. The result covered 42 flare systems across 71 observations, including 27 revisits, and was published as first author and presented at SPE ATCE 2024 (SPE-221067-MS), contributing to enhanced leak detection and repair programs in two major shale basins. <span class="exp-more" id="exp-seekops-more" hidden>I trained a fine-tuned YOLOv8 detector to classify wellheads, compressors, storage tanks, and flare stacks from aerial imagery for autonomous site characterization, managing the full cycle from annotation to held-out validation, and built the client-facing and internal visualization suites in Python and GIS platforms that communicated spatial emissions distributions across survey campaigns.</span> <button type="button" class="exp-toggle" aria-expanded="false" aria-controls="exp-seekops-more">more</button></p>
+        </div>
+        <div class="exp-skills" aria-label="Skills"><span class="tag">UAV TDLAS</span><span class="tag">mass balance</span><span class="tag">LiDAR terrain correction</span><span class="tag">Navier-Stokes plume model</span><span class="tag">YOLOv8</span><span class="tag">Folium</span><span class="tag">Plotly Dash</span><span class="tag">QGIS</span><span class="tag">ArcGIS Pro</span></div>
       </div>
     </article>
 
     <article class="exp" id="exp-yale">
-      <div class="exp-head">
-        <h3><a href="https://environment.yale.edu/">Yale School of the Environment</a></h3>
-        <div class="exp-meta">Master of Environmental Science, Machine Learning, Remote Sensing and Spatial Statistics<br>New Haven, Connecticut &middot; 2021 to 2023</div>
-      </div>
-      <div class="exp-body">
-        <p>In the Lee Lab I investigated the relationship between urbanization, rice cultivation, and methane across China's Yangtze River Delta, home to more than 150 million people: multi-decadal land cover classified from 30 m Landsat in Google Earth Engine, with urban extent from the GAIA dataset and paddy rice from the Phenology and Pixel-Based Paddy Mapping algorithm, set against Sentinel-5P TROPOMI column methane and tested for spatial clustering with Getis-Ord Gi* and Global Moran's I. The thesis proposed a DeepLabV3+ network to extend the emissions record before the satellite era. A 2026 reproduction of the analysis does not reach the thesis conclusion: no land-cover model outperforms a spatial null at 0.25 degrees, and both the original thesis and the reproduction are published together with an errata.</p>
+      <div class="exp-dates">2021 to 2023</div>
+      <div class="exp-main">
+        <div class="exp-head">
+          <h3><a href="https://environment.yale.edu/">Yale School of the Environment</a></h3>
+          <div class="exp-meta">Master of Environmental Science, Machine Learning, Remote Sensing and Spatial Statistics<br>New Haven, Connecticut</div>
+        </div>
+        <div class="exp-body">
+          <p>In the Lee Lab I investigated the relationship between urbanization, rice cultivation, and methane across China's Yangtze River Delta, home to more than 150 million people: multi-decadal land cover classified from 30 m Landsat in Google Earth Engine, with urban extent from the GAIA dataset and paddy rice from the Phenology and Pixel-Based Paddy Mapping algorithm, set against Sentinel-5P TROPOMI column methane and tested for spatial clustering with Getis-Ord Gi* and Global Moran's I. The thesis proposed a DeepLabV3+ network to extend the emissions record before the satellite era. A 2026 reproduction of the analysis does not reach the thesis conclusion: no land-cover model outperforms a spatial null at 0.25 degrees, and both the original thesis and the reproduction are published together with an errata.</p>
+        </div>
+        <div class="exp-skills" aria-label="Skills"><span class="tag">Google Earth Engine</span><span class="tag">Landsat</span><span class="tag">GAIA</span><span class="tag">PPPM</span><span class="tag">Sentinel-5P TROPOMI</span><span class="tag">Getis-Ord Gi*</span><span class="tag">Moran's I</span><span class="tag">DeepLabV3+</span><span class="tag">ResNet50</span></div>
       </div>
     </article>
 
     <article class="exp" id="exp-umn">
-      <div class="exp-head">
-        <h3><a href="https://twin-cities.umn.edu/">University of Minnesota</a></h3>
-        <div class="exp-meta">Visiting Research Scientist, Griffis Lab<br>Marcell Experimental Forest, Minnesota &middot; Summer 2022</div>
+      <div class="exp-dates">Summer 2022</div>
+      <div class="exp-main">
+        <div class="exp-head">
+          <h3><a href="https://twin-cities.umn.edu/">University of Minnesota</a></h3>
+          <div class="exp-meta">Visiting Research Scientist, Griffis Lab<br>Marcell Experimental Forest, Minnesota</div>
+        </div>
+        <div class="exp-body">
+          <p>The 2022 work applied feature importance and seasonal decomposition to isolate the environmental drivers of flux and built an ensemble of LightGBM, SARIMAX, Prophet, and XGBoost over OLS regression; soil temperature was the strongest signal, with a Pearson r of 0.87 with methane flux, and the ordinary least squares regression yielded an R&sup2; of 0.78. The project was rebuilt from source in 2026 as a monthly study of the full 2009 to 2024 record, forecasting one to twelve months ahead against seasonal benchmarks and projecting the fitted relationships back two decades. The rebuilt finding is narrower and more useful: the seasonal cycle repeats reliably, the size of each season varies without trend, and none of the recorded covariates predict that variation once seasonality is accounted for.</p>
+        </div>
+        <div class="exp-skills" aria-label="Skills"><span class="tag">eddy covariance</span><span class="tag">GHG analyzers</span><span class="tag">OLS regression</span><span class="tag">LightGBM</span><span class="tag">SARIMAX</span><span class="tag">Prophet</span><span class="tag">XGBoost</span><span class="tag">MAPE</span></div>
       </div>
-      <div class="exp-body">
-        <p>The 2022 work applied feature importance and seasonal decomposition to isolate the environmental drivers of flux and built an ensemble of LightGBM, SARIMAX, Prophet, and XGBoost over OLS regression; soil temperature was the strongest signal, with a Pearson r of 0.87 with methane flux, and the ordinary least squares regression yielded an R&sup2; of 0.78. The project was rebuilt from source in 2026 as a monthly study of the full 2009 to 2024 record, forecasting one to twelve months ahead against seasonal benchmarks and projecting the fitted relationships back two decades. The rebuilt finding is narrower and more useful: the seasonal cycle repeats reliably, the size of each season varies without trend, and none of the recorded covariates predict that variation once seasonality is accounted for.</p>
+    </article>
+
+    <article class="exp" id="exp-cydcor">
+      <div class="exp-dates">2019 to 2020</div>
+      <div class="exp-main">
+        <div class="exp-head">
+          <h3><a href="https://www.cydcor.com/">Cydcor</a></h3>
+          <div class="exp-meta">Geospatial Analyst<br>Los Angeles, California</div>
+        </div>
+        <div class="exp-body">
+          <p>A North American outsourced sales company running face-to-face campaigns for brands. Spatial statistics applied outside science. Territory planning from census demographics and sales data in ArcGIS, spatial models for expansion into new markets, and automated geocoding in Python for high-volume campaigns.</p>
+        </div>
       </div>
     </article>
 
     <article class="exp" id="exp-ucla">
-      <div class="exp-head">
-        <h3><a href="https://www.ucla.edu/">University of California, Los Angeles</a></h3>
-        <div class="exp-meta">BA, Geography and Environmental Studies; minors in Geographic Information Systems (GIS) and English<br>Los Angeles, California &middot; 2014 to 2018</div>
-      </div>
-      <div class="exp-body">
-        <p>The coursework covered the full geospatial stack: supervised and unsupervised image classification, spectral index analysis, SAR interpretation, DEM construction, spatial interpolation and autocorrelation, SQL spatial querying, cartographic design, and predictive environmental modeling. The undergraduate thesis measured surface vegetation change across the Mendocino Complex, at the time the largest wildfire in California history, from Landsat 8 pre- and post-fire scenes in Google Earth Engine using NDVI and NBR, and was presented at the 2019 Los Angeles Geospatial Summit, hosted by the USC Spatial Sciences Institute.</p>
+      <div class="exp-dates">2014 to 2018</div>
+      <div class="exp-main">
+        <div class="exp-head">
+          <h3><a href="https://www.ucla.edu/">University of California, Los Angeles</a></h3>
+          <div class="exp-meta">BA, Geography and Environmental Studies; minors in Geographic Information Systems (GIS) and English<br>Los Angeles, California</div>
+        </div>
+        <div class="exp-body">
+          <p>The coursework covered the full geospatial stack: supervised and unsupervised image classification, spectral index analysis, SAR interpretation, DEM construction, spatial interpolation and autocorrelation, SQL spatial querying, cartographic design, and predictive environmental modeling. The undergraduate thesis measured surface vegetation change across the Mendocino Complex, at the time the largest wildfire in California history, from Landsat 8 pre- and post-fire scenes in Google Earth Engine using NDVI and NBR, and was presented at the 2019 Los Angeles Geospatial Summit, hosted by the USC Spatial Sciences Institute.</p>
+        </div>
+        <div class="exp-skills" aria-label="Skills"><span class="tag">Landsat 8</span><span class="tag">NDVI</span><span class="tag">dNBR</span><span class="tag">ENVI</span><span class="tag">Google Earth Engine</span><span class="tag">SAR</span><span class="tag">DEM construction</span><span class="tag">cartography</span></div>
       </div>
     </article>
+    </div>
   </div>
 </section>
 
@@ -1232,6 +1280,10 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       });
     }
   }
+  // Role cards: "more" reveals the rest of an entry in place
+  document.querySelectorAll('.exp-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () { var more = document.getElementById(btn.getAttribute('aria-controls')); var open = btn.getAttribute('aria-expanded') === 'true'; btn.setAttribute('aria-expanded', open ? 'false' : 'true'); if (more) more.hidden = open; btn.textContent = open ? 'more' : 'less'; });
+  });
   // Section entrances: eyebrow, headline, then body rise in on the intro's curve
   document.querySelectorAll('section:not(.intro) .inner').forEach(function (inner) {
     var kids = Array.prototype.slice.call(inner.children);
