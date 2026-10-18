@@ -494,7 +494,16 @@ p { margin: 0 0 16px; }
 .pill-blob { position: absolute; left: -10%; right: -10%; bottom: 0; height: 0%; border-radius: 50% 50% 0 0 / 8px 8px 0 0; transition: height 700ms cubic-bezier(.4, 0, .2, 1); background: linear-gradient(to top, rgba(255,255,255,0.35), rgba(255,255,255,0.85) 55%, #ffffff); }
 .pill-fill:hover .pill-blob, .pill-fill:active .pill-blob { height: 95%; }
 .composer-form[hidden] { display: none; }
-.composer-form { display: grid; gap: 10px; max-width: 520px; margin-top: 8px; animation: rise 220ms ease-out; }
+/* The contact row: one message line with the send button at its end; name and email rise beneath once the message field has focus or text.
+   DOM order stays message, name, email, send, so keyboard and screen-reader order match the form; the grid places the button at the line's end. */
+.composer-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "msg send" "fields fields" "note note"; column-gap: 14px; row-gap: 0; align-items: end; max-width: 620px; margin-top: 18px; }
+.composer-form textarea { grid-area: msg; min-height: 38px; max-height: 200px; }
+.composer-form .composer-fields { grid-area: fields; max-height: 0; opacity: 0; transform: translateY(6px); overflow: hidden; transition: max-height 240ms ease, opacity 240ms ease, transform 240ms ease, margin 240ms ease; margin-top: 0; }
+.composer-form.open .composer-fields { max-height: 80px; opacity: 1; transform: none; margin-top: 10px; }
+.composer-form .composer-row { grid-area: send; }
+.composer-form .composer-note { grid-area: note; margin-top: 8px; }
+.composer-form .composer-note:empty { display: none; }
+@media (prefers-reduced-motion: reduce) { .composer-form .composer-fields { transition: none; } }
 @keyframes rise { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 .composer-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .composer-form input, .composer-form textarea { font: inherit; font-size: 14.5px; color: var(--text); background: transparent; border: 0; border-bottom: 1px solid var(--line); padding: 8px 0; outline: none; resize: vertical; transition: border-color .15s ease; }
@@ -617,18 +626,19 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           </div>
         </div>
         
-        <form class="composer-form" id="composer-form" action="https://formspree.io/f/mljdnobg" method="POST" hidden novalidate>
+        <form class="composer-form" id="composer-form" action="https://formspree.io/f/mljdnobg" method="POST" novalidate>
           <input type="hidden" name="_subject" value="mappingwithmatt.com: new note">
           <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
-          <div class="composer-fields">
-            <input type="text" name="name" placeholder="Name" autocomplete="name" required>
-            <input type="email" name="email" placeholder="Email" autocomplete="email" required>
+          <label class="visually-hidden" for="composer-message">Message</label>
+          <textarea id="composer-message" name="message" placeholder="Say hi, ask about a project, or float an idea. It lands straight in my inbox." rows="1" required></textarea>
+          <div class="composer-fields" id="composer-fields">
+            <label class="visually-hidden" for="composer-name">Name</label><input id="composer-name" type="text" name="name" placeholder="Name" autocomplete="name" required>
+            <label class="visually-hidden" for="composer-email">Email</label><input id="composer-email" type="email" name="email" placeholder="Email" autocomplete="email" required>
           </div>
-          <textarea name="message" placeholder="Say hi, ask about a project, or float an idea. It lands straight in my inbox." rows="3" required></textarea>
           <div class="composer-row">
-            <button type="submit" class="rip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4z"/></svg>let it rip!</button>
-            <span class="composer-note" id="composer-note"></span>
+            <button type="submit" class="rip" aria-label="Send the note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4z"/></svg>let it rip!</button>
           </div>
+          <span class="composer-note" id="composer-note" aria-live="polite"></span>
         </form>
 </div>
       
@@ -1300,10 +1310,16 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     cta.addEventListener('click', function () {
       cta.classList.remove('pressed'); void cta.offsetWidth; cta.classList.add('pressed');
       if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) {} }
-      var open = cta.getAttribute('aria-expanded') === 'true';
-      cta.setAttribute('aria-expanded', String(!open)); cformEl.hidden = open;
-      if (!open) { var first = cformEl.querySelector('input'); if (first) first.focus({ preventScroll: true }); cformEl.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); }
+      cta.setAttribute('aria-expanded', 'true'); cformEl.classList.add('open');
+      var msgEl = cformEl.querySelector('textarea'); if (msgEl) msgEl.focus({ preventScroll: true }); cformEl.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
     });
+    var openFields = function () { if (!cformEl.classList.contains('open')) { cformEl.classList.add('open'); cta.setAttribute('aria-expanded', 'true'); } };
+    var msgField = cformEl.querySelector('textarea');
+    if (msgField) {
+      msgField.addEventListener('focus', openFields); msgField.addEventListener('input', function () { if (msgField.value.trim()) openFields(); msgField.style.height = 'auto'; msgField.style.height = Math.min(200, msgField.scrollHeight) + 'px'; });
+      if (msgField.value.trim()) openFields();
+    }
+    cformEl.addEventListener('focusin', function (e) { if (e.target.closest('.composer-fields, .composer-row')) openFields(); });
     cformEl.addEventListener('submit', function (e) {
       e.preventDefault();
       var f = new FormData(cformEl), name = (f.get('name') || '').toString().trim(), email = (f.get('email') || '').toString().trim(), msg = (f.get('message') || '').toString().trim();
