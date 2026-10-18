@@ -5,7 +5,7 @@ main.project .lede { color: var(--text); margin-bottom: 20px; }
 main.project section { margin-top: 44px; }
 .pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
 .pills a { display: inline-flex; align-items: center; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; transition: border-color .15s ease, transform .15s ease; }
-.pills a:hover, .pills a:focus-visible { border-color: var(--text); transform: translateY(-1px); }
+.pills a:focus-visible { border-color: var(--text); }
 .pfig { margin: 28px 0; max-width: 880px; }
 .pfig .plate-frame { border: 1px solid var(--line); padding: 12px; background: rgba(255,255,255,0.02); }
 .pfig:not(.pvid) .plate-frame { box-sizing: border-box; width: fit-content; max-width: 100%; margin-inline: auto; }

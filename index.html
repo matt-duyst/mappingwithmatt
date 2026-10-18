@@ -53,14 +53,19 @@ html { scroll-padding-top: env(safe-area-inset-top, 0px); }
 html, body { margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 a { color: var(--link); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .15s ease, color .15s ease; }
-a:hover { border-bottom-color: var(--link); }
+/* Two link gestures sitewide. Outbound (a link that leaves the site): a small corner arrow in the muted color that slides 2 px up and right on hover.
+   Inbound: an underline that extends from the left on hover. Navigation chips, the rail, the orbit and the archive plates have their own states and take neither. */
+a[href^="http"]:not([href*="mappingwithmatt.com"]):not(.intro .jump a):not(#rail a):not(.orb)::after { content: ""; display: inline-block; width: 0.62em; height: 0.62em; margin-left: 0.22em; vertical-align: 0.08em; background: var(--muted); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M9 7h8v8'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M9 7h8v8'/%3E%3C/svg%3E") center / contain no-repeat; transition: transform 240ms ease; }
+a[href^="http"]:not([href*="mappingwithmatt.com"]):hover::after { transform: translate(2px, -2px); }
+a:not([href^="http"]):not(.intro .jump a):not(#rail a):not(.orb):not(.archive-strip a):not(.tagpill), a[href*="mappingwithmatt.com"] { background-image: linear-gradient(currentColor, currentColor); background-repeat: no-repeat; background-size: 0% 1px; background-position: 0 100%; transition: background-size 240ms ease, color .15s ease; }
+a:not([href^="http"]):not(.intro .jump a):not(#rail a):not(.orb):not(.archive-strip a):hover, a[href*="mappingwithmatt.com"]:hover { background-size: 100% 1px; }
+@media (prefers-reduced-motion: reduce) { a::after, a { transition: none; } }
 .intro .jump a, .hero .links a, .composer a, #rail a, footer.site a, .exp-head h3 a, .oss .card h3 a { color: var(--text); }
-.exp-head h3 a { border-bottom: 1px solid var(--line); } .exp-head h3 a:hover { color: var(--link); border-bottom-color: var(--link); }
+.exp-head h3 a { border-bottom: 1px solid var(--line); }
 
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 /* links set inside running text are underlined, so they do not rely on colour alone */
 .bio a, .roadmap .card-body a, .roles-grid .role a, .experience p a, .themes .line-v a, .papers .venue a { border-bottom: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); transition: text-decoration-color .15s ease, color .15s ease; }
-.bio a:hover, .roadmap .card-body a:hover, .roles-grid .role a:hover, .experience p a:hover, .themes .line-v a:hover, .papers .venue a:hover { text-decoration-color: currentColor; }
 img { max-width: 100%; height: auto; }
 
 /* The page's branching drawing and its live layer: two canvases behind the blob, drawn by assets/land.js */
@@ -224,7 +229,6 @@ nav.top .brand { font-weight: 600; letter-spacing: -0.01em; color: var(--text); 
 nav.top .brand:hover { color: var(--accent-text); }
 nav.top ul { list-style: none; display: flex; gap: 22px; padding: 0; margin: 0; flex-wrap: wrap; }
 nav.top a { color: var(--text); border-bottom: none; font-size: 14.5px; font-weight: 500; }
-nav.top a:hover { color: var(--accent-text); }
 
 /* Section frame */
 section { padding: 56px var(--pad); }
@@ -246,7 +250,6 @@ p { margin: 0 0 16px; }
 
 .hero .links svg { width: 15px; height: 15px; }
 .hero .contact { display: inline-flex; align-items: center; gap: 6px; }
-.hero .links a:hover { color: var(--accent-text); }
 .hero .contact { color: var(--muted); font-size: 14.5px; margin-top: 4px; }
 .hero .contact a { color: var(--accent-text); }
 .photo-col img.portrait { width: 100%; max-width: 280px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); display: block; }
@@ -273,7 +276,6 @@ p { margin: 0 0 16px; }
 .photo-col .affiliations .aff-label { font-family: var(--font-mono); font-size: 22px; font-weight: 700; letter-spacing: 0.01em; color: var(--text); margin-bottom: 6px; }
 .photo-col .affiliations .aff-yr { display: block; font-size: 11px; color: var(--muted); }
 .photo-col .affiliations a { color: var(--link); }
-.photo-col .affiliations a:hover { border-bottom-color: var(--link); }
 .photo-col .affiliations strong { color: var(--text); font-weight: 500; }
 
 /* Experience */
@@ -295,7 +297,6 @@ p { margin: 0 0 16px; }
 .theme p { font-family: var(--font-mono); color: var(--body); font-size: 12.5px; line-height: 1.7; margin-bottom: 10px; }
 .theme .projects { font-size: 14px; color: var(--muted); margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px 12px; }
 .theme .projects a { color: var(--link); border-bottom: 1px dotted transparent; }
-.theme .projects a:hover { border-bottom-color: var(--link); }
 
 .lines { margin-top: 36px; border-top: 1px solid var(--line); }
 .line-row { display: grid; grid-template-columns: 200px 1fr; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 12px; line-height: 1.7; }
@@ -313,15 +314,22 @@ p { margin: 0 0 16px; }
 .papers .award { color: var(--link); font-style: normal; font-weight: 500; }
 .papers .links { font-family: var(--font-mono); font-size: 12.5px; margin-top: 10px; display: flex; gap: 14px; flex-wrap: wrap; }
 .papers .links a { border-bottom: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); }
-.papers .links a:hover { text-decoration-color: currentColor; }
 .papers .proj { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 28px 0; border-top: 1px solid var(--line); align-items: start; }
 .papers .proj:last-child { border-bottom: 1px solid var(--line); }
 @media (min-width: 1200px) { .papers .proj { grid-template-columns: minmax(0, 4fr) minmax(0, 6fr); gap: 32px; } .papers .proj.no-figs { grid-template-columns: minmax(0, 1fr); } }
 .papers .proj-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .papers .proj-year { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
-.papers .proj-lines { font-family: var(--font-mono); font-size: 12px; color: var(--body); margin-top: 8px; display: grid; gap: 2px; }
-.papers .proj-lines .k { color: var(--muted); display: inline-block; min-width: 13ch; }
-.papers .proj-lines a { color: var(--link); border-bottom: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); }
+/* Tag pills above the reel, in the map's chip style; each row carries its tags, and a pill filters the reel with a 240 ms fade */
+.papers .tagbar { display: flex; flex-wrap: wrap; gap: 8px; margin: -8px 0 22px; }
+.papers .tagpill { font: 500 11px/1 var(--font-mono); letter-spacing: 0.03em; color: var(--muted); background: transparent; border: 1px solid transparent; border-radius: 999px; padding: 7px 12px; cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
+.papers .tagpill:hover, .papers .tagpill:focus-visible { border-color: var(--line); color: var(--text); }
+.papers .tagpill.active { border-color: var(--text); color: var(--text); background: var(--accent-soft); }
+.papers .tagpill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.papers .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.papers .tag { font: 500 10.5px/1 var(--font-mono); letter-spacing: 0.04em; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 8px; }
+.papers .proj { transition: opacity 240ms ease; }
+.papers .proj.fading { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .papers .proj { transition: none; } }
 .papers .proj-none { font-family: var(--font-mono); font-size: 12px; color: var(--muted); margin-top: 10px; }
 .fig-strip { position: relative; min-width: 0; }
 .strip-list { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-start; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; }
@@ -474,7 +482,6 @@ p { margin: 0 0 16px; }
 .hero .band-links { position: absolute; left: 0; bottom: calc(50% + 12px); z-index: 2; display: flex; flex-wrap: nowrap; gap: 8px; width: auto; margin: 0; }
 @media (min-width: 1000px) { .hero .band-links { width: 66%; justify-content: space-between; } }
 .hero .band-links a, .hero .band-links .docs-wrap > a { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; transition: border-color .15s ease, background .15s ease, transform .2s cubic-bezier(.34,1.56,.64,1); }
-.hero .band-links a:hover { color: var(--text); border-color: var(--text); background: var(--accent-soft); transform: translateY(-1px); }
 .hero .band-links a:active { transform: scale(0.97); }
 .hero .band-links svg { width: 12px; height: 12px; }
 .docs-wrap { position: relative; display: inline-flex; }
@@ -523,14 +530,13 @@ p { margin: 0 0 16px; }
 .composer-note { font-size: 13px; color: var(--muted); }
 @media (max-width: 600px) { .composer-fields { grid-template-columns: 1fr; } .hero .band-links { width: calc(100% - 132px); max-width: none; justify-content: flex-start; gap: 2px 12px; bottom: calc(50% + 9px); flex-wrap: wrap; }
   .hero .band-links a, .hero .band-links .docs-wrap > a { font-size: 9.5px; letter-spacing: -0.02em; padding: 4px 0; gap: 3px; border: 0; border-radius: 0; border-bottom: 1px solid transparent; }
-  .hero .band-links a:hover, .hero .band-links a:active { background: transparent; border-color: transparent; border-bottom-color: var(--text); transform: none; }
+
   .hero .band-links a span { white-space: nowrap; } .hero .band-links .more { display: none; } .hero .band-links svg { width: 11px; height: 11px; } .band-track { height: 128px; } .cta { width: 102px; height: 102px; font-size: 12.5px; } .band-cta { right: 0; margin-right: 0; padding-right: 0; --cta-r: 51px; } .band-wrap { margin-bottom: 0; } .pill-fill { top: calc(50% + 23px); padding: 7px 12px; font-size: 10.5px; } .hero .row > div:first-child { order: 1; } }
 @media (prefers-reduced-motion: reduce) { .composer-form { animation: none; } .cta, .cta-fill, .pill-blob { transition: none; } }
 footer.site { padding: 36px var(--pad); text-align: center; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
 footer.site .loc { display: inline-flex; align-items: center; gap: 5px; }
 footer.site .loc svg { width: 13px; height: 13px; }
 footer.site a { color: var(--muted); border-bottom: 1px dotted var(--muted); }
-footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--accent-text); }
 </style>
 </head>
 <body>
@@ -743,31 +749,33 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     <div class="eyebrow">Selected projects</div>
     <h2>Projects.</h2>
     <p class="proj-intro">One question runs through all of it: how well can what happens on the land be measured from above? The work moves across scales, from satellite estimates of carbon on about three million acres of rangeland and methane over a river delta of 150 million people, through drone surveys of gas flares and solar arrays, to a single tower in a Minnesota peatland measured half-hour by half-hour. Each project carries its figures and code where they can be shown. The oldest are the maps that taught the craft.</p>
+    <div class="tagbar" role="group" aria-label="Filter projects by tag"><button type="button" class="tagpill active" data-tag="all" aria-pressed="true">all</button><button type="button" class="tagpill" data-tag="methane" aria-pressed="false">methane</button><button type="button" class="tagpill" data-tag="rangeland" aria-pressed="false">rangeland</button><button type="button" class="tagpill" data-tag="remote-sensing" aria-pressed="false">remote sensing</button><button type="button" class="tagpill" data-tag="field-measurement" aria-pressed="false">field measurement</button><button type="button" class="tagpill" data-tag="modeling" aria-pressed="false">modeling</button><button type="button" class="tagpill" data-tag="archive" aria-pressed="false">archive</button></div>
     <ol class="proj-list">
-      <li class="proj no-figs">
+      <li data-tags="rangeland remote-sensing modeling" class="proj no-figs">
         <div class="proj-text">
           <div class="proj-head"><div class="title">Grassland growth across US rangeland for soil carbon verification</div><div class="proj-year">2025</div></div>
           <div class="authors">Grassroots Carbon &middot; process-based light use efficiency with a machine-learning correction</div>
           <div class="venue">2025 to present</div>
-          <div class="proj-lines"><div><span class="k">Status</span> publications forthcoming</div></div>
+          <div class="tags" aria-label="Tags"><span class="tag">rangeland</span><span class="tag">remote sensing</span><span class="tag">modeling</span></div>
           <div class="proj-none">Figures forthcoming.</div>
         </div>
       </li>
-      <li class="proj no-figs">
+      <li data-tags="methane field-measurement modeling" class="proj no-figs">
         <div class="proj-text">
           <div class="proj-head"><div class="title">Methane Destruction Removal Efficiency Assessment in US Shale Basins Using UAV-Based TDLAS Measurements</div><div class="proj-year">2024</div></div>
           <div class="authors">Duyst, K. M., and Smith, B. J. &middot; SeekOps</div>
           <div class="venue">SPE Annual Technical Conference and Exhibition, 2024 &middot; SPE-221067-MS</div>
+          <div class="tags" aria-label="Tags"><span class="tag">methane</span><span class="tag">field measurement</span><span class="tag">modeling</span></div>
           <div class="links"><a href="/projects/flare-efficiency/">Page</a><a href="https://doi.org/10.2118/221067-MS">paper</a></div>
           <div class="proj-none">Figures forthcoming.</div>
         </div>
       </li>
-      <li class="proj">
+      <li data-tags="methane remote-sensing" class="proj">
         <div class="proj-text">
           <div class="proj-head"><div class="title">Urban expansion, paddy rice, and atmospheric methane over the Yangtze River Delta</div><div class="proj-year">2023</div></div>
           <div class="authors">Yale School of the Environment, Lee lab &middot; Landsat-derived land cover, Sentinel-5P TROPOMI</div>
           <div class="venue">MESc thesis, 2023</div>
-          <div class="proj-lines"><div><span class="k">Reproduction</span> Reproduced 2026, with errata</div></div>
+          <div class="tags" aria-label="Tags"><span class="tag">methane</span><span class="tag">remote sensing</span></div>
           <div class="links"><a href="/projects/yangtze/">Page</a><a href="https://github.com/matt-duyst/Yangtze-Landcover-Methane">code</a><a href="https://github.com/matt-duyst/Yangtze-Landcover-Methane/blob/main/ERRATA.md">errata</a></div>
         </div>
         <div class="fig-strip">
@@ -781,12 +789,12 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 3" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 3"></button><button type="button" aria-label="Show figure 3 of 3"></button></div>
         </div>
       </li>
-      <li class="proj">
+      <li data-tags="methane field-measurement modeling" class="proj">
         <div class="proj-text">
           <div class="proj-head"><div class="title">Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland</div><div class="proj-year">2022</div></div>
           <div class="authors">University of Minnesota, Griffis lab &middot; AmeriFlux US-MBP, 2009 to 2024</div>
           <div class="venue">Visiting Research Scientist, 2022</div>
-          <div class="proj-lines"><div><span class="k">Reproduction</span> Rebuilt 2026</div></div>
+          <div class="tags" aria-label="Tags"><span class="tag">methane</span><span class="tag">field measurement</span><span class="tag">modeling</span></div>
           <div class="links"><a href="/projects/peatland/">Page</a><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting">code</a><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting/tree/main/notes">notes</a></div>
         </div>
         <div class="fig-strip">
@@ -808,12 +816,12 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 11" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 11"></button><button type="button" aria-label="Show figure 3 of 11"></button><button type="button" aria-label="Show figure 4 of 11"></button><button type="button" aria-label="Show figure 5 of 11"></button><button type="button" aria-label="Show figure 6 of 11"></button><button type="button" aria-label="Show figure 7 of 11"></button><button type="button" aria-label="Show figure 8 of 11"></button><button type="button" aria-label="Show figure 9 of 11"></button><button type="button" aria-label="Show figure 10 of 11"></button><button type="button" aria-label="Show figure 11 of 11"></button></div>
         </div>
       </li>
-      <li class="proj">
+      <li data-tags="modeling" class="proj">
         <div class="proj-text">
           <div class="proj-head"><div class="title">Carbon trading: a cross-sectoral analysis of allowance pathways under the EU ETS</div><div class="proj-year">2022</div></div>
           <div class="authors">Duyst, Bhardwaj &middot; Global Stocktake Climate Datathon</div>
           <div class="venue">2022, ahead of COP 27</div>
-          <div class="proj-lines"><div><span class="k">Result</span> <a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Honorable Mention</a></div></div>
+          <div class="tags" aria-label="Tags"><span class="tag">modeling</span></div>
           <div class="links"><a href="/projects/carbon-trading/">Page</a><a href="https://github.com/matt-duyst/Carbon-Trading">code</a></div>
         </div>
         <div class="fig-strip single">
@@ -822,12 +830,12 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           </ul>
         </div>
       </li>
-      <li class="proj">
+      <li data-tags="remote-sensing field-measurement modeling" class="proj">
         <div class="proj-text">
           <div class="proj-head"><div class="title">Toward UAV decision-support tools for photovoltaic arrays: a coastal Connecticut thermal mosaicking case study</div><div class="proj-year">2021</div></div>
           <div class="authors">Anthony, Duyst, Verheyden, Zhao &middot; Yale ENV 704</div>
           <div class="venue">Course research</div>
-          <div class="proj-lines"><div><span class="k">Status</span> Report published</div></div>
+          <div class="tags" aria-label="Tags"><span class="tag">remote sensing</span><span class="tag">field measurement</span><span class="tag">modeling</span></div>
           <div class="links"><a href="/projects/pv-thermal/">Page</a><a href="https://github.com/matt-duyst/UAV-PV-Assessment">code</a></div>
         </div>
         <div class="fig-strip uav-strip">
@@ -843,11 +851,12 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           <div class="strip-dots" role="group" aria-label="Figure position"><button type="button" aria-label="Show figure 1 of 5" aria-current="true"></button><button type="button" aria-label="Show figure 2 of 5"></button><button type="button" aria-label="Show figure 3 of 5"></button><button type="button" aria-label="Show figure 4 of 5"></button><button type="button" aria-label="Show figure 5 of 5"></button></div>
         </div>
       </li>
-      <li class="proj">
+      <li data-tags="archive remote-sensing" class="proj">
         <div class="proj-text">
           <div class="proj-head"><div class="title">Thirty coursework projects and the undergraduate thesis</div><div class="proj-year">2014 to 2018</div></div>
           <div class="authors">UCLA Geography &middot; 2014 to 2018</div>
           <div class="venue">Archive</div>
+          <div class="tags" aria-label="Tags"><span class="tag">archive</span><span class="tag">remote sensing</span></div>
           <div class="links"><a href="/maps/">archive</a><a href="/maps/mendocino-fire-complex/">Mendocino write-up</a><a href="https://web.archive.org/web/20251216180226/https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program/">Los Angeles Geospatial Summit, 2019</a></div>
         </div>
         <div class="fig-strip archive-strip">
@@ -1279,6 +1288,19 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
         setTimeout(function () { var w = window.open(vibe.href, '_blank', 'noopener'); if (!w) location.href = vibe.href; }, 600);
       });
     }
+  // Project tags: a pill filters the reel with a 240 ms fade; "all" restores
+  var tagbar = document.querySelector('.papers .tagbar'), projRows = Array.prototype.slice.call(document.querySelectorAll('.papers .proj'));
+  if (tagbar) {
+    tagbar.addEventListener('click', function (e) {
+      var pill = e.target.closest('.tagpill'); if (!pill) return;
+      var tag = pill.getAttribute('data-tag');
+      tagbar.querySelectorAll('.tagpill').forEach(function (b) { var on = b === pill; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+      projRows.forEach(function (row) {
+        var show = tag === 'all' || (row.getAttribute('data-tags') || '').split(' ').indexOf(tag) >= 0;
+        if (show) { if (row.hidden) { row.hidden = false; row.classList.add('fading'); requestAnimationFrame(function () { requestAnimationFrame(function () { row.classList.remove('fading'); }); }); } else row.classList.remove('fading'); }
+        else if (!row.hidden) { row.classList.add('fading'); setTimeout(function () { if (row.classList.contains('fading')) row.hidden = true; }, reduce ? 0 : 240); }
+      });
+    });
   }
   // Section entrances: eyebrow, headline, then body rise in on the intro's curve
   document.querySelectorAll('section:not(.intro) .inner').forEach(function (inner) {
