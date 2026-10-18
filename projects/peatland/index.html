@@ -23,42 +23,107 @@
 <p class="eyebrow">University of Minnesota, Griffis lab. 2022, rebuilt 2026.</p>
 <h1>Forecasting and reconstructing monthly methane flux at Marcell Bog Lake Peatland</h1>
 <p class="lede">Marcell Bog Lake Peatland is a poor fen in north-central Minnesota. A tower there has measured carbon dioxide since 2007 and methane since 2009, at a site with one of the longest-running peatland monitoring programs. This project asks two questions of it. How far ahead can monthly flux be forecast from the tower's own history and four measured drivers (soil temperature, air temperature, precipitation, and water table)? And can relationships learned on the measured years reach back to 1990, when the drivers begin? The answers come from seasonal decomposition, machine learning forecasts tested against simple benchmarks, and a backcast checked for how far it strays from the data it learned on. What the peatland does each year is predictable; how much it does is not, and the record so far cannot say why.</p>
-<nav class="pills" aria-label="Project links"><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting">Code</a><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting/tree/main/notes">Notes</a><a href="https://ameriflux.lbl.gov/sites/siteinfo/US-MBP">Site record</a></nav>
+<dl class="phead">
+<div><dt>Role</dt><dd>University of Minnesota, Griffis lab</dd></div>
+<div><dt>Timeline</dt><dd>2022, rebuilt 2026</dd></div>
+<div><dt>Links</dt><dd class="phead-links"><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting">Code</a><a href="https://github.com/matt-duyst/Peatland-Flux-Forecasting/tree/main/notes">Notes</a><a href="https://ameriflux.lbl.gov/sites/siteinfo/US-MBP">Site record</a></dd></div>
+</dl>
+<ul class="outcomes" aria-label="Outcomes">
+<li><span class="o-n">74%</span><span class="o-l">of monthly variance from one seasonal shape</span></li>
+<li><span class="o-n">12 of 57</span><span class="o-l">methane months below every fitted model</span></li>
+<li><span class="o-n">0.87</span><span class="o-l">Pearson r, soil temperature with methane flux</span></li>
+</ul>
 <section>
 <h2>The site</h2>
 <p>The tower stands in a poor fen at 47.5051 N, 93.4893 W, with upland forest to the east and southeast. Flux arriving from 30 to 200 degrees is discarded before publication, which removes 40 percent of the record. The site was left out of the FLUXNET-CH4 synthesis, so no community gap-filled product exists for it; this study works from the tower's own published record.</p>
-<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/site_overview.webp" width="1600" height="1245" alt="The flux tower and the wind directions it measures" decoding="async"></div><figcaption>The flux tower, its wetland, and the wind sectors it keeps.</figcaption></figure>
+<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/site_overview.webp" width="1600" height="1245" alt="The flux tower and the wind directions it measures" decoding="async"></div><figcaption><span class="fig-n">Fig. 1</span> The flux tower, its wetland, and the wind sectors it keeps.</figcaption></figure>
 </section>
 <section>
 <h2>The record</h2>
 <p>The environmental measurements begin in 1990, nineteen years before either flux record used here does, and that gap is the span the reconstruction covers. Air temperature and precipitation stop at the end of 2019, which ends the months the models could learn from and leaves 60 months of methane the tower recorded but the models cannot use. Forecasts inherit the same limit.</p>
-<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/covariate_availability.webp" width="1600" height="1067" alt="Which months each measurement and each analysis cover" loading="lazy" decoding="async"></div><figcaption>Which months each record covers, and where the model could run.</figcaption></figure>
+<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/covariate_availability.webp" width="1600" height="1067" alt="Which months each measurement and each analysis cover" loading="lazy" decoding="async"></div><figcaption><span class="fig-n">Fig. 2</span> Which months each record covers, and where the model could run.</figcaption></figure>
 </section>
 <section>
 <h2>The seasonal shape</h2>
 <p>One average shape for the whole record, the same twelve values repeated every year, accounts for 74 percent of the variation in methane and 71 percent in carbon dioxide. What remains is the size of each season, which varies more than fourfold on methane between its weakest year and its strongest, with no trend. That year-to-year variation is what nothing tested here predicted.</p>
-<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/seasonal_cycle.webp" width="1600" height="1322" alt="The seasonal cycle in monthly flux" loading="lazy" decoding="async"></div><figcaption>The seasonal shape of the record, and what each year leaves over.</figcaption></figure>
+<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/seasonal_cycle.webp" width="1600" height="1322" alt="The seasonal cycle in monthly flux" loading="lazy" decoding="async"></div><figcaption><span class="fig-n">Fig. 3</span> The seasonal shape of the record, and what each year leaves over.</figcaption></figure>
 </section>
 <section>
 <h2>Forecasts</h2>
 <p>Four fitted methods (ordinary least squares, ridge regression, random forest, and gradient boosting), each run with and without lagged drivers, were compared against four benchmarks at horizons from one to twelve months, rebuilt every month as the record grew. The forecasts follow the seasonal cycle closely. What they miss is how large each season will be: in 12 of the 57 evaluated methane months the measured flux fell below every fitted model.</p>
-<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/forecast_error_by_horizon.webp" width="1600" height="1334" alt="Monthly methane and carbon dioxide forecast error" loading="lazy" decoding="async"></div><figcaption>Fitted models rarely beat the seasonal average at any horizon.</figcaption></figure>
-<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/observed_and_predicted.webp" width="1600" height="1334" alt="Observed and predicted monthly flux" loading="lazy" decoding="async"></div><figcaption>Forecasts follow the seasonal cycle; the size of each season escapes them.</figcaption></figure>
-<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/measurements_used_across_forecast_horizons.webp" width="1600" height="1245" alt="Which measurements the models used" loading="lazy" decoding="async"></div><figcaption>Which inputs the models chose, against what the date already explains.</figcaption></figure>
-<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/prediction_error_by_year.webp" width="1600" height="825" alt="Prediction error by year" loading="lazy" decoding="async"></div><figcaption>Prediction error by year: similar misses, in varying directions.</figcaption></figure>
+<figure class="pfig pfig-live" id="fig-horizon"><div class="plate-frame">
+<div class="live" id="live-horizon" hidden>
+<div class="live-head"><div class="live-toggle" role="group" aria-label="Gas"><button type="button" class="live-gas active" data-gas="methane" aria-pressed="true">Methane</button><button type="button" class="live-gas" data-gas="carbon_dioxide" aria-pressed="false">Carbon dioxide</button></div><div class="live-read" id="live-read" aria-live="polite">Hover or focus a horizon for each method's error.</div></div>
+<svg class="live-svg" viewBox="0 0 1600 760" role="group" aria-labelledby="live-title"><title id="live-title">Mean absolute forecast error by horizon, the fitted models against the seasonal average</title></svg>
+</div>
+<img class="live-fallback" src="../../assets/figures/peatland/forecast_error_by_horizon.webp" width="1600" height="1334" alt="Monthly methane and carbon dioxide forecast error" loading="lazy" decoding="async">
+</div><figcaption><span class="fig-n">Fig. 4</span> Fitted models rarely beat the seasonal average at any horizon.</figcaption></figure>
+<script>
+/* The horizon figure drawn live from the repository's exported data (forecast_error_by_horizon.json): one gas at a time, the picture's own
+   colors on its white plate, hover or focus on a horizon reading out every method's error. The picture stays for reduced motion and no script. */
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !window.fetch) return;
+  var box = document.getElementById('live-horizon'), svg = box.querySelector('svg'), read = document.getElementById('live-read'), img = box.parentNode.querySelector('.live-fallback');
+  var NS = 'http://www.w3.org/2000/svg', INK = '#1A1A1A', MUTED = '#595959', GRID = '#D9D9D9', FITTED = '#009E73', BAND = '#EAEAEA', NAIVE = '#767676';
+  var LABEL = { 'benchmarks/climatology': 'the average of that month in previous years', 'benchmarks/seasonal naive': 'the same month last year', 'benchmarks/naive': 'last month carried forward', 'benchmarks/seasonal naive with drift': 'the same month last year, adjusted for trend' };
+  function el(name, attrs, text) { var e = document.createElementNS(NS, name); for (var k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; }
+  function methodName(key) { if (LABEL[key]) return LABEL[key]; var parts = key.split('/'); return parts[1] + (parts[0] === 'exogenous' ? ', with lagged drivers' : ''); }
+  function draw(data, gasKey) {
+    var g = data.gases[gasKey], H = data.horizons, W = 1600, Ht = 760, L = 220, R = 40, T = 130, B = 90, pw = W - L - R, ph = Ht - T - B;
+    while (svg.lastChild && svg.lastChild.tagName !== 'title') svg.removeChild(svg.lastChild);
+    var clim = g.methods['benchmarks/climatology'], naive = g.methods['benchmarks/seasonal naive'];
+    var lo = Math.min.apply(null, g.fitted_low.concat(clim.map(function (v, i) { return v - g.margin[i]; }), naive)), hi = Math.max.apply(null, g.fitted_high.concat(clim.map(function (v, i) { return v + g.margin[i]; }), naive));
+    var span = hi - lo; lo -= 0.06 * span; hi += 0.12 * span;
+    var x = function (i) { return L + (i + 0.5) * pw / H.length; }, y = function (v) { return T + ph - (v - lo) / (hi - lo) * ph; };
+    svg.appendChild(el('rect', { x: 0, y: 0, width: W, height: Ht, fill: '#fff' }));
+    // gridlines and the vertical axis in the gas's unit
+    var ticks = 5, step = (hi - lo) / ticks;
+    for (var t = 0; t <= ticks; t++) { var v = lo + t * step, yy = y(v); svg.appendChild(el('line', { x1: L, x2: W - R, y1: yy, y2: yy, stroke: GRID, 'stroke-width': 1 })); svg.appendChild(el('text', { x: L - 14, y: yy + 5, 'text-anchor': 'end', 'font-size': 20, fill: MUTED, 'font-family': 'JetBrains Mono, ui-monospace, monospace' }, v.toFixed(v < 1 ? 2 : 1))); }
+    svg.appendChild(el('text', { x: L - 14, y: T - 44, 'text-anchor': 'end', 'font-size': 20, fill: MUTED, 'font-family': 'JetBrains Mono, ui-monospace, monospace' }, g.unit));
+    H.forEach(function (h, i) { svg.appendChild(el('text', { x: x(i), y: T + ph + 40, 'text-anchor': 'middle', 'font-size': 22, fill: INK, 'font-family': 'Inter, system-ui, sans-serif' }, h + (h === 1 ? ' month' : ' months'))); });
+    svg.appendChild(el('text', { x: L + pw / 2, y: T + ph + 76, 'text-anchor': 'middle', 'font-size': 20, fill: MUTED, 'font-family': 'Inter, system-ui, sans-serif' }, 'forecast horizon'));
+    var path = function (vals) { return vals.map(function (v, i) { return (i ? 'L' : 'M') + x(i) + ' ' + y(v); }).join(' '); };
+    var band = H.map(function (_, i) { return x(i) + ' ' + y(clim[i] + g.margin[i]); }).concat(H.map(function (_, i) { return x(i) + ' ' + y(clim[i] - g.margin[i]); }).reverse());
+    svg.appendChild(el('path', { d: 'M' + band.join(' L') + ' Z', fill: BAND }));
+    var fit = H.map(function (_, i) { return x(i) + ' ' + y(g.fitted_high[i]); }).concat(H.map(function (_, i) { return x(i) + ' ' + y(g.fitted_low[i]); }).reverse());
+    svg.appendChild(el('path', { d: 'M' + fit.join(' L') + ' Z', fill: FITTED, 'fill-opacity': 0.55 }));
+    svg.appendChild(el('path', { d: path(g.fitted_low), fill: 'none', stroke: FITTED, 'stroke-width': 1.8 })); svg.appendChild(el('path', { d: path(g.fitted_high), fill: 'none', stroke: FITTED, 'stroke-width': 1.8 }));
+    svg.appendChild(el('path', { d: path(naive), fill: 'none', stroke: NAIVE, 'stroke-width': 4.4, 'stroke-dasharray': '22 11' }));
+    svg.appendChild(el('path', { d: path(clim), fill: 'none', stroke: INK, 'stroke-width': 4.8 }));
+    // legend, as the picture keys it
+    var lg = [[INK, 'line', 'The average of that month in previous years'], [NAIVE, 'dash', 'The same month last year'], [FITTED, 'fill', 'Highest and lowest of the eight fitted models'], [BAND, 'fill', 'Margin needed to differ from the average']];
+    lg.forEach(function (row, i) { var lx = L + 20 + (i % 2) * 700, ly = T - 100 + Math.floor(i / 2) * 34; if (row[1] === 'fill') svg.appendChild(el('rect', { x: lx, y: ly - 12, width: 44, height: 18, fill: row[0], 'fill-opacity': row[0] === FITTED ? 0.55 : 1, stroke: row[0] === FITTED ? FITTED : 'none' })); else svg.appendChild(el('line', { x1: lx, x2: lx + 44, y1: ly - 3, y2: ly - 3, stroke: row[0], 'stroke-width': 4, 'stroke-dasharray': row[1] === 'dash' ? '12 6' : 'none' })); svg.appendChild(el('text', { x: lx + 58, y: ly + 3, 'font-size': 20, fill: INK, 'font-family': 'Inter, system-ui, sans-serif' }, row[2])); });
+    // one hit column per horizon: hover or focus reads out every method's error there
+    H.forEach(function (h, i) {
+      var hit = el('rect', { x: L + i * pw / H.length, y: T, width: pw / H.length, height: ph, fill: 'transparent', tabindex: 0, role: 'button', 'aria-label': 'Errors at ' + h + ' month' + (h === 1 ? '' : 's') }), mark = el('line', { x1: x(i), x2: x(i), y1: T, y2: T + ph, stroke: INK, 'stroke-width': 1, 'stroke-dasharray': '4 4', opacity: 0 });
+      var show = function () { mark.setAttribute('opacity', 1); var rows = Object.keys(g.methods).map(function (k) { return [methodName(k), g.methods[k][i]]; }).sort(function (a, b) { return a[1] - b[1]; }); read.textContent = h + (h === 1 ? ' month' : ' months') + ', ' + g.label.toLowerCase() + ', n = ' + g.n[i] + ': ' + rows.map(function (r) { return r[0] + ' ' + r[1].toFixed(g.unit.charAt(0) === 'n' ? 1 : 3); }).join(' \u00b7 '); };
+      var hide = function () { mark.setAttribute('opacity', 0); };
+      hit.addEventListener('mouseenter', show); hit.addEventListener('focus', show); hit.addEventListener('mouseleave', hide); hit.addEventListener('blur', hide);
+      svg.appendChild(mark); svg.appendChild(hit);
+    });
+  }
+  fetch('../../assets/figures/peatland/forecast_error_by_horizon.json').then(function (r) { return r.json(); }).then(function (data) {
+    var gas = 'methane'; draw(data, gas); box.hidden = false; img.hidden = true;
+    box.querySelectorAll('.live-gas').forEach(function (b) { b.addEventListener('click', function () { gas = b.getAttribute('data-gas'); box.querySelectorAll('.live-gas').forEach(function (o) { var on = o === b; o.classList.toggle('active', on); o.setAttribute('aria-pressed', on ? 'true' : 'false'); }); draw(data, gas); read.textContent = 'Hover or focus a horizon for each method\'s error.'; }); });
+  }).catch(function () {});
+})();
+</script>
+<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/observed_and_predicted.webp" width="1600" height="1334" alt="Observed and predicted monthly flux" loading="lazy" decoding="async"></div><figcaption><span class="fig-n">Fig. 5</span> Forecasts follow the seasonal cycle; the size of each season escapes them.</figcaption></figure>
+<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/measurements_used_across_forecast_horizons.webp" width="1600" height="1245" alt="Which measurements the models used" loading="lazy" decoding="async"></div><figcaption><span class="fig-n">Fig. 6</span> Which inputs the models chose, against what the date already explains.</figcaption></figure>
+<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/prediction_error_by_year.webp" width="1600" height="825" alt="Prediction error by year" loading="lazy" decoding="async"></div><figcaption><span class="fig-n">Fig. 7</span> Prediction error by year: similar misses, in varying directions.</figcaption></figure>
 <p>The models reached for what the date already predicts and left alone what it does not, choosing temperature most and the water table least on methane. Across every evaluated year but methane in 2015 the misses are similar in size and vary in direction.</p>
 </section>
 <section>
 <h2>The backcast</h2>
 <p>Relationships fitted on the measured years can be projected into the earlier ones, but the water table term has to be assumed beyond the range the fit covered. The model only ever saw the water table across a 0.33 meter band; projecting back to 1990 asks for 0.29 meters above it. Refitting on progressively drier months shows the coefficient climbing at every step, which means it describes the months it was fitted on rather than the peatland. The three assumptions drawn give annual totals from 8 to 30 grams of carbon per square meter, and almost none of it can be checked, because methane measurement stopped in 1992 and did not resume until 2009.</p>
-<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/water_table_support.webp" width="1600" height="800" alt="Monthly water table elevation" loading="lazy" decoding="async"></div><figcaption>Water table beyond the fitted range, where the backcast must assume.</figcaption></figure>
-<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/coefficient_stability.webp" width="1600" height="1334" alt="The water table coefficient refitted on drier months" loading="lazy" decoding="async"></div><figcaption>The water table coefficient climbs as the fit is restricted to drier months.</figcaption></figure>
-<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/reconstruction_series.webp" width="1600" height="1067" alt="Reconstructed methane emission" loading="lazy" decoding="async"></div><figcaption>Reconstructed emission, 1990 to 2008, under three assumptions.</figcaption></figure>
+<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/water_table_support.webp" width="1600" height="800" alt="Monthly water table elevation" loading="lazy" decoding="async"></div><figcaption><span class="fig-n">Fig. 8</span> Water table beyond the fitted range, where the backcast must assume.</figcaption></figure>
+<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/coefficient_stability.webp" width="1600" height="1334" alt="The water table coefficient refitted on drier months" loading="lazy" decoding="async"></div><figcaption><span class="fig-n">Fig. 9</span> The water table coefficient climbs as the fit is restricted to drier months.</figcaption></figure>
+<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/reconstruction_series.webp" width="1600" height="1067" alt="Reconstructed methane emission" loading="lazy" decoding="async"></div><figcaption><span class="fig-n">Fig. 10</span> Reconstructed emission, 1990 to 2008, under three assumptions.</figcaption></figure>
 </section>
 <section>
 <h2>Diagnostic</h2>
 <p>Of the four checks, two distributions on weighted and unweighted residuals, only Laplace on the unweighted residuals holds. Nothing here changes what the study concludes: its intervals are built from the residuals themselves and assume no distribution at all.</p>
-<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/residual_distribution_check.webp" width="1560" height="2065" alt="Diagnostic check on model errors" loading="lazy" decoding="async"></div><figcaption>The model&#x27;s errors against two distributions, weighted and unweighted.</figcaption></figure>
+<figure class="pfig"><div class="plate-frame"><img src="../../assets/figures/peatland/residual_distribution_check.webp" width="1560" height="2065" alt="Diagnostic check on model errors" loading="lazy" decoding="async"></div><figcaption><span class="fig-n">Fig. 11</span> The model&#x27;s errors against two distributions, weighted and unweighted.</figcaption></figure>
 </section>
 <section>
 <h2>Reproduction</h2>
