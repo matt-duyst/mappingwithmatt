@@ -15,6 +15,10 @@ Two network profiles are recorded for every page. The throttled profile (40 ms R
 
 To accept a new state as the baseline, run `compare.py audit.json baseline.json --write-baseline` in the same commit as the change that moved the numbers; it refuses when any gate fails. `--force-baseline "reason"` writes it anyway and records the reason and the failing metrics under `meta.forced` in the file. `flight.py` captures the map's flight start several times (after the `map:globe-ready` mark and the 300 ms tile and label fade) and fails when the frames differ.
 
+## Hero tools
+
+Three scripts measure the hero's living branching, each with its usage in its docstring. `hero.py` traces the frame cost above the blob alone at 1440 and 390 in both schemes after a 20 s settle and during a cascade, the median of three, and waits whenever the one-minute load average is 2 or more; the target is under 0.5 ms on the GPU main thread and the renderer main thread. `life.py` prints the branching's population counts over 30 s and saves a capture. `crop.py` saves a close 400 by 300 crop of one tree at full growth. All three render with the GPU and need `websocket-client`; `crop.py` also needs Pillow.
+
 `vendor/axe.min.js` is axe-core, Mozilla Public License 2.0, used only by the audit; the site itself does not load it.
 
 ## Continuous integration
