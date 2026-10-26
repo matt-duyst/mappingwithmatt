@@ -1,7 +1,7 @@
 {
  "meta": {
-  "date": "2026-10-23",
-  "commit": "a4aa3e6",
+  "date": "2026-10-26",
+  "commit": "d175571",
   "root": "http://localhost:8000",
   "renderer": "gpu",
   "runs": 3,
@@ -10,18 +10,14 @@
    "throttled": "40 ms RTT, 10 Mbps, DPR 1 (the quoted figure)",
    "local": "no throttling, DPR 2 at 1440 and 3 at 390"
   },
-  "note": "Baseline taken at commit a4aa3e6 on 2026-10-23: gpu rendering, 3 throttled run(s) per page with the median quoted.",
+  "note": "Baseline taken at commit d175571 on 2026-10-26: gpu rendering, 3 throttled run(s) per page with the median quoted.",
   "forced": {
-   "reason": "Hero merged: land.js and inline icons added, see report",
+   "reason": "Section two merged: cards, links and contact row, see report",
    "failing": [
-    "/ 1440 dark cold requests: 6 is more than 10% over the baseline 5",
-    "/ 1440 dark cold bytes: 398431 is more than 10% over the baseline 352598",
-    "/ 1440 light cold requests: 6 is more than 10% over the baseline 5",
-    "/ 1440 light cold bytes: 398431 is more than 10% over the baseline 352598",
-    "/ 390 dark cold requests: 6 is more than 10% over the baseline 5",
-    "/ 390 dark cold bytes: 398431 is more than 10% over the baseline 352598",
-    "/ 390 light cold requests: 6 is more than 10% over the baseline 5",
-    "/ 390 light cold bytes: 398431 is more than 10% over the baseline 352598"
+    "/ 1440 dark cold requests: 7 is more than 10% over the baseline 6",
+    "/ 1440 light cold requests: 7 is more than 10% over the baseline 6",
+    "/ 390 dark cold requests: 7 is more than 10% over the baseline 6",
+    "/ 390 light cold requests: 7 is more than 10% over the baseline 6"
    ]
   }
  },
@@ -35,19 +31,19 @@
        "lcp": 132,
        "tbt": 0,
        "cls": 0,
-       "requests": 6,
-       "bytes": 398431,
+       "requests": 7,
+       "bytes": 405688,
        "by_type": {
         "Document": {
          "requests": 1,
-         "bytes": 194971
+         "bytes": 202228
         },
         "Font": {
          "requests": 2,
          "bytes": 80150
         },
         "Image": {
-         "requests": 1,
+         "requests": 2,
          "bytes": 98403
         },
         "Other": {
@@ -63,26 +59,26 @@
       },
       "scroll": {
        "fcp": 116,
-       "lcp": 10836,
+       "lcp": 11628,
        "tbt": 0,
        "cls": 0,
-       "requests": 62,
-       "bytes": 3123946,
+       "requests": 63,
+       "bytes": 3131095,
        "by_type": {
         "Document": {
          "requests": 1,
-         "bytes": 194971
+         "bytes": 202228
         },
         "Fetch": {
          "requests": 35,
-         "bytes": 596803
+         "bytes": 596695
         },
         "Font": {
          "requests": 2,
          "bytes": 80150
         },
         "Image": {
-         "requests": 18,
+         "requests": 19,
          "bytes": 1045051
         },
         "Other": {
@@ -98,29 +94,29 @@
          "bytes": 83382
         }
        },
-       "lcpElement": "VIDEO.reel"
+       "lcpElement": "IMG"
       },
       "runs": [
        {
         "cold": {
-         "fcp": 120,
-         "lcp": 136,
+         "fcp": 132,
+         "lcp": 164,
          "lcpElement": "P.bio",
          "tbt": 0,
          "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
+         "requests": 7,
+         "bytes": 405688,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 1,
+           "requests": 2,
            "bytes": 98403
           },
           "Other": {
@@ -134,100 +130,28 @@
          }
         },
         "scroll": {
-         "fcp": 120,
-         "lcp": 10836,
-         "lcpElement": "VIDEO.reel",
+         "fcp": 132,
+         "lcp": 11628,
+         "lcpElement": "IMG",
          "tbt": 0,
          "cls": 0,
-         "requests": 62,
-         "bytes": 3123922,
+         "requests": 63,
+         "bytes": 3131075,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Fetch": {
            "requests": 35,
-           "bytes": 596779
+           "bytes": 596675
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 18,
-           "bytes": 1045051
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 4,
-           "bytes": 1122862
-          },
-          "Stylesheet": {
-           "requests": 1,
-           "bytes": 83382
-          }
-         }
-        }
-       },
-       {
-        "cold": {
-         "fcp": 112,
-         "lcp": 132,
-         "lcpElement": "P.bio",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 1,
-           "bytes": 98403
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 1,
-           "bytes": 24180
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 112,
-         "lcp": 10816,
-         "lcpElement": "VIDEO.reel",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 62,
-         "bytes": 3123952,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Fetch": {
-           "requests": 35,
-           "bytes": 596809
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 18,
+           "requests": 19,
            "bytes": 1045051
           },
           "Other": {
@@ -252,19 +176,19 @@
          "lcpElement": "P.bio",
          "tbt": 0,
          "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
+         "requests": 7,
+         "bytes": 405688,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 1,
+           "requests": 2,
            "bytes": 98403
           },
           "Other": {
@@ -279,27 +203,27 @@
         },
         "scroll": {
          "fcp": 116,
-         "lcp": 11136,
-         "lcpElement": "VIDEO.reel",
+         "lcp": 11848,
+         "lcpElement": "IMG",
          "tbt": 0,
          "cls": 0,
-         "requests": 62,
-         "bytes": 3123946,
+         "requests": 63,
+         "bytes": 3131096,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Fetch": {
            "requests": 35,
-           "bytes": 596803
+           "bytes": 596696
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 18,
+           "requests": 19,
            "bytes": 1045051
           },
           "Other": {
@@ -316,264 +240,27 @@
           }
          }
         }
-       }
-      ],
-      "errors": [],
-      "overflow": false,
-      "hero": {
-       "lift": 4052,
-       "stack": 4829,
-       "ready": 5973
-      }
-     },
-     "local": {
-      "cold": {
-       "fcp": 80,
-       "lcp": 80,
-       "tbt": 0,
-       "cls": 0,
-       "requests": 6,
-       "bytes": 398431,
-       "by_type": {
-        "Document": {
-         "requests": 1,
-         "bytes": 194971
-        },
-        "Font": {
-         "requests": 2,
-         "bytes": 80150
-        },
-        "Image": {
-         "requests": 1,
-         "bytes": 98403
-        },
-        "Other": {
-         "requests": 1,
-         "bytes": 727
-        },
-        "Script": {
-         "requests": 1,
-         "bytes": 24180
-        }
        },
-       "lcpElement": "P.bio"
-      },
-      "scroll": {
-       "fcp": 80,
-       "lcp": 10976,
-       "tbt": 311,
-       "cls": 0,
-       "requests": 62,
-       "bytes": 3699730,
-       "by_type": {
-        "Document": {
-         "requests": 1,
-         "bytes": 194971
-        },
-        "Fetch": {
-         "requests": 35,
-         "bytes": 666253
-        },
-        "Font": {
-         "requests": 2,
-         "bytes": 80150
-        },
-        "Image": {
-         "requests": 18,
-         "bytes": 1551385
-        },
-        "Other": {
-         "requests": 1,
-         "bytes": 727
-        },
-        "Script": {
-         "requests": 4,
-         "bytes": 1122862
-        },
-        "Stylesheet": {
-         "requests": 1,
-         "bytes": 83382
-        }
-       },
-       "lcpElement": "VIDEO.reel"
-      },
-      "runs": [
-       {
-        "cold": {
-         "fcp": 80,
-         "lcp": 80,
-         "lcpElement": "P.bio",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 1,
-           "bytes": 98403
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 1,
-           "bytes": 24180
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 80,
-         "lcp": 10976,
-         "lcpElement": "VIDEO.reel",
-         "tbt": 311,
-         "cls": 0,
-         "requests": 62,
-         "bytes": 3699730,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Fetch": {
-           "requests": 35,
-           "bytes": 666253
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 18,
-           "bytes": 1551385
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 4,
-           "bytes": 1122862
-          },
-          "Stylesheet": {
-           "requests": 1,
-           "bytes": 83382
-          }
-         }
-        }
-       }
-      ],
-      "errors": [],
-      "overflow": false,
-      "hero": {
-       "lift": 3782,
-       "stack": 4558,
-       "ready": 5713
-      }
-     },
-     "axe": []
-    },
-    "light": {
-     "throttled": {
-      "cold": {
-       "fcp": 112,
-       "lcp": 128,
-       "tbt": 0,
-       "cls": 0,
-       "requests": 6,
-       "bytes": 398431,
-       "by_type": {
-        "Document": {
-         "requests": 1,
-         "bytes": 194971
-        },
-        "Font": {
-         "requests": 2,
-         "bytes": 80150
-        },
-        "Image": {
-         "requests": 1,
-         "bytes": 98403
-        },
-        "Other": {
-         "requests": 1,
-         "bytes": 727
-        },
-        "Script": {
-         "requests": 1,
-         "bytes": 24180
-        }
-       },
-       "lcpElement": "P.bio"
-      },
-      "scroll": {
-       "fcp": 112,
-       "lcp": 10840,
-       "tbt": 0,
-       "cls": 0,
-       "requests": 62,
-       "bytes": 3123969,
-       "by_type": {
-        "Document": {
-         "requests": 1,
-         "bytes": 194971
-        },
-        "Fetch": {
-         "requests": 35,
-         "bytes": 596826
-        },
-        "Font": {
-         "requests": 2,
-         "bytes": 80150
-        },
-        "Image": {
-         "requests": 18,
-         "bytes": 1045051
-        },
-        "Other": {
-         "requests": 1,
-         "bytes": 727
-        },
-        "Script": {
-         "requests": 4,
-         "bytes": 1122862
-        },
-        "Stylesheet": {
-         "requests": 1,
-         "bytes": 83382
-        }
-       },
-       "lcpElement": "VIDEO.reel"
-      },
-      "runs": [
        {
         "cold": {
          "fcp": 108,
-         "lcp": 128,
+         "lcp": 124,
          "lcpElement": "P.bio",
          "tbt": 0,
          "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
+         "requests": 7,
+         "bytes": 405688,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 1,
+           "requests": 2,
            "bytes": 98403
           },
           "Other": {
@@ -588,171 +275,27 @@
         },
         "scroll": {
          "fcp": 108,
-         "lcp": 10844,
-         "lcpElement": "VIDEO.reel",
+         "lcp": 11604,
+         "lcpElement": "IMG",
          "tbt": 0,
          "cls": 0,
-         "requests": 62,
-         "bytes": 3123982,
+         "requests": 63,
+         "bytes": 3131095,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Fetch": {
            "requests": 35,
-           "bytes": 596839
+           "bytes": 596695
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 18,
-           "bytes": 1045051
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 4,
-           "bytes": 1122862
-          },
-          "Stylesheet": {
-           "requests": 1,
-           "bytes": 83382
-          }
-         }
-        }
-       },
-       {
-        "cold": {
-         "fcp": 112,
-         "lcp": 128,
-         "lcpElement": "P.bio",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 1,
-           "bytes": 98403
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 1,
-           "bytes": 24180
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 112,
-         "lcp": 10828,
-         "lcpElement": "VIDEO.reel",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 62,
-         "bytes": 3123920,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Fetch": {
-           "requests": 35,
-           "bytes": 596777
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 18,
-           "bytes": 1045051
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 4,
-           "bytes": 1122862
-          },
-          "Stylesheet": {
-           "requests": 1,
-           "bytes": 83382
-          }
-         }
-        }
-       },
-       {
-        "cold": {
-         "fcp": 120,
-         "lcp": 136,
-         "lcpElement": "P.bio",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 1,
-           "bytes": 98403
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 1,
-           "bytes": 24180
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 120,
-         "lcp": 10840,
-         "lcpElement": "VIDEO.reel",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 62,
-         "bytes": 3123969,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Fetch": {
-           "requests": 35,
-           "bytes": 596826
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 18,
+           "requests": 19,
            "bytes": 1045051
           },
           "Other": {
@@ -774,9 +317,9 @@
       "errors": [],
       "overflow": false,
       "hero": {
-       "lift": 4048,
-       "stack": 4822,
-       "ready": 6002
+       "lift": 4049,
+       "stack": 4824,
+       "ready": 5999
       }
      },
      "local": {
@@ -785,19 +328,19 @@
        "lcp": 84,
        "tbt": 0,
        "cls": 0,
-       "requests": 6,
-       "bytes": 398431,
+       "requests": 7,
+       "bytes": 405688,
        "by_type": {
         "Document": {
          "requests": 1,
-         "bytes": 194971
+         "bytes": 202228
         },
         "Font": {
          "requests": 2,
          "bytes": 80150
         },
         "Image": {
-         "requests": 1,
+         "requests": 2,
          "bytes": 98403
         },
         "Other": {
@@ -813,26 +356,26 @@
       },
       "scroll": {
        "fcp": 84,
-       "lcp": 10744,
+       "lcp": 10712,
        "tbt": 0,
        "cls": 0,
-       "requests": 62,
-       "bytes": 3699861,
+       "requests": 63,
+       "bytes": 3706781,
        "by_type": {
         "Document": {
          "requests": 1,
-         "bytes": 194971
+         "bytes": 202228
         },
         "Fetch": {
          "requests": 35,
-         "bytes": 666384
+         "bytes": 666047
         },
         "Font": {
          "requests": 2,
          "bytes": 80150
         },
         "Image": {
-         "requests": 18,
+         "requests": 19,
          "bytes": 1551385
         },
         "Other": {
@@ -858,19 +401,19 @@
          "lcpElement": "P.bio",
          "tbt": 0,
          "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
+         "requests": 7,
+         "bytes": 405688,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 1,
+           "requests": 2,
            "bytes": 98403
           },
           "Other": {
@@ -885,27 +428,27 @@
         },
         "scroll": {
          "fcp": 84,
-         "lcp": 10744,
+         "lcp": 10712,
          "lcpElement": "VIDEO.reel",
          "tbt": 0,
          "cls": 0,
-         "requests": 62,
-         "bytes": 3699861,
+         "requests": 63,
+         "bytes": 3706781,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Fetch": {
            "requests": 35,
-           "bytes": 666384
+           "bytes": 666047
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 18,
+           "requests": 19,
            "bytes": 1551385
           },
           "Other": {
@@ -927,9 +470,462 @@
       "errors": [],
       "overflow": false,
       "hero": {
-       "lift": 3790,
+       "lift": 3778,
+       "stack": 4577,
+       "ready": 5657
+      }
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 112,
+       "lcp": 128,
+       "tbt": 0,
+       "cls": 0,
+       "requests": 7,
+       "bytes": 405688,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202228
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80150
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 98403
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 24180
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "scroll": {
+       "fcp": 112,
+       "lcp": 11600,
+       "tbt": 0,
+       "cls": 0,
+       "requests": 63,
+       "bytes": 3131062,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202228
+        },
+        "Fetch": {
+         "requests": 35,
+         "bytes": 596662
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80150
+        },
+        "Image": {
+         "requests": 19,
+         "bytes": 1045051
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1122862
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83382
+        }
+       },
+       "lcpElement": "IMG"
+      },
+      "runs": [
+       {
+        "cold": {
+         "fcp": 120,
+         "lcp": 136,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 7,
+         "bytes": 405688,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 98403
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24180
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 120,
+         "lcp": 11600,
+         "lcpElement": "IMG",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 63,
+         "bytes": 3131062,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Fetch": {
+           "requests": 35,
+           "bytes": 596662
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 19,
+           "bytes": 1045051
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122862
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83382
+          }
+         }
+        }
+       },
+       {
+        "cold": {
+         "fcp": 108,
+         "lcp": 124,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 7,
+         "bytes": 405688,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 98403
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24180
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 108,
+         "lcp": 11592,
+         "lcpElement": "IMG",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 63,
+         "bytes": 3131137,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Fetch": {
+           "requests": 35,
+           "bytes": 596737
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 19,
+           "bytes": 1045051
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122862
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83382
+          }
+         }
+        }
+       },
+       {
+        "cold": {
+         "fcp": 112,
+         "lcp": 128,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 7,
+         "bytes": 405688,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 98403
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24180
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 112,
+         "lcp": 11672,
+         "lcpElement": "IMG",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 63,
+         "bytes": 3131041,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Fetch": {
+           "requests": 35,
+           "bytes": 596641
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 19,
+           "bytes": 1045051
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122862
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83382
+          }
+         }
+        }
+       }
+      ],
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "lift": 4038,
+       "stack": 4815,
+       "ready": 5863
+      }
+     },
+     "local": {
+      "cold": {
+       "fcp": 80,
+       "lcp": 80,
+       "tbt": 0,
+       "cls": 0,
+       "requests": 7,
+       "bytes": 405688,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202228
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80150
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 98403
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 24180
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "scroll": {
+       "fcp": 80,
+       "lcp": 10760,
+       "tbt": 0,
+       "cls": 0,
+       "requests": 63,
+       "bytes": 3706915,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202228
+        },
+        "Fetch": {
+         "requests": 35,
+         "bytes": 666181
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80150
+        },
+        "Image": {
+         "requests": 19,
+         "bytes": 1551385
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1122862
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83382
+        }
+       },
+       "lcpElement": "VIDEO.reel"
+      },
+      "runs": [
+       {
+        "cold": {
+         "fcp": 80,
+         "lcp": 80,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 7,
+         "bytes": 405688,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 98403
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24180
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 80,
+         "lcp": 10760,
+         "lcpElement": "VIDEO.reel",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 63,
+         "bytes": 3706915,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Fetch": {
+           "requests": 35,
+           "bytes": 666181
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 19,
+           "bytes": 1551385
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122862
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83382
+          }
+         }
+        }
+       }
+      ],
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "lift": 3776,
        "stack": 4559,
-       "ready": 5841
+       "ready": 5702
       }
      },
      "axe": []
@@ -939,500 +935,23 @@
     "dark": {
      "throttled": {
       "cold": {
-       "fcp": 112,
-       "lcp": 132,
-       "tbt": 0,
-       "cls": 0,
-       "requests": 6,
-       "bytes": 398431,
-       "by_type": {
-        "Document": {
-         "requests": 1,
-         "bytes": 194971
-        },
-        "Font": {
-         "requests": 2,
-         "bytes": 80150
-        },
-        "Image": {
-         "requests": 1,
-         "bytes": 98403
-        },
-        "Other": {
-         "requests": 1,
-         "bytes": 727
-        },
-        "Script": {
-         "requests": 1,
-         "bytes": 24180
-        }
-       },
-       "lcpElement": "P.bio"
-      },
-      "scroll": {
-       "fcp": 112,
-       "lcp": 11568,
-       "tbt": 0,
-       "cls": 0,
-       "requests": 50,
-       "bytes": 3178166,
-       "by_type": {
-        "Document": {
-         "requests": 1,
-         "bytes": 194971
-        },
-        "Fetch": {
-         "requests": 19,
-         "bytes": 305066
-        },
-        "Font": {
-         "requests": 2,
-         "bytes": 80150
-        },
-        "Image": {
-         "requests": 21,
-         "bytes": 1128034
-        },
-        "Media": {
-         "requests": 1,
-         "bytes": 262974
-        },
-        "Other": {
-         "requests": 1,
-         "bytes": 727
-        },
-        "Script": {
-         "requests": 4,
-         "bytes": 1122862
-        },
-        "Stylesheet": {
-         "requests": 1,
-         "bytes": 83382
-        }
-       },
-       "lcpElement": "VIDEO.reel"
-      },
-      "runs": [
-       {
-        "cold": {
-         "fcp": 104,
-         "lcp": 120,
-         "lcpElement": "P.bio",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 1,
-           "bytes": 98403
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 1,
-           "bytes": 24180
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 104,
-         "lcp": 11568,
-         "lcpElement": "VIDEO.reel",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 50,
-         "bytes": 3178183,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Fetch": {
-           "requests": 19,
-           "bytes": 305083
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 21,
-           "bytes": 1128034
-          },
-          "Media": {
-           "requests": 1,
-           "bytes": 262974
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 4,
-           "bytes": 1122862
-          },
-          "Stylesheet": {
-           "requests": 1,
-           "bytes": 83382
-          }
-         }
-        }
-       },
-       {
-        "cold": {
-         "fcp": 112,
-         "lcp": 132,
-         "lcpElement": "P.bio",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 1,
-           "bytes": 98403
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 1,
-           "bytes": 24180
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 112,
-         "lcp": 11532,
-         "lcpElement": "VIDEO.reel",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 50,
-         "bytes": 3178166,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Fetch": {
-           "requests": 19,
-           "bytes": 305066
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 21,
-           "bytes": 1128034
-          },
-          "Media": {
-           "requests": 1,
-           "bytes": 262974
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 4,
-           "bytes": 1122862
-          },
-          "Stylesheet": {
-           "requests": 1,
-           "bytes": 83382
-          }
-         }
-        }
-       },
-       {
-        "cold": {
-         "fcp": 116,
-         "lcp": 132,
-         "lcpElement": "P.bio",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 1,
-           "bytes": 98403
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 1,
-           "bytes": 24180
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 116,
-         "lcp": 11780,
-         "lcpElement": "VIDEO.reel",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 50,
-         "bytes": 3178155,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Fetch": {
-           "requests": 19,
-           "bytes": 305055
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 21,
-           "bytes": 1128034
-          },
-          "Media": {
-           "requests": 1,
-           "bytes": 262974
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 4,
-           "bytes": 1122862
-          },
-          "Stylesheet": {
-           "requests": 1,
-           "bytes": 83382
-          }
-         }
-        }
-       }
-      ],
-      "errors": [],
-      "overflow": false,
-      "hero": {
-       "lift": 4044,
-       "stack": 4817,
-       "ready": 5973
-      }
-     },
-     "local": {
-      "cold": {
-       "fcp": 64,
-       "lcp": 64,
-       "tbt": 0,
-       "cls": 0,
-       "requests": 6,
-       "bytes": 398431,
-       "by_type": {
-        "Document": {
-         "requests": 1,
-         "bytes": 194971
-        },
-        "Font": {
-         "requests": 2,
-         "bytes": 80150
-        },
-        "Image": {
-         "requests": 1,
-         "bytes": 98403
-        },
-        "Other": {
-         "requests": 1,
-         "bytes": 727
-        },
-        "Script": {
-         "requests": 1,
-         "bytes": 24180
-        }
-       },
-       "lcpElement": "P.bio"
-      },
-      "scroll": {
-       "fcp": 64,
-       "lcp": 11412,
-       "tbt": 0,
-       "cls": 0,
-       "requests": 50,
-       "bytes": 4049616,
-       "by_type": {
-        "Document": {
-         "requests": 1,
-         "bytes": 194971
-        },
-        "Fetch": {
-         "requests": 19,
-         "bytes": 374656
-        },
-        "Font": {
-         "requests": 2,
-         "bytes": 80150
-        },
-        "Image": {
-         "requests": 21,
-         "bytes": 1929894
-        },
-        "Media": {
-         "requests": 1,
-         "bytes": 262974
-        },
-        "Other": {
-         "requests": 1,
-         "bytes": 727
-        },
-        "Script": {
-         "requests": 4,
-         "bytes": 1122862
-        },
-        "Stylesheet": {
-         "requests": 1,
-         "bytes": 83382
-        }
-       },
-       "lcpElement": "VIDEO.reel"
-      },
-      "runs": [
-       {
-        "cold": {
-         "fcp": 64,
-         "lcp": 64,
-         "lcpElement": "P.bio",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 1,
-           "bytes": 98403
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 1,
-           "bytes": 24180
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 64,
-         "lcp": 11412,
-         "lcpElement": "VIDEO.reel",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 50,
-         "bytes": 4049616,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 194971
-          },
-          "Fetch": {
-           "requests": 19,
-           "bytes": 374656
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 21,
-           "bytes": 1929894
-          },
-          "Media": {
-           "requests": 1,
-           "bytes": 262974
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Script": {
-           "requests": 4,
-           "bytes": 1122862
-          },
-          "Stylesheet": {
-           "requests": 1,
-           "bytes": 83382
-          }
-         }
-        }
-       }
-      ],
-      "errors": [],
-      "overflow": false,
-      "hero": {
-       "lift": 3780,
-       "stack": 4559,
-       "ready": 5663
-      }
-     },
-     "axe": []
-    },
-    "light": {
-     "throttled": {
-      "cold": {
        "fcp": 108,
        "lcp": 124,
        "tbt": 0,
        "cls": 0,
-       "requests": 6,
-       "bytes": 398431,
+       "requests": 7,
+       "bytes": 405688,
        "by_type": {
         "Document": {
          "requests": 1,
-         "bytes": 194971
+         "bytes": 202228
         },
         "Font": {
          "requests": 2,
          "bytes": 80150
         },
         "Image": {
-         "requests": 1,
+         "requests": 2,
          "bytes": 98403
         },
         "Other": {
@@ -1448,26 +967,26 @@
       },
       "scroll": {
        "fcp": 108,
-       "lcp": 11524,
+       "lcp": 11804,
        "tbt": 0,
        "cls": 0,
-       "requests": 50,
-       "bytes": 3178173,
+       "requests": 51,
+       "bytes": 3185255,
        "by_type": {
         "Document": {
          "requests": 1,
-         "bytes": 194971
+         "bytes": 202228
         },
         "Fetch": {
          "requests": 19,
-         "bytes": 305073
+         "bytes": 304898
         },
         "Font": {
          "requests": 2,
          "bytes": 80150
         },
         "Image": {
-         "requests": 21,
+         "requests": 22,
          "bytes": 1128034
         },
         "Media": {
@@ -1492,24 +1011,24 @@
       "runs": [
        {
         "cold": {
-         "fcp": 116,
-         "lcp": 128,
+         "fcp": 120,
+         "lcp": 136,
          "lcpElement": "P.bio",
          "tbt": 0,
          "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
+         "requests": 7,
+         "bytes": 405688,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 1,
+           "requests": 2,
            "bytes": 98403
           },
           "Other": {
@@ -1523,33 +1042,33 @@
          }
         },
         "scroll": {
-         "fcp": 116,
-         "lcp": 11516,
+         "fcp": 120,
+         "lcp": 11804,
          "lcpElement": "VIDEO.reel",
          "tbt": 0,
          "cls": 0,
-         "requests": 50,
-         "bytes": 3178154,
+         "requests": 51,
+         "bytes": 2922279,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Fetch": {
            "requests": 19,
-           "bytes": 305054
+           "bytes": 304896
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 21,
+           "requests": 22,
            "bytes": 1128034
           },
           "Media": {
            "requests": 1,
-           "bytes": 262974
+           "bytes": 0
           },
           "Other": {
            "requests": 1,
@@ -1568,24 +1087,24 @@
        },
        {
         "cold": {
-         "fcp": 104,
-         "lcp": 120,
+         "fcp": 108,
+         "lcp": 124,
          "lcpElement": "P.bio",
          "tbt": 0,
          "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
+         "requests": 7,
+         "bytes": 405688,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 1,
+           "requests": 2,
            "bytes": 98403
           },
           "Other": {
@@ -1599,28 +1118,28 @@
          }
         },
         "scroll": {
-         "fcp": 104,
-         "lcp": 11524,
+         "fcp": 108,
+         "lcp": 11824,
          "lcpElement": "VIDEO.reel",
          "tbt": 0,
          "cls": 0,
-         "requests": 50,
-         "bytes": 3178179,
+         "requests": 51,
+         "bytes": 3185255,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Fetch": {
            "requests": 19,
-           "bytes": 305079
+           "bytes": 304898
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 21,
+           "requests": 22,
            "bytes": 1128034
           },
           "Media": {
@@ -1649,19 +1168,19 @@
          "lcpElement": "P.bio",
          "tbt": 0,
          "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
+         "requests": 7,
+         "bytes": 405688,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 1,
+           "requests": 2,
            "bytes": 98403
           },
           "Other": {
@@ -1676,27 +1195,27 @@
         },
         "scroll": {
          "fcp": 108,
-         "lcp": 11524,
+         "lcp": 11540,
          "lcpElement": "VIDEO.reel",
          "tbt": 0,
          "cls": 0,
-         "requests": 50,
-         "bytes": 3178173,
+         "requests": 51,
+         "bytes": 3185317,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Fetch": {
            "requests": 19,
-           "bytes": 305073
+           "bytes": 304960
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 21,
+           "requests": 22,
            "bytes": 1128034
           },
           "Media": {
@@ -1722,30 +1241,30 @@
       "errors": [],
       "overflow": false,
       "hero": {
-       "lift": 4053,
-       "stack": 4830,
-       "ready": 5954
+       "lift": 4055,
+       "stack": 4833,
+       "ready": 6039
       }
      },
      "local": {
       "cold": {
-       "fcp": 64,
-       "lcp": 64,
+       "fcp": 80,
+       "lcp": 80,
        "tbt": 0,
        "cls": 0,
-       "requests": 6,
-       "bytes": 398431,
+       "requests": 7,
+       "bytes": 405688,
        "by_type": {
         "Document": {
          "requests": 1,
-         "bytes": 194971
+         "bytes": 202228
         },
         "Font": {
          "requests": 2,
          "bytes": 80150
         },
         "Image": {
-         "requests": 1,
+         "requests": 2,
          "bytes": 98403
         },
         "Other": {
@@ -1760,27 +1279,27 @@
        "lcpElement": "P.bio"
       },
       "scroll": {
-       "fcp": 64,
-       "lcp": 11448,
+       "fcp": 80,
+       "lcp": 11164,
        "tbt": 0,
        "cls": 0,
-       "requests": 50,
-       "bytes": 4049594,
+       "requests": 51,
+       "bytes": 4056747,
        "by_type": {
         "Document": {
          "requests": 1,
-         "bytes": 194971
+         "bytes": 202228
         },
         "Fetch": {
          "requests": 19,
-         "bytes": 374634
+         "bytes": 374530
         },
         "Font": {
          "requests": 2,
          "bytes": 80150
         },
         "Image": {
-         "requests": 21,
+         "requests": 22,
          "bytes": 1929894
         },
         "Media": {
@@ -1805,24 +1324,24 @@
       "runs": [
        {
         "cold": {
-         "fcp": 64,
-         "lcp": 64,
+         "fcp": 80,
+         "lcp": 80,
          "lcpElement": "P.bio",
          "tbt": 0,
          "cls": 0,
-         "requests": 6,
-         "bytes": 398431,
+         "requests": 7,
+         "bytes": 405688,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 1,
+           "requests": 2,
            "bytes": 98403
           },
           "Other": {
@@ -1836,28 +1355,28 @@
          }
         },
         "scroll": {
-         "fcp": 64,
-         "lcp": 11448,
+         "fcp": 80,
+         "lcp": 11164,
          "lcpElement": "VIDEO.reel",
          "tbt": 0,
          "cls": 0,
-         "requests": 50,
-         "bytes": 4049594,
+         "requests": 51,
+         "bytes": 4056747,
          "by_type": {
           "Document": {
            "requests": 1,
-           "bytes": 194971
+           "bytes": 202228
           },
           "Fetch": {
            "requests": 19,
-           "bytes": 374634
+           "bytes": 374530
           },
           "Font": {
            "requests": 2,
            "bytes": 80150
           },
           "Image": {
-           "requests": 21,
+           "requests": 22,
            "bytes": 1929894
           },
           "Media": {
@@ -1884,8 +1403,485 @@
       "overflow": false,
       "hero": {
        "lift": 3776,
-       "stack": 4544,
-       "ready": 5703
+       "stack": 4576,
+       "ready": 5576
+      }
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 112,
+       "lcp": 128,
+       "tbt": 0,
+       "cls": 0,
+       "requests": 7,
+       "bytes": 405688,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202228
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80150
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 98403
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 24180
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "scroll": {
+       "fcp": 112,
+       "lcp": 11528,
+       "tbt": 0,
+       "cls": 0,
+       "requests": 51,
+       "bytes": 2922311,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202228
+        },
+        "Fetch": {
+         "requests": 19,
+         "bytes": 304928
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80150
+        },
+        "Image": {
+         "requests": 22,
+         "bytes": 1128034
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1122862
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83382
+        }
+       },
+       "lcpElement": "VIDEO.reel"
+      },
+      "runs": [
+       {
+        "cold": {
+         "fcp": 108,
+         "lcp": 124,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 7,
+         "bytes": 405688,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 98403
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24180
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 108,
+         "lcp": 11540,
+         "lcpElement": "VIDEO.reel",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 51,
+         "bytes": 3185247,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Fetch": {
+           "requests": 19,
+           "bytes": 304890
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 22,
+           "bytes": 1128034
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262974
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122862
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83382
+          }
+         }
+        }
+       },
+       {
+        "cold": {
+         "fcp": 112,
+         "lcp": 132,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 7,
+         "bytes": 405688,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 98403
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24180
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 112,
+         "lcp": 11528,
+         "lcpElement": "VIDEO.reel",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 51,
+         "bytes": 2922288,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Fetch": {
+           "requests": 19,
+           "bytes": 304905
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 22,
+           "bytes": 1128034
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 0
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122862
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83382
+          }
+         }
+        }
+       },
+       {
+        "cold": {
+         "fcp": 112,
+         "lcp": 128,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 7,
+         "bytes": 405688,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 98403
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24180
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 112,
+         "lcp": 11512,
+         "lcpElement": "VIDEO.reel",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 51,
+         "bytes": 2922311,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Fetch": {
+           "requests": 19,
+           "bytes": 304928
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 22,
+           "bytes": 1128034
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 0
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122862
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83382
+          }
+         }
+        }
+       }
+      ],
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "lift": 4048,
+       "stack": 4822,
+       "ready": 5898
+      }
+     },
+     "local": {
+      "cold": {
+       "fcp": 88,
+       "lcp": 88,
+       "tbt": 0,
+       "cls": 0,
+       "requests": 7,
+       "bytes": 405688,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202228
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80150
+        },
+        "Image": {
+         "requests": 2,
+         "bytes": 98403
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 24180
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "scroll": {
+       "fcp": 88,
+       "lcp": 11444,
+       "tbt": 0,
+       "cls": 0,
+       "requests": 51,
+       "bytes": 4056677,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 202228
+        },
+        "Fetch": {
+         "requests": 19,
+         "bytes": 374460
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80150
+        },
+        "Image": {
+         "requests": 22,
+         "bytes": 1929894
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262974
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 727
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1122862
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83382
+        }
+       },
+       "lcpElement": "VIDEO.reel"
+      },
+      "runs": [
+       {
+        "cold": {
+         "fcp": 88,
+         "lcp": 88,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 7,
+         "bytes": 405688,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 98403
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24180
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 88,
+         "lcp": 11444,
+         "lcpElement": "VIDEO.reel",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 51,
+         "bytes": 4056677,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 202228
+          },
+          "Fetch": {
+           "requests": 19,
+           "bytes": 374460
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 22,
+           "bytes": 1929894
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262974
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122862
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83382
+          }
+         }
+        }
+       }
+      ],
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "lift": 3792,
+       "stack": 4574,
+       "ready": 5679
       }
      },
      "axe": []
@@ -1897,8 +1893,8 @@
     "dark": {
      "throttled": {
       "cold": {
-       "fcp": 140,
-       "lcp": 140,
+       "fcp": 136,
+       "lcp": 136,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -1928,8 +1924,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 140,
-       "lcp": 140,
+       "fcp": 136,
+       "lcp": 136,
        "tbt": 0,
        "cls": 0,
        "requests": 17,
@@ -1961,8 +1957,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 128,
-         "lcp": 128,
+         "fcp": 132,
+         "lcp": 132,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -1992,8 +1988,8 @@
          }
         },
         "scroll": {
-         "fcp": 128,
-         "lcp": 128,
+         "fcp": 132,
+         "lcp": 132,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2089,8 +2085,8 @@
        },
        {
         "cold": {
-         "fcp": 144,
-         "lcp": 144,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2120,8 +2116,8 @@
          }
         },
         "scroll": {
-         "fcp": 144,
-         "lcp": 144,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2157,8 +2153,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 56,
-       "lcp": 56,
+       "fcp": 40,
+       "lcp": 40,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -2188,8 +2184,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 56,
-       "lcp": 56,
+       "fcp": 40,
+       "lcp": 40,
        "tbt": 0,
        "cls": 0,
        "requests": 17,
@@ -2221,8 +2217,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 56,
-         "lcp": 56,
+         "fcp": 40,
+         "lcp": 40,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2252,8 +2248,8 @@
          }
         },
         "scroll": {
-         "fcp": 56,
-         "lcp": 56,
+         "fcp": 40,
+         "lcp": 40,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2292,8 +2288,8 @@
     "light": {
      "throttled": {
       "cold": {
-       "fcp": 136,
-       "lcp": 136,
+       "fcp": 132,
+       "lcp": 132,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -2323,8 +2319,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 136,
-       "lcp": 136,
+       "fcp": 132,
+       "lcp": 132,
        "tbt": 0,
        "cls": 0,
        "requests": 17,
@@ -2356,8 +2352,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 128,
-         "lcp": 128,
+         "fcp": 132,
+         "lcp": 132,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2387,8 +2383,8 @@
          }
         },
         "scroll": {
-         "fcp": 128,
-         "lcp": 128,
+         "fcp": 132,
+         "lcp": 132,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2484,8 +2480,8 @@
        },
        {
         "cold": {
-         "fcp": 144,
-         "lcp": 144,
+         "fcp": 128,
+         "lcp": 128,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2515,8 +2511,8 @@
          }
         },
         "scroll": {
-         "fcp": 144,
-         "lcp": 144,
+         "fcp": 128,
+         "lcp": 128,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2552,8 +2548,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 36,
-       "lcp": 36,
+       "fcp": 52,
+       "lcp": 52,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -2583,8 +2579,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 36,
-       "lcp": 36,
+       "fcp": 52,
+       "lcp": 52,
        "tbt": 0,
        "cls": 0,
        "requests": 17,
@@ -2616,8 +2612,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 36,
-         "lcp": 36,
+         "fcp": 52,
+         "lcp": 52,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2647,8 +2643,8 @@
          }
         },
         "scroll": {
-         "fcp": 36,
-         "lcp": 36,
+         "fcp": 52,
+         "lcp": 52,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2753,8 +2749,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 140,
-         "lcp": 140,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2784,72 +2780,8 @@
          }
         },
         "scroll": {
-         "fcp": 140,
-         "lcp": 140,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 17,
-         "bytes": 1543813,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 10500
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 11,
-           "bytes": 1442297
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        }
-       },
-       {
-        "cold": {
-         "fcp": 128,
-         "lcp": 128,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 9,
-         "bytes": 579455,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 10500
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 3,
-           "bytes": 477939
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 128,
-         "lcp": 128,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2914,6 +2846,70 @@
         "scroll": {
          "fcp": 132,
          "lcp": 132,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 17,
+         "bytes": 1543813,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 10500
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 11,
+           "bytes": 1442297
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        }
+       },
+       {
+        "cold": {
+         "fcp": 124,
+         "lcp": 124,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 9,
+         "bytes": 579455,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 10500
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 3,
+           "bytes": 477939
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 124,
+         "lcp": 124,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -2949,8 +2945,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 56,
-       "lcp": 56,
+       "fcp": 60,
+       "lcp": 60,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -2980,8 +2976,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 56,
-       "lcp": 56,
+       "fcp": 60,
+       "lcp": 60,
        "tbt": 0,
        "cls": 0,
        "requests": 17,
@@ -3013,8 +3009,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 56,
-         "lcp": 56,
+         "fcp": 60,
+         "lcp": 60,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3044,8 +3040,8 @@
          }
         },
         "scroll": {
-         "fcp": 56,
-         "lcp": 56,
+         "fcp": 60,
+         "lcp": 60,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3084,8 +3080,8 @@
     "light": {
      "throttled": {
       "cold": {
-       "fcp": 148,
-       "lcp": 148,
+       "fcp": 132,
+       "lcp": 132,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -3115,8 +3111,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 148,
-       "lcp": 148,
+       "fcp": 132,
+       "lcp": 132,
        "tbt": 0,
        "cls": 0,
        "requests": 17,
@@ -3212,8 +3208,8 @@
        },
        {
         "cold": {
-         "fcp": 148,
-         "lcp": 148,
+         "fcp": 128,
+         "lcp": 128,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3243,8 +3239,8 @@
          }
         },
         "scroll": {
-         "fcp": 148,
-         "lcp": 148,
+         "fcp": 128,
+         "lcp": 128,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3276,8 +3272,8 @@
        },
        {
         "cold": {
-         "fcp": 148,
-         "lcp": 148,
+         "fcp": 144,
+         "lcp": 144,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3307,8 +3303,8 @@
          }
         },
         "scroll": {
-         "fcp": 148,
-         "lcp": 148,
+         "fcp": 144,
+         "lcp": 144,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3344,8 +3340,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 36,
-       "lcp": 36,
+       "fcp": 60,
+       "lcp": 60,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -3375,8 +3371,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 36,
-       "lcp": 36,
+       "fcp": 60,
+       "lcp": 60,
        "tbt": 0,
        "cls": 0,
        "requests": 17,
@@ -3408,8 +3404,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 36,
-         "lcp": 36,
+         "fcp": 60,
+         "lcp": 60,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3439,8 +3435,8 @@
          }
         },
         "scroll": {
-         "fcp": 36,
-         "lcp": 36,
+         "fcp": 60,
+         "lcp": 60,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3611,8 +3607,8 @@
        },
        {
         "cold": {
-         "fcp": 144,
-         "lcp": 144,
+         "fcp": 148,
+         "lcp": 148,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3642,8 +3638,8 @@
          }
         },
         "scroll": {
-         "fcp": 144,
-         "lcp": 144,
+         "fcp": 148,
+         "lcp": 148,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3675,8 +3671,8 @@
        },
        {
         "cold": {
-         "fcp": 120,
-         "lcp": 120,
+         "fcp": 140,
+         "lcp": 140,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3706,8 +3702,8 @@
          }
         },
         "scroll": {
-         "fcp": 120,
-         "lcp": 120,
+         "fcp": 140,
+         "lcp": 140,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3743,8 +3739,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 44,
-       "lcp": 44,
+       "fcp": 40,
+       "lcp": 40,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -3774,8 +3770,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 44,
-       "lcp": 44,
+       "fcp": 40,
+       "lcp": 40,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -3807,8 +3803,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 44,
-         "lcp": 44,
+         "fcp": 40,
+         "lcp": 40,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3838,8 +3834,8 @@
          }
         },
         "scroll": {
-         "fcp": 44,
-         "lcp": 44,
+         "fcp": 40,
+         "lcp": 40,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3878,8 +3874,8 @@
     "light": {
      "throttled": {
       "cold": {
-       "fcp": 128,
-       "lcp": 128,
+       "fcp": 144,
+       "lcp": 144,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -3909,8 +3905,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 128,
-       "lcp": 128,
+       "fcp": 144,
+       "lcp": 144,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -3942,8 +3938,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 128,
-         "lcp": 128,
+         "fcp": 140,
+         "lcp": 140,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -3973,8 +3969,8 @@
          }
         },
         "scroll": {
-         "fcp": 128,
-         "lcp": 128,
+         "fcp": 140,
+         "lcp": 140,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4006,8 +4002,8 @@
        },
        {
         "cold": {
-         "fcp": 136,
-         "lcp": 136,
+         "fcp": 144,
+         "lcp": 144,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4037,8 +4033,8 @@
          }
         },
         "scroll": {
-         "fcp": 136,
-         "lcp": 136,
+         "fcp": 144,
+         "lcp": 144,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4070,8 +4066,8 @@
        },
        {
         "cold": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 148,
+         "lcp": 148,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4101,8 +4097,8 @@
          }
         },
         "scroll": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 148,
+         "lcp": 148,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4138,10 +4134,10 @@
      },
      "local": {
       "cold": {
-       "fcp": 48,
-       "lcp": 48,
+       "fcp": 52,
+       "lcp": 52,
        "tbt": 0,
-       "cls": 0,
+       "cls": 0.03,
        "requests": 9,
        "bytes": 627672,
        "by_type": {
@@ -4169,10 +4165,10 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 48,
-       "lcp": 48,
+       "fcp": 52,
+       "lcp": 52,
        "tbt": 0,
-       "cls": 0,
+       "cls": 0.03,
        "requests": 9,
        "bytes": 627672,
        "by_type": {
@@ -4202,11 +4198,11 @@
       "runs": [
        {
         "cold": {
-         "fcp": 48,
-         "lcp": 48,
+         "fcp": 52,
+         "lcp": 52,
          "lcpElement": "P.lede",
          "tbt": 0,
-         "cls": 0,
+         "cls": 0.03,
          "requests": 9,
          "bytes": 627672,
          "by_type": {
@@ -4233,11 +4229,11 @@
          }
         },
         "scroll": {
-         "fcp": 48,
-         "lcp": 48,
+         "fcp": 52,
+         "lcp": 52,
          "lcpElement": "P.lede",
          "tbt": 0,
-         "cls": 0,
+         "cls": 0.03,
          "requests": 9,
          "bytes": 627672,
          "by_type": {
@@ -4275,8 +4271,8 @@
     "dark": {
      "throttled": {
       "cold": {
-       "fcp": 124,
-       "lcp": 124,
+       "fcp": 136,
+       "lcp": 136,
        "tbt": 0,
        "cls": 0,
        "requests": 8,
@@ -4306,8 +4302,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 124,
-       "lcp": 124,
+       "fcp": 136,
+       "lcp": 136,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -4339,8 +4335,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4370,8 +4366,8 @@
          }
         },
         "scroll": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4403,8 +4399,8 @@
        },
        {
         "cold": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 144,
+         "lcp": 144,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4434,8 +4430,8 @@
          }
         },
         "scroll": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 144,
+         "lcp": 144,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4467,8 +4463,8 @@
        },
        {
         "cold": {
-         "fcp": 140,
-         "lcp": 140,
+         "fcp": 132,
+         "lcp": 132,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4498,8 +4494,8 @@
          }
         },
         "scroll": {
-         "fcp": 140,
-         "lcp": 140,
+         "fcp": 132,
+         "lcp": 132,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4535,8 +4531,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 56,
-       "lcp": 56,
+       "fcp": 68,
+       "lcp": 68,
        "tbt": 0,
        "cls": 0,
        "requests": 8,
@@ -4566,8 +4562,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 56,
-       "lcp": 56,
+       "fcp": 68,
+       "lcp": 68,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -4599,8 +4595,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 56,
-         "lcp": 56,
+         "fcp": 68,
+         "lcp": 68,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4630,8 +4626,8 @@
          }
         },
         "scroll": {
-         "fcp": 56,
-         "lcp": 56,
+         "fcp": 68,
+         "lcp": 68,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4670,8 +4666,8 @@
     "light": {
      "throttled": {
       "cold": {
-       "fcp": 140,
-       "lcp": 140,
+       "fcp": 136,
+       "lcp": 136,
        "tbt": 0,
        "cls": 0,
        "requests": 8,
@@ -4701,8 +4697,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 140,
-       "lcp": 140,
+       "fcp": 136,
+       "lcp": 136,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -4734,6 +4730,70 @@
       "runs": [
        {
         "cold": {
+         "fcp": 136,
+         "lcp": 136,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 8,
+         "bytes": 447524,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 7698
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 348810
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 136,
+         "lcp": 136,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 9,
+         "bytes": 627672,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 7698
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 3,
+           "bytes": 528958
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        }
+       },
+       {
+        "cold": {
          "fcp": 132,
          "lcp": 132,
          "lcpElement": "P.lede",
@@ -4831,70 +4891,6 @@
         "scroll": {
          "fcp": 148,
          "lcp": 148,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 9,
-         "bytes": 627672,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 7698
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 3,
-           "bytes": 528958
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        }
-       },
-       {
-        "cold": {
-         "fcp": 140,
-         "lcp": 140,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 8,
-         "bytes": 447524,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 7698
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 2,
-           "bytes": 348810
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 140,
-         "lcp": 140,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -4930,8 +4926,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 64,
-       "lcp": 64,
+       "fcp": 56,
+       "lcp": 56,
        "tbt": 0,
        "cls": 0,
        "requests": 8,
@@ -4961,8 +4957,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 64,
-       "lcp": 64,
+       "fcp": 56,
+       "lcp": 56,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -4994,8 +4990,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 64,
-         "lcp": 64,
+         "fcp": 56,
+         "lcp": 56,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -5025,8 +5021,8 @@
          }
         },
         "scroll": {
-         "fcp": 64,
-         "lcp": 64,
+         "fcp": 56,
+         "lcp": 56,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -5069,7 +5065,7 @@
     "dark": {
      "throttled": {
       "cold": {
-       "fcp": 132,
+       "fcp": 144,
        "lcp": 228,
        "tbt": 0,
        "cls": 0,
@@ -5104,7 +5100,7 @@
        "lcpElement": "VIDEO"
       },
       "scroll": {
-       "fcp": 132,
+       "fcp": 144,
        "lcp": 228,
        "tbt": 0,
        "cls": 0,
@@ -5141,6 +5137,78 @@
       "runs": [
        {
         "cold": {
+         "fcp": 148,
+         "lcp": 232,
+         "lcpElement": "VIDEO",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 9,
+         "bytes": 451241,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 5940
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 91311
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262974
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 148,
+         "lcp": 232,
+         "lcpElement": "VIDEO",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 9,
+         "bytes": 451241,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 5940
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 91311
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262974
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        }
+       },
+       {
+        "cold": {
          "fcp": 144,
          "lcp": 228,
          "lcpElement": "VIDEO",
@@ -5213,80 +5281,8 @@
        },
        {
         "cold": {
-         "fcp": 124,
-         "lcp": 240,
-         "lcpElement": "VIDEO",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 9,
-         "bytes": 451241,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 5940
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 2,
-           "bytes": 91311
-          },
-          "Media": {
-           "requests": 1,
-           "bytes": 262974
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 124,
-         "lcp": 240,
-         "lcpElement": "VIDEO",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 9,
-         "bytes": 451241,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 5940
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 2,
-           "bytes": 91311
-          },
-          "Media": {
-           "requests": 1,
-           "bytes": 262974
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        }
-       },
-       {
-        "cold": {
          "fcp": 132,
-         "lcp": 216,
+         "lcp": 228,
          "lcpElement": "VIDEO",
          "tbt": 0,
          "cls": 0,
@@ -5321,7 +5317,7 @@
         },
         "scroll": {
          "fcp": 132,
-         "lcp": 216,
+         "lcp": 228,
          "lcpElement": "VIDEO",
          "tbt": 0,
          "cls": 0,
@@ -5361,8 +5357,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 60,
-       "lcp": 60,
+       "fcp": 52,
+       "lcp": 52,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -5396,8 +5392,8 @@
        "lcpElement": "VIDEO"
       },
       "scroll": {
-       "fcp": 60,
-       "lcp": 60,
+       "fcp": 52,
+       "lcp": 52,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -5433,8 +5429,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 60,
-         "lcp": 60,
+         "fcp": 52,
+         "lcp": 52,
          "lcpElement": "VIDEO",
          "tbt": 0,
          "cls": 0,
@@ -5468,8 +5464,8 @@
          }
         },
         "scroll": {
-         "fcp": 60,
-         "lcp": 60,
+         "fcp": 52,
+         "lcp": 52,
          "lcpElement": "VIDEO",
          "tbt": 0,
          "cls": 0,
@@ -5512,7 +5508,7 @@
     "light": {
      "throttled": {
       "cold": {
-       "fcp": 148,
+       "fcp": 144,
        "lcp": 232,
        "tbt": 0,
        "cls": 0,
@@ -5547,7 +5543,7 @@
        "lcpElement": "VIDEO"
       },
       "scroll": {
-       "fcp": 148,
+       "fcp": 144,
        "lcp": 232,
        "tbt": 0,
        "cls": 0,
@@ -5584,7 +5580,79 @@
       "runs": [
        {
         "cold": {
-         "fcp": 148,
+         "fcp": 144,
+         "lcp": 228,
+         "lcpElement": "VIDEO",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 9,
+         "bytes": 451241,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 5940
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 91311
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262974
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 144,
+         "lcp": 228,
+         "lcpElement": "VIDEO",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 9,
+         "bytes": 451241,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 5940
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 91311
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262974
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        }
+       },
+       {
+        "cold": {
+         "fcp": 132,
          "lcp": 232,
          "lcpElement": "VIDEO",
          "tbt": 0,
@@ -5619,7 +5687,7 @@
          }
         },
         "scroll": {
-         "fcp": 148,
+         "fcp": 132,
          "lcp": 232,
          "lcpElement": "VIDEO",
          "tbt": 0,
@@ -5656,80 +5724,8 @@
        },
        {
         "cold": {
-         "fcp": 136,
-         "lcp": 216,
-         "lcpElement": "VIDEO",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 9,
-         "bytes": 451241,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 5940
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 2,
-           "bytes": 91311
-          },
-          "Media": {
-           "requests": 1,
-           "bytes": 262974
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 136,
-         "lcp": 216,
-         "lcpElement": "VIDEO",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 9,
-         "bytes": 451241,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 5940
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 2,
-           "bytes": 91311
-          },
-          "Media": {
-           "requests": 1,
-           "bytes": 262974
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        }
-       },
-       {
-        "cold": {
          "fcp": 152,
-         "lcp": 248,
+         "lcp": 236,
          "lcpElement": "VIDEO",
          "tbt": 0,
          "cls": 0,
@@ -5764,7 +5760,7 @@
         },
         "scroll": {
          "fcp": 152,
-         "lcp": 248,
+         "lcp": 236,
          "lcpElement": "VIDEO",
          "tbt": 0,
          "cls": 0,
@@ -5804,8 +5800,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 76,
-       "lcp": 76,
+       "fcp": 48,
+       "lcp": 48,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -5839,8 +5835,8 @@
        "lcpElement": "VIDEO"
       },
       "scroll": {
-       "fcp": 76,
-       "lcp": 76,
+       "fcp": 48,
+       "lcp": 48,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -5876,8 +5872,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 76,
-         "lcp": 76,
+         "fcp": 48,
+         "lcp": 48,
          "lcpElement": "VIDEO",
          "tbt": 0,
          "cls": 0,
@@ -5911,8 +5907,8 @@
          }
         },
         "scroll": {
-         "fcp": 76,
-         "lcp": 76,
+         "fcp": 48,
+         "lcp": 48,
          "lcpElement": "VIDEO",
          "tbt": 0,
          "cls": 0,
@@ -6249,8 +6245,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 80,
-       "lcp": 80,
+       "fcp": 68,
+       "lcp": 68,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -6284,8 +6280,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 80,
-       "lcp": 80,
+       "fcp": 68,
+       "lcp": 68,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -6321,8 +6317,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 80,
-         "lcp": 80,
+         "fcp": 68,
+         "lcp": 68,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -6356,8 +6352,8 @@
          }
         },
         "scroll": {
-         "fcp": 80,
-         "lcp": 80,
+         "fcp": 68,
+         "lcp": 68,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -6472,8 +6468,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 776,
+         "lcp": 776,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -6507,8 +6503,8 @@
          }
         },
         "scroll": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 776,
+         "lcp": 776,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -6616,8 +6612,8 @@
        },
        {
         "cold": {
-         "fcp": 144,
-         "lcp": 144,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -6651,8 +6647,8 @@
          }
         },
         "scroll": {
-         "fcp": 144,
-         "lcp": 144,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -6692,8 +6688,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 52,
-       "lcp": 52,
+       "fcp": 56,
+       "lcp": 56,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -6727,8 +6723,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 52,
-       "lcp": 52,
+       "fcp": 56,
+       "lcp": 56,
        "tbt": 0,
        "cls": 0,
        "requests": 9,
@@ -6764,8 +6760,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 52,
-         "lcp": 52,
+         "fcp": 56,
+         "lcp": 56,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -6799,8 +6795,8 @@
          }
         },
         "scroll": {
-         "fcp": 52,
-         "lcp": 52,
+         "fcp": 56,
+         "lcp": 56,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -6847,8 +6843,8 @@
     "dark": {
      "throttled": {
       "cold": {
-       "fcp": 144,
-       "lcp": 144,
+       "fcp": 136,
+       "lcp": 136,
        "tbt": 0,
        "cls": 0,
        "requests": 7,
@@ -6878,8 +6874,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 144,
-       "lcp": 144,
+       "fcp": 136,
+       "lcp": 136,
        "tbt": 0,
        "cls": 0,
        "requests": 14,
@@ -6911,8 +6907,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 140,
-         "lcp": 140,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -6942,8 +6938,8 @@
          }
         },
         "scroll": {
-         "fcp": 140,
-         "lcp": 140,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -6975,8 +6971,8 @@
        },
        {
         "cold": {
-         "fcp": 144,
-         "lcp": 144,
+         "fcp": 152,
+         "lcp": 152,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7006,8 +7002,8 @@
          }
         },
         "scroll": {
-         "fcp": 144,
-         "lcp": 144,
+         "fcp": 152,
+         "lcp": 152,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7039,8 +7035,8 @@
        },
        {
         "cold": {
-         "fcp": 144,
-         "lcp": 144,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7070,8 +7066,8 @@
          }
         },
         "scroll": {
-         "fcp": 144,
-         "lcp": 144,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7107,8 +7103,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 56,
-       "lcp": 56,
+       "fcp": 64,
+       "lcp": 64,
        "tbt": 0,
        "cls": 0,
        "requests": 7,
@@ -7138,8 +7134,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 56,
-       "lcp": 56,
+       "fcp": 64,
+       "lcp": 64,
        "tbt": 0,
        "cls": 0,
        "requests": 14,
@@ -7171,8 +7167,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 56,
-         "lcp": 56,
+         "fcp": 64,
+         "lcp": 64,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7202,8 +7198,8 @@
          }
         },
         "scroll": {
-         "fcp": 56,
-         "lcp": 56,
+         "fcp": 64,
+         "lcp": 64,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7242,8 +7238,8 @@
     "light": {
      "throttled": {
       "cold": {
-       "fcp": 132,
-       "lcp": 132,
+       "fcp": 140,
+       "lcp": 140,
        "tbt": 0,
        "cls": 0,
        "requests": 7,
@@ -7273,8 +7269,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 132,
-       "lcp": 132,
+       "fcp": 140,
+       "lcp": 140,
        "tbt": 0,
        "cls": 0,
        "requests": 14,
@@ -7306,8 +7302,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 136,
-         "lcp": 136,
+         "fcp": 128,
+         "lcp": 128,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7337,8 +7333,8 @@
          }
         },
         "scroll": {
-         "fcp": 136,
-         "lcp": 136,
+         "fcp": 128,
+         "lcp": 128,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7370,8 +7366,8 @@
        },
        {
         "cold": {
-         "fcp": 132,
-         "lcp": 132,
+         "fcp": 156,
+         "lcp": 156,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7401,8 +7397,8 @@
          }
         },
         "scroll": {
-         "fcp": 132,
-         "lcp": 132,
+         "fcp": 156,
+         "lcp": 156,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7434,8 +7430,8 @@
        },
        {
         "cold": {
-         "fcp": 132,
-         "lcp": 132,
+         "fcp": 140,
+         "lcp": 140,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7465,8 +7461,8 @@
          }
         },
         "scroll": {
-         "fcp": 132,
-         "lcp": 132,
+         "fcp": 140,
+         "lcp": 140,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7502,8 +7498,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 44,
-       "lcp": 44,
+       "fcp": 48,
+       "lcp": 48,
        "tbt": 0,
        "cls": 0,
        "requests": 7,
@@ -7533,8 +7529,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 44,
-       "lcp": 44,
+       "fcp": 48,
+       "lcp": 48,
        "tbt": 0,
        "cls": 0,
        "requests": 14,
@@ -7566,8 +7562,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 44,
-         "lcp": 44,
+         "fcp": 48,
+         "lcp": 48,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7597,8 +7593,8 @@
          }
         },
         "scroll": {
-         "fcp": 44,
-         "lcp": 44,
+         "fcp": 48,
+         "lcp": 48,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7639,8 +7635,8 @@
     "dark": {
      "throttled": {
       "cold": {
-       "fcp": 124,
-       "lcp": 124,
+       "fcp": 136,
+       "lcp": 136,
        "tbt": 0,
        "cls": 0,
        "requests": 8,
@@ -7670,8 +7666,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 124,
-       "lcp": 124,
+       "fcp": 136,
+       "lcp": 136,
        "tbt": 0,
        "cls": 0,
        "requests": 14,
@@ -7703,8 +7699,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 144,
+         "lcp": 144,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7734,8 +7730,8 @@
          }
         },
         "scroll": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 144,
+         "lcp": 144,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7767,8 +7763,8 @@
        },
        {
         "cold": {
-         "fcp": 132,
-         "lcp": 132,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7798,8 +7794,8 @@
          }
         },
         "scroll": {
-         "fcp": 132,
-         "lcp": 132,
+         "fcp": 136,
+         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -7899,12 +7895,12 @@
      },
      "local": {
       "cold": {
-       "fcp": 68,
-       "lcp": 68,
+       "fcp": 100,
+       "lcp": 100,
        "tbt": 0,
        "cls": 0,
-       "requests": 9,
-       "bytes": 744357,
+       "requests": 8,
+       "bytes": 686362,
        "by_type": {
         "Document": {
          "requests": 1,
@@ -7915,8 +7911,8 @@
          "bytes": 80150
         },
         "Image": {
-         "requests": 3,
-         "bytes": 643890
+         "requests": 2,
+         "bytes": 585895
         },
         "Other": {
          "requests": 1,
@@ -7930,8 +7926,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 68,
-       "lcp": 68,
+       "fcp": 100,
+       "lcp": 100,
        "tbt": 0,
        "cls": 0,
        "requests": 14,
@@ -7963,13 +7959,13 @@
       "runs": [
        {
         "cold": {
-         "fcp": 68,
-         "lcp": 68,
+         "fcp": 100,
+         "lcp": 100,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
-         "requests": 9,
-         "bytes": 744357,
+         "requests": 8,
+         "bytes": 686362,
          "by_type": {
           "Document": {
            "requests": 1,
@@ -7980,8 +7976,8 @@
            "bytes": 80150
           },
           "Image": {
-           "requests": 3,
-           "bytes": 643890
+           "requests": 2,
+           "bytes": 585895
           },
           "Other": {
            "requests": 1,
@@ -7994,8 +7990,8 @@
          }
         },
         "scroll": {
-         "fcp": 68,
-         "lcp": 68,
+         "fcp": 100,
+         "lcp": 100,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -8034,8 +8030,8 @@
     "light": {
      "throttled": {
       "cold": {
-       "fcp": 132,
-       "lcp": 132,
+       "fcp": 128,
+       "lcp": 128,
        "tbt": 0,
        "cls": 0,
        "requests": 8,
@@ -8065,8 +8061,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 132,
-       "lcp": 132,
+       "fcp": 128,
+       "lcp": 128,
        "tbt": 0,
        "cls": 0,
        "requests": 14,
@@ -8098,8 +8094,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 132,
-         "lcp": 132,
+         "fcp": 128,
+         "lcp": 128,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -8129,8 +8125,72 @@
          }
         },
         "scroll": {
-         "fcp": 132,
-         "lcp": 132,
+         "fcp": 128,
+         "lcp": 128,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 14,
+         "bytes": 902996,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 9451
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 8,
+           "bytes": 802529
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        }
+       },
+       {
+        "cold": {
+         "fcp": 120,
+         "lcp": 120,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 8,
+         "bytes": 686362,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 9451
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 2,
+           "bytes": 585895
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 120,
+         "lcp": 120,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -8195,70 +8255,6 @@
         "scroll": {
          "fcp": 136,
          "lcp": 136,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 14,
-         "bytes": 902996,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 9451
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 8,
-           "bytes": 802529
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        }
-       },
-       {
-        "cold": {
-         "fcp": 116,
-         "lcp": 116,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 8,
-         "bytes": 686362,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 9451
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 2,
-           "bytes": 585895
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 116,
-         "lcp": 116,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -8294,8 +8290,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 64,
-       "lcp": 64,
+       "fcp": 80,
+       "lcp": 80,
        "tbt": 0,
        "cls": 0,
        "requests": 8,
@@ -8325,8 +8321,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 64,
-       "lcp": 64,
+       "fcp": 80,
+       "lcp": 80,
        "tbt": 0,
        "cls": 0,
        "requests": 14,
@@ -8358,8 +8354,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 64,
-         "lcp": 64,
+         "fcp": 80,
+         "lcp": 80,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -8389,8 +8385,8 @@
          }
         },
         "scroll": {
-         "fcp": 64,
-         "lcp": 64,
+         "fcp": 80,
+         "lcp": 80,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -8489,62 +8485,6 @@
       "runs": [
        {
         "cold": {
-         "fcp": 132,
-         "lcp": 132,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 95139,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 4123
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 132,
-         "lcp": 132,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 95139,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 4123
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        }
-       },
-       {
-        "cold": {
          "fcp": 124,
          "lcp": 124,
          "lcpElement": "P.lede",
@@ -8601,8 +8541,8 @@
        },
        {
         "cold": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 120,
+         "lcp": 120,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -8628,8 +8568,64 @@
          }
         },
         "scroll": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 120,
+         "lcp": 120,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 95139,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 4123
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        }
+       },
+       {
+        "cold": {
+         "fcp": 128,
+         "lcp": 128,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 95139,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 4123
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 128,
+         "lcp": 128,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -8780,8 +8776,8 @@
     "light": {
      "throttled": {
       "cold": {
-       "fcp": 128,
-       "lcp": 128,
+       "fcp": 124,
+       "lcp": 124,
        "tbt": 0,
        "cls": 0,
        "requests": 6,
@@ -8807,8 +8803,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 128,
-       "lcp": 128,
+       "fcp": 124,
+       "lcp": 124,
        "tbt": 0,
        "cls": 0,
        "requests": 6,
@@ -8836,6 +8832,62 @@
       "runs": [
        {
         "cold": {
+         "fcp": 124,
+         "lcp": 124,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 95139,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 4123
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 124,
+         "lcp": 124,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 95139,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 4123
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        }
+       },
+       {
+        "cold": {
          "fcp": 132,
          "lcp": 132,
          "lcpElement": "P.lede",
@@ -8892,8 +8944,8 @@
        },
        {
         "cold": {
-         "fcp": 128,
-         "lcp": 128,
+         "fcp": 116,
+         "lcp": 116,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -8919,64 +8971,8 @@
          }
         },
         "scroll": {
-         "fcp": 128,
-         "lcp": 128,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 95139,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 4123
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        }
-       },
-       {
-        "cold": {
-         "fcp": 128,
-         "lcp": 128,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 95139,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 4123
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 128,
-         "lcp": 128,
+         "fcp": 116,
+         "lcp": 116,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -9008,8 +9004,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 48,
-       "lcp": 48,
+       "fcp": 56,
+       "lcp": 56,
        "tbt": 0,
        "cls": 0,
        "requests": 6,
@@ -9035,8 +9031,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 48,
-       "lcp": 48,
+       "fcp": 56,
+       "lcp": 56,
        "tbt": 0,
        "cls": 0,
        "requests": 6,
@@ -9064,8 +9060,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 48,
-         "lcp": 48,
+         "fcp": 56,
+         "lcp": 56,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -9091,8 +9087,8 @@
          }
         },
         "scroll": {
-         "fcp": 48,
-         "lcp": 48,
+         "fcp": 56,
+         "lcp": 56,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -9129,8 +9125,8 @@
     "dark": {
      "throttled": {
       "cold": {
-       "fcp": 128,
-       "lcp": 128,
+       "fcp": 120,
+       "lcp": 120,
        "tbt": 0,
        "cls": 0,
        "requests": 6,
@@ -9156,8 +9152,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 128,
-       "lcp": 128,
+       "fcp": 120,
+       "lcp": 120,
        "tbt": 0,
        "cls": 0,
        "requests": 6,
@@ -9185,6 +9181,118 @@
       "runs": [
        {
         "cold": {
+         "fcp": 120,
+         "lcp": 120,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 95139,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 4123
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 120,
+         "lcp": 120,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 95139,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 4123
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        }
+       },
+       {
+        "cold": {
+         "fcp": 116,
+         "lcp": 116,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 95139,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 4123
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 116,
+         "lcp": 116,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 95139,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 4123
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 2,
+           "bytes": 10139
+          }
+         }
+        }
+       },
+       {
+        "cold": {
          "fcp": 128,
          "lcp": 128,
          "lcpElement": "P.lede",
@@ -9214,118 +9322,6 @@
         "scroll": {
          "fcp": 128,
          "lcp": 128,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 95139,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 4123
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        }
-       },
-       {
-        "cold": {
-         "fcp": 124,
-         "lcp": 124,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 95139,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 4123
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 124,
-         "lcp": 124,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 95139,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 4123
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        }
-       },
-       {
-        "cold": {
-         "fcp": 136,
-         "lcp": 136,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 6,
-         "bytes": 95139,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 4123
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 2,
-           "bytes": 10139
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 136,
-         "lcp": 136,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -9357,8 +9353,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 60,
-       "lcp": 60,
+       "fcp": 40,
+       "lcp": 40,
        "tbt": 0,
        "cls": 0,
        "requests": 6,
@@ -9384,8 +9380,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 60,
-       "lcp": 60,
+       "fcp": 40,
+       "lcp": 40,
        "tbt": 0,
        "cls": 0,
        "requests": 6,
@@ -9413,8 +9409,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 60,
-         "lcp": 60,
+         "fcp": 40,
+         "lcp": 40,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -9440,8 +9436,8 @@
          }
         },
         "scroll": {
-         "fcp": 60,
-         "lcp": 60,
+         "fcp": 40,
+         "lcp": 40,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -9476,8 +9472,8 @@
     "light": {
      "throttled": {
       "cold": {
-       "fcp": 140,
-       "lcp": 140,
+       "fcp": 120,
+       "lcp": 120,
        "tbt": 0,
        "cls": 0,
        "requests": 6,
@@ -9503,8 +9499,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 140,
-       "lcp": 140,
+       "fcp": 120,
+       "lcp": 120,
        "tbt": 0,
        "cls": 0,
        "requests": 6,
@@ -9532,8 +9528,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 140,
-         "lcp": 140,
+         "fcp": 116,
+         "lcp": 116,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -9559,8 +9555,8 @@
          }
         },
         "scroll": {
-         "fcp": 140,
-         "lcp": 140,
+         "fcp": 116,
+         "lcp": 116,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -9644,8 +9640,8 @@
        },
        {
         "cold": {
-         "fcp": 152,
-         "lcp": 152,
+         "fcp": 120,
+         "lcp": 120,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -9671,8 +9667,8 @@
          }
         },
         "scroll": {
-         "fcp": 152,
-         "lcp": 152,
+         "fcp": 120,
+         "lcp": 120,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -9704,8 +9700,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 52,
-       "lcp": 52,
+       "fcp": 32,
+       "lcp": 32,
        "tbt": 0,
        "cls": 0,
        "requests": 6,
@@ -9731,8 +9727,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 52,
-       "lcp": 52,
+       "fcp": 32,
+       "lcp": 32,
        "tbt": 0,
        "cls": 0,
        "requests": 6,
@@ -9760,8 +9756,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 52,
-         "lcp": 52,
+         "fcp": 32,
+         "lcp": 32,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -9787,8 +9783,8 @@
          }
         },
         "scroll": {
-         "fcp": 52,
-         "lcp": 52,
+         "fcp": 32,
+         "lcp": 32,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -9855,7 +9851,7 @@
       },
       "scroll": {
        "fcp": 128,
-       "lcp": 7096,
+       "lcp": 7068,
        "tbt": 0,
        "cls": 0,
        "requests": 35,
@@ -9887,8 +9883,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 132,
-         "lcp": 132,
+         "fcp": 128,
+         "lcp": 128,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -9914,8 +9910,68 @@
          }
         },
         "scroll": {
-         "fcp": 132,
-         "lcp": 7108,
+         "fcp": 128,
+         "lcp": 7076,
+         "lcpElement": "IMG",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 35,
+         "bytes": 5744033,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 17865
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 30,
+           "bytes": 5637536
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 7755
+          }
+         }
+        }
+       },
+       {
+        "cold": {
+         "fcp": 120,
+         "lcp": 120,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 5,
+         "bytes": 106497,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 17865
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 7755
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 120,
+         "lcp": 7068,
          "lcpElement": "IMG",
          "tbt": 0,
          "cls": 0,
@@ -9975,67 +10031,7 @@
         },
         "scroll": {
          "fcp": 128,
-         "lcp": 7080,
-         "lcpElement": "IMG",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 35,
-         "bytes": 5744033,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 17865
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 30,
-           "bytes": 5637536
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 1,
-           "bytes": 7755
-          }
-         }
-        }
-       },
-       {
-        "cold": {
-         "fcp": 128,
-         "lcp": 128,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 5,
-         "bytes": 106497,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 17865
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 1,
-           "bytes": 7755
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 128,
-         "lcp": 7096,
+         "lcp": 7064,
          "lcpElement": "IMG",
          "tbt": 0,
          "cls": 0,
@@ -10071,8 +10067,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 72,
-       "lcp": 72,
+       "fcp": 40,
+       "lcp": 40,
        "tbt": 0,
        "cls": 0,
        "requests": 5,
@@ -10098,8 +10094,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 72,
-       "lcp": 72,
+       "fcp": 40,
+       "lcp": 40,
        "tbt": 0,
        "cls": 0,
        "requests": 35,
@@ -10131,8 +10127,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 72,
-         "lcp": 72,
+         "fcp": 40,
+         "lcp": 40,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -10158,8 +10154,8 @@
          }
         },
         "scroll": {
-         "fcp": 72,
-         "lcp": 72,
+         "fcp": 40,
+         "lcp": 40,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -10226,7 +10222,7 @@
       },
       "scroll": {
        "fcp": 124,
-       "lcp": 7180,
+       "lcp": 7084,
        "tbt": 0,
        "cls": 0,
        "requests": 35,
@@ -10286,7 +10282,67 @@
         },
         "scroll": {
          "fcp": 124,
-         "lcp": 7180,
+         "lcp": 7084,
+         "lcpElement": "IMG",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 35,
+         "bytes": 5744033,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 17865
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Image": {
+           "requests": 30,
+           "bytes": 5637536
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 7755
+          }
+         }
+        }
+       },
+       {
+        "cold": {
+         "fcp": 120,
+         "lcp": 120,
+         "lcpElement": "P.lede",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 5,
+         "bytes": 106497,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 17865
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80150
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 727
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 7755
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 120,
+         "lcp": 7068,
          "lcpElement": "IMG",
          "tbt": 0,
          "cls": 0,
@@ -10346,67 +10402,7 @@
         },
         "scroll": {
          "fcp": 124,
-         "lcp": 7088,
-         "lcpElement": "IMG",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 35,
-         "bytes": 5744033,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 17865
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Image": {
-           "requests": 30,
-           "bytes": 5637536
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 1,
-           "bytes": 7755
-          }
-         }
-        }
-       },
-       {
-        "cold": {
-         "fcp": 132,
-         "lcp": 132,
-         "lcpElement": "P.lede",
-         "tbt": 0,
-         "cls": 0,
-         "requests": 5,
-         "bytes": 106497,
-         "by_type": {
-          "Document": {
-           "requests": 1,
-           "bytes": 17865
-          },
-          "Font": {
-           "requests": 2,
-           "bytes": 80150
-          },
-          "Other": {
-           "requests": 1,
-           "bytes": 727
-          },
-          "Stylesheet": {
-           "requests": 1,
-           "bytes": 7755
-          }
-         }
-        },
-        "scroll": {
-         "fcp": 132,
-         "lcp": 7456,
+         "lcp": 7224,
          "lcpElement": "IMG",
          "tbt": 0,
          "cls": 0,
@@ -10442,8 +10438,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 40,
-       "lcp": 40,
+       "fcp": 72,
+       "lcp": 72,
        "tbt": 0,
        "cls": 0,
        "requests": 5,
@@ -10469,8 +10465,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 40,
-       "lcp": 40,
+       "fcp": 72,
+       "lcp": 72,
        "tbt": 0,
        "cls": 0,
        "requests": 35,
@@ -10502,8 +10498,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 40,
-         "lcp": 40,
+         "fcp": 72,
+         "lcp": 72,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -10529,8 +10525,8 @@
          }
         },
         "scroll": {
-         "fcp": 40,
-         "lcp": 40,
+         "fcp": 72,
+         "lcp": 72,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -10631,8 +10627,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 128,
-         "lcp": 128,
+         "fcp": 124,
+         "lcp": 124,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -10658,8 +10654,8 @@
          }
         },
         "scroll": {
-         "fcp": 128,
-         "lcp": 128,
+         "fcp": 124,
+         "lcp": 124,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -10751,8 +10747,8 @@
        },
        {
         "cold": {
-         "fcp": 128,
-         "lcp": 128,
+         "fcp": 132,
+         "lcp": 132,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -10778,8 +10774,8 @@
          }
         },
         "scroll": {
-         "fcp": 128,
-         "lcp": 128,
+         "fcp": 132,
+         "lcp": 132,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -10815,8 +10811,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 32,
-       "lcp": 32,
+       "fcp": 44,
+       "lcp": 44,
        "tbt": 0,
        "cls": 0,
        "requests": 5,
@@ -10842,8 +10838,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 32,
-       "lcp": 32,
+       "fcp": 44,
+       "lcp": 44,
        "tbt": 0,
        "cls": 0,
        "requests": 35,
@@ -10875,8 +10871,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 32,
-         "lcp": 32,
+         "fcp": 44,
+         "lcp": 44,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -10902,8 +10898,8 @@
          }
         },
         "scroll": {
-         "fcp": 32,
-         "lcp": 32,
+         "fcp": 44,
+         "lcp": 44,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -10942,8 +10938,8 @@
     "light": {
      "throttled": {
       "cold": {
-       "fcp": 124,
-       "lcp": 124,
+       "fcp": 116,
+       "lcp": 116,
        "tbt": 0,
        "cls": 0,
        "requests": 5,
@@ -10969,8 +10965,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 124,
-       "lcp": 124,
+       "fcp": 116,
+       "lcp": 116,
        "tbt": 0,
        "cls": 0,
        "requests": 35,
@@ -11002,8 +10998,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 120,
+         "lcp": 120,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -11029,8 +11025,8 @@
          }
         },
         "scroll": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 120,
+         "lcp": 120,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -11062,8 +11058,8 @@
        },
        {
         "cold": {
-         "fcp": 136,
-         "lcp": 136,
+         "fcp": 116,
+         "lcp": 116,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -11089,8 +11085,8 @@
          }
         },
         "scroll": {
-         "fcp": 136,
-         "lcp": 136,
+         "fcp": 116,
+         "lcp": 116,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -11122,8 +11118,8 @@
        },
        {
         "cold": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 112,
+         "lcp": 112,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -11149,8 +11145,8 @@
          }
         },
         "scroll": {
-         "fcp": 124,
-         "lcp": 124,
+         "fcp": 112,
+         "lcp": 112,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -11186,8 +11182,8 @@
      },
      "local": {
       "cold": {
-       "fcp": 52,
-       "lcp": 52,
+       "fcp": 40,
+       "lcp": 40,
        "tbt": 0,
        "cls": 0,
        "requests": 5,
@@ -11213,8 +11209,8 @@
        "lcpElement": "P.lede"
       },
       "scroll": {
-       "fcp": 52,
-       "lcp": 52,
+       "fcp": 40,
+       "lcp": 40,
        "tbt": 0,
        "cls": 0,
        "requests": 35,
@@ -11246,8 +11242,8 @@
       "runs": [
        {
         "cold": {
-         "fcp": 52,
-         "lcp": 52,
+         "fcp": 40,
+         "lcp": 40,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -11273,8 +11269,8 @@
          }
         },
         "scroll": {
-         "fcp": 52,
-         "lcp": 52,
+         "fcp": 40,
+         "lcp": 40,
          "lcpElement": "P.lede",
          "tbt": 0,
          "cls": 0,
@@ -11315,7 +11311,7 @@
  },
  "links": {
   "pages": 38,
-  "references": 770,
+  "references": 774,
   "problems": []
  }
 }
