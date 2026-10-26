@@ -111,6 +111,49 @@ def network(c, since=0):
             'by_type': {k: {'requests': v[0], 'bytes': v[1]} for k, v in sorted(by_type.items())}}
 
 
+MAP_HOSTS = ('tiles.openfreemap.org', 'basemap.nationalmap.gov', 'tiles.maps.eox.at', 's3.amazonaws.com')
+MAP_PATHS = ('/vendor/maplibre-gl', '/vendor/glyphs/')
+
+
+def is_map_request(url):
+    """A request the roadmap map makes: its tiles, styles and terrain from the map hosts, and MapLibre and the label glyphs from the site."""
+    parts = url.split('/', 3); host = parts[2] if len(parts) > 2 else ''; path = '/' + parts[3] if len(parts) > 3 else '/'
+    return host in MAP_HOSTS or any(path.startswith(m) for m in MAP_PATHS)
+
+
+def map_share(c):
+    """The map's own requests and bytes over the whole visit, kept apart from the rest of the scroll."""
+    fin = {e['params']['requestId']: e['params']['encodedDataLength'] for e in c.ev if e.get('method') == 'Network.loadingFinished'}
+    reqs = [e['params'] for e in c.ev if e.get('method') == 'Network.requestWillBeSent' and is_map_request(e['params']['request']['url'])]
+    return {'map_requests': len(reqs), 'map_bytes': sum(fin.get(r['requestId'], 0) for r in reqs)}
+
+
+# The map is settled when its arrival flight has landed (if one ran) and it is loaded, still and has its tiles in; window.__mwmMap is the page's handle
+MAP_SETTLED = """(() => { const m = window.__mwmMap; if (!m) return false;
+  const proj = m.getProjection ? (m.getProjection() || {}).type : 'mercator';   // a map still on the globe has its arrival flight to come
+  if (proj === 'globe' || (performance.getEntriesByName('map:globe-ready').length && !performance.getEntriesByName('map:landed').length)) return false;
+  return m.loaded() && !m.isMoving() && m.areTilesLoaded(); })()"""
+
+
+def scroll_through(c):
+    """Scroll the page 450 px every 220 ms. On a page with the roadmap map the scroll stops with the map canvas centred and waits for the map to
+    settle (the arrival flight's map:landed mark, or else its first idle in view), up to 15 s, then carries on. Returns the wait."""
+    has_map = c.js("!!document.getElementById('rt-mapcanvas')")
+    if not has_map:
+        c.js("(async () => { for (let y = 0; y < document.body.scrollHeight; y += 450) { scrollTo(0, y); await new Promise(r => setTimeout(r, 220)); } return true; })()", wait=True)
+        return {}
+    c.js("(async () => { const stop = document.getElementById('rt-mapcanvas').getBoundingClientRect().top + scrollY - innerHeight / 2; for (let y = 0; y < stop; y += 450) { scrollTo(0, y); await new Promise(r => setTimeout(r, 220)); } return true; })()", wait=True)
+    c.js("document.getElementById('rt-mapcanvas').scrollIntoView({ block: 'center' }); true"); t0 = time.time(); settled = False
+    while time.time() - t0 < 15:
+        try:
+            if c.js(MAP_SETTLED): settled = True; break
+        except Exception: pass
+        c.pump(0.2)
+    wait_ms = int((time.time() - t0) * 1000)
+    c.js("(async () => { for (let y = scrollY; y < document.body.scrollHeight; y += 450) { scrollTo(0, y); await new Promise(r => setTimeout(r, 220)); } return true; })()", wait=True)
+    return {'map_wait_ms': wait_ms, 'map_timeout': not settled}
+
+
 def errors(c):
     return [e['params']['exceptionDetails'].get('text', '')[:160] for e in c.ev if e.get('method') == 'Runtime.exceptionThrown'] + \
            [e['params']['entry']['text'][:160] for e in c.ev if e.get('method') == 'Log.entryAdded' and e['params']['entry']['level'] == 'error'] + \
@@ -147,8 +190,9 @@ def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=Fal
         out['cold'] = json.loads(c.js(METRICS)); out['cold'].update(network(c))
         if path == '/':
             out['hero'] = json.loads(c.js("JSON.stringify(Object.fromEntries(performance.getEntriesByType('mark').filter(m => m.name.startsWith('hero-')).map(m => [m.name.slice(5), Math.round(m.startTime)])))"))
-        c.js("(async () => { for (let y = 0; y < document.body.scrollHeight; y += 450) { scrollTo(0, y); await new Promise(r => setTimeout(r, 220)); } return true; })()", wait=True); c.pump(8.0)
-        out['scroll'] = json.loads(c.js(METRICS)); out['scroll'].update(network(c))
+        wait = scroll_through(c); c.pump(8.0)
+        out['scroll'] = json.loads(c.js(METRICS)); out['scroll'].update(network(c)); out['scroll'].update(wait)
+        if wait: out['scroll'].update(map_share(c))
         out['overflow'] = c.js('document.documentElement.scrollWidth > document.documentElement.clientWidth')
         if profile == 'local':
             c.send('Runtime.evaluate', {'expression': axe_src})
