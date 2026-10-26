@@ -30,7 +30,7 @@ jobs:
         run: |
           set -o pipefail
           python3 tools/claims/check.py | tee claims.txt
-          { echo "## Claims"; head -1 claims.txt; } >> "$GITHUB_STEP_SUMMARY"
+          { echo "## Claims"; head -2 claims.txt; } >> "$GITHUB_STEP_SUMMARY"
       - name: Links and accessibility
         run: |
           python3 tools/audit/run.py http://localhost:8000 --checks-only --software --chrome "$CHROME" --out audit.json
