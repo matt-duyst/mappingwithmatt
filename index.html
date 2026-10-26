@@ -1574,6 +1574,10 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   // Sentinel-2 cloudless by year: EOX publishes a mosaic for every year from 2016 (WMTS layer s2cloudless_3857) to 2025 (s2cloudless-YYYY_3857 from 2017),
   // as listed in its capabilities document; two sources let a year change crossfade over 240 ms with no camera move. ?years=off hides the row and keeps 2024.
   var YEARS = P.get('years') !== 'off';
+  // Moonglow: the terrain lit from the northwest (315 degrees, anchored to the map) over the dark basemap only, in two tones measured before the restore,
+  // a warm highlight rgba(230, 115, 57, 0.28) and a cool dim shadow rgba(33, 48, 63, 0.85), beneath the labels. ?moonglow=off leaves it out.
+  var MOONGLOW = P.get('moonglow') !== 'off';
+  function baseIs(v) { var b = document.querySelector('input[name="base"]:checked'); return !!b && b.value === v; }
   var S2_YEARS = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], s2Year = 2024, s2Front = 'a', s2Fading = null;
   var s2Tiles = function (y) { return ['https://tiles.maps.eox.at/wmts/1.0.0/' + (y === 2016 ? 's2cloudless_3857' : 's2cloudless-' + y + '_3857') + '/default/g/{z}/{y}/{x}.jpg']; };
   var S2_ATTR = 'Sentinel-2 cloudless 2016 to 2025 by <a href="https://cloudless.eox.at/preview">EOX IT Services</a> (contains modified Copernicus Sentinel data), CC BY-NC-SA 4.0';
@@ -1614,7 +1618,12 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       st.layers.filter(function (l) { return l.type !== 'symbol'; }).forEach(function (l) {
         var L = JSON.parse(JSON.stringify(l)); L.id = 'dk-' + l.id; if (L.source) L.source = 'dk-' + l.source; L.layout = L.layout || {}; L.layout.visibility = arrive && !landed ? 'visible' : 'none'; map.addLayer(L, 'plan');
       });
+      if (MOONGLOW && !map.getLayer('moonglow')) {
+        map.addLayer({ id: 'moonglow', type: 'hillshade', source: 'dem', layout: { visibility: baseIs('dark') ? 'visible' : 'none' }, paint: { 'hillshade-illumination-direction': 315, 'hillshade-illumination-anchor': 'map', 'hillshade-exaggeration': 0.55, 'hillshade-shadow-color': 'rgba(33, 48, 63, 0.85)', 'hillshade-highlight-color': 'rgba(230, 115, 57, 0.28)', 'hillshade-accent-color': 'rgba(0, 0, 0, 0)' } }, 'plan');
+      }
     }).catch(function () { makeMini(null); });
+    // The two styles arrive in either order; once both are in, the place labels move to the top of the basemap stack, above the dark basemap and moonglow
+    Promise.all([ofmReady, darkReady]).then(function () { map.getStyle().layers.filter(function (l) { return l.id.indexOf('lbl-') === 0; }).forEach(function (l) { map.moveLayer(l.id, 'plan'); }); });
     // The deterministic start: the canvas is sized, the projection is set, and the flight waits for the dark basemap and its labels to be placed
     // (the first idle after both styles are in), or 6 s, whichever comes first; the map:globe-ready mark records the moment
     if (arrive) {
@@ -1668,7 +1677,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   document.getElementById('l-globe').addEventListener('change', function (e) { try { map.setProjection({ type: e.target.checked ? 'globe' : 'mercator' }); } catch (err) {} });
   map.on('mousemove', function (e) { document.getElementById('coords').textContent = Math.abs(e.lngLat.lat).toFixed(4) + (e.lngLat.lat >= 0 ? '°N ' : '°S ') + Math.abs(e.lngLat.lng).toFixed(4) + (e.lngLat.lng >= 0 ? '°E' : '°W') + ' · zoom ' + map.getZoom().toFixed(1); });
   var hint = document.getElementById('hint'); setTimeout(function () { hint.classList.add('gone'); }, 4000); ['mousedown', 'wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, function () { hint.classList.add('gone'); }, { once: true, passive: true }); });
-  document.querySelectorAll('input[name="base"]').forEach(function (r) { r.addEventListener('change', function () { document.getElementById('rt-mapcanvas').classList.toggle('base-dark', r.value === 'dark'); map.setLayoutProperty('imagery', 'visibility', r.value === 'imagery' ? 'visible' : 'none'); map.setLayoutProperty('imagery-eox', 'visibility', r.value === 'eox' ? 'visible' : 'none'); map.setLayoutProperty('imagery-eox-b', 'visibility', r.value === 'eox' ? 'visible' : 'none'); s2Box.hidden = !YEARS || r.value !== 'eox'; map.getStyle().layers.filter(function (l) { return l.id.indexOf('dk-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', r.value === 'dark' ? 'visible' : 'none'); }); }); });
+  document.querySelectorAll('input[name="base"]').forEach(function (r) { r.addEventListener('change', function () { document.getElementById('rt-mapcanvas').classList.toggle('base-dark', r.value === 'dark'); map.setLayoutProperty('imagery', 'visibility', r.value === 'imagery' ? 'visible' : 'none'); map.setLayoutProperty('imagery-eox', 'visibility', r.value === 'eox' ? 'visible' : 'none'); map.setLayoutProperty('imagery-eox-b', 'visibility', r.value === 'eox' ? 'visible' : 'none'); s2Box.hidden = !YEARS || r.value !== 'eox'; if (map.getLayer('moonglow')) map.setLayoutProperty('moonglow', 'visibility', r.value === 'dark' ? 'visible' : 'none'); map.getStyle().layers.filter(function (l) { return l.id.indexOf('dk-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', r.value === 'dark' ? 'visible' : 'none'); }); }); });
   document.getElementById('l-labels').addEventListener('change', function (e) { map.getStyle().layers.filter(function (l) { return l.id.indexOf('lbl-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', e.target.checked ? 'visible' : 'none'); }); });
   // Sentinel-2 year row: a row of years in mono, the active one lit; click or arrow keys move between years
   var s2Box = document.getElementById('s2-years'), s2Row = s2Box.querySelector('.years'), s2Label = document.getElementById('s2-year');
