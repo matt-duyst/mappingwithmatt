@@ -491,8 +491,8 @@ p { margin: 0 0 16px; }
 .composer-form[hidden] { display: none; }
 /* The contact row: one message line with the send button at its end; name and email rise beneath once the message field has focus or text.
    DOM order stays message, name, email, send, so keyboard and screen-reader order match the form; the grid places the button at the line's end. */
-.composer-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "msg send" "fields fields" "note note"; column-gap: 14px; row-gap: 0; align-items: end; max-width: 620px; margin-top: 18px; }
-.composer-form textarea { grid-area: msg; min-height: 38px; max-height: 200px; }
+.composer-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "msg send" "fields fields" "note note"; column-gap: 14px; row-gap: 0; align-items: end; max-width: 660px; margin-top: 18px; }
+.composer-form textarea { grid-area: msg; field-sizing: content; min-height: calc(2 * 1.6em + 17px); overflow-y: hidden; }   /* sized to its content, two lines at least; rows=2 is the fallback where field-sizing is unknown */
 .composer-form .composer-fields { grid-area: fields; max-height: 0; opacity: 0; transform: translateY(6px); overflow: hidden; transition: max-height 240ms ease, opacity 240ms ease, transform 240ms ease, margin 240ms ease; margin-top: 0; }
 .composer-form.open .composer-fields { max-height: 80px; opacity: 1; transform: none; margin-top: 10px; }
 .composer-form .composer-row { grid-area: send; }
@@ -626,7 +626,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           <input type="hidden" name="_subject" value="mappingwithmatt.com: new note">
           <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
           <label class="visually-hidden" for="composer-message">Message</label>
-          <textarea id="composer-message" name="message" placeholder="Say hi, ask about a project, or float an idea. It lands straight in my inbox." rows="1" required></textarea>
+          <textarea id="composer-message" name="message" placeholder="Say hi, ask about a project, or float an idea." rows="2" required></textarea>
           <div class="composer-fields" id="composer-fields">
             <label class="visually-hidden" for="composer-name">Name</label><input id="composer-name" type="text" name="name" placeholder="Name" autocomplete="name" required>
             <label class="visually-hidden" for="composer-email">Email</label><input id="composer-email" type="email" name="email" placeholder="Email" autocomplete="email" required>
@@ -1313,7 +1313,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     var openFields = function () { if (!cformEl.classList.contains('open')) { cformEl.classList.add('open'); cta.setAttribute('aria-expanded', 'true'); } };
     var msgField = cformEl.querySelector('textarea');
     if (msgField) {
-      msgField.addEventListener('focus', openFields); msgField.addEventListener('input', function () { if (msgField.value.trim()) openFields(); msgField.style.height = 'auto'; msgField.style.height = Math.min(200, msgField.scrollHeight) + 'px'; });
+      msgField.addEventListener('focus', openFields); msgField.addEventListener('input', function () { if (msgField.value.trim()) openFields(); if (!('fieldSizing' in msgField.style)) { msgField.style.height = 'auto'; msgField.style.height = msgField.scrollHeight + 'px'; } });
       if (msgField.value.trim()) openFields();
     }
     cformEl.addEventListener('focusin', function (e) { if (e.target.closest('.composer-fields, .composer-row')) openFields(); });
