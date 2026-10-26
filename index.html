@@ -1773,6 +1773,33 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   var tip = document.getElementById('tip');
   map.on('mousemove', 'arcs', function (e) { var f = e.features[0]; if (!f) return; tip.textContent = f.properties.label; tip.hidden = false; tip.style.left = e.point.x + 'px'; tip.style.top = e.point.y + 'px'; map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', 'arcs', function () { tip.hidden = true; map.getCanvas().style.cursor = ''; });
+  // Idle drift: when the map has rested at a stop for 3 s with no interaction, the bearing drifts at 4 degrees a minute, easing in over 2 s. Any pointer,
+  // touch, wheel, key or control interaction, and any camera move the map did not make itself (the flight, a card change, play, a jump), stops it within
+  // 240 ms; another 3 s of rest starts it again. It runs only while the map is in view, never mid-scrub or during play, and not under reduced motion.
+  // ?idle=off leaves it out.
+  var IDLE = P.get('idle') !== 'off' && !reduce;
+  if (IDLE) {
+    var REST_MS = 3000, EASE_IN_MS = 2000, STOP_MS = 200, RATE = 4 / 60000;   // degrees per millisecond
+    var restSince = performance.now(), driftStart = 0, speed = 0, stopFrom = 0, stopAt = 0, selfMove = false, mapInView = false, lastT = 0, idleRaf = null;
+    var wake = function () { restSince = performance.now(); if (speed > 0 && !stopAt) { stopFrom = speed; stopAt = restSince; } driftStart = 0; };
+    ['pointerdown', 'pointermove', 'wheel', 'touchstart', 'keydown', 'click', 'input'].forEach(function (ev) { appEl.addEventListener(ev, wake, { passive: true }); });
+    document.getElementById('tabs').addEventListener('scroll', wake, { passive: true });
+    map.on('movestart', function () { if (!selfMove) wake(); }); map.on('moveend', function () { if (!selfMove) wake(); });
+    var idleTick = function (now) {
+      idleRaf = null; if (!mapInView || document.hidden) { lastT = 0; return; }
+      var dt = lastT ? Math.min(64, now - lastT) : 0; lastT = now;
+      var resting = landed && !playing && !map.isMoving() && progress === Math.round(progress) && now - restSince >= REST_MS;
+      if (stopAt) { speed = Math.max(0, stopFrom * (1 - (now - stopAt) / STOP_MS)); if (speed === 0) stopAt = 0; }
+      else if (resting) { if (!driftStart) driftStart = now; var k = Math.min(1, (now - driftStart) / EASE_IN_MS); speed = RATE * k * k * (3 - 2 * k); }
+      else speed = 0;
+      if (map.isMoving()) { speed = 0; stopAt = 0; }   // another camera move owns the map; the drift never interrupts it
+      else if (speed > 0 && dt) { selfMove = true; map.setBearing(map.getBearing() + speed * dt); selfMove = false; }
+      idleRaf = requestAnimationFrame(idleTick);
+    };
+    new IntersectionObserver(function (es) { mapInView = es.some(function (e) { return e.isIntersecting; }); if (mapInView && !idleRaf) idleRaf = requestAnimationFrame(idleTick); }).observe(document.getElementById('rt-mapcanvas'));
+    document.addEventListener('visibilitychange', function () { if (!document.hidden && mapInView && !idleRaf) idleRaf = requestAnimationFrame(idleTick); });
+    window.__mwmIdle = function () { return { speed: speed * 60000, restMs: Math.round(performance.now() - restSince) }; };   // degrees per minute, for the audit tools
+  }
   window.__mwmMap = map;   // a handle for the audit tools
   return { play: play, goStop: goStop };
   }
