@@ -2,7 +2,7 @@
 
 `run.py` loads the seven pages (main, Peatland, Yangtze, Carbon Trading, photovoltaic, flare efficiency, archive index) at 1440 and 390 in the dark and light themes and writes `audit.json` with, for each: a cold load (requests, bytes by resource type, FCP, LCP, TBT, CLS), a full scroll (the same after scrolling the whole page), the hero sequence marks on the main page, axe violations, console errors, horizontal overflow, and a sweep of every internal link, fragment and srcset file in the repository.
 
-Two network profiles are recorded for every page. The throttled profile (40 ms RTT, 10 Mbps, DPR 1) is the quoted figure and the one the baseline gates on; the local profile (no throttling, DPR 2 at 1440 and 3 at 390) is recorded beside it and labelled local. Chrome renders with the GPU; `--software` switches to SwiftShader, whose numbers are not comparable with the baseline.
+Two network profiles are recorded for every page. The throttled profile (40 ms RTT, 10 Mbps, DPR 1) is the quoted figure and the one the baseline gates on; the local profile (no throttling, DPR 2 at 1440 and 3 at 390) is recorded beside it and labelled local. Requests and bytes count only what leaves the page: data: URLs such as inline masks and icons are left out and reported apart as `inline`. Chrome renders with the GPU; `--software` switches to SwiftShader, whose numbers are not comparable with the baseline.
 
 ## Run
 

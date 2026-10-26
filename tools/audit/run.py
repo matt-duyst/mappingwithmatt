@@ -99,12 +99,16 @@ class Chrome:
 
 
 def network(c, since=0):
-    reqs = [e['params'] for e in c.ev if e.get('method') == 'Network.requestWillBeSent'][since:]
+    """Requests and bytes since the given event index. data: URLs (inline masks and icons) never leave the page, so they are left out of
+    the counts, the bytes and the by_type breakdown and reported apart as inline."""
+    seen = [e['params'] for e in c.ev if e.get('method') == 'Network.requestWillBeSent'][since:]
+    reqs = [r for r in seen if not r['request']['url'].startswith('data:')]
     fin = {e['params']['requestId']: e['params']['encodedDataLength'] for e in c.ev if e.get('method') == 'Network.loadingFinished'}
     by_type = {}
     for r in reqs:
         t = r.get('type', 'Other'); by_type.setdefault(t, [0, 0]); by_type[t][0] += 1; by_type[t][1] += fin.get(r['requestId'], 0)
-    return {'requests': len(reqs), 'bytes': sum(fin.get(r['requestId'], 0) for r in reqs), 'by_type': {k: {'requests': v[0], 'bytes': v[1]} for k, v in sorted(by_type.items())}}
+    return {'requests': len(reqs), 'bytes': sum(fin.get(r['requestId'], 0) for r in reqs), 'inline': len(seen) - len(reqs),
+            'by_type': {k: {'requests': v[0], 'bytes': v[1]} for k, v in sorted(by_type.items())}}
 
 
 def errors(c):
