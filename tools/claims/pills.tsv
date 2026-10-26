@@ -1,0 +1,42 @@
+role	pill	line	phrase
+Grassroots Carbon	Light Use Efficiency	95	deterministic Light Use Efficiency (LUE) backbone
+Grassroots Carbon	RothC	94	feeding RothC, a process-based biogeochemical model
+Grassroots Carbon	CAR-SEP	94	Protocol (CAR-SEP)
+Grassroots Carbon	Harmonized Landsat-Sentinel	105	the Harmonized Landsat-Sentinel (HLS) spectral suite
+Grassroots Carbon	AWS S3	111	a cloud-native data system built on AWS S3
+Grassroots Carbon	Cloud Optimized GeoTIFF	112	Optimized GeoTIFF endpoints (the name wraps from line 111)
+Grassroots Carbon	Uber H3	113	Uber H3 spatial indexing
+SeekOps	UAV TDLAS	134	unmanned aerial vehicles mounted with in-situ tunable diode laser absorption spectroscopy (TDLAS)
+SeekOps	mass balance	142	mass-balance methane flux estimation
+SeekOps	LiDAR terrain correction	142	Terrain effects were corrected via LiDAR-derived surface models
+SeekOps	Navier-Stokes plume model	145	Plume transport was modeled through coupled Navier-Stokes formulations
+SeekOps	YOLOv8	151	Fine-tuned the YOLOv8 object detection architecture
+SeekOps	Folium	159	visualization suites in Python (Folium, Plotly Dash)
+SeekOps	Plotly Dash	159	visualization suites in Python (Folium, Plotly Dash)
+SeekOps	QGIS	159	GIS environments (QGIS, ArcGIS Pro)
+SeekOps	ArcGIS Pro	159	GIS environments (QGIS, ArcGIS Pro)
+Yale School of the Environment	Google Earth Engine	172	Google Earth Engine, delineating urban extent
+Yale School of the Environment	Landsat	171	the complete 30m Landsat archive (TM, ETM+, OLI)
+Yale School of the Environment	GAIA	172	Global Artificial Impervious Areas (GAIA) algorithm
+Yale School of the Environment	PPPM	173	Phenology and Pixel-Based Paddy Mapping (PPPM) algorithm
+Yale School of the Environment	Sentinel-5P TROPOMI	178	Sentinel-5P TROPOMI column-averaged dry-air mixing ratios
+Yale School of the Environment	Getis-Ord Gi*	179	Applied the Getis-Ord Gi*
+Yale School of the Environment	Moran's I	180	Global Moran's I to quantify spatial autocorrelation
+Yale School of the Environment	DeepLabV3+	187	convolutional neural network on the DeepLabV3+ architecture
+Yale School of the Environment	ResNet50	190	built on a ResNet50 backbone
+University of Minnesota	eddy covariance	200	where the eddy covariance technique was first applied
+University of Minnesota	GHG analyzers	204	measured near-simultaneously via Ultraportable GHG Analyzers
+University of Minnesota	OLS regression	217	and XGBoost alongside OLS regression
+University of Minnesota	LightGBM	216	integrated LightGBM, SARIMAX
+University of Minnesota	SARIMAX	216	integrated LightGBM, SARIMAX (Seasonal AutoRegressive Integrated
+University of Minnesota	Prophet	217	Facebook Prophet, and XGBoost
+University of Minnesota	XGBoost	217	Facebook Prophet, and XGBoost alongside OLS regression
+University of Minnesota	MAPE	221	lowest Mean Absolute Percentage Error (MAPE)
+University of California, Los Angeles	Landsat 8	61	Processed Landsat 8 OLI/TIRS C1 Level-1 imagery
+University of California, Los Angeles	NDVI	59	Spectral Indices (NDVI & NBR)
+University of California, Los Angeles	dNBR	60	Normalized Burn Ratio (dNBR) analyses
+University of California, Los Angeles	ENVI	64	ENVI pipeline (radiometric calibration
+University of California, Los Angeles	Google Earth Engine	65	against a Google Earth Engine UN-SPIDER
+University of California, Los Angeles	SAR	76	SAR analysis, DEM construction
+University of California, Los Angeles	DEM construction	76	SAR analysis, DEM construction, spectral indices
+University of California, Los Angeles	cartography	77	spatial interpolation, and cartography are documented

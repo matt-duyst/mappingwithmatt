@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Every sentence with a digit or a percent sign on the seven pages must have a row in ledger.tsv.
+"""Every sentence with a digit or a percent sign on the seven pages must have a row in ledger.tsv, and every skill pill on the
+Experience cards of the main page must have a row in pills.tsv.
 
-    python3 tools/claims/check.py            # exit 1 when a sentence has no ledger row
+    python3 tools/claims/check.py            # exit 1 when a sentence has no ledger row or a pill has no pills row
 
 The ledger has four tab-separated columns: page, sentence, source, line. A source of UNSOURCED is a row, so the check passes;
-it is the report's job to list those. Sentences are compared after whitespace is collapsed.
+it is the report's job to list those. Sentences are compared after whitespace is collapsed. The pills file has four columns:
+role (the card's heading), pill (its text), line (the line of the CV's layout extraction that names it for that role) and phrase
+(the words on that line that support it).
 """
 import html, os, re, sys
 
@@ -48,6 +51,26 @@ def load_ledger():
     return rows
 
 
+def load_pills():
+    rows = set()
+    with open(os.path.join(HERE, 'pills.tsv'), encoding='utf-8') as f:
+        next(f)
+        for line in f:
+            parts = line.rstrip('\n').split('\t')
+            if len(parts) >= 4 and parts[2].strip().isdigit(): rows.add((parts[0].strip(), parts[1].strip()))
+    return rows
+
+
+def pills():
+    """(role, pill) for every skill pill on the main page's Experience cards; the role is the card's heading."""
+    t = open(os.path.join(SITE, PAGES['main']), encoding='utf-8').read(); out = []
+    for card in re.findall(r'<article class="exp"[^>]*>.*?</article>', t, flags=re.S):
+        head = re.search(r'<h3>(.*?)</h3>', card, flags=re.S)
+        role = html.unescape(re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', head.group(1)))).strip() if head else ''
+        for tag in re.findall(r'<span class="tag">(.*?)</span>', card, flags=re.S): out.append((role, html.unescape(tag.strip())))
+    return out
+
+
 def main():
     ledger = load_ledger(); missing = []; total = sourced = unsourced = 0
     for page, rel in PAGES.items():
@@ -60,7 +83,10 @@ def main():
             else: sourced += 1
     print(f"{total} sentences with a digit or percent sign: {sourced} sourced, {unsourced} unsourced, {len(missing)} without a ledger row")
     for page, s in missing: print(f"  {page}: {s}")
-    sys.exit(1 if missing else 0)
+    known = load_pills(); found = pills(); unpilled = [(r, p) for r, p in found if (r, p) not in known]
+    print(f"{len(found)} skill pills on the Experience cards: {len(found) - len(unpilled)} sourced to the CV, {len(unpilled)} without a pills row")
+    for r, p in unpilled: print(f"  {r}: {p}")
+    sys.exit(1 if missing or unpilled else 0)
 
 
 if __name__ == '__main__':
