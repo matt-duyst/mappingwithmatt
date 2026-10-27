@@ -1,6 +1,6 @@
 # How a change moves through the checks
 
-Work happens on a branch, never directly on main, and each step of a brief becomes one commit whose message says what changed in the site rather than what was done to the repository: "Reserve the height of every image before it loads", not "fix CSS". A commit is pushed only after it has been verified on a local server, and the next step is not started until the previous one is on origin.
+Work happens on a branch, never directly on main, and each step of a brief becomes one commit whose message says what changed in the site rather than what was done to the repository: "Reserve the height of every image before it loads", not "fix CSS". A commit is pushed only after it has been verified on a local server, and the next step is not started until the previous one is on origin. Reviews are served with `python3 tools/serve.py`, which serves the site on 0.0.0.0:8000 with `Cache-Control: no-store` on every response, so a reload never shows a stale file.
 
 Before a change is merged it is looked at, not only measured. Captures are taken at 1440 and 390 pixels wide, in the dark theme and the light theme, of whatever the change touches, and they are judged by eye against what the brief asked for. The captures are kept in a dated review folder beside the repository, not inside it.
 
