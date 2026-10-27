@@ -527,10 +527,10 @@ p { margin: 0 0 16px; }
 .band-arrow { position: absolute; left: calc(24px + var(--cta-r) - (var(--cta-r) + 10px) * 0.7071 - 12.75px); top: calc(24px + var(--cta-r) - (var(--cta-r) + 10px) * 0.7071 - 12.75px); width: 18px; height: 18px; color: var(--muted); }
 .band-arrow svg { width: 100%; height: 100%; }
 /* The cue at the arrow's tail (the arrow's path starts 5 px into its 18 px box), so the arrow reads from the cue to the bubble; "tap me" where nothing hovers.
-   Once the bubble has opened the composer it fades over 240 ms and stays away for the session. */
+   It shows whenever the composer is closed: it fades out over 240 ms as the composer opens and back in as it closes. */
 .band-cue { position: absolute; left: calc(24px + var(--cta-r) - (var(--cta-r) + 10px) * 0.7071 - 12.75px + 3px); top: calc(24px + var(--cta-r) - (var(--cta-r) + 10px) * 0.7071 - 12.75px + 3px); transform: translate(-100%, -100%); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.03em; color: var(--muted); white-space: nowrap; pointer-events: none; transition: opacity 240ms ease; }
 .band-cue .cue-tap { display: none; } @media (hover: none) { .band-cue .cue-click { display: none; } .band-cue .cue-tap { display: inline; } }
-.band-cue.gone { opacity: 0; } .band-cue.gone.at-once { transition: none; }
+.band-cue.gone { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .band-cue { transition: none; } }
 .cta { position: relative; width: 170px; height: 170px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; font-size: 15px; font-weight: 500; cursor: pointer; overflow: hidden; display: grid; place-items: center; will-change: transform; transition: border-color .2s ease; }
 .cta-label { position: relative; z-index: 2; transition: color .3s ease; }
@@ -1390,11 +1390,9 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   var cta = document.getElementById('cta'), ctaWrap = document.getElementById('cta-wrap'), cformEl = document.getElementById('composer-form');
   if (cta && cformEl) {
     var msgField = cformEl.querySelector('textarea');
-    var cue = document.getElementById('band-cue'), CUE_KEY = 'mwm-cue-done';
-    try { if (cue && sessionStorage.getItem(CUE_KEY) === '1') cue.classList.add('gone', 'at-once'); } catch (e) {}
-    var retireCue = function () { if (!cue || cue.classList.contains('gone')) return; cue.classList.add('gone'); try { sessionStorage.setItem(CUE_KEY, '1'); } catch (e) {} };
-    var openComposer = function () { retireCue(); cformEl.classList.remove('closed'); cformEl.classList.remove('rising'); void cformEl.offsetWidth; cformEl.classList.add('rising'); cta.setAttribute('aria-expanded', 'true'); if (msgField) msgField.focus({ preventScroll: true }); cformEl.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); };
-    var closeComposer = function () { cformEl.classList.add('closed'); cformEl.classList.remove('open'); cta.setAttribute('aria-expanded', 'false'); cta.focus({ preventScroll: true }); };
+    var cue = document.getElementById('band-cue'), showCue = function (on) { if (cue) cue.classList.toggle('gone', !on); };
+    var openComposer = function () { showCue(false); cformEl.classList.remove('closed'); cformEl.classList.remove('rising'); void cformEl.offsetWidth; cformEl.classList.add('rising'); cta.setAttribute('aria-expanded', 'true'); if (msgField) msgField.focus({ preventScroll: true }); cformEl.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); };
+    var closeComposer = function () { showCue(true); cformEl.classList.add('closed'); cformEl.classList.remove('open'); cta.setAttribute('aria-expanded', 'false'); cta.focus({ preventScroll: true }); };
     cformEl.classList.add('closed');
     cta.addEventListener('click', function () {
       cta.classList.remove('pressed'); void cta.offsetWidth; cta.classList.add('pressed');
