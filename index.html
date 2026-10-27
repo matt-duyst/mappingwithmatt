@@ -512,8 +512,9 @@ p { margin: 0 0 16px; }
 /* The Email pill copies the address. Its tooltip, in the mono face and muted color, reads "copy email" on hover or focus and "copied: ..." for 1.6 s after
    a copy, then fades over 240 ms; the pill itself never changes size. If no copy method works, the tooltip holds the address, selected, to copy by hand. */
 .hero .band-links .copy-email { position: relative; background-color: transparent; cursor: pointer; line-height: inherit; }
-.copy-tip { position: absolute; left: 0; bottom: calc(100% + 8px); padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.03em; color: var(--muted); white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 240ms ease; }
+.copy-tip { position: absolute; z-index: 6; left: 0; bottom: calc(100% + 8px); padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.03em; color: var(--muted); white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 240ms ease; }
 .copy-email:hover .copy-tip, .copy-email:focus-visible .copy-tip, .copy-email.copied .copy-tip, .copy-email.manual .copy-tip { opacity: 1; }
+.copy-email.tip-below .copy-tip { bottom: auto; top: calc(100% + 8px); }   /* on a wrapped row's later line, below the pill so it never covers the line above */
 .copy-email.manual .copy-tip { pointer-events: auto; user-select: all; -webkit-user-select: all; color: var(--text); }
 @media (prefers-reduced-motion: reduce) { .copy-tip { transition: none; } }
 .hero .band-links svg { width: 12px; height: 12px; }
@@ -1469,7 +1470,10 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       if (copyLive) copyLive.textContent = 'Copy unavailable; the address is selected to copy by hand';
       copyTimer = setTimeout(function () { copyBtn.classList.remove('manual'); copyTip.textContent = 'copy email'; }, 8000);
     };
+    var placeTip = function () { var first = copyBtn.parentNode.firstElementChild; copyBtn.classList.toggle('tip-below', !!first && copyBtn.getBoundingClientRect().top > first.getBoundingClientRect().top + 4); };
+    ['pointerenter', 'focus'].forEach(function (ev) { copyBtn.addEventListener(ev, placeTip); });
     copyBtn.addEventListener('click', function () {
+      placeTip();
       if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) navigator.clipboard.writeText(ADDR).then(function () { copied('clipboard'); }, function () { if (byTextarea()) copied('execCommand'); else byHand(); });
       else if (byTextarea()) copied('execCommand'); else byHand();
     });
