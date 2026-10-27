@@ -504,11 +504,18 @@ p { margin: 0 0 16px; }
    wraps between pills, never inside one. */
 .band { container-type: inline-size; --band-h: 172px; }
 .hero .band-links { position: absolute; left: 0; top: calc(var(--band-h) / 2 - 24px); transform: translateY(-50%); z-index: 2; display: flex; flex-wrap: nowrap; gap: 8px; margin: 0; }
-.hero .band-links a, .hero .band-links .docs-wrap > a { white-space: nowrap; }
+.hero .band-links a, .hero .band-links .docs-wrap > a, .hero .band-links .copy-email { white-space: nowrap; }
 @container (max-width: 875px) { .hero .band-links { position: static; transform: none; flex-wrap: wrap; margin: 0 0 48px; } }   /* clear of the bubble, which rises 24 px above the band, and of the cue above it */
-.hero .band-links a, .hero .band-links .docs-wrap > a { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; transition: border-color .15s ease, background .15s ease, transform .2s cubic-bezier(.34,1.56,.64,1); }
-.hero .band-links a:hover { color: var(--text); border-color: var(--text); background: var(--accent-soft); transform: translateY(-1px); }
-.hero .band-links a:active { transform: scale(0.97); }
+.hero .band-links a, .hero .band-links .docs-wrap > a, .hero .band-links .copy-email { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; transition: border-color .15s ease, background .15s ease, transform .2s cubic-bezier(.34,1.56,.64,1); }
+.hero .band-links a:hover, .hero .band-links .copy-email:hover { color: var(--text); border-color: var(--text); background: var(--accent-soft); transform: translateY(-1px); }
+.hero .band-links a:active, .hero .band-links .copy-email:active { transform: scale(0.97); }
+/* The Email pill copies the address. Its tooltip, in the mono face and muted color, reads "copy email" on hover or focus and "copied: ..." for 1.6 s after
+   a copy, then fades over 240 ms; the pill itself never changes size. If no copy method works, the tooltip holds the address, selected, to copy by hand. */
+.hero .band-links .copy-email { position: relative; background-color: transparent; cursor: pointer; line-height: inherit; }
+.copy-tip { position: absolute; left: 0; bottom: calc(100% + 8px); padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.03em; color: var(--muted); white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 240ms ease; }
+.copy-email:hover .copy-tip, .copy-email:focus-visible .copy-tip, .copy-email.copied .copy-tip, .copy-email.manual .copy-tip { opacity: 1; }
+.copy-email.manual .copy-tip { pointer-events: auto; user-select: all; -webkit-user-select: all; color: var(--text); }
+@media (prefers-reduced-motion: reduce) { .copy-tip { transition: none; } }
 .hero .band-links svg { width: 12px; height: 12px; }
 .docs-wrap { position: relative; display: inline-flex; }
 .docs-menu { position: absolute; left: 0; top: calc(100% + 8px); display: flex; flex-direction: column; min-width: 150px; padding: 4px; border: 1px solid var(--line); border-radius: 10px; background: rgba(15,15,16,0.92); backdrop-filter: blur(10px); z-index: 5; animation: rise 180ms ease-out; }
@@ -568,9 +575,9 @@ p { margin: 0 0 16px; }
 .composer-row .rip:active { transform: scale(0.97); }
 .composer-note { font-size: 13px; color: var(--muted); }
 @media (max-width: 600px) { .composer-fields { grid-template-columns: 1fr; } .composer-form { grid-template-columns: 1fr; grid-template-areas: "msg" "send" "fields" "note"; } .composer-form .composer-row { margin-top: 10px; } .hero .band-links { gap: 2px 12px; }
-  .hero .band-links a, .hero .band-links .docs-wrap > a { font-size: 9.5px; letter-spacing: -0.02em; padding: 4px 0; gap: 3px; border: 0; border-radius: 0; border-bottom: 1px solid transparent; }
-  .hero .band-links a:hover, .hero .band-links a:active { background: transparent; border-color: transparent; border-bottom-color: var(--text); transform: none; }
-  .hero .band-links a span { white-space: nowrap; } .hero .band-links .more { display: none; } .hero .band-links svg { width: 11px; height: 11px; } .band { --band-h: 128px; } .cta { width: 102px; height: 102px; font-size: 12.5px; } .band-cta { right: 0; margin-right: 0; padding-right: 0; --cta-r: 51px; } .band-wrap { margin-bottom: 0; } .hero .row > div:first-child { order: 1; } }
+  .hero .band-links a, .hero .band-links .docs-wrap > a, .hero .band-links .copy-email { font-size: 9.5px; letter-spacing: -0.02em; padding: 4px 0; gap: 3px; border: 0; border-radius: 0; border-bottom: 1px solid transparent; }
+  .hero .band-links a:hover, .hero .band-links a:active, .hero .band-links .copy-email:hover, .hero .band-links .copy-email:active { background: transparent; border-color: transparent; border-bottom-color: var(--text); transform: none; }
+  .hero .band-links a span, .hero .band-links .copy-email span { white-space: nowrap; } .hero .band-links .more { display: none; } .hero .band-links svg { width: 11px; height: 11px; } .band { --band-h: 128px; } .cta { width: 102px; height: 102px; font-size: 12.5px; } .band-cta { right: 0; margin-right: 0; padding-right: 0; --cta-r: 51px; } .band-wrap { margin-bottom: 0; } .hero .row > div:first-child { order: 1; } }
 @media (prefers-reduced-motion: reduce) { .composer-form { animation: none; } .cta, .cta-fill { transition: none; } }
 footer.site { padding: 36px var(--pad); text-align: center; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
 footer.site .loc { display: inline-flex; align-items: center; gap: 5px; }
@@ -677,7 +684,8 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           <a href="https://mappingwithmatt.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span>Portfolio</span></a>
           <a href="https://doi.org/10.2118/221067-MS"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Publications</span></a>
           <span class="docs-wrap"><a href="#docs-menu" id="cv-link" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg><span>CV<span class="more"> &amp; Resume</span></span></a><span class="docs-menu" id="docs-menu" hidden><a href="assets/Duyst_Resume.pdf" download>Resume, PDF</a><a href="assets/Duyst_CV.pdf" download>CV, PDF</a></span></span>
-          <a href="mailto:matthew.duyst@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Email</span></a>
+          <button type="button" class="copy-email" id="copy-email" aria-label="Copy email address matthew.duyst@gmail.com" aria-describedby="copy-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Email</span><span class="copy-tip" id="copy-tip" role="tooltip">copy email</span></button>
+          <span class="visually-hidden" id="copy-live" aria-live="polite"></span>
           </div>
           <div class="band-track">
           <div class="band-cta" id="cta-wrap">
@@ -1441,6 +1449,32 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     // hue for the fills drifts with the page blobs
     var hueEl = document.documentElement, hh = 200;
     (function hueLoop() { hh = (hh + 0.05) % 360; hueEl.style.setProperty('--ch', hh.toFixed(1)); requestAnimationFrame(hueLoop); })();
+  }
+  // The Email pill copies the address: the clipboard API where the page is a secure context, else a hidden textarea and execCommand('copy'), as on the
+  // LAN review server; the tooltip confirms for 1.6 s and a polite live region announces it. When both fail the tooltip holds the address, selected.
+  var copyBtn = document.getElementById('copy-email'), copyTip = document.getElementById('copy-tip'), copyLive = document.getElementById('copy-live'), ADDR = 'matthew.duyst@gmail.com', copyTimer = null;
+  if (copyBtn && copyTip) {
+    var copied = function (how) {
+      copyBtn.classList.remove('manual'); copyBtn.classList.add('copied'); copyBtn.dataset.copiedBy = how; copyTip.textContent = 'copied: ' + ADDR;
+      if (copyLive) { copyLive.textContent = ''; setTimeout(function () { copyLive.textContent = 'Email copied'; }, 30); }
+      clearTimeout(copyTimer); copyTimer = setTimeout(function () { copyBtn.classList.remove('copied'); copyTimer = setTimeout(function () { copyTip.textContent = 'copy email'; }, 240); }, 1600);
+    };
+    var byTextarea = function () {
+      var ta = document.createElement('textarea'), ok = false; ta.value = ADDR; ta.setAttribute('readonly', ''); ta.setAttribute('aria-hidden', 'true');
+      ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;'; document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(ta); copyBtn.focus({ preventScroll: true }); return ok;
+    };
+    var byHand = function () {
+      clearTimeout(copyTimer); copyBtn.classList.remove('copied'); copyBtn.classList.add('manual'); copyTip.textContent = ADDR;
+      try { var rg = document.createRange(); rg.selectNodeContents(copyTip); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(rg); } catch (e) {}
+      if (copyLive) copyLive.textContent = 'Copy unavailable; the address is selected to copy by hand';
+      copyTimer = setTimeout(function () { copyBtn.classList.remove('manual'); copyTip.textContent = 'copy email'; }, 8000);
+    };
+    copyBtn.addEventListener('click', function () {
+      if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) navigator.clipboard.writeText(ADDR).then(function () { copied('clipboard'); }, function () { if (byTextarea()) copied('execCommand'); else byHand(); });
+      else if (byTextarea()) copied('execCommand'); else byHand();
+    });
   }
   var cvLink = document.getElementById('cv-link'), docsMenu = document.getElementById('docs-menu');
   if (cvLink && docsMenu) { cvLink.addEventListener('click', function (e) { e.preventDefault(); var open = !docsMenu.hidden; docsMenu.hidden = open; cvLink.setAttribute('aria-expanded', String(!open)); }); document.addEventListener('click', function (e) { if (!docsMenu.hidden && !e.target.closest('.docs-wrap')) { docsMenu.hidden = true; cvLink.setAttribute('aria-expanded', 'false'); } }); }
