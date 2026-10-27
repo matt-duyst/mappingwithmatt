@@ -114,8 +114,28 @@ section, footer { position: relative; z-index: 2; }
 #rail.show { opacity: 1; pointer-events: auto; transform: translate(0, -50%); }
 #rail a { position: relative; display: flex; align-items: center; gap: 12px; padding: 9px 0; color: var(--muted); border: 0; }
 #rail a span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.03em; opacity: 0; transform: translateX(6px); transition: opacity 200ms ease, transform 200ms cubic-bezier(.65, 0, .35, 1); white-space: nowrap; }
-#rail a i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--muted); background: transparent; box-sizing: border-box; transition: background 200ms ease, border-color 200ms ease, transform 200ms ease; }
-#rail a + a::before { content: ""; position: absolute; right: 3px; top: -9px; height: 18px; border-left: 1px dashed var(--line); }
+#rail a i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--muted); background: var(--bg); box-sizing: border-box; transition: background 200ms ease, border-color 200ms ease, transform 200ms ease; position: relative; z-index: 1; }
+/* The route behind the dots: a dashed line in the favicon's stroke (round caps, dash 5 gap 4.5) that fills from the top as the page scrolls */
+#rail .rail-line { position: absolute; right: 0; width: 7px; pointer-events: none; overflow: visible; }
+#rail .rail-line line { stroke-width: 1.5; stroke-linecap: round; stroke-dasharray: 5 4.5; fill: none; }
+#rail .rail-line .track { stroke: var(--line); }
+#rail .rail-line .prog { stroke: var(--text); }
+/* The legend: a small collapsible panel at the foot of the rail on desktop, in the footer on phones */
+.legend { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.03em; color: var(--muted); }
+#rail .legend { margin-top: 14px; align-self: flex-end; text-align: right; }
+.legend summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 6px; padding: 4px 0; }
+.legend summary::-webkit-details-marker { display: none; }
+.legend summary::before { content: ""; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid currentColor; transition: transform 200ms ease; }
+.legend[open] summary::before { transform: rotate(180deg); }
+.legend summary:hover, .legend summary:focus-visible { color: var(--text); }
+.legend ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+.legend li { display: flex; align-items: center; gap: 9px; white-space: nowrap; justify-content: flex-end; }
+#rail .legend li { flex-direction: row-reverse; }
+.legend li svg { width: 26px; height: 18px; flex: none; color: var(--muted); fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+.legend li .sym-stop svg { stroke-width: 1.4; }
+footer.site .legend { display: none; }
+@media (max-width: 900px) { footer.site .legend { display: block; width: 100%; margin-top: 18px; } footer.site .legend li { justify-content: flex-start; } }
+@media (prefers-reduced-motion: reduce) { .legend summary::before { transition: none; } }
 #rail a:hover span, #rail a:focus-visible span { opacity: 1; transform: none; color: var(--text); }
 #rail a.active i { background: var(--text); border-color: var(--text); transform: scale(1.25); }
 #rail a:hover i { border-color: var(--text); }
@@ -388,6 +408,8 @@ p { margin: 0 0 16px; }
 .rt-app.collapsed .panel { overflow:hidden; padding:0; }
 .mapwrap { position:relative; min-width:0; }
 #rt-mapcanvas { position:absolute; inset:0; background:#0b0b0c; }
+/* The jump between distant stops fades the map (canvas and markers) to the dark page ground and back; the controls stay */
+#rt-mapcanvas.jumping { background:#0f0f10; } #rt-mapcanvas .maplibregl-canvas-container { transition:opacity 320ms ease; } #rt-mapcanvas.jumping .maplibregl-canvas-container { opacity:0; }
 .visually-hidden { position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; border:0; }
 .maplibregl-ctrl-group { background:rgba(15,15,16,.85)!important; border:1px solid var(--line); backdrop-filter:blur(8px); }
 .maplibregl-ctrl-group button { filter:invert(1); }
@@ -398,7 +420,9 @@ p { margin: 0 0 16px; }
 .maplibregl-ctrl-attrib a { color:rgba(255,255,255,.6); }
 .mini { position:absolute; right:12px; bottom:118px; width:180px; height:110px; border:1px solid var(--line); border-radius:6px; overflow:hidden; z-index:5; background:#0b0b0c; }
 #minimap { position:absolute; inset:0; }
-.minibox { position:absolute; border:1px solid var(--text); background:rgba(255,255,255,.08); pointer-events:none; }
+/* the overview window is an SVG rectangle redrawn by its attributes, so following the map never counts as a layout shift */
+.minibox-layer { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:hidden; }
+.minibox { fill:rgba(255,255,255,.08); stroke:var(--text); stroke-width:1; shape-rendering:crispEdges; }
 .readout { position:absolute; right:56px; top:12px; z-index:5; font-size:10.5px; color:var(--muted); text-align:right; line-height:1.5; pointer-events:none; }
 .ticks { display:flex; justify-content:space-between; font-size:9px; color:var(--muted); padding:0 2px; margin-top:-4px; }
 .hud { position:absolute; left:12px; bottom:100px; z-index:5; font-size:10.5px; color:var(--muted); pointer-events:none; }
@@ -435,16 +459,28 @@ p { margin: 0 0 16px; }
 .card .g-role { margin:6px 0 0; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.035); font-size:11px; line-height:1.6; }
 .card-body[hidden] { display:none; }
 .rt-app { --text: #ECECEA; --muted: #9A9A98; }  /* the panel is dark in both schemes; its text keeps the dark scheme's tokens */
+/* The Sentinel-2 year row: shown only while Sentinel-2 is the basemap; the active year is lit */
+.s2-years[hidden] { display:none; } .s2-years .years { display:flex; flex-wrap:wrap; gap:2px; margin-top:6px; }
+.s2-years .years button { font:inherit; font-family:var(--font-mono); font-size:11px; letter-spacing:0.02em; color:var(--muted); background:transparent; border:1px solid transparent; border-radius:4px; padding:3px 5px; cursor:pointer; }
+.s2-years .years button:hover { color:var(--text); } .s2-years .years button[aria-checked="true"] { color:var(--text); background:rgba(255,255,255,.06); border-color:var(--line); } .s2-years .years button:focus-visible { outline:1px solid var(--text); outline-offset:2px; }
 .sec { border-top:1px solid var(--line); padding-top:12px; display:flex; flex-direction:column; gap:8px; font-size:11px; }
 .sec label { display:flex; align-items:center; gap:8px; cursor:pointer; }
 .sec input { margin:0; accent-color:#ECECEA; }
 .row { display:flex; gap:14px; flex-wrap:wrap; }
-.marker { width:34px; height:34px; border-radius:50%; background:#121213; border:1px solid rgba(255,255,255,.55); box-shadow:0 0 0 4px rgba(15,15,16,.5), 0 0 0 5px rgba(255,255,255,.35); display:grid; place-items:center; color:var(--text); cursor:pointer; opacity:.4; transition:opacity .3s, border-color .2s; }
-.marker.on { opacity:1; } .marker.active { border-color:var(--text); box-shadow:0 0 0 4px rgba(15,15,16,.5), 0 0 0 5px var(--text); }
+.marker { width:34px; height:34px; border-radius:50%; background:#121213; border:1px solid rgba(255,255,255,.55); box-shadow:0 0 0 4px rgba(15,15,16,.5), 0 0 0 5px rgba(255,255,255,.35); display:grid; place-items:center; color:var(--text); cursor:pointer; filter:opacity(.4); transition:filter .3s, border-color .2s; }
+/* the visited and unvisited states use filter, since MapLibre writes its own inline opacity on every marker element */
+.marker.on { filter:opacity(1); } .marker.active { border-color:var(--text); box-shadow:0 0 0 4px rgba(15,15,16,.5), 0 0 0 5px var(--text); }
 .marker .ic { width:16px; height:16px; stroke-width:1.6; } .marker .ic.ph { width:16px; height:16px; }
 .marker .ic-pair { display:flex; gap:1px; align-items:center; } .marker .ic-pair .ic { width:9px; height:9px; } .marker .ic-pair .ic.ph { width:13px; height:13px; }
 .xmark { font:700 13px var(--font-mono); color:var(--text); transform:translateY(-30px); }
-.rt-site-dot { width:8px; height:8px; border-radius:50%; background:var(--text); border:2px solid #0b0b0c; opacity:0; transition:opacity .4s; } .rt-site-dot.on { opacity:1; }
+/* The map label, placed by hand per stop: the active stop's label beside its marker. Over imagery the text is light with a
+   dark halo; over the dark basemap it takes the page's text color with a page-color halo. The anchor sits on the inner span, since MapLibre owns the outer transform. */
+.rt-label { pointer-events:none; filter:opacity(0); transition:filter .4s; }
+.rt-label.on { filter:opacity(1); }
+.rt-label > span { display:block; font:500 11px/1.3 var(--font-mono); letter-spacing:0.03em; white-space:nowrap; color:#ECECEA; text-shadow:0 0 2px rgba(11,11,12,.95), 0 0 2px rgba(11,11,12,.95), 1px 1px 0 rgba(11,11,12,.9), -1px -1px 0 rgba(11,11,12,.9), 1px -1px 0 rgba(11,11,12,.9), -1px 1px 0 rgba(11,11,12,.9); }
+.base-dark .rt-label > span { color:var(--text); text-shadow:0 0 2px var(--bg), 0 0 2px var(--bg), 1px 1px 0 var(--bg), -1px -1px 0 var(--bg), 1px -1px 0 var(--bg), -1px 1px 0 var(--bg); }
+.rt-label.anc-left > span { transform:translate(50%, 0); } .rt-label.anc-right > span { transform:translate(-50%, 0); } .rt-label.anc-top > span { transform:translate(0, 50%); } .rt-label.anc-bottom > span { transform:translate(0, -50%); }
+.rt-label.rt-label-stop > span { font-weight:700; }
 .cursor { width:10px; height:10px; border-radius:50%; background:var(--text); border:2px solid #0b0b0c; }
 @media (max-width:860px) { .rt-app.app { grid-template-columns:1fr; grid-template-rows:minmax(0,1fr) 6px var(--ph, 40%); } .rt-app.collapsed { grid-template-rows:minmax(0,1fr) 6px 44px; } .splitter { cursor:row-resize; } .panel { border-left:0; border-top:1px solid var(--line); } .tab-nm { display:none; } .mini { width:110px; height:66px; } .rt-app.collapsed .panel { padding:10px 14px; } }
 
@@ -489,12 +525,21 @@ p { margin: 0 0 16px; }
 .cta.sent .cta-label { color: var(--text) !important; }
 @keyframes press { 40% { transform: scale(1.06); } }
 .composer-form[hidden] { display: none; }
+/* The composer behind the bubble: closed, it takes no space at all; opened, it joins the flow beneath the bubble, pushing what follows down, and rises in
+   over 240 ms. The shift follows the visitor's press, so it does not count as an unexpected layout shift. Without JavaScript the class is never set and
+   the composer stays open. */
+.composer-form.closed { display: none; }
+.composer-form.rising { animation: composer-rise 240ms ease both; }
+@keyframes composer-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .composer-form.rising { animation: none; } }
 /* The contact row: one message line with the send button at its end; name and email rise beneath once the message field has focus or text.
    DOM order stays message, name, email, send, so keyboard and screen-reader order match the form; the grid places the button at the line's end. */
 .composer-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "msg send" "fields fields" "note note"; column-gap: 14px; row-gap: 0; align-items: end; max-width: 660px; margin-top: 18px; }
 .composer-form textarea { grid-area: msg; field-sizing: content; min-height: calc(2 * 1.6em + 17px); overflow-y: hidden; }   /* sized to its content, two lines at least; rows=2 is the fallback where field-sizing is unknown */
-.composer-form .composer-fields { grid-area: fields; max-height: 0; opacity: 0; transform: translateY(6px); overflow: hidden; transition: max-height 240ms ease, opacity 240ms ease, transform 240ms ease, margin 240ms ease; margin-top: 0; }
-.composer-form.open .composer-fields { max-height: 80px; opacity: 1; transform: none; margin-top: 10px; }
+/* name and email keep their place while hidden, so their rise moves nothing below */
+.composer-form .composer-fields { grid-area: fields; margin-top: 10px; opacity: 0; transform: translateY(6px); visibility: hidden; transition: opacity 240ms ease, transform 240ms ease, visibility 0s linear 240ms; }
+.composer-form.open .composer-fields { opacity: 1; transform: none; visibility: visible; transition: opacity 240ms ease, transform 240ms ease, visibility 0s linear 0s; }
+@media (prefers-reduced-motion: reduce) { .composer-form .composer-fields, .composer-form.open .composer-fields { transition: none; } }
 .composer-form .composer-row { grid-area: send; }
 .composer-form .composer-note { grid-area: note; margin-top: 8px; }
 .composer-form .composer-note:empty { display: none; }
@@ -509,10 +554,10 @@ p { margin: 0 0 16px; }
 .composer-row .rip svg { width: 12px; height: 12px; }
 .composer-row .rip:hover { border-color: var(--text); background: var(--accent-soft); transform: translateY(-1px); }
 .composer-row .rip:active { transform: scale(0.97); }
-.composer-email { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.02em; color: var(--muted); border: 0; }
-.composer-email:hover, .composer-email:focus-visible { color: var(--text); }
+.band-email { position: absolute; right: calc(4% + 190px); top: calc(50% + 10px); z-index: 2; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.02em; color: var(--muted); border: 0; white-space: nowrap; }
+.band-email:hover, .band-email:focus-visible { color: var(--text); }
 .composer-note { font-size: 13px; color: var(--muted); }
-@media (max-width: 600px) { .composer-fields { grid-template-columns: 1fr; } .composer-form { grid-template-columns: 1fr; grid-template-areas: "msg" "send" "fields" "note"; } .composer-form .composer-row { margin-top: 10px; } .hero .band-links { gap: 2px 12px; }
+@media (max-width: 600px) { .composer-fields { grid-template-columns: 1fr; } .composer-form { grid-template-columns: 1fr; grid-template-areas: "msg" "send" "fields" "note"; } .composer-form .composer-row { margin-top: 10px; } .band-email { right: 114px; } .hero .band-links { gap: 2px 12px; }
   .hero .band-links a, .hero .band-links .docs-wrap > a { font-size: 9.5px; letter-spacing: -0.02em; padding: 4px 0; gap: 3px; border: 0; border-radius: 0; border-bottom: 1px solid transparent; }
   .hero .band-links a:hover, .hero .band-links a:active { background: transparent; border-color: transparent; border-bottom-color: var(--text); transform: none; }
   .hero .band-links a span { white-space: nowrap; } .hero .band-links .more { display: none; } .hero .band-links svg { width: 11px; height: 11px; } .band-track { height: 128px; } .cta { width: 102px; height: 102px; font-size: 12.5px; } .band-cta { right: 0; margin-right: 0; padding-right: 0; --cta-r: 51px; } .band-wrap { margin-bottom: 0; } .hero .row > div:first-child { order: 1; } }
@@ -553,6 +598,15 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   <a href="#research" data-sec="research"><span>Research</span><i></i></a>
   <a href="#code" data-sec="code"><span>Code &amp; data</span><i></i></a>
   <a href="#intro" class="rail-top"><span>Top</span><i></i></a>
+  <svg class="rail-line" aria-hidden="true"><defs><clipPath id="rail-clip"><rect id="rail-clip-rect" x="0" y="0" width="7" height="0"/></clipPath></defs><line class="track" x1="3.5" y1="0" x2="3.5" y2="100%"/><g clip-path="url(#rail-clip)"><line class="prog" x1="3.5" y1="0" x2="3.5" y2="100%"/></g></svg>
+  <details class="legend" id="legend">
+    <summary>Legend</summary>
+    <ul>
+      <li><svg viewBox="0 0 26 18" aria-hidden="true"><line x1="2" y1="9" x2="24" y2="9" stroke-dasharray="5 4.5"/></svg><span>dashed line, route</span></li>
+      <li class="sym-stop"><svg viewBox="0 0 26 18" aria-hidden="true"><circle cx="13" cy="9" r="7.5"/><circle cx="13" cy="9" r="1.6" fill="currentColor" stroke="none"/></svg><span>stop symbol, where work happened</span></li>
+      <li><svg viewBox="0 0 26 18" aria-hidden="true"><circle cx="13" cy="9" r="7.5" stroke-dasharray="5 4.5"/></svg><span>ring, the author</span></li>
+    </ul>
+  </details>
 </nav>
 <main>
 <section class="intro" id="intro">
@@ -619,6 +673,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
             <span class="band-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M17 9v8H9"/></svg></span>
             <button type="button" class="cta" id="cta" aria-expanded="false" aria-controls="composer-form"><span class="cta-fill" aria-hidden="true"></span><span class="cta-label">let's chat!</span></button>
           </div>
+          <a class="band-email" href="mailto:matthew.duyst@gmail.com">matthew.duyst@gmail.com</a>
           </div>
         </div>
         
@@ -633,7 +688,6 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           </div>
           <div class="composer-row">
             <button type="submit" class="rip" aria-label="Send the note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4z"/></svg>let it rip!</button>
-            <a class="composer-email" href="mailto:matthew.duyst@gmail.com">matthew.duyst@gmail.com</a>
           </div>
           <span class="composer-note" id="composer-note" aria-live="polite"></span>
         </form>
@@ -656,7 +710,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     <button class="ptoggle" id="ptoggle" title="Collapse panel (P)">&#9656;</button>
     <div class="hint" id="hint">Play the route, or drag and zoom</div>
     <div class="hud" id="coords">&nbsp;</div>
-    <div class="mini" id="mini" title="Overview: drag the box or click" aria-hidden="true"><div id="minimap"></div><div class="minibox" id="minibox"></div></div>
+    <div class="mini" id="mini" title="Overview: drag the box or click" aria-hidden="true"><div id="minimap"></div><svg class="minibox-layer"><rect class="minibox" id="minibox" x="0" y="0" width="2" height="2"/></svg></div>
     <div class="readout" id="readout"></div>
     <div class="tip" id="tip" hidden></div>
     <div class="strip">
@@ -708,14 +762,14 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     <div class="sec">
       <div class="k">Basemap</div>
       <div class="row"><label><input type="radio" name="base" value="imagery" checked>USGS imagery</label><label><input type="radio" name="base" value="eox">Sentinel-2</label><label><input type="radio" name="base" value="dark">Dark map</label><label><input type="radio" name="base" value="none">None</label></div>
+      <div class="s2-years" id="s2-years" hidden><div class="k">Sentinel-2 cloudless <span id="s2-year">2024</span>, EOX</div><div class="years" role="radiogroup" aria-label="Sentinel-2 mosaic year"></div></div>
       <label><input type="checkbox" id="l-labels" checked>Place labels</label>
       <label><input type="checkbox" id="l-terrain">3D terrain and hillshade</label>
       <label><input type="checkbox" id="l-route" checked>Route</label>
-      <label><input type="checkbox" id="l-sites" checked>Study sites</label>
       <label><input type="checkbox" id="l-stops" checked>Stops</label>
       <label><input type="checkbox" id="l-globe">Globe at low zoom</label>
     </div>
-    <div class="sec"><div class="k">Sources</div><div style="color:var(--muted);line-height:1.6">Imagery: USGS The National Map (public domain) and EOX Sentinel-2 cloudless (Copernicus, CC BY-NC-SA). Labels and dark map: OpenFreeMap, OpenMapTiles, OpenStreetMap contributors. Terrain: Mapzen and AWS Terrain Tiles. Engine: MapLibre GL JS 6.</div></div>
+    <div class="sec"><div class="k">Sources</div><div style="color:var(--muted);line-height:1.6">Imagery: USGS The National Map (public domain) and EOX Sentinel-2 cloudless, one mosaic for each year from 2016 to 2025 (Copernicus, CC BY-NC-SA). Labels and dark map: OpenFreeMap, OpenMapTiles, OpenStreetMap contributors. Terrain: Mapzen and AWS Terrain Tiles. Engine: MapLibre GL JS 6.</div></div>
   </aside>
 </div>
 </section>
@@ -1260,17 +1314,27 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     var links = dock.querySelectorAll('a'), railRaf = null;
     // The section whose top has passed the band 40 to 45 percent down the viewport is current; the last section
     // also becomes current once its top is in view or the page is at the bottom, since it is too short to reach the band
+    var railLine = dock.querySelector('.rail-line'), railClip = document.getElementById('rail-clip-rect'), dots = dock.querySelectorAll('a i');
+    function railFit() {
+      if (!railLine || !dots.length) return;
+      var nr = dock.getBoundingClientRect(), first = dots[0].getBoundingClientRect(), lastDot = dots[dots.length - 1].getBoundingClientRect();
+      var top = first.top + first.height / 2 - nr.top, h = lastDot.top + lastDot.height / 2 - nr.top - top;
+      railLine.style.top = top + 'px'; railLine.style.height = h + 'px'; railLine.setAttribute('viewBox', '0 0 7 ' + h); railLine.setAttribute('height', h);
+    }
     function railUpdate() {
       railRaf = null;
       var vh = window.innerHeight, cur = null, last = secs[secs.length - 1];
+      if (railClip) { var span = document.documentElement.scrollHeight - vh, p = span > 0 ? Math.max(0, Math.min(1, window.scrollY / span)) : 1; railClip.setAttribute('height', (p * parseFloat(railLine.getAttribute('height') || 0)).toFixed(1)); }
       secs.forEach(function (sec) { if (sec.getBoundingClientRect().top <= vh * 0.45) cur = sec; });
       if (last && (last.getBoundingClientRect().top < vh || window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2)) cur = last;
       links.forEach(function (a) { a.classList.toggle('active', !!cur && a.getAttribute('href') === '#' + cur.id); });
     }
     function railQueue() { if (!railRaf) railRaf = requestAnimationFrame(railUpdate); }
     window.addEventListener('scroll', railQueue, { passive: true });
-    window.addEventListener('resize', railQueue);
-    railUpdate();
+    window.addEventListener('resize', function () { railFit(); railQueue(); });
+    railFit(); railUpdate();
+    var legend = document.getElementById('legend'), footEl = document.querySelector('footer.site');
+    if (legend && footEl) { var copy = legend.cloneNode(true); copy.removeAttribute('id'); footEl.appendChild(copy); }
   }
   // The music link: ?vibe=off hides it; ?icon=wave swaps the record for the waveform. Hover, focus or a tap plays the icon's motion once.
   // On touch the tap plays it, and the playlist opens shortly after.
@@ -1301,17 +1365,26 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     document.querySelectorAll('.reveal').forEach(function (el) { ro.observe(el); });
   } else { document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); }); }
 
-  // Contact band: the chat circle is magnetic, fills with color on hover, and opens the note; the email pill copies on click
+  // Contact band: the chat circle is magnetic and fills with color on hover. It opens and closes the composer, which waits closed behind it; a second press
+  // or Escape closes it and returns focus to the bubble, though Escape leaves it open while the message holds text. Name and email rise once the message has
+  // focus or text.
   var cta = document.getElementById('cta'), ctaWrap = document.getElementById('cta-wrap'), cformEl = document.getElementById('composer-form');
   if (cta && cformEl) {
+    var msgField = cformEl.querySelector('textarea');
+    var openComposer = function () { cformEl.classList.remove('closed'); cformEl.classList.remove('rising'); void cformEl.offsetWidth; cformEl.classList.add('rising'); cta.setAttribute('aria-expanded', 'true'); if (msgField) msgField.focus({ preventScroll: true }); cformEl.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); };
+    var closeComposer = function () { cformEl.classList.add('closed'); cformEl.classList.remove('open'); cta.setAttribute('aria-expanded', 'false'); cta.focus({ preventScroll: true }); };
+    cformEl.classList.add('closed');
     cta.addEventListener('click', function () {
       cta.classList.remove('pressed'); void cta.offsetWidth; cta.classList.add('pressed');
       if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) {} }
-      cta.setAttribute('aria-expanded', 'true'); cformEl.classList.add('open');
-      var msgEl = cformEl.querySelector('textarea'); if (msgEl) msgEl.focus({ preventScroll: true }); cformEl.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
+      if (cformEl.classList.contains('closed')) openComposer(); else closeComposer();
     });
-    var openFields = function () { if (!cformEl.classList.contains('open')) { cformEl.classList.add('open'); cta.setAttribute('aria-expanded', 'true'); } };
-    var msgField = cformEl.querySelector('textarea');
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || cformEl.classList.contains('closed') || !cformEl.contains(document.activeElement) && document.activeElement !== cta) return;
+      if (msgField && msgField.value.trim()) return;   // a note in progress stays open
+      closeComposer();
+    });
+    var openFields = function () { if (!cformEl.classList.contains('open')) cformEl.classList.add('open'); };
     if (msgField) {
       msgField.addEventListener('focus', openFields); msgField.addEventListener('input', function () { if (msgField.value.trim()) openFields(); if (!('fieldSizing' in msgField.style)) { msgField.style.height = 'auto'; msgField.style.height = msgField.scrollHeight + 'px'; } });
       if (msgField.value.trim()) openFields();
@@ -1327,7 +1400,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       btn.disabled = true; note.textContent = 'Sending';
       fetch(cformEl.action, { method: 'POST', body: new FormData(cformEl), headers: { Accept: 'application/json' } }).then(function (res) {
         if (!res.ok) { failed(); return; }
-        cformEl.reset(); cformEl.hidden = true; btn.disabled = false; note.textContent = ''; cta.setAttribute('aria-expanded', 'false');
+        cformEl.reset(); btn.disabled = false; note.textContent = ''; closeComposer();
         label.textContent = 'sent!'; cta.classList.add('sent');
         setTimeout(function () { label.textContent = "let's chat!"; cta.classList.remove('sent'); }, 2600);
       }, failed);
@@ -1451,19 +1524,54 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 <script type="module">
 (function () {
   var STOPS = [{"k": "visalia", "name": "Visalia", "short": "Visalia", "yr": "origin", "years": "Hometown", "lon": -119.2921, "lat": 36.3302, "zoom": 9.8}, {"k": "ucla", "name": "Los Angeles", "short": "UCLA", "yr": "2014", "years": "2014 to 2018", "lon": -118.4452, "lat": 34.0689, "zoom": 12}, {"k": "cydcor", "name": "Los Angeles", "short": "Cydcor", "yr": "2019", "years": "2019 to 2020", "lon": -118.7627, "lat": 34.1566, "zoom": 10.5}, {"k": "yale", "name": "New Haven", "short": "Yale", "yr": "2021", "years": "2021 to 2023", "lon": -72.9223, "lat": 41.3163, "zoom": 11.8}, {"k": "umn", "name": "Marcell Experimental Forest", "short": "Minnesota", "yr": "2022", "years": "Summer 2022", "lon": -93.4893, "lat": 47.5051, "zoom": 12.2}, {"k": "seekops", "name": "Austin", "short": "SeekOps", "yr": "2024", "years": "2024", "lon": -97.7431, "lat": 30.2672, "zoom": 10.8}, {"k": "grc", "name": "San Antonio", "short": "Grassroots", "yr": "2025", "years": "2025 to present", "lon": -98.4936, "lat": 29.4241, "zoom": 10.2}];
-  var SITES = [{"label": "Mendocino Complex, 2018", "from_": 1, "lon": -122.9, "lat": 39.3}, {"label": "West Campus solar array", "from_": 3, "lon": -72.98, "lat": 41.26}, {"label": "Yangtze River Delta, 2023", "from_": 3, "lon": 120.5, "lat": 31.2}, {"label": "Marcell peatland tower, 2022", "from_": 4, "lon": -93.4893, "lat": 47.5051}, {"label": "Bakken flare sites, 2024", "from_": 5, "lon": -102.8, "lat": 47.9}, {"label": "Permian flare sites, 2024", "from_": 5, "lon": -102.4, "lat": 31.9}, {"label": "US rangeland, 2025 to present", "from_": 6, "lon": -99.5, "lat": 31.6}];
   var ROUTE = ["visalia", "ucla", "cydcor", "yale", "umn", "yale", "seekops", "grc"];
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Map review switches, all optional and free when absent; the defaults are the owner's choices. ?flight=off skips the arrival from orbit.
+  var P = new URLSearchParams(location.search), FLIGHT = P.get('flight') !== 'off';
   var byKey = {}; STOPS.forEach(function (s) { byKey[s.k] = s; });
   // Everything that needs MapLibre runs here, once, after the module has been imported (see initMaps below)
   function run(maplibregl) {
   if (window.innerWidth < 600) { var tabStrip = document.getElementById('tabs'); if (tabStrip) tabStrip.scrollLeft = 0; }
+  // Arrival: the first time the map is made in a session it starts on a globe over the Pacific, with North America filling the right half, and flies to
+  // Visalia's tuned camera over 2.2 s once the dark basemap and its labels are placed and the section has been at least half in view for an unbroken 300 ms.
+  // It flies over the dark basemap and labels only; the imagery fades in over 480 ms on landing. Reduced motion starts at Visalia; a #map-stop- deep link
+  // keeps its own camera; a session flag keeps later visits in the session at the usual start.
+  var arrived = false; try { arrived = sessionStorage.getItem('mwm-arrived') === '1'; } catch (e) {}
+  var deepLink = /map-stop-(\d)/.test(location.hash);
+  var arrive = FLIGHT && !reduce && !arrived && !deepLink;
+  var HOME = { center: [STOPS[0].lon, STOPS[0].lat], zoom: STOPS[0].zoom, bearing: 55, pitch: 35 };   // Visalia's tuned camera with terrain off (CAM[0], pitch capped at 35)
+  var start = arrive ? { center: [-155, 30], zoom: 1.4 } : reduce && !deepLink ? HOME : { center: [-96, 38.5], zoom: 3.6 };
   var map = new maplibregl.Map({
     container: 'rt-mapcanvas',
-    style: { version: 8, sources: {}, layers: [ { id: 'bg', type: 'background', paint: { 'background-color': '#0b0b0c' } } ] },
-    center: [-96, 38.5], zoom: 3.6, minZoom: 2.5, maxZoom: 19, attributionControl: { compact: true }, dragRotate: false, pitchWithRotate: false, cooperativeGestures: true,
+    style: { version: 8, sources: {}, layers: [ { id: 'bg', type: 'background', paint: { 'background-color': '#0b0b0c' } } ], projection: { type: arrive ? 'globe' : 'mercator' } },
+    center: start.center, zoom: start.zoom, bearing: start.bearing || 0, pitch: start.pitch || 0, minZoom: arrive ? 1.2 : 2.5, maxZoom: 19, attributionControl: { compact: true }, dragRotate: false, pitchWithRotate: false, cooperativeGestures: true,
     locale: { 'Map.Title': 'Roadmap map' }
   });
+  function bez(x1, y1, x2, y2) { return function (t) { var lo = 0, hi = 1, u = t; for (var k = 0; k < 24; k++) { u = (lo + hi) / 2; var x = 3 * (1 - u) * (1 - u) * u * x1 + 3 * (1 - u) * u * u * x2 + u * u * u; if (x < t) lo = u; else hi = u; } return 3 * (1 - u) * (1 - u) * u * y1 + 3 * (1 - u) * u * u * y2 + u * u * u; }; }
+  var FLY_EASE = bez(0.2, 0.8, 0.2, 1);   // the site's easing curve
+  var tilesIn = false, inView = false, viewTimer = null, flown = !arrive, landed = !arrive;
+  function pmark(n) { try { performance.mark(n); } catch (e) {} }
+  function settleArrival() { if (flown) return; flown = true; try { sessionStorage.setItem('mwm-arrived', '1'); } catch (e) {} }
+  // Landing: the imagery is switched on and fades in, then the dark basemap beneath it is hidden again so later panning loads one basemap
+  function land() {
+    if (landed) return; landed = true;
+    if (!map.getLayer('imagery')) return;
+    map.setLayoutProperty('imagery', 'visibility', 'visible'); map.setPaintProperty('imagery', 'raster-opacity', 1);
+    setTimeout(function () { var base = document.querySelector('input[name="base"]:checked'); if (base && base.value === 'imagery') map.getStyle().layers.filter(function (l) { return l.id.indexOf('dk-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', 'none'); }); pmark('map:landed'); }, 700);
+  }
+  function maybeFly() {
+    if (flown || !tilesIn || !inView) return;
+    settleArrival(); pmark('map:arrival-start');
+    map.once('moveend', function () { map.setProjection({ type: 'mercator' }); map.setMinZoom(2.5); pmark('map:arrival-end'); land(); });
+    map.flyTo({ center: HOME.center, zoom: HOME.zoom, bearing: HOME.bearing, pitch: HOME.pitch, duration: 2200, easing: FLY_EASE, essential: true });
+  }
+  if (arrive && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      var on = es.some(function (e) { return e.isIntersecting; });
+      clearTimeout(viewTimer);
+      if (on) viewTimer = setTimeout(function () { inView = true; maybeFly(); }, 300); else inView = false;
+    }, { threshold: 0.5 }).observe(document.getElementById('rt-mapcanvas'));
+  } else if (arrive) { inView = true; }
   // compact attribution opens itself when the first attributions arrive; fold it once to the info button, then leave it to the visitor
   var attrib = map.getContainer().querySelector('.maplibregl-ctrl-attrib');
   if (attrib && 'MutationObserver' in window) { var attribMo = new MutationObserver(function () { if (attrib.classList.contains('maplibregl-compact-show')) { attrib.classList.remove('maplibregl-compact-show'); attrib.removeAttribute('open'); attribMo.disconnect(); } }); attribMo.observe(attrib, { attributes: true, attributeFilter: ['class'] }); }
@@ -1481,14 +1589,29 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   var legs = []; for (var i = 0; i < ROUTE.length - 1; i++) { var a = byKey[ROUTE[i]], b = byKey[ROUTE[i + 1]]; legs.push(gc([a.lon, a.lat], [b.lon, b.lat], 64)); }
   var TRAVEL = { 0: [0], 1: [1], 2: [2], 3: [3], 4: [4, 5], 5: [6] };
   var full = [].concat.apply([], legs);
-  function arcLine(s, e) { return { type: 'Feature', geometry: { type: 'LineString', coordinates: gc(s, e, 80) } }; }
-  var markers = [], siteMarkers = [], xmark = null, cursorM = null, ready = false;
+  // Sentinel-2 cloudless by year: EOX publishes a mosaic for every year from 2016 (WMTS layer s2cloudless_3857) to 2025 (s2cloudless-YYYY_3857 from 2017),
+  // as listed in its capabilities document; two sources let a year change crossfade over 240 ms with no camera move. ?years=off hides the row and keeps 2024.
+  var YEARS = P.get('years') !== 'off';
+  // Moonglow: the terrain lit from the northwest (315 degrees, anchored to the map) over the dark basemap only, in two tones measured before the restore,
+  // a warm highlight rgba(230, 115, 57, 0.28) and a cool dim shadow rgba(33, 48, 63, 0.85), beneath the labels. ?moonglow=off leaves it out.
+  var MOONGLOW = P.get('moonglow') !== 'off';
+  function baseIs(v) { var b = document.querySelector('input[name="base"]:checked'); return !!b && b.value === v; }
+  var S2_YEARS = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], s2Year = 2024, s2Front = 'a', s2Fading = null;
+  var s2Tiles = function (y) { return ['https://tiles.maps.eox.at/wmts/1.0.0/' + (y === 2016 ? 's2cloudless_3857' : 's2cloudless-' + y + '_3857') + '/default/g/{z}/{y}/{x}.jpg']; };
+  var S2_ATTR = 'Sentinel-2 cloudless 2016 to 2025 by <a href="https://cloudless.eox.at/preview">EOX IT Services</a> (contains modified Copernicus Sentinel data), CC BY-NC-SA 4.0';
+  var markers = [], xmark = null, cursorM = null, ready = false, stopLabel = null, stopLabelM = null;
+  // hand placement, in pixels at each stop's tuned camera: the stop label beside its marker
+  var STOP_LABELS = [{ anchor: 'left', offset: [26, 0] }, { anchor: 'left', offset: [26, 0] }, { anchor: 'left', offset: [26, 0] }, { anchor: 'left', offset: [26, 0] }, { anchor: 'left', offset: [26, -14] }, { anchor: 'left', offset: [26, 0] }, { anchor: 'left', offset: [26, 0] }];
+  function makeLabel(text, cls) { var el = document.createElement('div'); el.className = 'rt-label ' + cls; var sp = document.createElement('span'); sp.textContent = text; el.appendChild(sp); return el; }
+  function stopLabelText(i) { var tab = document.querySelector('.tab[data-i="' + i + '"]'), nm = tab && tab.querySelector('.tab-nm'), yr = tab && tab.querySelector('.tab-yr'); return (nm ? nm.textContent : STOPS[i].short) + (yr ? ' \u00b7 ' + yr.textContent : ''); }
   map.on('load', function () {
     map.addSource('usgs', { type: 'raster', tiles: ['https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}'], tileSize: 256, maxzoom: 16, attribution: 'Imagery: USGS The National Map (NAIP), public domain' });
-    map.addSource('eox', { type: 'raster', tiles: ['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg'], tileSize: 256, maxzoom: 15, attribution: 'Sentinel-2 cloudless 2024 by <a href="https://cloudless.eox.at/preview">EOX IT Services</a> (contains modified Copernicus Sentinel data), CC BY-NC-SA 4.0' });
+    map.addSource('eox', { type: 'raster', tiles: s2Tiles(2024), tileSize: 256, maxzoom: 15, attribution: S2_ATTR });
+    map.addSource('eox-b', { type: 'raster', tiles: s2Tiles(2024), tileSize: 256, maxzoom: 15, attribution: S2_ATTR });
     map.addSource('dem', { type: 'raster-dem', tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'], encoding: 'terrarium', tileSize: 256, maxzoom: 15, attribution: 'Terrain: Mapzen, AWS Terrain Tiles' });
-    map.addLayer({ id: 'imagery', type: 'raster', source: 'usgs', paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08 } });
-    map.addLayer({ id: 'imagery-eox', type: 'raster', source: 'eox', layout: { visibility: 'none' }, paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08 } });
+    map.addLayer({ id: 'imagery', type: 'raster', source: 'usgs', layout: { visibility: arrive ? 'none' : 'visible' }, paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08, 'raster-opacity': arrive ? 0 : 1, 'raster-opacity-transition': { duration: 480, delay: 0 } } });
+    map.addLayer({ id: 'imagery-eox', type: 'raster', source: 'eox', layout: { visibility: 'none' }, paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08, 'raster-opacity': 1, 'raster-opacity-transition': { duration: 240, delay: 0 } } });
+    map.addLayer({ id: 'imagery-eox-b', type: 'raster', source: 'eox-b', layout: { visibility: 'none' }, paint: { 'raster-saturation': -1, 'raster-brightness-max': 0.72, 'raster-contrast': 0.08, 'raster-opacity': 0, 'raster-opacity-transition': { duration: 240, delay: 0 } } });
     map.addSource('slot', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } }); map.addLayer({ id: 'plan', type: 'circle', source: 'slot' });
     map.addLayer({ id: 'hillshade', type: 'hillshade', source: 'dem', layout: { visibility: 'none' }, paint: { 'hillshade-exaggeration': 0.35, 'hillshade-shadow-color': '#000', 'hillshade-highlight-color': '#666' } });
     // OpenFreeMap (OpenStreetMap vector tiles, no key, no cap): the dark basemap and a labels-only overlay derived from the liberty style
@@ -1506,30 +1629,41 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
         map.addLayer(L, 'plan');
       });
     }).catch(function () {});
-    fetch(OFM_DARK).then(function (r) { return r.json(); }).then(function (st) {
+    var darkReady = fetch(OFM_DARK).then(function (r) { return r.json(); }).then(function (st) {
       makeMini(st);
       Object.keys(st.sources).forEach(function (k) { if (!map.getSource('dk-' + k)) map.addSource('dk-' + k, st.sources[k]); });
       st.layers.filter(function (l) { return l.type !== 'symbol'; }).forEach(function (l) {
-        var L = JSON.parse(JSON.stringify(l)); L.id = 'dk-' + l.id; if (L.source) L.source = 'dk-' + l.source; L.layout = L.layout || {}; L.layout.visibility = 'none'; map.addLayer(L, 'plan');
+        var L = JSON.parse(JSON.stringify(l)); L.id = 'dk-' + l.id; if (L.source) L.source = 'dk-' + l.source; L.layout = L.layout || {}; L.layout.visibility = arrive && !landed ? 'visible' : 'none'; map.addLayer(L, 'plan');
       });
+      if (MOONGLOW && !map.getLayer('moonglow')) {
+        map.addLayer({ id: 'moonglow', type: 'hillshade', source: 'dem', layout: { visibility: baseIs('dark') ? 'visible' : 'none' }, paint: { 'hillshade-illumination-direction': 315, 'hillshade-illumination-anchor': 'map', 'hillshade-exaggeration': 0.55, 'hillshade-shadow-color': 'rgba(33, 48, 63, 0.85)', 'hillshade-highlight-color': 'rgba(230, 115, 57, 0.28)', 'hillshade-accent-color': 'rgba(0, 0, 0, 0)' } }, 'plan');
+      }
     }).catch(function () { makeMini(null); });
+    // The two styles arrive in either order; once both are in, the place labels move to the top of the basemap stack, above the dark basemap and moonglow
+    Promise.all([ofmReady, darkReady]).then(function () { map.getStyle().layers.filter(function (l) { return l.id.indexOf('lbl-') === 0; }).forEach(function (l) { map.moveLayer(l.id, 'plan'); }); });
+    // The deterministic start: the canvas is sized, the projection is set, and the flight waits for the dark basemap and its labels to be placed
+    // (the first idle after both styles are in), or 6 s, whichever comes first; the map:globe-ready mark records the moment
+    if (arrive) {
+      map.resize(); map.setProjection({ type: 'globe' });
+      var globeReady = function () { if (tilesIn) return; tilesIn = true; pmark('map:globe-ready'); maybeFly(); }, globeTimer = setTimeout(globeReady, 6000);
+      Promise.all([ofmReady, darkReady]).then(function () { map.once('idle', function () { clearTimeout(globeTimer); globeReady(); }); });
+    }
     map.addSource('plan', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: full } } });
     map.addLayer({ id: 'plan-line', type: 'line', source: 'plan', paint: { 'line-color': '#fff', 'line-opacity': 0.35, 'line-width': 1.2, 'line-dasharray': [2, 3] } });
     map.addSource('done', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [] } } });
     map.addLayer({ id: 'done-glow', type: 'line', source: 'done', paint: { 'line-color': '#fff', 'line-opacity': 0.25, 'line-width': 6, 'line-blur': 4 } });
     map.addLayer({ id: 'done', type: 'line', source: 'done', paint: { 'line-color': '#fff', 'line-width': 2 } });
-    map.addSource('arcs', { type: 'geojson', data: { type: 'FeatureCollection', features: SITES.map(function (s) { var f = STOPS[s.from_]; var a = arcLine([f.lon, f.lat], [s.lon, s.lat]); a.properties = { from: s.from_, label: s.label }; return a; }) } });
-    map.addLayer({ id: 'arcs', type: 'line', source: 'arcs', paint: { 'line-color': '#fff', 'line-opacity': 0, 'line-width': 1, 'line-dasharray': [2, 3] } });
     markers = STOPS.map(function (s, i) { var el = document.createElement('div'); el.className = 'marker'; el.innerHTML = document.querySelector('.tab[data-i="' + i + '"] .tab-ic').innerHTML; el.title = s.name + ' · ' + s.years; el.addEventListener('click', function () { goStop(i); }); return new maplibregl.Marker({ element: el, offset: [0, -16] }).setLngLat([s.lon, s.lat]).addTo(map); });
-    siteMarkers = SITES.map(function (s) { var el = document.createElement('div'); el.className = 'rt-site-dot'; el.title = s.label; return { m: new maplibregl.Marker({ element: el }).setLngLat([s.lon, s.lat]).addTo(map), from: s.from_ }; });
-    var xe = document.createElement('div'); xe.className = 'xmark'; xe.textContent = 'X'; xe.style.opacity = 0; xmark = new maplibregl.Marker({ element: xe }).setLngLat([STOPS[6].lon, STOPS[6].lat]).addTo(map);
-    var ce = document.createElement('div'); ce.className = 'cursor'; ce.style.opacity = 0; cursorM = new maplibregl.Marker({ element: ce }).setLngLat([STOPS[0].lon, STOPS[0].lat]).addTo(map);
+    // the stop label placed by hand: anchor and pixel offset per stop, tuned at each stop's camera
+    stopLabel = makeLabel('', 'rt-label-stop anc-left'); stopLabelM = new maplibregl.Marker({ element: stopLabel, offset: STOP_LABELS[0].offset }).setLngLat([STOPS[0].lon, STOPS[0].lat]).addTo(map);
+    var mapRoot = document.getElementById('rt-mapcanvas'), baseNow = document.querySelector('input[name="base"]:checked'); mapRoot.classList.toggle('base-dark', !!baseNow && baseNow.value === 'dark');
+    var xe = document.createElement('div'); xe.className = 'xmark'; xe.textContent = 'X'; xe.style.filter = 'opacity(0)'; xmark = new maplibregl.Marker({ element: xe }).setLngLat([STOPS[6].lon, STOPS[6].lat]).addTo(map);
+    var ce = document.createElement('div'); ce.className = 'cursor'; ce.style.filter = 'opacity(0)'; cursorM = new maplibregl.Marker({ element: ce }).setLngLat([STOPS[0].lon, STOPS[0].lat]).addTo(map);
     ready = true; activate(0); setProgress(0);
     // deep link
     var m = /map-stop-(\d)/.exec(location.hash); if (m) { var si = +m[1]; if (si >= 0 && si < N) { setProgress(si); flyStop(si, 0); } }
     // hover tooltips on stop markers with the one-line role
     markers.forEach(function (mk, i) { var el = mk.getElement(); el.addEventListener('mousemove', function (e) { var body = bodies[i]; var head = body.querySelector('.rt-head'); tip.innerHTML = '<strong>' + STOPS[i].name + '</strong> · ' + STOPS[i].years + (head ? '<br>' + head.textContent : ''); tip.hidden = false; var r = document.getElementById('rt-mapcanvas').getBoundingClientRect(); tip.style.left = (e.clientX - r.left) + 'px'; tip.style.top = (e.clientY - r.top) + 'px'; }); el.addEventListener('mouseleave', function () { tip.hidden = true; }); });
-    siteMarkers.forEach(function (sm) { var el = sm.m.getElement(); el.addEventListener('mousemove', function (e) { tip.textContent = el.title; tip.hidden = false; var r = document.getElementById('rt-mapcanvas').getBoundingClientRect(); tip.style.left = (e.clientX - r.left) + 'px'; tip.style.top = (e.clientY - r.top) + 'px'; }); el.addEventListener('mouseleave', function () { tip.hidden = true; }); });
   });
   // minimap: a second map synced to the main one, with the current window drawn on it; it is created after the main map
   // loads, from the dark style without its symbol layers, so it draws no labels and fetches no glyphs
@@ -1541,8 +1675,8 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     mini = new maplibregl.Map({ container: 'minimap', style: style, center: [-96, 38.5], zoom: 1.6, interactive: false, attributionControl: false });
     mini.on('load', function () { mini.getStyle().layers.filter(function (l) { return l.type === 'symbol'; }).forEach(function (l) { mini.removeLayer(l.id); }); syncMini(); });
   }
-  function syncMini() { if (!mini) return; var b = map.getBounds(); var p1 = mini.project(b.getNorthWest()), p2 = mini.project(b.getSouthEast()); var box = document.getElementById('minibox'); box.style.left = Math.min(p1.x, p2.x) + 'px'; box.style.top = Math.min(p1.y, p2.y) + 'px'; box.style.width = Math.max(2, Math.abs(p2.x - p1.x)) + 'px'; box.style.height = Math.max(2, Math.abs(p2.y - p1.y)) + 'px'; }
-  map.on('move', syncMini);
+  function syncMini() { if (!mini) return; var b = map.getBounds(); var p1 = mini.project(b.getNorthWest()), p2 = mini.project(b.getSouthEast()); var box = document.getElementById('minibox'); box.setAttribute('x', Math.min(p1.x, p2.x) + 0.5); box.setAttribute('y', Math.min(p1.y, p2.y) + 0.5); box.setAttribute('width', Math.max(2, Math.abs(p2.x - p1.x) - 1)); box.setAttribute('height', Math.max(2, Math.abs(p2.y - p1.y) - 1)); }
+  map.on('move', function () { if (!window.__mwmDrifting) syncMini(); });   // a drift step barely moves the window; the minimap catches up on the next real move
   document.getElementById('mini').addEventListener('click', function (e) { if (!mini) return; var r = e.currentTarget.getBoundingClientRect(); var ll = mini.unproject([e.clientX - r.left, e.clientY - r.top]); map.easeTo({ center: ll, duration: 500 }); });
   // readouts: distance travelled along the route and elevation under the cursor when terrain is on
   function kmBetween(a, b) { var R = 6371, dLat = (b[1] - a[1]) * rad, dLon = (b[0] - a[0]) * rad, s1 = Math.sin(dLat / 2), s2 = Math.sin(dLon / 2); var q = s1 * s1 + Math.cos(a[1] * rad) * Math.cos(b[1] * rad) * s2 * s2; return 2 * R * Math.asin(Math.sqrt(q)); }
@@ -1555,11 +1689,25 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   document.getElementById('l-globe').addEventListener('change', function (e) { try { map.setProjection({ type: e.target.checked ? 'globe' : 'mercator' }); } catch (err) {} });
   map.on('mousemove', function (e) { document.getElementById('coords').textContent = Math.abs(e.lngLat.lat).toFixed(4) + (e.lngLat.lat >= 0 ? '°N ' : '°S ') + Math.abs(e.lngLat.lng).toFixed(4) + (e.lngLat.lng >= 0 ? '°E' : '°W') + ' · zoom ' + map.getZoom().toFixed(1); });
   var hint = document.getElementById('hint'); setTimeout(function () { hint.classList.add('gone'); }, 4000); ['mousedown', 'wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, function () { hint.classList.add('gone'); }, { once: true, passive: true }); });
-  document.querySelectorAll('input[name="base"]').forEach(function (r) { r.addEventListener('change', function () { map.setLayoutProperty('imagery', 'visibility', r.value === 'imagery' ? 'visible' : 'none'); map.setLayoutProperty('imagery-eox', 'visibility', r.value === 'eox' ? 'visible' : 'none'); map.getStyle().layers.filter(function (l) { return l.id.indexOf('dk-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', r.value === 'dark' ? 'visible' : 'none'); }); }); });
+  document.querySelectorAll('input[name="base"]').forEach(function (r) { r.addEventListener('change', function () { document.getElementById('rt-mapcanvas').classList.toggle('base-dark', r.value === 'dark'); map.setLayoutProperty('imagery', 'visibility', r.value === 'imagery' ? 'visible' : 'none'); map.setLayoutProperty('imagery-eox', 'visibility', r.value === 'eox' ? 'visible' : 'none'); map.setLayoutProperty('imagery-eox-b', 'visibility', r.value === 'eox' ? 'visible' : 'none'); s2Box.hidden = !YEARS || r.value !== 'eox'; if (map.getLayer('moonglow')) map.setLayoutProperty('moonglow', 'visibility', r.value === 'dark' ? 'visible' : 'none'); map.getStyle().layers.filter(function (l) { return l.id.indexOf('dk-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', r.value === 'dark' ? 'visible' : 'none'); }); }); });
   document.getElementById('l-labels').addEventListener('change', function (e) { map.getStyle().layers.filter(function (l) { return l.id.indexOf('lbl-') === 0; }).forEach(function (l) { map.setLayoutProperty(l.id, 'visibility', e.target.checked ? 'visible' : 'none'); }); });
+  // Sentinel-2 year row: a row of years in mono, the active one lit; click or arrow keys move between years
+  var s2Box = document.getElementById('s2-years'), s2Row = s2Box.querySelector('.years'), s2Label = document.getElementById('s2-year');
+  S2_YEARS.forEach(function (y) { var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'radio'); b.textContent = y; b.dataset.year = y; b.setAttribute('aria-checked', y === s2Year ? 'true' : 'false'); b.tabIndex = y === s2Year ? 0 : -1; s2Row.appendChild(b); });
+  function setS2Year(y) {
+    if (y === s2Year || S2_YEARS.indexOf(y) < 0) return;
+    var front = s2Front === 'a' ? 'imagery-eox' : 'imagery-eox-b', back = s2Front === 'a' ? 'imagery-eox-b' : 'imagery-eox', backSrc = s2Front === 'a' ? 'eox-b' : 'eox';
+    map.getSource(backSrc).setTiles(s2Tiles(y));
+    var done = false, swap = function () { if (done) return; done = true; map.setPaintProperty(back, 'raster-opacity', 1); map.setPaintProperty(front, 'raster-opacity', 0); s2Front = s2Front === 'a' ? 'b' : 'a'; };
+    if (s2Fading) clearTimeout(s2Fading);
+    map.once('idle', swap); s2Fading = setTimeout(swap, 1500);   // the fade starts once the new year's tiles are in, or after 1.5 s regardless
+    s2Year = y; s2Label.textContent = y;
+    Array.prototype.forEach.call(s2Row.children, function (b) { var on = +b.dataset.year === y; b.setAttribute('aria-checked', on ? 'true' : 'false'); b.tabIndex = on ? 0 : -1; if (on && s2Row.contains(document.activeElement)) b.focus(); });
+  }
+  s2Row.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) { setS2Year(+b.dataset.year); b.focus(); } });
+  s2Row.addEventListener('keydown', function (e) { var i = S2_YEARS.indexOf(s2Year); if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); e.stopPropagation(); setS2Year(S2_YEARS[Math.min(S2_YEARS.length - 1, i + 1)]); } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); e.stopPropagation(); setS2Year(S2_YEARS[Math.max(0, i - 1)]); } });
   document.getElementById('l-terrain').addEventListener('change', function (e) { terrainOn = e.target.checked; if (e.target.checked) { map.setTerrain({ source: 'dem', exaggeration: 1.3 }); map.setLayoutProperty('hillshade', 'visibility', 'visible'); try { if (!map.getLayer('sky')) map.addLayer({ id: 'sky', type: 'sky', paint: { 'sky-color': '#0b0b0c', 'horizon-color': '#1a1a1c', 'fog-color': '#0b0b0c', 'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.6, 'fog-ground-blend': 0.5 } }); } catch (err) {} map.easeTo({ pitch: 55, duration: 900 }); } else { map.setTerrain(null); map.setLayoutProperty('hillshade', 'visibility', 'none'); map.easeTo({ pitch: 0, duration: 700 }); } });
   document.getElementById('l-route').addEventListener('change', function (e) { ['plan-line', 'done', 'done-glow'].forEach(function (l) { map.setLayoutProperty(l, 'visibility', e.target.checked ? 'visible' : 'none'); }); });
-  document.getElementById('l-sites').addEventListener('change', function (e) { map.setLayoutProperty('arcs', 'visibility', e.target.checked ? 'visible' : 'none'); siteMarkers.forEach(function (s) { s.m.getElement().style.display = e.target.checked ? '' : 'none'; }); });
   document.getElementById('l-stops').addEventListener('change', function (e) { markers.forEach(function (m) { m.getElement().style.display = e.target.checked ? '' : 'none'; }); xmark.getElement().style.display = e.target.checked ? '' : 'none'; });
   var progress = 0, active = -1, N = 7, terrainOn = false;
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab')), bodies = Array.prototype.slice.call(document.querySelectorAll('.card-body')), scrub = document.getElementById('scrub');
@@ -1570,9 +1718,8 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     bodies.forEach(function (b, j) { b.hidden = j !== i; });
     if (!ready) return;
     markers.forEach(function (m, j) { m.getElement().classList.toggle('on', j <= i); m.getElement().classList.toggle('active', j === i); });
-    siteMarkers.forEach(function (s) { s.m.getElement().classList.toggle('on', s.from <= i); });
-    map.setPaintProperty('arcs', 'line-opacity', ['case', ['<=', ['get', 'from'], i], 0.6, 0]);
-    xmark.getElement().style.opacity = i === N - 1 ? 1 : 0;
+    if (stopLabelM) { stopLabel.querySelector('span').textContent = stopLabelText(i); stopLabel.className = 'rt-label rt-label-stop anc-' + STOP_LABELS[i].anchor + ' on'; stopLabelM.setLngLat([STOPS[i].lon, STOPS[i].lat]).setOffset(STOP_LABELS[i].offset); }
+    xmark.getElement().style.filter = i === N - 1 ? 'opacity(1)' : 'opacity(0)';   // filter, since MapLibre writes its own inline opacity on markers
   }
   function legPoint(pts, f) { var k = f * (pts.length - 1), i = Math.floor(k), t = k - i; if (i >= pts.length - 1) return pts[pts.length - 1]; var a = pts[i], b = pts[i + 1]; return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; }
   function setProgress(p, follow) {
@@ -1581,13 +1728,28 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     for (var k = 0; k < i; k++) (TRAVEL[k] || []).forEach(function (L) { coords = coords.concat(legs[L]); });
     var pos = null;
     if (f > 0 && TRAVEL[i]) { var Ls = TRAVEL[i], per = 1 / Ls.length; Ls.forEach(function (L, q) { var lf = Math.max(0, Math.min(1, (f - q * per) / per)); if (lf > 0) { var n = Math.floor(lf * (legs[L].length - 1)); coords = coords.concat(legs[L].slice(0, n + 1)); pos = legPoint(legs[L], lf); } }); }
-    if (ready) { map.getSource('done').setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: coords } }); if (pos) { cursorM.setLngLat(pos); cursorM.getElement().style.opacity = 1; if (follow) map.jumpTo({ center: pos }); } else cursorM.getElement().style.opacity = 0; }
+    if (ready) { map.getSource('done').setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: coords } }); if (pos) { cursorM.setLngLat(pos); cursorM.getElement().style.filter = 'opacity(1)'; if (follow) map.jumpTo({ center: pos }); } else cursorM.getElement().style.filter = 'opacity(0)'; }
     if (i !== active) activate(i);
     scrub.value = progress; if (typeof updateReadout === 'function') updateReadout();
   }
   var CAM = [ { b: 55, p: 55 }, { b: 20, p: 45 }, { b: 35, p: 40 }, { b: 175, p: 50 }, { b: 0, p: 40 }, { b: 270, p: 50 }, { b: 315, p: 50 } ];
   function flyStop(i, ms) { var s = STOPS[i], c = CAM[i]; map.flyTo({ center: [s.lon, s.lat], zoom: s.zoom, bearing: c.b, pitch: terrainOn ? c.p : Math.min(c.p, 35), duration: reduce ? 0 : (ms || 1800), curve: 1.4 }); history.replaceState(null, '', '#map-stop-' + i); }
-  function goStop(i) { stopPlay(); setProgress(i); flyStop(i); }
+  // The jump rule: between stops more than 1,200 km apart, the map fades out over 320 ms, jumps to the stop's tuned camera, and fades back over 320 ms once
+  // its tiles are in (or after 400 ms); shorter moves fly as before, and play keeps its own travel. ?jump=off flies every move.
+  var JUMP = P.get('jump') !== 'off' && !reduce, JUMP_KM = 1200, FADE_MS = 320, jumpTimer = null;
+  function jumpStop(i) {
+    var s = STOPS[i], c = CAM[i], box = document.getElementById('rt-mapcanvas'); clearTimeout(jumpTimer);
+    box.classList.add('jumping'); pmark('map:jump-start');
+    jumpTimer = setTimeout(function () {
+      map.jumpTo({ center: [s.lon, s.lat], zoom: s.zoom, bearing: c.b, pitch: terrainOn ? c.p : Math.min(c.p, 35) }); history.replaceState(null, '', '#map-stop-' + i);
+      var shown = false, show = function () { if (shown) return; shown = true; box.classList.remove('jumping'); pmark('map:jump-end'); };
+      map.once('idle', show); jumpTimer = setTimeout(show, 400);
+    }, FADE_MS);
+  }
+  function goStop(i) {
+    var from = active; settleArrival(); land(); stopPlay(); setProgress(i);
+    if (JUMP && from >= 0 && from !== i && kmBetween([STOPS[from].lon, STOPS[from].lat], [STOPS[i].lon, STOPS[i].lat]) > JUMP_KM) jumpStop(i); else flyStop(i);
+  }
   tabs.forEach(function (t) { t.addEventListener('click', function () { goStop(+t.getAttribute('data-i')); }); });
   scrub.addEventListener('input', function () { stopPlay(); setProgress(+scrub.value, false); });
   var playing = false, raf = null, playBtn = document.getElementById('play');
@@ -1596,6 +1758,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   var legMs = 3400, holdMs = 2600, travelZoom = 5.2;
   function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
   function play() {
+    settleArrival(); land();
     if (playing) { stopPlay(); return; }
     playing = true; ui(); if (progress >= N - 1) progress = 0;
     var from = Math.floor(progress), phase = 'hold', t0 = null, h0 = null;
@@ -1610,7 +1773,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     raf = requestAnimationFrame(step);
   }
   playBtn.addEventListener('click', play);
-  map.on('dragstart', stopPlay); map.on('wheel', stopPlay);
+  map.on('dragstart', stopPlay); map.on('wheel', stopPlay); map.on('dragstart', function () { settleArrival(); land(); }); map.on('wheel', function () { settleArrival(); land(); });
   document.getElementById('rt-app').addEventListener('keydown', function (e) {
     if (e.target.tagName === 'INPUT') return;
     if (e.key === ' ') { e.preventDefault(); play(); }
@@ -1631,8 +1794,41 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   window.addEventListener('pointerup', function () { if (rs) { rs = false; splitter.classList.remove('drag'); map.resize(); } });
   window.addEventListener('resize', function () { map.resize(); });
   var tip = document.getElementById('tip');
-  map.on('mousemove', 'arcs', function (e) { var f = e.features[0]; if (!f) return; tip.textContent = f.properties.label; tip.hidden = false; tip.style.left = e.point.x + 'px'; tip.style.top = e.point.y + 'px'; map.getCanvas().style.cursor = 'pointer'; });
-  map.on('mouseleave', 'arcs', function () { tip.hidden = true; map.getCanvas().style.cursor = ''; });
+  // Idle drift: when the map has rested at a stop for 3 s with no interaction, the bearing turns at 4 degrees a minute in steps four times a second, each
+  // step a jumpTo of the elapsed share, so no animation frames are requested between steps; the step size ramps up over the first 2 s. Any pointer, touch,
+  // wheel, key or control interaction, and any camera move the map did not make itself (the flight, a card change, play, a jump), stops it at once; it never
+  // touches the camera while another move runs. It runs only while the map canvas is at least half in view and the page is visible, and starts again after
+  // another 3 s of rest once both are true. Never mid-scrub or during play, not under reduced motion; ?idle=off leaves it out.
+  var IDLE = P.get('idle') !== 'off' && !reduce;
+  if (IDLE) {
+    var REST_MS = 3000, EASE_IN_MS = 2000, STEP_MS = 250, RATE = 4 / 60000;   // degrees per millisecond
+    var restSince = performance.now(), driftStart = 0, lastStep = 0, rate = 0, selfMove = false, halfInView = false, stepTimer = null;
+    // MapLibre fades label placement over 300 ms after every camera change, which would keep the map rendering through every step; a step turns the
+    // labels by under a tenth of a degree, so the fade is off while the drift runs and back the moment it stops (the map has no public setter for it)
+    // feature-detected: when a MapLibre release drops or renames the field, the drift steps as before and never touches it (vendor/maplibre-gl-6.10.0/NOTES.md)
+    var HAS_FADE = typeof map._fadeDuration === 'number', FADE0 = HAS_FADE ? map._fadeDuration : null, setFade = function (ms) { if (HAS_FADE && typeof map._fadeDuration === 'number') map._fadeDuration = ms; };
+    var wake = function () { restSince = performance.now(); driftStart = 0; lastStep = 0; rate = 0; setFade(FADE0); };
+    ['pointerdown', 'pointermove', 'wheel', 'touchstart', 'keydown', 'click', 'input'].forEach(function (ev) { appEl.addEventListener(ev, wake, { passive: true }); });
+    document.getElementById('tabs').addEventListener('scroll', wake, { passive: true });
+    map.on('movestart', function () { if (!selfMove) wake(); }); map.on('moveend', function () { if (!selfMove) wake(); });
+    var driftStep = function () {
+      var now = performance.now();
+      if (!landed || playing || map.isMoving() || progress !== Math.round(progress) || now - restSince < REST_MS) { driftStart = 0; lastStep = 0; rate = 0; setFade(FADE0); return; }
+      if (!driftStart) { driftStart = now; lastStep = now; setFade(0); return; }
+      var k = Math.min(1, (now - driftStart) / EASE_IN_MS); rate = RATE * k * k * (3 - 2 * k);
+      var dt = now - lastStep; lastStep = now;
+      selfMove = true; window.__mwmDrifting = true; map.jumpTo({ bearing: map.getBearing() + rate * dt }); window.__mwmDrifting = false; selfMove = false;
+    };
+    var syncDrift = function () {
+      var on = halfInView && !document.hidden;
+      if (on && !stepTimer) { wake(); stepTimer = setInterval(driftStep, STEP_MS); }   // back in view: another 3 s of rest first
+      else if (!on && stepTimer) { clearInterval(stepTimer); stepTimer = null; wake(); }
+    };
+    new IntersectionObserver(function (es) { halfInView = es.some(function (e) { return e.isIntersecting && e.intersectionRatio >= 0.5; }); syncDrift(); }, { threshold: [0, 0.5, 1] }).observe(document.getElementById('rt-mapcanvas'));
+    document.addEventListener('visibilitychange', syncDrift);
+    window.__mwmIdle = function () { return { speed: rate * 60000, restMs: Math.round(performance.now() - restSince), running: !!stepTimer }; };   // degrees per minute, for the audit tools
+  }
+  window.__mwmMap = map;   // a handle for the audit tools
   return { play: play, goStop: goStop };
   }
   // Deferred start: MapLibre, its stylesheet and every tile request wait until the map is about to scroll into view
