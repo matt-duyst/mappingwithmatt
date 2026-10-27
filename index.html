@@ -1787,7 +1787,8 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     var restSince = performance.now(), driftStart = 0, lastStep = 0, rate = 0, selfMove = false, halfInView = false, stepTimer = null;
     // MapLibre fades label placement over 300 ms after every camera change, which would keep the map rendering through every step; a step turns the
     // labels by under a tenth of a degree, so the fade is off while the drift runs and back the moment it stops (the map has no public setter for it)
-    var FADE0 = map._fadeDuration, setFade = function (ms) { if (typeof map._fadeDuration === 'number') map._fadeDuration = ms; };
+    // feature-detected: when a MapLibre release drops or renames the field, the drift steps as before and never touches it (vendor/maplibre-gl-6.10.0/NOTES.md)
+    var HAS_FADE = typeof map._fadeDuration === 'number', FADE0 = HAS_FADE ? map._fadeDuration : null, setFade = function (ms) { if (HAS_FADE && typeof map._fadeDuration === 'number') map._fadeDuration = ms; };
     var wake = function () { restSince = performance.now(); driftStart = 0; lastStep = 0; rate = 0; setFade(FADE0); };
     ['pointerdown', 'pointermove', 'wheel', 'touchstart', 'keydown', 'click', 'input'].forEach(function (ev) { appEl.addEventListener(ev, wake, { passive: true }); });
     document.getElementById('tabs').addEventListener('scroll', wake, { passive: true });
