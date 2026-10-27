@@ -495,9 +495,10 @@ p { margin: 0 0 16px; }
 
 /* Contact, footer */
 /* Contact band: a centerd line with the chat circle riding on it */
-.band-wrap { grid-column: 1 / -1; }
+.band-wrap { grid-column: 1 / -1; border-bottom: 1px solid var(--line); }   /* the contact band's one divider: beneath the bubble, or beneath the composer when it is open */
+.band-wrap:has(.composer-form:not(.closed)) { padding-bottom: 18px; }
 .band { position: relative; margin: 8px 0 0; }
-.band-track { position: relative; height: var(--band-h); border-bottom: 1px solid var(--line); }
+.band-track { position: relative; height: var(--band-h); }
 /* Every way to reach me, in one left-aligned row centred on the bubble (whose centre sits 24 px above the band's line). When the band is too narrow for
    the row and the bubble side by side (under 876 px of band, a viewport of about 971 px with a scrollbar), the row joins the flow above the bubble and
    wraps between pills, never inside one. */
@@ -515,7 +516,6 @@ p { margin: 0 0 16px; }
 .docs-menu a, .docs-menu button { font-family: var(--font-mono); font-size: 11.5px; color: var(--text); background: transparent; border: 0; text-align: left; padding: 8px 10px; border-radius: 7px; cursor: pointer; }
 .docs-menu a:hover, .docs-menu button:hover { background: var(--accent-soft); }
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .docs-menu { background: rgba(250,250,247,0.94); } }
-.band-line { position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--line); }
 .band-cta { position: absolute; right: 4%; top: 50%; transform: translateY(-50%); padding: 24px; margin: -24px; --cta-r: 85px; }
 .band-arrow { position: absolute; left: calc(24px + var(--cta-r) - (var(--cta-r) + 10px) * 0.7071 - 12.75px); top: calc(24px + var(--cta-r) - (var(--cta-r) + 10px) * 0.7071 - 12.75px); width: 18px; height: 18px; color: var(--muted); }
 .band-arrow svg { width: 100%; height: 100%; }
@@ -679,7 +679,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
           <span class="docs-wrap"><a href="#docs-menu" id="cv-link" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg><span>CV<span class="more"> &amp; Resume</span></span></a><span class="docs-menu" id="docs-menu" hidden><a href="assets/Duyst_Resume.pdf" download>Resume, PDF</a><a href="assets/Duyst_CV.pdf" download>CV, PDF</a></span></span>
           <a href="mailto:matthew.duyst@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Email</span></a>
           </div>
-          <div class="band-track"><div class="band-line"></div>
+          <div class="band-track">
           <div class="band-cta" id="cta-wrap">
             <span class="band-cue" id="band-cue" aria-hidden="true"><span class="cue-click">click me</span><span class="cue-tap">tap me</span></span>
             <span class="band-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M17 9v8H9"/></svg></span>
