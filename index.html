@@ -525,11 +525,13 @@ p { margin: 0 0 16px; }
 .cta.sent .cta-label { color: var(--text) !important; }
 @keyframes press { 40% { transform: scale(1.06); } }
 .composer-form[hidden] { display: none; }
-/* The composer behind the bubble: closed, it keeps its place and height so opening it moves nothing, and is hidden from the eye, the pointer and the keyboard;
-   it rises in over 240 ms. Without JavaScript the class is never set and the composer stays open. */
-.composer-form { transition: opacity 240ms ease, transform 240ms ease, visibility 0s linear 0s; }
-.composer-form.closed { opacity: 0; transform: translateY(8px); visibility: hidden; pointer-events: none; transition: opacity 240ms ease, transform 240ms ease, visibility 0s linear 240ms; }
-@media (prefers-reduced-motion: reduce) { .composer-form, .composer-form.closed { transition: none; } }
+/* The composer behind the bubble: closed, it takes no space at all; opened, it joins the flow beneath the bubble, pushing what follows down, and rises in
+   over 240 ms. The shift follows the visitor's press, so it does not count as an unexpected layout shift. Without JavaScript the class is never set and
+   the composer stays open. */
+.composer-form.closed { display: none; }
+.composer-form.rising { animation: composer-rise 240ms ease both; }
+@keyframes composer-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .composer-form.rising { animation: none; } }
 /* The contact row: one message line with the send button at its end; name and email rise beneath once the message field has focus or text.
    DOM order stays message, name, email, send, so keyboard and screen-reader order match the form; the grid places the button at the line's end. */
 .composer-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "msg send" "fields fields" "note note"; column-gap: 14px; row-gap: 0; align-items: end; max-width: 660px; margin-top: 18px; }
@@ -1369,7 +1371,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   var cta = document.getElementById('cta'), ctaWrap = document.getElementById('cta-wrap'), cformEl = document.getElementById('composer-form');
   if (cta && cformEl) {
     var msgField = cformEl.querySelector('textarea');
-    var openComposer = function () { cformEl.classList.remove('closed'); cta.setAttribute('aria-expanded', 'true'); if (msgField) msgField.focus({ preventScroll: true }); cformEl.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); };
+    var openComposer = function () { cformEl.classList.remove('closed'); cformEl.classList.remove('rising'); void cformEl.offsetWidth; cformEl.classList.add('rising'); cta.setAttribute('aria-expanded', 'true'); if (msgField) msgField.focus({ preventScroll: true }); cformEl.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); };
     var closeComposer = function () { cformEl.classList.add('closed'); cformEl.classList.remove('open'); cta.setAttribute('aria-expanded', 'false'); cta.focus({ preventScroll: true }); };
     cformEl.classList.add('closed');
     cta.addEventListener('click', function () {
