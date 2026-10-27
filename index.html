@@ -420,7 +420,9 @@ p { margin: 0 0 16px; }
 .maplibregl-ctrl-attrib a { color:rgba(255,255,255,.6); }
 .mini { position:absolute; right:12px; bottom:118px; width:180px; height:110px; border:1px solid var(--line); border-radius:6px; overflow:hidden; z-index:5; background:#0b0b0c; }
 #minimap { position:absolute; inset:0; }
-.minibox { position:absolute; border:1px solid var(--text); background:rgba(255,255,255,.08); pointer-events:none; }
+/* the overview window is an SVG rectangle redrawn by its attributes, so following the map never counts as a layout shift */
+.minibox-layer { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:hidden; }
+.minibox { fill:rgba(255,255,255,.08); stroke:var(--text); stroke-width:1; shape-rendering:crispEdges; }
 .readout { position:absolute; right:56px; top:12px; z-index:5; font-size:10.5px; color:var(--muted); text-align:right; line-height:1.5; pointer-events:none; }
 .ticks { display:flex; justify-content:space-between; font-size:9px; color:var(--muted); padding:0 2px; margin-top:-4px; }
 .hud { position:absolute; left:12px; bottom:100px; z-index:5; font-size:10.5px; color:var(--muted); pointer-events:none; }
@@ -701,7 +703,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     <button class="ptoggle" id="ptoggle" title="Collapse panel (P)">&#9656;</button>
     <div class="hint" id="hint">Play the route, or drag and zoom</div>
     <div class="hud" id="coords">&nbsp;</div>
-    <div class="mini" id="mini" title="Overview: drag the box or click" aria-hidden="true"><div id="minimap"></div><div class="minibox" id="minibox"></div></div>
+    <div class="mini" id="mini" title="Overview: drag the box or click" aria-hidden="true"><div id="minimap"></div><svg class="minibox-layer"><rect class="minibox" id="minibox" x="0" y="0" width="2" height="2"/></svg></div>
     <div class="readout" id="readout"></div>
     <div class="tip" id="tip" hidden></div>
     <div class="strip">
@@ -1666,7 +1668,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     mini = new maplibregl.Map({ container: 'minimap', style: style, center: [-96, 38.5], zoom: 1.6, interactive: false, attributionControl: false });
     mini.on('load', function () { mini.getStyle().layers.filter(function (l) { return l.type === 'symbol'; }).forEach(function (l) { mini.removeLayer(l.id); }); syncMini(); });
   }
-  function syncMini() { if (!mini) return; var b = map.getBounds(); var p1 = mini.project(b.getNorthWest()), p2 = mini.project(b.getSouthEast()); var box = document.getElementById('minibox'); box.style.left = Math.min(p1.x, p2.x) + 'px'; box.style.top = Math.min(p1.y, p2.y) + 'px'; box.style.width = Math.max(2, Math.abs(p2.x - p1.x)) + 'px'; box.style.height = Math.max(2, Math.abs(p2.y - p1.y)) + 'px'; }
+  function syncMini() { if (!mini) return; var b = map.getBounds(); var p1 = mini.project(b.getNorthWest()), p2 = mini.project(b.getSouthEast()); var box = document.getElementById('minibox'); box.setAttribute('x', Math.min(p1.x, p2.x) + 0.5); box.setAttribute('y', Math.min(p1.y, p2.y) + 0.5); box.setAttribute('width', Math.max(2, Math.abs(p2.x - p1.x) - 1)); box.setAttribute('height', Math.max(2, Math.abs(p2.y - p1.y) - 1)); }
   map.on('move', function () { if (!window.__mwmDrifting) syncMini(); });   // a drift step barely moves the window; the minimap catches up on the next real move
   document.getElementById('mini').addEventListener('click', function (e) { if (!mini) return; var r = e.currentTarget.getBoundingClientRect(); var ll = mini.unproject([e.clientX - r.left, e.clientY - r.top]); map.easeTo({ center: ll, duration: 500 }); });
   // readouts: distance travelled along the route and elevation under the cursor when terrain is on
