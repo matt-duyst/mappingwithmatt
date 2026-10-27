@@ -498,14 +498,14 @@ p { margin: 0 0 16px; }
 .band-wrap { grid-column: 1 / -1; border-bottom: 1px solid var(--line); }   /* the contact band's one divider: beneath the bubble, or beneath the composer when it is open */
 .band-wrap:has(.composer-form:not(.closed)) { padding-bottom: 18px; }
 .band { position: relative; margin: 8px 0 0; }
-.band-track { position: relative; height: var(--band-h); }
+.band-track { position: relative; height: var(--band-h); border-bottom: 1px solid transparent; }
 /* Every way to reach me, in one left-aligned row centred on the bubble (whose centre sits 24 px above the band's line). When the band is too narrow for
    the row and the bubble side by side (under 876 px of band, a viewport of about 971 px with a scrollbar), the row joins the flow above the bubble and
    wraps between pills, never inside one. */
 .band { container-type: inline-size; --band-h: 172px; }
 .hero .band-links { position: absolute; left: 0; top: calc(var(--band-h) / 2 - 24px); transform: translateY(-50%); z-index: 2; display: flex; flex-wrap: nowrap; gap: 8px; margin: 0; }
 .hero .band-links a, .hero .band-links .docs-wrap > a { white-space: nowrap; }
-@container (max-width: 875px) { .hero .band-links { position: static; transform: none; flex-wrap: wrap; margin: 0 0 32px; } }   /* clear of the bubble, which rises 24 px above the band */
+@container (max-width: 875px) { .hero .band-links { position: static; transform: none; flex-wrap: wrap; margin: 0 0 48px; } }   /* clear of the bubble, which rises 24 px above the band, and of the cue above it */
 .hero .band-links a, .hero .band-links .docs-wrap > a { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.03em; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 6px 11px; transition: border-color .15s ease, background .15s ease, transform .2s cubic-bezier(.34,1.56,.64,1); }
 .hero .band-links a:hover { color: var(--text); border-color: var(--text); background: var(--accent-soft); transform: translateY(-1px); }
 .hero .band-links a:active { transform: scale(0.97); }
