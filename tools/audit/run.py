@@ -203,13 +203,20 @@ def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=Fal
     return out
 
 
+TIMED = ('fcp', 'lcp', 'tbt')   # timed metrics, which vary run to run: each is recorded as its median with the minimum and maximum beside it
+
+
 def median_of(dicts):
-    """Per-metric median across runs; the by_type breakdown is taken from the median-bytes run."""
+    """Per-metric median across runs, with fcp_min and fcp_max (and the same for lcp and tbt) for the timed metrics; the by_type breakdown is
+    taken from the median-bytes run."""
     import statistics
     keys = [k for k in dicts[0] if isinstance(dicts[0][k], (int, float)) and not isinstance(dicts[0][k], bool)]
     out = {k: (statistics.median([d[k] for d in dicts if d.get(k) is not None]) if any(d.get(k) is not None for d in dicts) else None) for k in keys}
     for k in out:
         if out[k] is not None and all(isinstance(d.get(k), int) for d in dicts): out[k] = int(round(out[k]))
+    for k in TIMED:
+        vals = [d[k] for d in dicts if isinstance(d.get(k), (int, float))]
+        if vals: out[k + '_min'] = min(vals); out[k + '_max'] = max(vals)
     mid = sorted(dicts, key=lambda d: d['bytes'])[len(dicts) // 2]
     out['by_type'] = mid.get('by_type'); out['lcpElement'] = mid.get('lcpElement')
     return out
@@ -249,7 +256,7 @@ def main():
     ap.add_argument('--pages', default=','.join(PAGES))
     ap.add_argument('--tmp', default=os.path.join(HERE, '.tmp'))
     ap.add_argument('--port', type=int, default=9950)
-    ap.add_argument('--runs', type=int, default=3, help='runs of the throttled profile; the median of each metric is the quoted figure')
+    ap.add_argument('--runs', type=int, default=5, help='runs of the throttled profile; the median of each metric is the quoted figure, with the minimum and maximum of the timed metrics beside it')
     ap.add_argument('--checks-only', action='store_true', help='axe, errors, overflow and links only; no performance measurement')
     ap.add_argument('--timeout', type=int, default=7200, help='seconds before the run is abandoned, its Chrome processes killed and the exit code set to 2')
     args = ap.parse_args()
