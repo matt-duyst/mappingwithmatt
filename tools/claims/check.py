@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Every sentence with a digit or a percent sign on the seven pages must have a row in ledger.tsv, and every skill pill on the
-Experience cards of the main page must have a row in pills.tsv.
+Experience cards and every tag on the record of the main page must have a row in pills.tsv.
 
     python3 tools/claims/check.py            # exit 1 when a sentence has no ledger row or a pill has no pills row
 
 The ledger has four tab-separated columns: page, sentence, source, line. A source of UNSOURCED is a row, so the check passes;
 it is the report's job to list those. Sentences are compared after whitespace is collapsed. The pills file has four columns:
-role (the card's heading), pill (its text), line (the line of the CV's layout extraction that names it for that role) and phrase
-(the words on that line that support it).
+role (the card's heading, or the record entry's data-role), pill (its text), line (the line of the CV's layout extraction that names it for that
+role, as a bare number or "CV N", or "resume N" for the resume's extraction; "not verified" when neither names it) and phrase (the words on
+that line that support it).
 """
 import html, os, re, sys
 
@@ -57,7 +58,7 @@ def load_pills():
         next(f)
         for line in f:
             parts = line.rstrip('\n').split('\t')
-            if len(parts) >= 4 and parts[2].strip().isdigit(): rows.add((parts[0].strip(), parts[1].strip()))
+            if len(parts) >= 4 and re.match(r'^(\d+|(CV|resume) \d+|not verified)$', parts[2].strip()): rows.add((parts[0].strip(), parts[1].strip()))
     return rows
 
 
@@ -68,6 +69,8 @@ def pills():
         head = re.search(r'<h3>(.*?)</h3>', card, flags=re.S)
         role = html.unescape(re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', head.group(1)))).strip() if head else ''
         for tag in re.findall(r'<span class="tag">(.*?)</span>', card, flags=re.S): out.append((role, html.unescape(tag.strip())))
+    for role, block in re.findall(r'<div class="tags"[^>]*data-role="([^"]+)"[^>]*>(.*?)</div></article>', t, flags=re.S):
+        for tag in re.findall(r'<span class="tag">(.*?)</span>', block, flags=re.S): out.append((html.unescape(role), html.unescape(tag.strip())))
     return out
 
 
@@ -84,7 +87,7 @@ def main():
     print(f"{total} sentences with a digit or percent sign: {sourced} sourced, {unsourced} unsourced, {len(missing)} without a ledger row")
     for page, s in missing: print(f"  {page}: {s}")
     known = load_pills(); found = pills(); unpilled = [(r, p) for r, p in found if (r, p) not in known]
-    print(f"{len(found)} skill pills on the Experience cards: {len(found) - len(unpilled)} sourced to the CV, {len(unpilled)} without a pills row")
+    print(f"{len(found)} skill pills and tags on the main page: {len(found) - len(unpilled)} sourced to the CV, {len(unpilled)} without a pills row")
     for r, p in unpilled: print(f"  {r}: {p}")
     sys.exit(1 if missing or unpilled else 0)
 

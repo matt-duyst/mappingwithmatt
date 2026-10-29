@@ -40,3 +40,92 @@ University of California, Los Angeles	Google Earth Engine	65	against a Google Ea
 University of California, Los Angeles	SAR	76	SAR analysis, DEM construction
 University of California, Los Angeles	DEM construction	76	SAR analysis, DEM construction, spectral indices
 University of California, Los Angeles	cartography	77	spatial interpolation, and cartography are documented
+Grassroots Carbon	soil organic carbon from field cores	resume 35	downstream ML workflows. Ranch-level SOC stratification is designed
+Grassroots Carbon	PastureMap grazing records	CV 128	practices from integration with longitudinal management event data
+Grassroots Carbon	Rangeland Analysis Platform	CV 104	meteorological forcing, and the Rangeland Analysis Platform
+Grassroots Carbon	gridMET	CV 104	zones, PRISM climate normals, GridMET meteorological forcing, and the
+Grassroots Carbon	Harmonized Landsat Sentinel	CV 105	The pipeline integrates the Harmonized Landsat-Sentinel (HLS) spectral suite across structural
+Grassroots Carbon	3DEP	CV 103	soils, gSSURGO soil survey, 3DEP terrain
+Grassroots Carbon	POLARIS and gSSURGO	CV 103	federal earth observation archive: POLARIS gridded soils, gSSURGO soil survey
+Grassroots Carbon	PRISM	CV 104	NRCS MLRA/LRR ecological zones, PRISM climate normals, GridMET meteorological
+Grassroots Carbon	NEON and AmeriFlux sites	CV 102	federal monitoring networks, ecological observatories, agricultural research stations
+Grassroots Carbon	light use efficiency modeling	CV 95	architecture pairs a deterministic Light Use Efficiency (LUE) backbone, where
+Grassroots Carbon	counterfactual baselines	resume 41	CAR-SEP. Modeling extends into counterfactual
+Grassroots Carbon	gradient-boosted residual correction	CV 97	a bounded machine-learning correction trained on the systematic errors
+Grassroots Carbon	biomass estimation	resume 40	■ Benchmark biomass and structural vegetation estimation
+Grassroots Carbon	creditable depth modeling	not verified	named in neither the CV nor the resume
+Grassroots Carbon	sampling stratification	resume 35	ML workflows. Ranch-level SOC stratification is designed
+Grassroots Carbon	validation by region	CV 121	validation expansion that scales the modeling framework
+Grassroots Carbon	VM0042	resume 41	under the Regenerative Standard, VM0042, and CAR-SEP. Modeling extends
+Grassroots Carbon	Regenerative Standard	resume 41	supporting quantification under the Regenerative Standard, VM0042, and CAR-SEP. Modeling
+Grassroots Carbon	Python	resume 37	covariate extraction tooling: a Python client querying five authoritative
+Grassroots Carbon	GeoPandas	CV 249	Geospatial Data Science & Statistics: GeoPandas, Rasterio, GDAL, NumPy, Pandas
+Grassroots Carbon	Rasterio	CV 249	Science & Statistics: GeoPandas, Rasterio, GDAL, NumPy, Pandas, Statsmodels
+Grassroots Carbon	GDAL	CV 249	Statistics: GeoPandas, Rasterio, GDAL, NumPy, Pandas, Statsmodels, Folium
+Grassroots Carbon	XGBoost	CV 244	Keras, TensorFlow, Scikit-learn, XGBoost, LightGBM, Random Forest, SVM
+Grassroots Carbon	LightGBM	CV 244	TensorFlow, Scikit-learn, XGBoost, LightGBM, Random Forest, SVM, ARIMA/SARIMAX
+Grassroots Carbon	scikit-learn	CV 244	PyTorch, Keras, TensorFlow, Scikit-learn, XGBoost, LightGBM, Random Forest
+Grassroots Carbon	Docker	CV 243	Engineering: Python, R, SQL, Docker, Microsoft Azure, ParaView, OpenFOAM.
+Grassroots Carbon	SQL	CV 243	Programming & Engineering: Python, R, SQL, Docker, Microsoft Azure, ParaView
+SeekOps	UAV TDLAS spectrometry	resume 51	basins. Deployed UAV-mounted TDLAS sensors, ultrasonic
+SeekOps	ultrasonic anemometers	resume 52	anemometers, and RTK ground stations, calculating
+SeekOps	RTK ground stations	resume 52	anemometers, and RTK ground stations, calculating DRE%
+SeekOps	flight telemetry	resume 56	vector validation through AirData telemetry. Modeled plume dynamics via
+SeekOps	LiDAR terrain	resume 55	UAV-based methane detection: LiDAR terrain corrections, surface roughness
+SeekOps	aerial imagery	resume 59	stacks) from high-resolution aerial imagery, enabling autonomous site characterization
+SeekOps	mass balance emission rates	resume 52	stations, calculating DRE% through mass-balance equations comparing uncombusted
+SeekOps	plume modeling	resume 56	through AirData telemetry. Modeled plume dynamics via
+SeekOps	terrain and roughness correction	resume 55	terrain corrections, surface roughness
+SeekOps	wind validation	resume 56	oil and gas facilities, and wind vector validation through AirData telemetry.
+SeekOps	YOLOv8 object detection	resume 58	■ Trained a fine-tuned YOLOv8 object detection model to classify
+SeekOps	predictive emissions modeling	resume 62	survey campaigns, and developed predictive emissions modeling
+SeekOps	LDAR	resume 54	2024, contributing to enhanced LDAR programs across two major US shale
+SeekOps	OGMP and EPA reporting	resume 57	emission source maps aligned with OGMP and EPA reporting standards.
+SeekOps	Python	resume 61	geospatial visualization suites in Python (Folium, Plotly Dash) and GIS
+SeekOps	PyTorch	CV 244	Machine Learning & Deep Learning: PyTorch, Keras, TensorFlow, Scikit-learn
+SeekOps	ParaView	CV 243	SQL, Docker, Microsoft Azure, ParaView, OpenFOAM.
+SeekOps	OpenFOAM	CV 243	Docker, Microsoft Azure, ParaView, OpenFOAM.
+University of Minnesota	eddy covariance flux	resume 84	field data collection using eddy covariance towers, ultrasonic anemometers
+University of Minnesota	greenhouse gas analyzers	resume 84	ultrasonic anemometers, and greenhouse gas analyzers under AmeriFlux
+University of Minnesota	water table and soil temperature	CV 210	drivers. Predictor variables (soil temperature at 10 cm, atmospheric temperature
+University of Minnesota	AmeriFlux US-MBP	CV 201	Lake Peatland (AmeriFlux site US-MBP), a sub-boreal peatland with continuous
+University of Minnesota	seasonal decomposition	resume 85	feature importance rankings and seasonal decomposition to
+University of Minnesota	feature importance	resume 85	temporal resolution. Applied feature importance rankings and seasonal decomposition
+University of Minnesota	ensemble stacking	resume 87	■ Constructed an ensemble stacking model layering LightGBM, SARIMAX
+University of Minnesota	AmeriFlux protocols	CV 205	standard calibration gases under AmeriFlux protocols. Beyond eddy covariance, the
+University of Minnesota	Python	CV 243	Programming & Engineering: Python, R, SQL, Docker, Microsoft Azure
+University of Minnesota	Statsmodels	CV 249	Rasterio, GDAL, NumPy, Pandas, Statsmodels, Folium, Plotly Dash, Matplotlib
+University of Minnesota	scikit-learn	CV 244	PyTorch, Keras, TensorFlow, Scikit-learn, XGBoost, LightGBM, Random Forest
+University of Minnesota	Pandas	CV 249	Data Science & Statistics: GeoPandas, Rasterio, GDAL, NumPy, Pandas
+University of Minnesota	Matplotlib	CV 249	Statsmodels, Folium, Plotly Dash, Matplotlib, spatial autocorrelation
+Cydcor	census tract demographics	resume 95	executive leadership, integrated census tract demographics with internal sales metrics in
+Cydcor	internal sales metrics	resume 95	census tract demographics with internal sales metrics in ArcGIS using kriging and spatial
+Cydcor	Google Geocoding API	resume 97	workflows in Python against the Google API, with batch geocoding and spatial
+Cydcor	kriging and spatial interpolation	resume 95	sales metrics in ArcGIS using kriging and spatial interpolation
+Cydcor	spatial regression	resume 96	predictive geospatial models using spatial regression and weighted overlay analysis
+Cydcor	weighted overlay	resume 96	using spatial regression and weighted overlay analysis for expansion into
+Cydcor	batch geocoding and validation	resume 97	against the Google API, with batch geocoding and spatial data validation pipelines
+Cydcor	ArcGIS	resume 95	with internal sales metrics in ArcGIS using kriging and spatial interpolation
+Cydcor	Python	resume 97	Automated geocoding workflows in Python against the Google API, with batch
+Yale School of the Environment	GAIA urban extent	CV 172	Artificial Impervious Areas (GAIA) algorithm and mapping paddied
+Yale School of the Environment	PPPM rice mapping	CV 173	and Pixel-Based Paddy Mapping (PPPM) algorithm. The rice classification
+Yale School of the Environment	NDVI, EVI, LSWI	CV 174	signal (NDVI, EVI, LSWI) with China's regional cropping
+Yale School of the Environment	UAV thermal and RGB imagery	CV 54	Zhao; Yale ENV 704), integrating thermal and RGB UAV imagery for photovoltaic panel
+Yale School of the Environment	land cover classification	CV 171	output through rice cultivation. Classified multi-decadal land cover from the complete 30m Landsat
+Yale School of the Environment	Getis-Ord Gi* hot spots	CV 179	spatial resolution. Applied the Getis-Ord Gi*
+Yale School of the Environment	DeepLabV3+ with ResNet50	CV 190	skip connections built on a ResNet50 backbone, with the model
+Yale School of the Environment	multivariate analysis	CV 51	Statistics (ENV 781/S&DS 674), Multivariate Statistical Methods for Environmental
+Yale School of the Environment	photogrammetry	CV 50	Workshop on Remote Sensing and Photogrammetry with Drones (ENV 704) and Observing
+Yale School of the Environment	regression modeling	CV 52	Sciences (ENV 758), and Regression Modeling of Ecological and Environmental
+Yale School of the Environment	PyTorch	CV 244	Machine Learning & Deep Learning: PyTorch, Keras, TensorFlow, Scikit-learn
+Yale School of the Environment	Keras and TensorFlow	CV 244	Learning & Deep Learning: PyTorch, Keras, TensorFlow, Scikit-learn, XGBoost
+Yale School of the Environment	R	CV 243	Programming & Engineering: Python, R, SQL, Docker, Microsoft Azure
+University of California, Los Angeles	digital elevation models	resume 26	(NDVI, NBR), SAR interpretation, DEM construction, spatial interpolation
+University of California, Los Angeles	supervised and unsupervised classification	resume 26	unsupervised image classification, spectral
+University of California, Los Angeles	NDVI and NBR	resume 26	classification, spectral index analysis (NDVI, NBR), SAR interpretation, DEM construction
+University of California, Los Angeles	change detection	resume 28	vegetation change detection using Landsat and Google Earth
+University of California, Los Angeles	spatial interpolation and autocorrelation	resume 26	interpretation, DEM construction, spatial interpolation and
+University of California, Los Angeles	predictive modeling	resume 27	querying, cartographic design, and predictive environmental modeling. Undergraduate
+University of California, Los Angeles	cartographic design	resume 27	SQL-based spatial querying, cartographic design, and predictive environmental
+University of California, Los Angeles	ArcGIS	CV 246	Observation Platforms: QGIS, ArcGIS Pro, Google Earth Engine (Python
+University of California, Los Angeles	spatial SQL	resume 27	autocorrelation, SQL-based spatial querying, cartographic
