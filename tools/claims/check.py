@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Every sentence with a digit or a percent sign on the seven pages must have a row in ledger.tsv, and every skill pill on the
+"""Every sentence with a digit, a percent sign or a claim word (largest, highest, top, first, only, longest, inaugural, most, best,
+leading, award, awarded, recognized, selected, chosen, funded) on the seven pages must have a row in ledger.tsv, and every skill pill on the
 Experience cards and every tag on the record of the main page must have a row in pills.tsv.
 
     python3 tools/claims/check.py            # exit 1 when a sentence has no ledger row or a pill has no pills row
@@ -7,7 +8,8 @@ Experience cards and every tag on the record of the main page must have a row in
 The ledger has four tab-separated columns: page, sentence, source, line. A source of UNSOURCED is a row, so the check passes;
 it is the report's job to list those. Sentences are compared after whitespace is collapsed. The pills file has four columns:
 role (the card's heading, or the record entry's data-role), pill (its text), line (the line of the CV's layout extraction that names it for that
-role, as a bare number or "CV N", or "resume N" for the resume's extraction; "not verified" when neither names it) and phrase (the words on
+role, as a bare number or "CV N", or "resume N" for the resume's extraction; "owner, YYYY-MM-DD" for an owner statement; "not verified"
+when nothing names it) and phrase (the words on
 that line that support it).
 """
 import html, os, re, sys
@@ -39,7 +41,12 @@ def sentences(path):
 def is_sentence(s): return len(re.findall(r'[A-Za-z]{2,}', s)) >= 3  # three words or more; bare years, counters and labels are not claims
 
 
-def has_number(s): return is_sentence(s) and re.search(r'\d|%', s) is not None
+CLAIM_WORDS = re.compile(r'\b(largest|highest|top|first|only|longest|inaugural|most|best|leading|award|awarded|recognized|selected|chosen|funded)\b', re.I)
+
+
+def has_number(s):
+    """A claim: a digit or percent sign, or a superlative, first or award word that asserts rank or recognition."""
+    return is_sentence(s) and (re.search(r'\d|%', s) is not None or CLAIM_WORDS.search(s) is not None)
 
 
 def load_ledger():
@@ -58,7 +65,7 @@ def load_pills():
         next(f)
         for line in f:
             parts = line.rstrip('\n').split('\t')
-            if len(parts) >= 4 and re.match(r'^(\d+|(CV|resume) \d+|not verified)$', parts[2].strip()): rows.add((parts[0].strip(), parts[1].strip()))
+            if len(parts) >= 4 and re.match(r'^(\d+|(CV|resume) \d+|owner, \d{4}-\d{2}-\d{2}|not verified)$', parts[2].strip()): rows.add((parts[0].strip(), parts[1].strip()))
     return rows
 
 
@@ -84,7 +91,7 @@ def main():
             if row is None: missing.append((page, s))
             elif row[0] == 'UNSOURCED': unsourced += 1
             else: sourced += 1
-    print(f"{total} sentences with a digit or percent sign: {sourced} sourced, {unsourced} unsourced, {len(missing)} without a ledger row")
+    print(f"{total} sentences with a digit, percent sign or claim word: {sourced} sourced, {unsourced} unsourced, {len(missing)} without a ledger row")
     for page, s in missing: print(f"  {page}: {s}")
     known = load_pills(); found = pills(); unpilled = [(r, p) for r, p in found if (r, p) not in known]
     print(f"{len(found)} skill pills and tags on the main page: {len(found) - len(unpilled)} sourced to the CV, {len(unpilled)} without a pills row")
