@@ -4,7 +4,7 @@
     python3 tools/audit/capture.py URL --chrome BINARY --out DIR
 
 Full page with every fold closed at 1440 and 390 in both schemes; the Experience band at 1440 (dark) at rest and with the Grassroots Carbon
-entry's "XGBoost" pill hovered; the Education band at 1440 (dark); the Awards + fellowships rows at 1440 in both schemes and at 390 (dark); and a
+entry's "Python" pill hovered; the Education band at 1440 (dark); the Awards + fellowships rows at 1440 in both schemes and at 390 (dark); and a
 WebM at 1440 (dark), 15 s, scrolling from the About through the record. Screencast frames are replayed on a canvas and encoded by MediaRecorder
 as VP9.
 """
@@ -52,7 +52,7 @@ def band(name, sel, w=1440, h=900, theme='dark', pill=None):
         save(c, name)
     finally: c.close()
 band('experience-1440-dark.png', '#band-experience')
-band('experience-thread-xgboost-1440-dark.png', '#band-experience', pill=('#exp-grc', 'XGBoost'))
+band('experience-thread-python-1440-dark.png', '#band-experience', pill=('#exp-grc', 'Python'))   # Python is a tag in four roles
 band('education-1440-dark.png', '#band-education')
 band('awards-1440-dark.png', '#band-awards')
 band('awards-1440-light.png', '#band-awards', theme='light')
