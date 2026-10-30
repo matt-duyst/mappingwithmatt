@@ -1,0 +1,2800 @@
+{
+ "meta": {
+  "date": "2026-10-30",
+  "commit": "8baa474",
+  "root": "http://localhost:8001",
+  "renderer": "software",
+  "runs": 5,
+  "checks_only": false,
+  "profiles": {
+   "throttled": "40 ms RTT, 10 Mbps, DPR 1 (the quoted figure)",
+   "local": "no throttling, DPR 2 at 1440 and 3 at 390"
+  },
+  "note": "Baseline taken of main at 8baa474 with the tools at dd2ba46 on 2026-10-30: software rendering, 5 throttled run(s) per page with the median quoted.",
+  "forced": {
+   "reason": "CI baseline: main at 8baa474, ubuntu-latest, no GPU",
+   "failing": [
+    "/ 1440 dark cold tbt: 106 ms is above 50 ms",
+    "/ 1440 dark scroll tbt: 2883 ms is above 50 ms",
+    "/ 1440 dark throttled: Failed to load resource: the server responded with a status of 404 (File not found)",
+    "/ 1440 dark throttled: HTTP 404 http://localhost:8001/vendor/glyphs/Noto%20Sans%20Regular/256-511.pbf",
+    "/ 1440 light cold tbt: 118 ms is above 50 ms",
+    "/ 1440 light scroll tbt: 2806 ms is above 50 ms",
+    "/ 1440 light throttled: Failed to load resource: the server responded with a status of 404 (File not found)",
+    "/ 1440 light throttled: HTTP 404 http://localhost:8001/vendor/glyphs/Noto%20Sans%20Regular/256-511.pbf",
+    "/ 1440 light throttled: Failed to load resource: the server responded with a status of 404 (File not found)",
+    "/ 1440 light throttled: HTTP 404 http://localhost:8001/vendor/glyphs/Noto%20Sans%20Regular/256-511.pbf",
+    "/ 390 dark scroll tbt: 1388 ms is above 50 ms",
+    "/ 390 dark throttled: Failed to load resource: the server responded with a status of 404 (File not found)",
+    "/ 390 dark throttled: HTTP 404 http://localhost:8001/vendor/glyphs/Noto%20Sans%20Regular/256-511.pbf",
+    "/ 390 dark throttled: Failed to load resource: the server responded with a status of 404 (File not found)",
+    "/ 390 dark throttled: HTTP 404 http://localhost:8001/vendor/glyphs/Noto%20Sans%20Regular/256-511.pbf",
+    "/ 390 light scroll tbt: 1423 ms is above 50 ms",
+    "/ 390 light throttled: Failed to load resource: the server responded with a status of 404 (File not found)",
+    "/ 390 light throttled: HTTP 404 http://localhost:8001/vendor/glyphs/Noto%20Sans%20Regular/256-511.pbf"
+   ]
+  },
+  "tools_commit": "dd2ba46"
+ },
+ "pages": {
+  "/": {
+   "1440": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 140,
+       "lcp": 184,
+       "tbt": 106,
+       "cls": 0,
+       "requests": 6,
+       "bytes": 434633,
+       "inline": 1,
+       "fcp_min": 136,
+       "fcp_max": 164,
+       "lcp_min": 172,
+       "lcp_max": 228,
+       "tbt_min": 16,
+       "tbt_max": 284,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 98404
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 24181
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "scroll": {
+       "fcp": 140,
+       "lcp": 184,
+       "tbt": 2883,
+       "cls": 0,
+       "requests": 65,
+       "bytes": 3448307,
+       "inline": 5,
+       "map_wait_ms": 6522,
+       "map_requests": 46,
+       "map_bytes": 2067013,
+       "fcp_min": 136,
+       "fcp_max": 164,
+       "lcp_min": 172,
+       "lcp_max": 228,
+       "tbt_min": 2531,
+       "tbt_max": 4523,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Fetch": {
+         "requests": 42,
+         "bytes": 884946
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 14,
+         "bytes": 1045065
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1122865
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83383
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "runs": [
+       {
+        "cold": {
+         "fcp": 136,
+         "lcp": 216,
+         "lcpElement": "P.bio",
+         "tbt": 225,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 136,
+         "lcp": 216,
+         "lcpElement": "P.bio",
+         "tbt": 4523,
+         "cls": 0,
+         "requests": 65,
+         "bytes": 3448307,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 42,
+           "bytes": 884946
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 14,
+           "bytes": 1045065
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 8135,
+         "map_timeout": false,
+         "map_requests": 46,
+         "map_bytes": 2067013
+        }
+       },
+       {
+        "cold": {
+         "fcp": 140,
+         "lcp": 180,
+         "lcpElement": "P.bio",
+         "tbt": 41,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 140,
+         "lcp": 180,
+         "lcpElement": "P.bio",
+         "tbt": 2989,
+         "cls": 0,
+         "requests": 67,
+         "bytes": 3578505,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 44,
+           "bytes": 1015144
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 14,
+           "bytes": 1045065
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 6522,
+         "map_timeout": false,
+         "map_requests": 48,
+         "map_bytes": 2197211
+        }
+       },
+       {
+        "cold": {
+         "fcp": 160,
+         "lcp": 184,
+         "lcpElement": "P.bio",
+         "tbt": 284,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 160,
+         "lcp": 184,
+         "lcpElement": "P.bio",
+         "tbt": 2883,
+         "cls": 0,
+         "requests": 68,
+         "bytes": 3579048,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 45,
+           "bytes": 1015687
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 14,
+           "bytes": 1045065
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 6509,
+         "map_timeout": false,
+         "map_requests": 49,
+         "map_bytes": 2197754
+        }
+       },
+       {
+        "cold": {
+         "fcp": 164,
+         "lcp": 228,
+         "lcpElement": "P.bio",
+         "tbt": 106,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 164,
+         "lcp": 228,
+         "lcpElement": "P.bio",
+         "tbt": 2805,
+         "cls": 0,
+         "requests": 65,
+         "bytes": 3448299,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 42,
+           "bytes": 884938
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 14,
+           "bytes": 1045065
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 6605,
+         "map_timeout": false,
+         "map_requests": 46,
+         "map_bytes": 2067005
+        }
+       },
+       {
+        "cold": {
+         "fcp": 136,
+         "lcp": 172,
+         "lcpElement": "P.bio",
+         "tbt": 16,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 136,
+         "lcp": 172,
+         "lcpElement": "P.bio",
+         "tbt": 2531,
+         "cls": 0,
+         "requests": 65,
+         "bytes": 3448305,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 42,
+           "bytes": 884944
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 14,
+           "bytes": 1045065
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 6345,
+         "map_timeout": false,
+         "map_requests": 46,
+         "map_bytes": 2067011
+        }
+       }
+      ],
+      "errors": [
+       "Failed to load resource: the server responded with a status of 404 (File not found)",
+       "HTTP 404 http://localhost:8001/vendor/glyphs/Noto%20Sans%20Regular/256-511.pbf"
+      ],
+      "overflow": false,
+      "hero": {
+       "lift": 4064,
+       "stack": 4997,
+       "ready": 6336
+      }
+     },
+     "local": {
+      "cold": {
+       "fcp": 168,
+       "lcp": 168,
+       "tbt": 125,
+       "cls": 0,
+       "requests": 6,
+       "bytes": 434633,
+       "inline": 1,
+       "fcp_min": 168,
+       "fcp_max": 168,
+       "lcp_min": 168,
+       "lcp_max": 168,
+       "tbt_min": 125,
+       "tbt_max": 125,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 98404
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 24181
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "scroll": {
+       "fcp": 168,
+       "lcp": 168,
+       "tbt": 4708,
+       "cls": 0,
+       "requests": 67,
+       "bytes": 4154357,
+       "inline": 5,
+       "map_wait_ms": 5214,
+       "map_requests": 48,
+       "map_bytes": 2266729,
+       "fcp_min": 168,
+       "fcp_max": 168,
+       "lcp_min": 168,
+       "lcp_max": 168,
+       "tbt_min": 4708,
+       "tbt_max": 4708,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Fetch": {
+         "requests": 44,
+         "bytes": 1084662
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 14,
+         "bytes": 1551399
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1122865
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83383
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "runs": [
+       {
+        "cold": {
+         "fcp": 168,
+         "lcp": 168,
+         "lcpElement": "P.bio",
+         "tbt": 125,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 168,
+         "lcp": 168,
+         "lcpElement": "P.bio",
+         "tbt": 4708,
+         "cls": 0,
+         "requests": 67,
+         "bytes": 4154357,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 44,
+           "bytes": 1084662
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 14,
+           "bytes": 1551399
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 5214,
+         "map_timeout": false,
+         "map_requests": 48,
+         "map_bytes": 2266729
+        }
+       }
+      ],
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "lift": 3817,
+       "stack": 4735,
+       "ready": 6063
+      }
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 148,
+       "lcp": 192,
+       "tbt": 118,
+       "cls": 0,
+       "requests": 6,
+       "bytes": 434633,
+       "inline": 1,
+       "fcp_min": 140,
+       "fcp_max": 152,
+       "lcp_min": 188,
+       "lcp_max": 204,
+       "tbt_min": 0,
+       "tbt_max": 259,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 98404
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 24181
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "scroll": {
+       "fcp": 148,
+       "lcp": 192,
+       "tbt": 2806,
+       "cls": 0,
+       "requests": 67,
+       "bytes": 3578504,
+       "inline": 5,
+       "map_wait_ms": 6471,
+       "map_requests": 48,
+       "map_bytes": 2197210,
+       "fcp_min": 140,
+       "fcp_max": 152,
+       "lcp_min": 188,
+       "lcp_max": 204,
+       "tbt_min": 2564,
+       "tbt_max": 3143,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Fetch": {
+         "requests": 44,
+         "bytes": 1015143
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 14,
+         "bytes": 1045065
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1122865
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83383
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "runs": [
+       {
+        "cold": {
+         "fcp": 148,
+         "lcp": 196,
+         "lcpElement": "P.bio",
+         "tbt": 259,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 148,
+         "lcp": 196,
+         "lcpElement": "P.bio",
+         "tbt": 3143,
+         "cls": 0,
+         "requests": 65,
+         "bytes": 3448280,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 42,
+           "bytes": 884919
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 14,
+           "bytes": 1045065
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 6284,
+         "map_timeout": false,
+         "map_requests": 46,
+         "map_bytes": 2066986
+        }
+       },
+       {
+        "cold": {
+         "fcp": 148,
+         "lcp": 192,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 148,
+         "lcp": 192,
+         "lcpElement": "P.bio",
+         "tbt": 2788,
+         "cls": 0,
+         "requests": 67,
+         "bytes": 3578504,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 44,
+           "bytes": 1015143
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 14,
+           "bytes": 1045065
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 6655,
+         "map_timeout": false,
+         "map_requests": 48,
+         "map_bytes": 2197210
+        }
+       },
+       {
+        "cold": {
+         "fcp": 140,
+         "lcp": 204,
+         "lcpElement": "P.bio",
+         "tbt": 118,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 140,
+         "lcp": 204,
+         "lcpElement": "P.bio",
+         "tbt": 2806,
+         "cls": 0,
+         "requests": 68,
+         "bytes": 3578728,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 45,
+           "bytes": 1015367
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 14,
+           "bytes": 1045065
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 6471,
+         "map_timeout": false,
+         "map_requests": 49,
+         "map_bytes": 2197434
+        }
+       },
+       {
+        "cold": {
+         "fcp": 152,
+         "lcp": 192,
+         "lcpElement": "P.bio",
+         "tbt": 217,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 152,
+         "lcp": 192,
+         "lcpElement": "P.bio",
+         "tbt": 2870,
+         "cls": 0,
+         "requests": 68,
+         "bytes": 3579065,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 45,
+           "bytes": 1015704
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 14,
+           "bytes": 1045065
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 6492,
+         "map_timeout": false,
+         "map_requests": 49,
+         "map_bytes": 2197771
+        }
+       },
+       {
+        "cold": {
+         "fcp": 140,
+         "lcp": 188,
+         "lcpElement": "P.bio",
+         "tbt": 25,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 140,
+         "lcp": 188,
+         "lcpElement": "P.bio",
+         "tbt": 2564,
+         "cls": 0,
+         "requests": 67,
+         "bytes": 3577341,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 44,
+           "bytes": 1013980
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 14,
+           "bytes": 1045065
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 6312,
+         "map_timeout": false,
+         "map_requests": 48,
+         "map_bytes": 2196047
+        }
+       }
+      ],
+      "errors": [
+       "Failed to load resource: the server responded with a status of 404 (File not found)",
+       "HTTP 404 http://localhost:8001/vendor/glyphs/Noto%20Sans%20Regular/256-511.pbf",
+       "Failed to load resource: the server responded with a status of 404 (File not found)",
+       "HTTP 404 http://localhost:8001/vendor/glyphs/Noto%20Sans%20Regular/256-511.pbf"
+      ],
+      "overflow": false,
+      "hero": {
+       "lift": 4072,
+       "stack": 5022,
+       "ready": 6317
+      }
+     },
+     "local": {
+      "cold": {
+       "fcp": 216,
+       "lcp": 216,
+       "tbt": 82,
+       "cls": 0,
+       "requests": 6,
+       "bytes": 434633,
+       "inline": 1,
+       "fcp_min": 216,
+       "fcp_max": 216,
+       "lcp_min": 216,
+       "lcp_max": 216,
+       "tbt_min": 82,
+       "tbt_max": 82,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 98404
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 24181
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "scroll": {
+       "fcp": 216,
+       "lcp": 216,
+       "tbt": 4444,
+       "cls": 0,
+       "requests": 67,
+       "bytes": 4154385,
+       "inline": 5,
+       "map_wait_ms": 5192,
+       "map_requests": 48,
+       "map_bytes": 2266757,
+       "fcp_min": 216,
+       "fcp_max": 216,
+       "lcp_min": 216,
+       "lcp_max": 216,
+       "tbt_min": 4444,
+       "tbt_max": 4444,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Fetch": {
+         "requests": 44,
+         "bytes": 1084690
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 14,
+         "bytes": 1551399
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1122865
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83383
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "runs": [
+       {
+        "cold": {
+         "fcp": 216,
+         "lcp": 216,
+         "lcpElement": "P.bio",
+         "tbt": 82,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 216,
+         "lcp": 216,
+         "lcpElement": "P.bio",
+         "tbt": 4444,
+         "cls": 0,
+         "requests": 67,
+         "bytes": 4154385,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 44,
+           "bytes": 1084690
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 14,
+           "bytes": 1551399
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 5192,
+         "map_timeout": false,
+         "map_requests": 48,
+         "map_bytes": 2266757
+        }
+       }
+      ],
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "lift": 3825,
+       "stack": 4748,
+       "ready": 6165
+      }
+     },
+     "axe": []
+    }
+   },
+   "390": {
+    "dark": {
+     "throttled": {
+      "cold": {
+       "fcp": 128,
+       "lcp": 172,
+       "tbt": 0,
+       "cls": 0,
+       "requests": 6,
+       "bytes": 434633,
+       "inline": 1,
+       "fcp_min": 128,
+       "fcp_max": 132,
+       "lcp_min": 168,
+       "lcp_max": 184,
+       "tbt_min": 0,
+       "tbt_max": 0,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 98404
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 24181
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "scroll": {
+       "fcp": 128,
+       "lcp": 172,
+       "tbt": 1388,
+       "cls": 0,
+       "requests": 47,
+       "bytes": 3361627,
+       "inline": 5,
+       "map_wait_ms": 5324,
+       "map_requests": 24,
+       "map_bytes": 1634372,
+       "fcp_min": 128,
+       "fcp_max": 132,
+       "lcp_min": 168,
+       "lcp_max": 184,
+       "tbt_min": 1348,
+       "tbt_max": 1448,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Fetch": {
+         "requests": 20,
+         "bytes": 452305
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 17,
+         "bytes": 1128051
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262975
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1122865
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83383
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "runs": [
+       {
+        "cold": {
+         "fcp": 128,
+         "lcp": 184,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 128,
+         "lcp": 184,
+         "lcpElement": "P.bio",
+         "tbt": 1350,
+         "cls": 0,
+         "requests": 47,
+         "bytes": 3361627,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 20,
+           "bytes": 452305
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 17,
+           "bytes": 1128051
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262975
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 5276,
+         "map_timeout": false,
+         "map_requests": 24,
+         "map_bytes": 1634372
+        }
+       },
+       {
+        "cold": {
+         "fcp": 128,
+         "lcp": 168,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 128,
+         "lcp": 168,
+         "lcpElement": "P.bio",
+         "tbt": 1348,
+         "cls": 0,
+         "requests": 47,
+         "bytes": 3361626,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 20,
+           "bytes": 452304
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 17,
+           "bytes": 1128051
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262975
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 5245,
+         "map_timeout": false,
+         "map_requests": 24,
+         "map_bytes": 1634371
+        }
+       },
+       {
+        "cold": {
+         "fcp": 132,
+         "lcp": 172,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 132,
+         "lcp": 172,
+         "lcpElement": "P.bio",
+         "tbt": 1411,
+         "cls": 0,
+         "requests": 49,
+         "bytes": 3457991,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 22,
+           "bytes": 548669
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 17,
+           "bytes": 1128051
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262975
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 5411,
+         "map_timeout": false,
+         "map_requests": 26,
+         "map_bytes": 1730736
+        }
+       },
+       {
+        "cold": {
+         "fcp": 128,
+         "lcp": 176,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 128,
+         "lcp": 176,
+         "lcpElement": "P.bio",
+         "tbt": 1388,
+         "cls": 0,
+         "requests": 49,
+         "bytes": 3457993,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 22,
+           "bytes": 548671
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 17,
+           "bytes": 1128051
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262975
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 5476,
+         "map_timeout": false,
+         "map_requests": 26,
+         "map_bytes": 1730738
+        }
+       },
+       {
+        "cold": {
+         "fcp": 132,
+         "lcp": 172,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 132,
+         "lcp": 172,
+         "lcpElement": "P.bio",
+         "tbt": 1448,
+         "cls": 0,
+         "requests": 47,
+         "bytes": 3361613,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 20,
+           "bytes": 452291
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 17,
+           "bytes": 1128051
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262975
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 5324,
+         "map_timeout": false,
+         "map_requests": 24,
+         "map_bytes": 1634358
+        }
+       }
+      ],
+      "errors": [
+       "Failed to load resource: the server responded with a status of 404 (File not found)",
+       "HTTP 404 http://localhost:8001/vendor/glyphs/Noto%20Sans%20Regular/256-511.pbf",
+       "Failed to load resource: the server responded with a status of 404 (File not found)",
+       "HTTP 404 http://localhost:8001/vendor/glyphs/Noto%20Sans%20Regular/256-511.pbf"
+      ],
+      "overflow": false,
+      "hero": {
+       "lift": 4051,
+       "stack": 4862,
+       "ready": 6019
+      }
+     },
+     "local": {
+      "cold": {
+       "fcp": 148,
+       "lcp": 148,
+       "tbt": 0,
+       "cls": 0,
+       "requests": 6,
+       "bytes": 434633,
+       "inline": 1,
+       "fcp_min": 148,
+       "fcp_max": 148,
+       "lcp_min": 148,
+       "lcp_max": 148,
+       "tbt_min": 0,
+       "tbt_max": 0,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 98404
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 24181
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "scroll": {
+       "fcp": 148,
+       "lcp": 148,
+       "tbt": 3308,
+       "cls": 0,
+       "requests": 47,
+       "bytes": 3969960,
+       "inline": 5,
+       "map_wait_ms": 4186,
+       "map_requests": 24,
+       "map_bytes": 1703820,
+       "fcp_min": 148,
+       "fcp_max": 148,
+       "lcp_min": 148,
+       "lcp_max": 148,
+       "tbt_min": 3308,
+       "tbt_max": 3308,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Fetch": {
+         "requests": 20,
+         "bytes": 521753
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 17,
+         "bytes": 1929911
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1122865
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83383
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "runs": [
+       {
+        "cold": {
+         "fcp": 148,
+         "lcp": 148,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 148,
+         "lcp": 148,
+         "lcpElement": "P.bio",
+         "tbt": 3308,
+         "cls": 0,
+         "requests": 47,
+         "bytes": 3969960,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 20,
+           "bytes": 521753
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 17,
+           "bytes": 1929911
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 0
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 4186,
+         "map_timeout": false,
+         "map_requests": 24,
+         "map_bytes": 1703820
+        }
+       }
+      ],
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "lift": 3784,
+       "stack": 4582,
+       "ready": 5785
+      }
+     },
+     "axe": []
+    },
+    "light": {
+     "throttled": {
+      "cold": {
+       "fcp": 164,
+       "lcp": 188,
+       "tbt": 0,
+       "cls": 0,
+       "requests": 6,
+       "bytes": 434633,
+       "inline": 1,
+       "fcp_min": 124,
+       "fcp_max": 480,
+       "lcp_min": 148,
+       "lcp_max": 500,
+       "tbt_min": 0,
+       "tbt_max": 0,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 98404
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 24181
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "scroll": {
+       "fcp": 164,
+       "lcp": 188,
+       "tbt": 1423,
+       "cls": 0,
+       "requests": 47,
+       "bytes": 3361552,
+       "inline": 5,
+       "map_wait_ms": 5388,
+       "map_requests": 24,
+       "map_bytes": 1634297,
+       "fcp_min": 124,
+       "fcp_max": 480,
+       "lcp_min": 148,
+       "lcp_max": 500,
+       "tbt_min": 1387,
+       "tbt_max": 1562,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Fetch": {
+         "requests": 20,
+         "bytes": 452230
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 17,
+         "bytes": 1128051
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 262975
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1122865
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83383
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "runs": [
+       {
+        "cold": {
+         "fcp": 480,
+         "lcp": 500,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 480,
+         "lcp": 500,
+         "lcpElement": "P.bio",
+         "tbt": 1387,
+         "cls": 0,
+         "requests": 47,
+         "bytes": 3361551,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 20,
+           "bytes": 452229
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 17,
+           "bytes": 1128051
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262975
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 5398,
+         "map_timeout": false,
+         "map_requests": 24,
+         "map_bytes": 1634296
+        }
+       },
+       {
+        "cold": {
+         "fcp": 124,
+         "lcp": 148,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 124,
+         "lcp": 148,
+         "lcpElement": "P.bio",
+         "tbt": 1452,
+         "cls": 0,
+         "requests": 47,
+         "bytes": 3361625,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 20,
+           "bytes": 452303
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 17,
+           "bytes": 1128051
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262975
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 5249,
+         "map_timeout": false,
+         "map_requests": 24,
+         "map_bytes": 1634370
+        }
+       },
+       {
+        "cold": {
+         "fcp": 148,
+         "lcp": 188,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 148,
+         "lcp": 188,
+         "lcpElement": "P.bio",
+         "tbt": 1562,
+         "cls": 0,
+         "requests": 49,
+         "bytes": 3458073,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 22,
+           "bytes": 548751
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 17,
+           "bytes": 1128051
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262975
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 5835,
+         "map_timeout": false,
+         "map_requests": 26,
+         "map_bytes": 1730818
+        }
+       },
+       {
+        "cold": {
+         "fcp": 164,
+         "lcp": 164,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 164,
+         "lcp": 164,
+         "lcpElement": "P.bio",
+         "tbt": 1401,
+         "cls": 0,
+         "requests": 47,
+         "bytes": 3361530,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 20,
+           "bytes": 452208
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 17,
+           "bytes": 1128051
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262975
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 5388,
+         "map_timeout": false,
+         "map_requests": 24,
+         "map_bytes": 1634275
+        }
+       },
+       {
+        "cold": {
+         "fcp": 208,
+         "lcp": 232,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 208,
+         "lcp": 232,
+         "lcpElement": "P.bio",
+         "tbt": 1423,
+         "cls": 0,
+         "requests": 47,
+         "bytes": 3361552,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 20,
+           "bytes": 452230
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 17,
+           "bytes": 1128051
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 262975
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 5097,
+         "map_timeout": false,
+         "map_requests": 24,
+         "map_bytes": 1634297
+        }
+       }
+      ],
+      "errors": [
+       "Failed to load resource: the server responded with a status of 404 (File not found)",
+       "HTTP 404 http://localhost:8001/vendor/glyphs/Noto%20Sans%20Regular/256-511.pbf"
+      ],
+      "overflow": false,
+      "hero": {
+       "lift": 4414,
+       "stack": 5235,
+       "ready": 6468
+      }
+     },
+     "local": {
+      "cold": {
+       "fcp": 424,
+       "lcp": 424,
+       "tbt": 0,
+       "cls": 0,
+       "requests": 6,
+       "bytes": 434633,
+       "inline": 1,
+       "fcp_min": 424,
+       "fcp_max": 424,
+       "lcp_min": 424,
+       "lcp_max": 424,
+       "tbt_min": 0,
+       "tbt_max": 0,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 1,
+         "bytes": 98404
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 1,
+         "bytes": 24181
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "scroll": {
+       "fcp": 424,
+       "lcp": 424,
+       "tbt": 3157,
+       "cls": 0,
+       "requests": 47,
+       "bytes": 3970056,
+       "inline": 5,
+       "map_wait_ms": 3993,
+       "map_requests": 24,
+       "map_bytes": 1703916,
+       "fcp_min": 424,
+       "fcp_max": 424,
+       "lcp_min": 424,
+       "lcp_max": 424,
+       "tbt_min": 3157,
+       "tbt_max": 3157,
+       "by_type": {
+        "Document": {
+         "requests": 1,
+         "bytes": 231168
+        },
+        "Fetch": {
+         "requests": 20,
+         "bytes": 521849
+        },
+        "Font": {
+         "requests": 2,
+         "bytes": 80152
+        },
+        "Image": {
+         "requests": 17,
+         "bytes": 1929911
+        },
+        "Media": {
+         "requests": 1,
+         "bytes": 0
+        },
+        "Other": {
+         "requests": 1,
+         "bytes": 728
+        },
+        "Script": {
+         "requests": 4,
+         "bytes": 1122865
+        },
+        "Stylesheet": {
+         "requests": 1,
+         "bytes": 83383
+        }
+       },
+       "lcpElement": "P.bio"
+      },
+      "runs": [
+       {
+        "cold": {
+         "fcp": 424,
+         "lcp": 424,
+         "lcpElement": "P.bio",
+         "tbt": 0,
+         "cls": 0,
+         "requests": 6,
+         "bytes": 434633,
+         "inline": 1,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 1,
+           "bytes": 98404
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 1,
+           "bytes": 24181
+          }
+         }
+        },
+        "scroll": {
+         "fcp": 424,
+         "lcp": 424,
+         "lcpElement": "P.bio",
+         "tbt": 3157,
+         "cls": 0,
+         "requests": 47,
+         "bytes": 3970056,
+         "inline": 5,
+         "by_type": {
+          "Document": {
+           "requests": 1,
+           "bytes": 231168
+          },
+          "Fetch": {
+           "requests": 20,
+           "bytes": 521849
+          },
+          "Font": {
+           "requests": 2,
+           "bytes": 80152
+          },
+          "Image": {
+           "requests": 17,
+           "bytes": 1929911
+          },
+          "Media": {
+           "requests": 1,
+           "bytes": 0
+          },
+          "Other": {
+           "requests": 1,
+           "bytes": 728
+          },
+          "Script": {
+           "requests": 4,
+           "bytes": 1122865
+          },
+          "Stylesheet": {
+           "requests": 1,
+           "bytes": 83383
+          }
+         },
+         "map_wait_ms": 3993,
+         "map_timeout": false,
+         "map_requests": 24,
+         "map_bytes": 1703916
+        }
+       }
+      ],
+      "errors": [],
+      "overflow": false,
+      "hero": {
+       "lift": 4146,
+       "stack": 4949,
+       "ready": 6134
+      }
+     },
+     "axe": []
+    }
+   }
+  }
+ },
+ "links": {
+  "pages": 38,
+  "references": 770,
+  "problems": []
+ }
+}
