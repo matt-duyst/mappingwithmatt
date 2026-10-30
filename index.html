@@ -256,7 +256,7 @@ p { margin: 0 0 16px; }
    measures (2 x 461 + 48) = 970 px, which a 15 px scrollbar and two 40 px gutters reach at 1065 px. Media queries cannot read the property,
    so the two values below are kept equal by hand. */
 :root { --justify-min: 1064px; --rec-label: 150px; --rec-stop: 16px; --rec-gap: 24px; --pill-gap: 6px; --pill-h: calc(10.5px * 1.2 + 10px); }
-.hero .about, .hero .record { grid-column: 1 / -1; position: relative; justify-self: center; width: min(1280px, calc(100vw - var(--sbw, 0px) - 2 * var(--pad))); }
+.hero .about, .hero .record { --wide: min(1280px, calc(100vw - var(--sbw, 0px) - 2 * var(--pad))); grid-column: 1 / -1; position: relative; justify-self: start; width: var(--wide); margin-left: calc((100% - var(--wide)) / 2); }   /* centered over the row by margin, so a container wider than the row never spills to the right */
 .about h2.eyebrow, .record h2.eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; margin: 0 0 12px; }   /* a real heading in the eyebrow's style, so the entry titles below it keep heading order */
 @media (max-width: 640px) { .hero .about { order: 1; } .hero .record { order: 2; } }   /* the row's phone order on main gives its first child 1 and the contact band 3 */
 .hero .about::before, .hero .record::before { content: ""; position: absolute; inset: -10px -14px; z-index: -1; border-radius: 14px; background: color-mix(in srgb, var(--bg) 60%, transparent); box-shadow: 0 0 28px 14px color-mix(in srgb, var(--bg) 60%, transparent); }
