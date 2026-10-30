@@ -24,19 +24,19 @@ jobs:
         with:
           python-version: '3.12'
       - run: python3 -m pip install websocket-client
-      # The tools drive Google Chrome; this is the version they are run against on the workstation
-      - id: chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: 156.0.8078.76
-          install-dependencies: true
+      # The tools drive Google Chrome. The workstation runs 156.0.8078.76, which Google no longer serves for Linux; this pins the same
+      # 156.0.8078 branch at the build Google's package pool carries, and fails if the installed version differs.
       - name: Chrome
+        id: sha
+        env:
+          CHROME_VERSION: 156.0.8078.79
         run: |
-          echo "CHROME=${{ steps.chrome.outputs.chrome-path }}" >> "$GITHUB_ENV"
-          "${{ steps.chrome.outputs.chrome-path }}" --version
+          curl -fsSLo chrome.deb "https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb"
+          sudo apt-get update -q && sudo apt-get install -y -q ./chrome.deb && rm chrome.deb
+          google-chrome-stable --version | grep -F "$CHROME_VERSION"
+          echo "CHROME=$(command -v google-chrome-stable)" >> "$GITHUB_ENV"
           echo "short=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
           mkdir -p out
-        id: sha
 
       # Baseline mode
       - if: env.BASELINE_REF != ''
