@@ -82,26 +82,62 @@ methods: supervised and unsupervised classification; NDVI and NBR; change detect
 
 tools: ENVI; Google Earth Engine; ArcGIS; spatial SQL
 
-Speaker, Los Angeles Geospatial Summit (2019)
+2021 to 2023
 
-My undergraduate thesis was chosen by a faculty committee for presentation at the USC Spatial Sciences Institute's annual conference, among student presenters from six universities.
-
-Undergraduate Research Scholars Program (2017 to 2018)
-
-A funded year of research under a faculty mentor, which carried the thesis.
-
-Regents Scholar (2014 to 2018)
-
-One of the highest honors UCLA confers on an undergraduate, chosen by a faculty committee and held for all four years.
-
-Merit Research Scholar and Dean's Scholar (2021 to 2023)
+Merit Research Scholar and Dean's Scholar
 
 The school's merit research awards, offered each year to a limited number of its top applicants; together they funded the degree in full.
 
-Hixon Center for Urban Sustainability Fellow (2022)
+Yale School of the Environment
+
+New Haven, CT
+
+2022
+
+Honorable Mention, Global Stocktake Climate Datathon
+
+The inaugural datathon, convened by UNC-Chapel Hill's Data-Driven EnviroLab and the OpenEarth Foundation ahead of COP 27 in support of the Paris Agreement's first Global Stocktake. A panel of expert judges recognized four entries from more than 100 participants in 30 countries; ours, from a team of two, was one of them.
+
+Data-Driven EnviroLab, UNC-Chapel Hill
+
+OpenEarth Foundation
+
+2022
+
+Hixon Center for Urban Sustainability Fellow
 
 The center funds a handful of student research fellows each year on work that connects science to how cities are run; mine funded the Yangtze research, which I presented at the school that year.
 
-Honorable Mention, Global Stocktake Climate Datathon (2022)
+Yale School of the Environment
 
-The inaugural datathon, convened by UNC-Chapel Hill's Data-Driven EnviroLab and the OpenEarth Foundation ahead of COP 27 in support of the Paris Agreement's first Global Stocktake. A panel of expert judges recognized four entries from more than 100 participants in 30 countries; ours, from a team of two, was one of them.
+New Haven, CT
+
+2019
+
+Speaker, Los Angeles Geospatial Summit
+
+My undergraduate thesis was chosen by a faculty committee for presentation at the USC Spatial Sciences Institute's annual conference, among student presenters from six universities.
+
+USC Spatial Sciences Institute
+
+Los Angeles, CA
+
+2017 to 2018
+
+Undergraduate Research Scholars Program
+
+A funded year of research under a faculty mentor, which carried the thesis.
+
+UCLA
+
+Los Angeles, CA
+
+2014 to 2018
+
+Regents Scholar
+
+One of the highest honors UCLA confers on an undergraduate, chosen by a faculty committee and held for all four years.
+
+UCLA
+
+Los Angeles, CA
