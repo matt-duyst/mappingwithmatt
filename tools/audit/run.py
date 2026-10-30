@@ -254,6 +254,7 @@ def main():
     ap.add_argument('--software', action='store_true', help='render with SwiftShader instead of the GPU (not comparable with the baseline)')
     ap.add_argument('--profiles', default='throttled,local')
     ap.add_argument('--pages', default=','.join(PAGES))
+    ap.add_argument('--themes', default='dark,light', help='color schemes to load, comma separated')
     ap.add_argument('--tmp', default=os.path.join(HERE, '.tmp'))
     ap.add_argument('--port', type=int, default=9950)
     ap.add_argument('--runs', type=int, default=5, help='runs of the throttled profile; the median of each metric is the quoted figure, with the minimum and maximum of the timed metrics beside it')
@@ -272,7 +273,7 @@ def main():
         result['pages'][path] = {}
         for width in WIDTHS:
             result['pages'][path][str(width)] = {}
-            for theme in ('dark', 'light'):
+            for theme in args.themes.split(','):
                 entry = {}
                 if args.checks_only:
                     port += 1

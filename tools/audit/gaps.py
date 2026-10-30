@@ -1,18 +1,24 @@
 #!/usr/bin/env python3
 """Justified text: the widest inter-word gap on every line of every justified paragraph, as a multiple of that paragraph's own space width.
 
-    python3 tools/audit/gaps.py [URL] [--width 1440] [--chrome BINARY] [--open]      # --open presses every fold first
+    python3 tools/audit/gaps.py [URL] [--width 1440[,1920,...]] [--chrome BINARY] [--open | --both] [--css "rules"]
 
-Walks each word with Range.getClientRects, groups words by line, measures the gap between neighbours, and measures a single space in the same
-font for the ratio. Lines above 2.0x are flagged. Also reports any line that ends in a hyphen the source text does not contain (hyphenation).
+--open presses every fold first; --both measures with the folds closed, then opens them and measures again; --css injects trial rules.
+Several widths are measured in one headless session by resizing the viewport. Walks each word with Range.getClientRects, groups words by
+line, measures the gap between neighbours, and measures a single space in the same font for the ratio. Lines above 2.0x are flagged and
+lines above 2.5x counted. Also reports any line that ends in a hyphen the source text does not contain (hyphenation).
 """
 import json, os, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); SITE = os.path.abspath(os.path.join(HERE, '..', '..'))
 sys.path.insert(0, HERE); from run import Chrome
-args = sys.argv[1:]; chrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'; width = 1440; open_folds = '--open' in args
-if '--chrome' in args: i = args.index('--chrome'); chrome = args[i + 1]; del args[i:i + 2]
-if '--width' in args: i = args.index('--width'); width = int(args[i + 1]); del args[i:i + 2]
-args = [a for a in args if a != '--open']
+args = sys.argv[1:]; chrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'; widths = [1440]; css = ''
+def opt(name):
+    global args
+    if name not in args: return None
+    i = args.index(name); v = args[i + 1]; del args[i:i + 2]; return v
+chrome = opt('--chrome') or chrome; widths = [int(w) for w in (opt('--width') or '1440').split(',')]; css = opt('--css') or ''
+phases = ['open'] if '--open' in args else (['closed', 'open'] if '--both' in args else ['closed'])
+args = [a for a in args if a not in ('--open', '--both')]
 target = args[0] if args else 'http://localhost:8000/'
 MEASURE = """JSON.stringify((() => {
   const out = [];
@@ -40,21 +46,28 @@ MEASURE = """JSON.stringify((() => {
   });
   return out;
 })())"""
-c = Chrome(chrome, 9978, os.path.join(HERE, '.gaps-profile'), width, 900, False)
+def report(rows, label):
+    by = {}
+    for r in rows: by.setdefault(r['id'], []).append(r)
+    print(f"== {label}"); print(f"{'paragraph':34s} {'lines':>5s} {'widest':>7s}  line  first words"); flagged = []; hyph = []; widest = 0
+    for pid, rs in by.items():
+        full = [r for r in rs if not r['lastLine']] or rs; w = max(full, key=lambda r: r['ratio']); widest = max(widest, w['ratio'])
+        print(f"{pid:34s} {len(rs):5d} {w['ratio']:6.2f}x  {w['line']:4d}  {w['words']}")
+        flagged += [r for r in full if r['ratio'] > 2.0]; hyph += [r for r in rs if r['hyph']]
+    over25 = sum(1 for r in flagged if r['ratio'] > 2.5)
+    print(f"\n{len(by)} justified paragraphs, {len(rows)} lines; {len(flagged)} line(s) above 2.0x, {over25} above 2.5x, widest {widest:.2f}x (last lines of paragraphs are ragged and not counted); {len(hyph)} hyphenated line end(s)")
+    for r in flagged: print(f"  {r['id']} line {r['line']}: {r['ratio']}x  {r['words']}")
+    for r in hyph: print(f"  hyphen: {r['id']} line {r['line']}: {r['words']}")
+    print(f"SUMMARY\t{label}\t{len(flagged)}\t{over25}\t{widest:.2f}\t{len(hyph)}\n")
+c = Chrome(chrome, 9978, os.path.join(HERE, '.gaps-profile'), widths[0], 900, False)
 try:
     for m in ('Page.enable', 'Runtime.enable'): c.send(m)
-    c.send('Emulation.setDeviceMetricsOverride', {'width': width, 'height': 900, 'deviceScaleFactor': 1, 'mobile': False})
+    c.send('Emulation.setDeviceMetricsOverride', {'width': widths[0], 'height': 900, 'deviceScaleFactor': 1, 'mobile': False})
     c.send('Page.navigate', {'url': target}); c.pump(3.0)
-    if open_folds: c.js("document.querySelectorAll('.fold-btn').forEach(b => { if (b.getAttribute('aria-expanded') !== 'true') b.click(); }); true"); c.pump(0.8)
-    rows = json.loads(c.js(MEASURE))
+    if css: c.js(f"const st = document.createElement('style'); st.textContent = {json.dumps(css)}; document.head.appendChild(st); true"); c.pump(0.3)
+    for phase in phases:
+        if phase == 'open': c.js("document.querySelectorAll('.fold-btn').forEach(b => { if (b.getAttribute('aria-expanded') !== 'true') b.click(); }); true"); c.pump(0.8)
+        for w in widths:
+            c.send('Emulation.setDeviceMetricsOverride', {'width': w, 'height': 900, 'deviceScaleFactor': 1, 'mobile': False}); c.pump(0.8)
+            report(json.loads(c.js(MEASURE)), f"{w} folds {phase}")
 finally: c.close()
-by = {}
-for r in rows: by.setdefault(r['id'], []).append(r)
-print(f"{'paragraph':34s} {'lines':>5s} {'widest':>7s}  line  first words"); flagged = []; hyph = []
-for pid, rs in by.items():
-    full = [r for r in rs if not r['lastLine']] or rs; w = max(full, key=lambda r: r['ratio'])
-    print(f"{pid:34s} {len(rs):5d} {w['ratio']:6.2f}x  {w['line']:4d}  {w['words']}")
-    flagged += [r for r in full if r['ratio'] > 2.0]; hyph += [r for r in rs if r['hyph']]
-print(f"\n{len(by)} justified paragraphs, {len(rows)} lines; {len(flagged)} line(s) above 2.0x (last lines of paragraphs are ragged and not counted); {len(hyph)} hyphenated line end(s)")
-for r in flagged: print(f"  {r['id']} line {r['line']}: {r['ratio']}x  {r['words']}")
-for r in hyph: print(f"  hyphen: {r['id']} line {r['line']}: {r['words']}")
