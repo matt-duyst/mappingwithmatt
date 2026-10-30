@@ -8,8 +8,8 @@ Experience cards and every tag on the record of the main page must have a row in
 The ledger has four tab-separated columns: page, sentence, source, line. A source of UNSOURCED is a row, so the check passes;
 it is the report's job to list those. Sentences are compared after whitespace is collapsed. The pills file has four columns:
 role (the card's heading, or the record entry's data-role), pill (its text), line (the line of the CV's layout extraction that names it for that
-role, as a bare number or "CV N", or "resume N" for the resume's extraction; "owner, YYYY-MM-DD" for an owner statement; "not verified"
-when nothing names it) and phrase (the words on
+role, as "CV N" or "resume N" inside that role's own sections (SECTIONS below), "owner, YYYY-MM-DD" for an owner statement, "site PATH/" or
+"repo NAME FILE" among the role's other allowed sources (OTHER below), or "not verified" when nothing names it) and phrase (the words on
 that line that support it).
 """
 import html, os, re, sys
@@ -59,13 +59,54 @@ def load_ledger():
     return rows
 
 
+# Each role's own sections of the CV and resume layout extractions (pdftotext -layout), by line range. A pill citing a line outside its
+# role's sections fails, so the Technical Skills lists (CV 242 to 250, resume 101 to 112) count for no pill.
+SECTIONS = {
+    'Grassroots Carbon': {'CV': [(91, 129)], 'resume': [(31, 46)]},
+    'SeekOps': {'CV': [(130, 166)], 'resume': [(48, 63)]},
+    'University of Minnesota': {'CV': [(197, 225)], 'resume': [(81, 90)]},
+    'Cydcor': {'resume': [(92, 99)]},
+    'Yale School of the Environment': {'CV': [(35, 56), (167, 196)], 'resume': [(15, 22), (65, 79)]},
+    'University of California, Los Angeles': {'CV': [(57, 80)], 'resume': [(23, 28)]},
+}
+# Each role's other allowed sources: public repository files cited by name, and the site's own pages (by path prefix), whose text must
+# carry the cited phrase.
+OTHER = {
+    'University of Minnesota': ['repo Peatland-Flux-Forecasting writeup/Forecasting_Methane_Flux_2022.pdf', 'site projects/peatland/'],
+    'Yale School of the Environment': ['repo Yangtze-Landcover-Methane Duyst_Thesis_Final.ipynb', 'repo UAV-PV-Assessment README.md', 'site projects/yangtze/', 'site projects/pv-thermal/'],
+    'University of California, Los Angeles': ['site maps/'],
+}
+
+
+def page_text(rel):
+    t = open(os.path.join(SITE, rel, 'index.html'), encoding='utf-8').read()
+    t = re.sub(r'<script\b.*?</script>|<style\b.*?</style>|<head\b.*?</head>', ' ', t, flags=re.S)
+    return re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', ' ', t)))
+
+
+def citation_problem(role, src, phrase):
+    """None when the pill's citation is allowed for its role, else why not."""
+    m = re.match(r'^(CV|resume) (\d+)$', src)
+    if m:
+        n = int(m.group(2)); spans = SECTIONS.get(role, {}).get(m.group(1), [])
+        return None if any(a <= n <= b for a, b in spans) else f'{src} is outside the {role} sections of the {m.group(1)}'
+    if re.match(r'^owner, \d{4}-\d{2}-\d{2}$', src) or src == 'not verified': return None
+    if src.startswith('repo '): return None if src in OTHER.get(role, []) else f'{src} is not an allowed source for {role}'
+    if src.startswith('site '):
+        rel = src[5:]
+        if not any(('site ' + rel).startswith(o) for o in OTHER.get(role, []) if o.startswith('site ')): return f'{src} is not an allowed page for {role}'
+        if not os.path.exists(os.path.join(SITE, rel, 'index.html')): return f'{src} does not exist'
+        return None if re.sub(r'\s+', ' ', phrase).strip() in page_text(rel) else f'{src} does not carry "{phrase}"'
+    return f'"{src}" is not a citation'
+
+
 def load_pills():
-    rows = set()
+    rows = {}
     with open(os.path.join(HERE, 'pills.tsv'), encoding='utf-8') as f:
         next(f)
         for line in f:
             parts = line.rstrip('\n').split('\t')
-            if len(parts) >= 4 and re.match(r'^(\d+|(CV|resume) \d+|owner, \d{4}-\d{2}-\d{2}|not verified)$', parts[2].strip()): rows.add((parts[0].strip(), parts[1].strip()))
+            if len(parts) >= 4: rows[(parts[0].strip(), parts[1].strip())] = (parts[2].strip(), parts[3].strip())
     return rows
 
 
@@ -100,8 +141,13 @@ def main():
     print(f"{total} sentences with a digit, percent sign or claim word: {sourced} sourced, {unsourced} unsourced, {len(missing)} without a ledger row")
     for page, s in missing: print(f"  {page}: {s}")
     known = load_pills(); found = pills(); unpilled = [(r, p) for r, p in found if (r, p) not in known]
-    print(f"{len(found)} skill pills and tags on the main page: {len(found) - len(unpilled)} sourced to the CV, {len(unpilled)} without a pills row")
-    for r, p in unpilled: print(f"  {r}: {p}")
+    bad = [(r, p, citation_problem(r, *known[(r, p)])) for r, p in found if (r, p) in known]; bad = [x for x in bad if x[2]]
+    unverified = [(r, p) for r, p in found if known.get((r, p), ('',))[0] == 'not verified']
+    print(f"{len(found)} skill pills and tags on the main page: {len(found) - len(unpilled) - len(bad)} cited within their role, {len(unverified)} not verified, "
+          f"{len(unpilled)} without a pills row, {len(bad)} with a citation outside their role")
+    for r, p in unpilled: print(f"  no row: {r}: {p}")
+    for r, p, why in bad: print(f"  {r}: {p}: {why}")
+    unpilled += [(r, p) for r, p, _ in bad]
     stray = stray_pills()
     if stray: print(f"  {stray} pill(s) on the page sit outside any role's tag block")
     sys.exit(1 if missing or unpilled or stray else 0)
