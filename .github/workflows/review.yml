@@ -1,0 +1,124 @@
+name: review
+
+# Every browser check, measurement and capture for a branch under review, on a hosted runner. Pushes to any branch but main run the
+# review; a manual run with baseline_ref measures that ref instead and publishes tools/audit/baseline-ci.json as an artifact.
+on:
+  push:
+    branches-ignore: [main]
+  workflow_dispatch:
+    inputs:
+      baseline_ref:
+        description: 'Measure this ref and write tools/audit/baseline-ci.json from it, instead of reviewing'
+        required: false
+        default: ''
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      BASELINE_REF: ${{ inputs.baseline_ref }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install websocket-client
+      # The tools drive Google Chrome; this is the version they are run against on the workstation
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 156.0.8078.76
+          install-dependencies: true
+      - name: Chrome
+        run: |
+          echo "CHROME=${{ steps.chrome.outputs.chrome-path }}" >> "$GITHUB_ENV"
+          "${{ steps.chrome.outputs.chrome-path }}" --version
+          echo "short=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          mkdir -p out
+        id: sha
+
+      # Baseline mode
+      - if: env.BASELINE_REF != ''
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.baseline_ref }}
+          path: base
+      - name: CI baseline
+        if: env.BASELINE_REF != ''
+        run: |
+          sha=$(git -C base rev-parse --short HEAD)
+          (cd base && python3 -m http.server 8001 >/dev/null 2>&1 &)
+          sleep 1; curl -sf -o /dev/null http://localhost:8001/
+          python3 tools/audit/run.py http://localhost:8001 --pages / --software --chrome "$CHROME" --out out/audit-base.json
+          cp out/audit-base.json tools/audit/baseline-ci.json
+          python3 tools/audit/compare.py out/audit-base.json tools/audit/baseline-ci.json --force-baseline "CI baseline: ${BASELINE_REF} at ${sha}, ubuntu-latest, no GPU"
+          cp tools/audit/baseline-ci.json out/baseline-ci.json
+          echo "CI baseline written from ${BASELINE_REF} at ${sha}; artifact baseline-ci-${sha}" >> "$GITHUB_STEP_SUMMARY"
+          echo "BASE_SHA=${sha}" >> "$GITHUB_ENV"
+      - if: env.BASELINE_REF != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: baseline-ci-${{ env.BASE_SHA }}
+          path: out/
+          retention-days: 14
+
+      # Review mode
+      - name: Serve the site
+        if: env.BASELINE_REF == ''
+        run: |
+          python3 -m http.server 8000 >/dev/null 2>&1 &
+          sleep 1; curl -sf -o /dev/null http://localhost:8000/
+      - name: Claims and pills
+        if: env.BASELINE_REF == ''
+        run: set -o pipefail; python3 tools/claims/check.py | tee out/claims.txt
+      - name: Copy
+        if: env.BASELINE_REF == ''
+        run: set -o pipefail; python3 tools/claims/copy_check.py http://localhost:8000/ --chrome "$CHROME" | tee out/copy.txt
+      - name: Links
+        if: env.BASELINE_REF == ''
+        run: |
+          set -o pipefail
+          python3 tools/audit/run.py http://localhost:8000 --checks-only --pages / --software --chrome "$CHROME" --out out/checks.json
+          python3 tools/audit/compare.py --checks-only out/checks.json | tee out/links.txt
+      - name: Axe, keyboard and layout
+        if: env.BASELINE_REF == ''
+        run: python3 tools/audit/review.py http://localhost:8000/ --chrome "$CHROME" --out out
+      - name: Justified gaps
+        if: env.BASELINE_REF == ''
+        run: set -o pipefail; python3 tools/audit/gaps.py http://localhost:8000/ --width 1100,1280,1440,1920 --both --chrome "$CHROME" | tee out/gaps.txt
+      - name: Audit
+        if: env.BASELINE_REF == ''
+        run: |
+          set -o pipefail
+          python3 tools/audit/run.py http://localhost:8000 --pages / --software --chrome "$CHROME" --out out/audit.json
+          python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json | tee out/compare.txt
+      - name: Audit tool tests
+        if: env.BASELINE_REF == ''
+        run: python3 -m unittest discover -s tools/audit -p 'test_*.py'
+      - name: Captures
+        if: always() && env.BASELINE_REF == ''
+        run: python3 tools/audit/capture.py http://localhost:8000/ --chrome "$CHROME" --out out/captures
+      - name: Summary
+        if: always() && env.BASELINE_REF == ''
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import os
+          def read(p): return open(p).read() if os.path.exists(p) else '(not run)\n'
+          print('# Review of', os.environ['GITHUB_SHA'][:7]); print()
+          print('## Claims and pills'); print('```'); print(read('out/claims.txt').strip()); print('```')
+          print('## Copy'); print('```'); print(read('out/copy.txt').strip()); print('```')
+          print('## Links'); print('```'); print(read('out/links.txt').strip()); print('```')
+          print('## Justified gaps'); print(); print('| Width and folds | Lines over 2.0x | Over 2.5x | Widest |'); print('|---|---|---|---|')
+          for l in read('out/gaps.txt').splitlines():
+              if l.startswith('SUMMARY'): p = l.split('\t'); print(f'| {p[1]} | {p[2]} | {p[3]} | {p[4]}x |')
+          print(); print('## Audit against baseline-ci.json'); print('```'); print(read('out/compare.txt').strip()); print('```')
+          print(read('out/review.md'))
+          print(f"Artifact: review-{os.environ['GITHUB_SHA'][:7]}")
+          PY
+      - if: always() && env.BASELINE_REF == ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-${{ steps.sha.outputs.short }}
+          path: out/
+          retention-days: 14
