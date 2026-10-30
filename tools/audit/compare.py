@@ -12,15 +12,18 @@ range across its runs ("down from X to Y" or "up from X to Y", X the baseline me
 not a gate.
 
 Fails (exit 1) when, on the throttled profile, requests or bytes rise more than 10 percent, FCP or LCP rise more than 100 ms,
-CLS exceeds 0.05 or TBT exceeds 50 ms; and when any axe violation, console error, overflow or broken internal link is present.
+CLS exceeds 0.05 or TBT exceeds 50 ms (--gate=absolute, the default, for local runs against the GPU baseline); with --gate=relative, for
+the review workflow's GPU-less runner, TBT fails instead when it exceeds the CI baseline's maximum for the cell by more than 25 percent; and when any axe violation, console error, overflow or broken internal link is present.
 The local profile is printed beside the quoted figure and does not gate.
 """
 import json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from trend import trend as trend_text
+from trend import trend as trend_text, tbt_failure
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 args = sys.argv[1:]; CHECKS = '--checks-only' in args; WRITE = '--write-baseline' in args; FORCE = None
+GATE = next((a.split('=', 1)[1] for a in args if a.startswith('--gate=')), 'absolute'); args = [a for a in args if not a.startswith('--gate=')]
+if GATE not in ('absolute', 'relative'): sys.exit(f'--gate must be absolute or relative, not {GATE}')
 if '--force-baseline' in args:
     i = args.index('--force-baseline'); FORCE = args[i + 1] if i + 1 < len(args) else ''
     if not FORCE.strip(): sys.exit('--force-baseline needs a reason')
@@ -76,7 +79,9 @@ for path, widths in cur['pages'].items():
                     if metric in ('requests', 'bytes') and bq and q > bq * 1.10: fails.append(f"{tag}: {q} is more than 10% over the baseline {bq}")
                     if metric in ('fcp', 'lcp') and bq is not None and q is not None and q > bq + 100: fails.append(f"{tag}: {q} ms is more than 100 ms over the baseline {bq}")
                     if metric == 'cls' and q > 0.05: fails.append(f"{tag}: {q} is above 0.05")
-                    if metric == 'tbt' and q > 50: fails.append(f"{tag}: {q} ms is above 50 ms")
+                    if metric == 'tbt':
+                        why = tbt_failure(q, spread(b, stage, metric)[1], GATE)
+                        if why: fails.append(f"{tag}: {why}")
             for v in e.get('axe', []): fails.append(f"{path} {width} {theme}: axe {v['id']} ({v['impact']}) on {', '.join(v['nodes'][:3])}")
             for profile in ('throttled', 'local'):
                 for err in e.get(profile, {}).get('errors', []): fails.append(f"{path} {width} {theme} {profile}: {err}")

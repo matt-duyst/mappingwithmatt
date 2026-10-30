@@ -1,7 +1,7 @@
 import os, sys, unittest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from trend import trend
+from trend import trend, tbt_failure
 
 
 class TrendWording(unittest.TestCase):
@@ -13,6 +13,22 @@ class TrendWording(unittest.TestCase):
 
     def test_a_median_inside_the_spread_is_within_noise(self):
         self.assertEqual(trend(136, 140, 128, 156), 'within noise')
+
+
+class TbtGate(unittest.TestCase):
+    def test_absolute_mode_fails_above_fifty_milliseconds(self):
+        self.assertIsNotNone(tbt_failure(51, 10, 'absolute'))
+        self.assertIsNone(tbt_failure(50, 10, 'absolute'))
+
+    def test_absolute_mode_ignores_the_baseline_spread(self):
+        self.assertIsNotNone(tbt_failure(300, 1000, 'absolute'))
+
+    def test_relative_mode_fails_beyond_a_quarter_over_the_baseline_maximum(self):
+        self.assertIsNone(tbt_failure(355, 284, 'relative'))
+        self.assertIsNotNone(tbt_failure(356, 284, 'relative'))
+
+    def test_relative_mode_fails_without_a_baseline_spread(self):
+        self.assertIsNotNone(tbt_failure(10, None, 'relative'))
 
 
 if __name__ == '__main__':

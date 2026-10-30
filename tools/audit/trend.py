@@ -7,3 +7,15 @@ def trend(new, base, lo, hi):
     if lo is None or hi is None or base is None or new is None: return ''
     if lo <= new <= hi: return 'within noise'
     return f"{'down' if new < lo else 'up'} from {base} to {new}"
+
+
+def tbt_failure(median, base_max, mode='absolute'):
+    """The TBT gate. absolute (local runs against the GPU baseline): fail above 50 ms. relative (the review workflow's runner, where no
+    page can meet 50 ms): fail when the median exceeds the CI baseline's maximum for the same cell by more than 25 percent. Returns the
+    failure message, or None."""
+    if median is None: return None
+    if mode == 'absolute': return f"{median} ms is above 50 ms" if median > 50 else None
+    if mode != 'relative': raise ValueError(f'unknown gate mode {mode}')
+    if base_max is None: return f"{median} ms has no baseline spread to compare with"
+    limit = base_max * 1.25
+    return f"{median} ms is more than 25% over the baseline's maximum {base_max}" if median > limit else None
