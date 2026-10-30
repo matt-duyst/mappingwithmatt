@@ -21,7 +21,13 @@ MEASURE = """JSON.stringify((() => {
     const style = getComputedStyle(p); const span = document.createElement('span'); span.textContent = '\\u00a0'; span.style.font = style.font; span.style.whiteSpace = 'pre'; p.appendChild(span);
     const space = span.getBoundingClientRect().width; span.remove();
     const walker = document.createTreeWalker(p, NodeFilter.SHOW_TEXT); const words = []; let n;
-    while ((n = walker.nextNode())) { const t = n.textContent; const re = /\\S+/g; let m; while ((m = re.exec(t))) { const r = document.createRange(); r.setStart(n, m.index); r.setEnd(n, m.index + m[0].length); const rects = [...r.getClientRects()]; if (rects.length) { const rc = rects[rects.length - 1]; words.push({ w: m[0], x1: rects[0].left, x2: rc.right, y: Math.round(rc.top), bottom: rc.bottom }); } } }
+    while ((n = walker.nextNode())) { const t = n.textContent; const re = /\\S+/g; let m; while ((m = re.exec(t))) { const r = document.createRange(); r.setStart(n, m.index); r.setEnd(n, m.index + m[0].length); const rects = [...r.getClientRects()]; if (rects.length) { const rc = rects[rects.length - 1];
+      // a token that continues the previous one with no whitespace between (a link's text followed by punctuation) is the same word
+      const prev = words[words.length - 1]; const joined = prev && prev.endNode && prev.endsNode && m.index === 0 && prev.endNode !== n && /^\\S/.test(t);
+      if (joined && Math.round(rc.top) === prev.y) { prev.w += m[0]; prev.x2 = rc.right; prev.endNode = n; prev.endsNode = m.index + m[0].length === t.length; continue; }
+      // the corner arrow after an outbound link is drawn by ::after and is not a word gap
+      const a = n.parentElement.closest('a'); let arrow = 0; if (a && /^http/.test(a.getAttribute('href') || '') && m.index + m[0].length === t.length) { const ps = getComputedStyle(a, '::after'); arrow = (parseFloat(ps.width) || 0) + (parseFloat(ps.marginLeft) || 0); }
+      words.push({ w: m[0], x1: rects[0].left, x2: rc.right + arrow, y: Math.round(rc.top), bottom: rc.bottom, endNode: n, endsNode: m.index + m[0].length === t.length }); } } }
     const lines = []; words.forEach(w => { const L = lines.find(l => Math.abs(l.y - w.y) < 3); if (L) L.words.push(w); else lines.push({ y: w.y, words: [w] }); });
     lines.sort((a, b) => a.y - b.y);
     const src = p.textContent;
