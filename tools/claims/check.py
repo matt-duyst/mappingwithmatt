@@ -76,9 +76,15 @@ def pills():
         head = re.search(r'<h3>(.*?)</h3>', card, flags=re.S)
         role = html.unescape(re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', head.group(1)))).strip() if head else ''
         for tag in re.findall(r'<span class="tag">(.*?)</span>', card, flags=re.S): out.append((role, html.unescape(tag.strip())))
-    for role, block in re.findall(r'<div class="tags"[^>]*data-role="([^"]+)"[^>]*>(.*?)</div></article>', t, flags=re.S):
-        for tag in re.findall(r'<span class="tag">(.*?)</span>', block, flags=re.S): out.append((html.unescape(role), html.unescape(tag.strip())))
+    for role, block in re.findall(r'<div class="tags"[^>]*data-role="([^"]+)"[^>]*>(.*?)</div></li>', t, flags=re.S):
+        for tag in re.findall(r'<span class="tag"[^>]*>(.*?)</span>', block, flags=re.S): out.append((html.unescape(role), html.unescape(tag.strip())))
     return out
+
+
+def stray_pills():
+    """Pills on the main page that no role reads: every span of class "tag" must sit in a card or a role's tag block."""
+    t = open(os.path.join(SITE, PAGES['main']), encoding='utf-8').read()
+    return len(re.findall(r'<span class="tag"[\s>]', t)) - len(pills())
 
 
 def main():
@@ -96,7 +102,9 @@ def main():
     known = load_pills(); found = pills(); unpilled = [(r, p) for r, p in found if (r, p) not in known]
     print(f"{len(found)} skill pills and tags on the main page: {len(found) - len(unpilled)} sourced to the CV, {len(unpilled)} without a pills row")
     for r, p in unpilled: print(f"  {r}: {p}")
-    sys.exit(1 if missing or unpilled else 0)
+    stray = stray_pills()
+    if stray: print(f"  {stray} pill(s) on the page sit outside any role's tag block")
+    sys.exit(1 if missing or unpilled or stray else 0)
 
 
 if __name__ == '__main__':
