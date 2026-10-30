@@ -60,7 +60,7 @@ for w in (1100, 1280, 1440, 1920, 390):
             closed = axe(c); c.js(OPEN); c.pump(0.8); opened = axe(c); res['axe'][w] = {'closed': closed, 'open': opened}
             problems += [f'{w} axe {v["id"]} on {", ".join(v["nodes"][:3])}' for v in closed + opened]
         if w == 390:
-            res['pillsInside'] = json.loads(c.js("""JSON.stringify(['soil organic carbon from field cores', 'gradient-boosted residual correction'].map(t => { const p = [...document.querySelectorAll('.tag')].find(x => x.textContent === t);
+            res['pillsInside'] = json.loads(c.js("""JSON.stringify(['temperature and vapor pressure deficit (VPD) stress scalars', 'Oil and Gas Methane Partnership (OGMP) and EPA reporting'].map(t => { const p = [...document.querySelectorAll('.tag')].find(x => x.textContent === t);
               const e = p.closest('.chapter').querySelector('.entry'), a = p.getBoundingClientRect(), b = e.getBoundingClientRect(); return { pill: t, right: Math.round(a.right), entryRight: Math.round(b.right), inside: a.right <= b.right + 0.5, lines: Math.round(a.height / 12.6) }; }))"""))
             problems += [f'390: "{p["pill"]}" overruns its entry' for p in res['pillsInside'] if not p['inside']]
         if w == 1440:

@@ -96,6 +96,11 @@ jobs:
           python3 tools/audit/run.py http://localhost:8000 --pages / --software --chrome "$CHROME" --out out/audit.json
           # the relative TBT gate: this runner has no GPU, so TBT is held to the CI baseline's own spread (owner-approved)
           python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json --gate=relative | tee out/compare.txt
+      - name: Load-time trace
+        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
+        run: |
+          python3 tools/audit/trace.py http://localhost:8000/ --chrome "$CHROME" --out out
+          cat out/trace.md >> "$GITHUB_STEP_SUMMARY"
       - name: Audit tool tests
         if: ${{ !cancelled() && env.BASELINE_REF == '' }}
         run: python3 -m unittest discover -s tools/audit -p 'test_*.py'
