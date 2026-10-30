@@ -4,10 +4,10 @@
     python3 tools/audit/review.py URL --chrome BINARY --out DIR
 
 Writes DIR/review.json and DIR/review.md: axe with every fold closed and then open (1440 and 390); Tab order through the About and record
-(1440); the layout at 1440 (container, About columns and characters per line, --justify-min, the Experience grid, the Education columns, the
-awards axis and each mark's x and lane); folded tag rows at 1440 and 1280; which column holds each About paragraph at 1100, 1280, 1440 and 1920;
-and whether the two longest pills stay inside their entry at 390. Exits 1 on any axe violation, console error, overflow, a paragraph in the
-wrong column, or a pill outside its entry.
+(1440); the layout at 1440 (container, About columns and characters per line, --justify-min, the Experience grid and paragraph measure, each
+entry's tag block width and lines per tag row, the Awards grid, the Education columns); which column holds each About paragraph at 1100, 1280,
+1440 and 1920; whether every pill is visible at 1440, 1100 and 390; and whether the two longest pills stay inside their entry at 390. Exits 1 on
+any axe violation, console error, overflow, a paragraph in the wrong column, a hidden pill, or a pill outside its entry.
 """
 import json, os, sys, time
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE); from run import Chrome, errors
@@ -34,28 +34,27 @@ COLUMNS = """JSON.stringify((() => { const x = id => Math.round(document.getElem
 LAYOUT = """JSON.stringify((() => { const r = el => el.getBoundingClientRect(), $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
   const probe = document.createElement('span'); const p2 = $('#about-p2'); probe.textContent = p2.textContent.slice(0, 55); const cs = getComputedStyle(p2);
   probe.style.cssText = 'position:absolute;white-space:nowrap;font:' + cs.font + ';letter-spacing:' + cs.letterSpacing; document.body.appendChild(probe); const w55 = r(probe).width; probe.remove();
-  const cols = $$('.about-col').map(c => Math.round(r(c).width)); const svg = $('.aw-axis'), sb = r(svg);
-  const marks = $$('.aw-mark').map(g => { const s = g.firstElementChild.nextElementSibling || g.lastElementChild, b = r(s); const cy = b.top + b.height / 2 - sb.top;
-    return { honor: g.getAttribute('data-honor'), x0: Math.round(b.left - sb.left), x1: Math.round(b.right - sb.left), lane: Math.round((42 - cy) / 12) - 1 }; });
+  const cols = $$('.about-col').map(c => Math.round(r(c).width));
+  const tags = $$('#band-experience .chapter, #band-education .chapter').map(ch => ({ entry: ch.querySelector('.ch-place').textContent, paragraph: Math.round(r(ch.querySelector('.entry-body p')).width), block: Math.round(r(ch.querySelector('.tags')).width),
+    rows: [...ch.querySelectorAll('.tag-row')].map(row => ({ label: row.querySelector('.tag-label').textContent, pills: row.querySelectorAll('.tag').length, lines: new Set([...row.querySelectorAll('.tag')].map(p => Math.round(r(p).top))).size })) }));
   return { container: Math.round(r($('#record')).width), aboutWidth: Math.round(r($('#about')).width), aboutColumns: cols, charsPerLine: cols.map(w => Math.round(w / (w55 / 55))),
-    justifyMin: getComputedStyle(document.documentElement).getPropertyValue('--justify-min').trim(), experienceGrid: getComputedStyle($('#band-experience .chapter')).gridTemplateColumns,
-    educationColumns: $$('#band-education .chapter').map(c => Math.round(r(c).width)), axisWidth: Math.round(sb.width), marks }; })())"""
-FOLDED = """JSON.stringify([...document.querySelectorAll('#band-experience .chapter')].map(ch => ({ entry: ch.querySelector('.ch-place').textContent,
-  control: ch.querySelector('.fold-btn').offsetParent ? ch.querySelector('.fold-btn').textContent : '(none)',
-  rows: [...ch.querySelectorAll('.tag-row')].map(row => ({ label: row.querySelector('.tag-label').textContent, shown: [...row.querySelectorAll('.tag:not([hidden])')].length,
-    hidden: [...row.querySelectorAll('.tag[hidden]')].map(p => p.textContent), more: (row.querySelector('.tag-more') || {}).textContent || '' })) })))"""
+    justifyMin: getComputedStyle(document.documentElement).getPropertyValue('--justify-min').trim(), experienceGrid: getComputedStyle($('#band-experience .chapter')).gridTemplateColumns, tags,
+    awardsGrid: getComputedStyle($('#band-awards .chapter')).gridTemplateColumns, awardsEntry: getComputedStyle($('#band-awards .aw-entry')).gridTemplateColumns,
+    educationColumns: $$('#band-education .chapter').map(c => Math.round(r(c).width)) }; })())"""
+HIDDEN = """JSON.stringify([...document.querySelectorAll('#record .tag')].filter(p => { const b = p.getBoundingClientRect(); return p.hidden || b.width === 0 || b.height === 0; }).map(p => p.textContent).concat([document.querySelectorAll('#record .tag').length + ' pills']))"""
 KEYS = """(() => { const a = document.activeElement; if (!a || !(a.closest('#about') || a.closest('#record'))) return 'OUT';
   return a.tagName === 'A' ? 'link: ' + a.textContent.trim().slice(0, 30) : a.classList.contains('award') ? 'entry: ' + a.querySelector('.entry-title').textContent.trim().slice(0, 30) : 'button: ' + (a.getAttribute('aria-label') || a.textContent.trim()); })()"""
 EXPECT = """JSON.stringify([...document.querySelectorAll('#about a, #about button, #record a, #record button, #record [tabindex="0"]')].filter(e => e.offsetParent && e.tabIndex >= 0)
   .map(a => a.tagName === 'A' ? 'link: ' + a.textContent.trim().slice(0, 30) : a.classList.contains('award') ? 'entry: ' + a.querySelector('.entry-title').textContent.trim().slice(0, 30) : 'button: ' + (a.getAttribute('aria-label') || a.textContent.trim())))"""
-res = {'columns': {}, 'folded': {}, 'axe': {}}; problems = []
+res = {'columns': {}, 'hiddenPills': {}, 'axe': {}}; problems = []
 for w in (1100, 1280, 1440, 1920, 390):
     c = session(w, 844 if w < 600 else 900)
     try:
         if w >= 600:
             res['columns'][w] = json.loads(c.js(COLUMNS))
             if w > 1064 and not res['columns'][w]['ok']: problems.append(f'{w}: About paragraphs are not 1 to 3 left and 4 to 6 right')
-        if w in (1280, 1440): res['folded'][w] = json.loads(c.js(FOLDED))
+        if w in (1440, 1100, 390):
+            h = json.loads(c.js(HIDDEN)); res['hiddenPills'][w] = h; problems += [f'{w}: pill "{t}" is not visible' for t in h[:-1]]
         if w == 1440: res['layout'] = json.loads(c.js(LAYOUT))
         if w in (1440, 390):
             closed = axe(c); c.js(OPEN); c.pump(0.8); opened = axe(c); res['axe'][w] = {'closed': closed, 'open': opened}
@@ -84,10 +83,11 @@ for w in (1100, 1280, 1440, 1920, 390):
 res['problems'] = problems
 json.dump(res, open(os.path.join(out, 'review.json'), 'w'), indent=1)
 L = res.get('layout', {}); md = ['## Review', '', f"Container {L.get('container')} px; About columns {L.get('aboutColumns')} px at {L.get('charsPerLine')} characters per line; --justify-min {L.get('justifyMin')}.",
-     f"Experience grid {L.get('experienceGrid')}; Education columns {L.get('educationColumns')} px; awards axis {L.get('axisWidth')} px.", '', '| Honor | x from | x to | lane |', '|---|---|---|---|']
-md += [f"| {m['honor']} | {m['x0']} | {m['x1']} | {m['lane']} |" for m in L.get('marks', [])]
+     f"Experience grid {L.get('experienceGrid')}; Awards grid {L.get('awardsGrid')} with the entry as {L.get('awardsEntry')}; Education columns {L.get('educationColumns')} px.", '',
+     '| Entry | Paragraph | Tag block | data: | methods: | tools: |', '|---|---|---|---|---|---|']
+md += [f"| {t['entry']} | {t['paragraph']} | {t['block']} | " + ' | '.join(f"{x['pills']} pills, {x['lines']} line(s)" for x in t['rows']) + ' |' for t in L.get('tags', [])]
 md += ['', '| Width | About columns 1-3 / 4-6 x | holds |', '|---|---|---|'] + [f"| {w} | {v['left']} / {v['right']} | {'yes' if v['ok'] else 'NO'} |" for w, v in res['columns'].items()]
-md += ['', '| Width | Entry | Row | Shown | Hidden |', '|---|---|---|---|---|'] + [f"| {w} | {e['entry']} | {r['label']} | {r['shown']} | {len(r['hidden'])} {r['more']} |" for w, es in res['folded'].items() for e in es for r in e['rows']]
+md += ['', 'Pills not visible: ' + '; '.join(f"{w}: {len(v) - 1} of {v[-1]}" for w, v in res['hiddenPills'].items())]
 md += ['', '| Width | axe closed | axe open |', '|---|---|---|'] + [f"| {w} | {len(v['closed'])} | {len(v['open'])} |" for w, v in res['axe'].items()]
 md += ['', f"Keyboard at 1440: {len(res.get('keyboard', {}).get('order', []))} stops, matches DOM order: {res.get('keyboard', {}).get('matchesDom')}.",
        f"Pills at 390: " + '; '.join(f"{p['pill']} {'inside' if p['inside'] else 'OUTSIDE'} ({p['lines']} line(s))" for p in res.get('pillsInside', [])), '', 'Problems: ' + ('none' if not problems else '; '.join(problems))]

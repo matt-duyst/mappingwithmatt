@@ -26,14 +26,27 @@ MEASURE = """JSON.stringify((() => {
   paras.forEach((p, pi) => {
     const style = getComputedStyle(p); const span = document.createElement('span'); span.textContent = '\\u00a0'; span.style.font = style.font; span.style.whiteSpace = 'pre'; p.appendChild(span);
     const space = span.getBoundingClientRect().width; span.remove();
-    const walker = document.createTreeWalker(p, NodeFilter.SHOW_TEXT); const words = []; let n;
-    while ((n = walker.nextNode())) { const t = n.textContent; const re = /\\S+/g; let m; while ((m = re.exec(t))) { const r = document.createRange(); r.setStart(n, m.index); r.setEnd(n, m.index + m[0].length); const rects = [...r.getClientRects()]; if (rects.length) { const rc = rects[rects.length - 1];
-      // a token that continues the previous one with no whitespace between (a link's text followed by punctuation) is the same word
-      const prev = words[words.length - 1]; const joined = prev && prev.endNode && prev.endsNode && m.index === 0 && prev.endNode !== n && /^\\S/.test(t);
-      if (joined && Math.round(rc.top) === prev.y) { prev.w += m[0]; prev.x2 = rc.right; prev.endNode = n; prev.endsNode = m.index + m[0].length === t.length; continue; }
-      // the corner arrow after an outbound link is drawn by ::after and is not a word gap
-      const a = n.parentElement.closest('a'); let arrow = 0; if (a && /^http/.test(a.getAttribute('href') || '') && m.index + m[0].length === t.length) { const ps = getComputedStyle(a, '::after'); arrow = (parseFloat(ps.width) || 0) + (parseFloat(ps.marginLeft) || 0); }
-      words.push({ w: m[0], x1: rects[0].left, x2: rc.right + arrow, y: Math.round(rc.top), bottom: rc.bottom, endNode: n, endsNode: m.index + m[0].length === t.length }); } } }
+    // Words are runs of non-space characters across the paragraph's text, whichever text nodes they span: a word ends only where the text itself
+    // has whitespace, so two spans that meet at a space stay two words and a link followed by its punctuation stays one.
+    const walker = document.createTreeWalker(p, NodeFilter.SHOW_TEXT); const chars = []; let n;
+    while ((n = walker.nextNode())) { if (!n.parentElement.getClientRects().length) continue; for (let i = 0; i < n.textContent.length; i++) chars.push([n, i, n.textContent[i]]); }
+    const words = []; let s = -1;
+    for (let i = 0; i <= chars.length; i++) {
+      const space = i === chars.length || /\\s/.test(chars[i][2]);
+      if (!space && s < 0) s = i;
+      if (space && s >= 0) {
+        const e = i - 1, r = document.createRange(); r.setStart(chars[s][0], chars[s][1]); r.setEnd(chars[e][0], chars[e][1] + 1);
+        const rects = [...r.getClientRects()].filter(x => x.width > 0);
+        if (rects.length) {
+          const rc = rects[rects.length - 1], w = chars.slice(s, i).map(c => c[2]).join('');
+          // the corner arrow after an outbound link is drawn by ::after and is not a word gap
+          const a = chars[e][0].parentElement.closest('a'); let arrow = 0;
+          if (a && /^http/.test(a.getAttribute('href') || '') && (e + 1 === chars.length || chars[e + 1][0].parentElement.closest('a') !== a)) { const ps = getComputedStyle(a, '::after'); arrow = (parseFloat(ps.width) || 0) + (parseFloat(ps.marginLeft) || 0); }
+          words.push({ w, x1: rects[0].left, x2: rc.right + arrow, y: Math.round(rc.top), bottom: rc.bottom });
+        }
+        s = -1;
+      }
+    }
     const lines = []; words.forEach(w => { const L = lines.find(l => Math.abs(l.y - w.y) < 3); if (L) L.words.push(w); else lines.push({ y: w.y, words: [w] }); });
     lines.sort((a, b) => a.y - b.y);
     const src = p.textContent;
@@ -59,15 +72,20 @@ def report(rows, label):
     for r in flagged: print(f"  {r['id']} line {r['line']}: {r['ratio']}x  {r['words']}")
     for r in hyph: print(f"  hyphen: {r['id']} line {r['line']}: {r['words']}")
     print(f"SUMMARY\t{label}\t{len(flagged)}\t{over25}\t{widest:.2f}\t{len(hyph)}\n")
-c = Chrome(chrome, 9978, os.path.join(HERE, '.gaps-profile'), widths[0], 900, False)
-try:
-    for m in ('Page.enable', 'Runtime.enable'): c.send(m)
-    c.send('Emulation.setDeviceMetricsOverride', {'width': widths[0], 'height': 900, 'deviceScaleFactor': 1, 'mobile': False})
-    c.send('Page.navigate', {'url': target}); c.pump(3.0)
-    if css: c.js(f"const st = document.createElement('style'); st.textContent = {json.dumps(css)}; document.head.appendChild(st); true"); c.pump(0.3)
-    for phase in phases:
-        if phase == 'open': c.js("document.querySelectorAll('.fold-btn').forEach(b => { if (b.getAttribute('aria-expanded') !== 'true') b.click(); }); true"); c.pump(0.8)
-        for w in widths:
-            c.send('Emulation.setDeviceMetricsOverride', {'width': w, 'height': 900, 'deviceScaleFactor': 1, 'mobile': False}); c.pump(0.8)
-            report(json.loads(c.js(MEASURE)), f"{w} folds {phase}")
-finally: c.close()
+def main():
+    c = Chrome(chrome, 9978, os.path.join(HERE, '.gaps-profile'), widths[0], 900, False)
+    try:
+        for m in ('Page.enable', 'Runtime.enable'): c.send(m)
+        c.send('Emulation.setDeviceMetricsOverride', {'width': widths[0], 'height': 900, 'deviceScaleFactor': 1, 'mobile': False})
+        c.send('Page.navigate', {'url': target}); c.pump(3.0)
+        if css: c.js(f"const st = document.createElement('style'); st.textContent = {json.dumps(css)}; document.head.appendChild(st); true"); c.pump(0.3)
+        for phase in phases:
+            if phase == 'open': c.js("document.querySelectorAll('.fold-btn').forEach(b => { if (b.getAttribute('aria-expanded') !== 'true') b.click(); }); true"); c.pump(0.8)
+            for w in widths:
+                c.send('Emulation.setDeviceMetricsOverride', {'width': w, 'height': 900, 'deviceScaleFactor': 1, 'mobile': False}); c.pump(0.8)
+                report(json.loads(c.js(MEASURE)), f"{w} folds {phase}")
+    finally: c.close()
+
+
+if __name__ == '__main__':
+    main()

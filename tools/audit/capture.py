@@ -3,10 +3,10 @@
 
     python3 tools/audit/capture.py URL --chrome BINARY --out DIR
 
-Full page with every fold closed at 1440 and 390 in both schemes; the About at 1100, 1280, 1440 and 1920 (dark); the full page with every fold open
-at 1440 (dark); the Experience band at 1440 (dark) with the Grassroots Carbon entry open and its "XGBoost" pill hovered; the awards timeline at 1440 in both
-schemes and with the Hixon entry hovered (dark); the hero at 1440 x 900 (dark); and a WebM at 1440 (dark), at most 15 s, scrolling from the
-About through the record to the contact band. Screencast frames are replayed on a canvas and encoded by MediaRecorder as VP9.
+Full page with every fold closed at 1440 and 390 in both schemes; the Experience band at 1440 (dark) at rest and with the Grassroots Carbon
+entry's "XGBoost" pill hovered; the Education band at 1440 (dark); the Awards + fellowships rows at 1440 in both schemes and at 390 (dark); and a
+WebM at 1440 (dark), 15 s, scrolling from the About through the record. Screencast frames are replayed on a canvas and encoded by MediaRecorder
+as VP9.
 """
 import base64, json, os, sys, time
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE); from run import Chrome
@@ -33,56 +33,38 @@ def save(c, name, clip=None):
 def tall(c, w, dpr=1):
     """Make the viewport as tall as the document, so the fixed layers and the lazy parts render in place, and scroll to the top."""
     c.js("scrollTo(0, 0); true"); h = int(c.js("document.documentElement.scrollHeight")); c.send('Emulation.setDeviceMetricsOverride', {'width': w, 'height': min(h, 16000), 'deviceScaleFactor': dpr, 'mobile': w < 600}); c.pump(2.0)
-def region(c, sel, name, pad=24, over=None):
-    """Scroll the region into view, hover a point inside it if asked (after the scroll, so the pointer stays on it), and capture it; the clip is
-    in page coordinates."""
-    b = box(c, sel); c.js(f"scrollTo(0, {max(0, int(b['top']) - 120)}); true"); c.pump(0.8); b = box(c, sel)
-    if over: e = box(c, over); hover(c, e['x'] + min(40, e['w'] / 2), e['y'] + 10)
-    save(c, name, (0, max(0, b['top'] - pad), c_w, b['h'] + 2 * pad))
 def hover(c, x, y): c.send('Input.dispatchMouseEvent', {'type': 'mouseMoved', 'x': x, 'y': y}); c.pump(0.4)
-OPEN = "document.querySelectorAll('.fold-btn').forEach(b => { if (b.getAttribute('aria-expanded') !== 'true') b.click(); }); true"
 for theme in ('dark', 'light'):
     for w, h in ((1440, 900), (390, 844)):
         c = page(w, h, theme)
         try: tall(c, w); save(c, f'page-folded-{w}-{theme}.png')
         finally: c.close()
-for w in (1100, 1280, 1440, 1920):
-    c = page(w, 900); c_w = w
+def band(name, sel, w=1440, h=900, theme='dark', pill=None):
+    """A band alone: the viewport is made as tall as the band, so it renders whole; a pill is hovered after the last scroll so the pointer stays on it."""
+    global c_w
+    c = page(w, h, theme); c_w = w
     try:
-        b = box(c, '#about'); c.send('Emulation.setDeviceMetricsOverride', {'width': w, 'height': int(b['h']) + 120, 'deviceScaleFactor': 1, 'mobile': False}); c.pump(0.8)
-        c.js(f"scrollTo(0, {int(box(c, '#about')['top']) - 40}); true"); c.pump(0.8); save(c, f'about-{w}-dark.png')
+        c.send('Emulation.setDeviceMetricsOverride', {'width': w, 'height': int(box(c, sel)['h']) + 80, 'deviceScaleFactor': 1, 'mobile': w < 600}); c.pump(0.8)
+        c.js(f"scrollTo(0, {int(box(c, sel)['top']) - 40}); true"); c.pump(0.8)
+        if pill:
+            p = json.loads(c.js(f"JSON.stringify((() => {{ const t = [...document.querySelectorAll('{pill[0]} .tag')].find(x => x.textContent === {json.dumps(pill[1])}); const r = t.getBoundingClientRect(); return {{x: r.left + r.width / 2, y: r.top + r.height / 2}}; }})())"))
+            hover(c, p['x'], p['y'])
+        save(c, name)
     finally: c.close()
-c = page(1440, 900)
-try: c.js(OPEN); c.pump(1.0); tall(c, 1440); save(c, 'page-open-1440-dark.png')
-finally: c.close()
-c = page(1440, 900); c_w = 1440
-try:
-    c.js("document.querySelector('#exp-grc .fold-btn').click(); true"); c.pump(0.8)   # XGBoost sits in the folded part of the row
-    b = box(c, '#band-experience'); c.js(f"scrollTo(0, {int(b['top']) - 40}); true"); c.pump(0.8)
-    p = json.loads(c.js("JSON.stringify((() => { const t = [...document.querySelectorAll('#exp-grc .tag')].find(x => x.textContent === 'XGBoost' && !x.hidden) || document.querySelector('#exp-grc .tag-more'); const r = t.getBoundingClientRect(); return {x: r.left + r.width / 2, y: r.top + r.height / 2, text: t.textContent}; })())"))
-    print('hovering', p['text'], flush=True)
-    c.send('Emulation.setDeviceMetricsOverride', {'width': 1440, 'height': int(box(c, '#band-experience')['h']) + 80, 'deviceScaleFactor': 1, 'mobile': False}); c.pump(0.6)
-    c.js(f"scrollTo(0, {int(box(c, '#band-experience')['top']) - 40}); true"); c.pump(0.6)
-    p = json.loads(c.js("JSON.stringify((() => { const t = [...document.querySelectorAll('#exp-grc .tag')].find(x => x.textContent === 'XGBoost' && !x.hidden) || document.querySelector('#exp-grc .tag-more'); const r = t.getBoundingClientRect(); return {x: r.left + r.width / 2, y: r.top + r.height / 2}; })())"))
-    hover(c, p['x'], p['y']); save(c, 'experience-thread-xgboost-1440-dark.png')
-finally: c.close()
-for theme in ('dark', 'light'):
-    c = page(1440, 900, theme); c_w = 1440
-    try:
-        region(c, '#band-awards', f'awards-1440-{theme}.png')
-        if theme == 'dark': region(c, '#band-awards', 'awards-hixon-hovered-1440-dark.png', over='.award[data-honor="hixon"]')
-    finally: c.close()
-c = page(1440, 900)
-try: c.js("scrollTo(0, 0); true"); c.pump(0.6); save(c, 'hero-1440x900-dark.png')
-finally: c.close()
+band('experience-1440-dark.png', '#band-experience')
+band('experience-thread-xgboost-1440-dark.png', '#band-experience', pill=('#exp-grc', 'XGBoost'))
+band('education-1440-dark.png', '#band-education')
+band('awards-1440-dark.png', '#band-awards')
+band('awards-1440-light.png', '#band-awards', theme='light')
+band('awards-390-dark.png', '#band-awards', w=390, h=844)
 # the clip
 c = page(1440, 900); frames = []
 try:
     y0 = int(box(c, '#about')['top']) - 40; y1 = int(box(c, '.band-wrap')['top']) - 300; c.js(f"scrollTo(0, {y0}); true"); c.pump(1.0); c.ev.clear()
     c.send('Page.startScreencast', {'format': 'jpeg', 'quality': 80, 'maxWidth': 1440, 'maxHeight': 900, 'everyNthFrame': 1})
-    c.js(f"(function () {{ var t0 = performance.now(); function step(t) {{ var k = Math.min(1, (t - t0) / 13000); scrollTo(0, {y0} + ({y1} - {y0}) * k); if (k < 1) requestAnimationFrame(step); }} requestAnimationFrame(step); }})(); true")
+    c.js(f"(function () {{ var t0 = performance.now(); function step(t) {{ var k = Math.min(1, (t - t0) / 14000); scrollTo(0, {y0} + ({y1} - {y0}) * k); if (k < 1) requestAnimationFrame(step); }} requestAnimationFrame(step); }})(); true")
     t0 = time.time()
-    while time.time() - t0 < 14.5:
+    while time.time() - t0 < 15.0:
         c.pump(0.05)
         for e in c.ev:
             if e.get('method') == 'Page.screencastFrame':
