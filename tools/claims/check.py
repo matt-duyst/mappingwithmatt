@@ -76,7 +76,7 @@ def pills():
         head = re.search(r'<h3>(.*?)</h3>', card, flags=re.S)
         role = html.unescape(re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', head.group(1)))).strip() if head else ''
         for tag in re.findall(r'<span class="tag">(.*?)</span>', card, flags=re.S): out.append((role, html.unescape(tag.strip())))
-    for role, block in re.findall(r'<div class="tags"[^>]*data-role="([^"]+)"[^>]*>(.*?)</div></li>', t, flags=re.S):
+    for role, block in re.findall(r'<div class="tags"[^>]*data-role="([^"]+)"[^>]*>(.*?)</div></article></li>', t, flags=re.S):
         for tag in re.findall(r'<span class="tag"[^>]*>(.*?)</span>', block, flags=re.S): out.append((html.unescape(role), html.unescape(tag.strip())))
     return out
 
