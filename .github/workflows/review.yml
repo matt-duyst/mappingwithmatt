@@ -52,7 +52,9 @@ jobs:
           sleep 1; curl -sf -o /dev/null http://localhost:8001/
           python3 tools/audit/run.py http://localhost:8001 --pages / --software --chrome "$CHROME" --out out/audit-base.json
           cp out/audit-base.json tools/audit/baseline-ci.json
-          python3 tools/audit/compare.py out/audit-base.json tools/audit/baseline-ci.json --force-baseline "CI baseline: ${BASELINE_REF} at ${sha}, ubuntu-latest, no GPU"
+          # compare.py exits 1 when a gate fails even as it forces the write; the write itself is what this step checks
+          python3 tools/audit/compare.py out/audit-base.json tools/audit/baseline-ci.json --force-baseline "CI baseline: ${BASELINE_REF} at ${sha}, ubuntu-latest, no GPU" || true
+          python3 -c "import json, sys; m = json.load(open('tools/audit/baseline-ci.json'))['meta']; sys.exit(0 if m.get('commit') and 'note' in m else 1)"
           cp tools/audit/baseline-ci.json out/baseline-ci.json
           echo "CI baseline written from ${BASELINE_REF} at ${sha}; artifact baseline-ci-${sha}" >> "$GITHUB_STEP_SUMMARY"
           echo "BASE_SHA=${sha}" >> "$GITHUB_ENV"
@@ -70,31 +72,31 @@ jobs:
           python3 -m http.server 8000 >/dev/null 2>&1 &
           sleep 1; curl -sf -o /dev/null http://localhost:8000/
       - name: Claims and pills
-        if: env.BASELINE_REF == ''
+        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
         run: set -o pipefail; python3 tools/claims/check.py | tee out/claims.txt
       - name: Copy
-        if: env.BASELINE_REF == ''
+        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
         run: set -o pipefail; python3 tools/claims/copy_check.py http://localhost:8000/ --chrome "$CHROME" | tee out/copy.txt
       - name: Links
-        if: env.BASELINE_REF == ''
+        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
         run: |
           set -o pipefail
           python3 tools/audit/run.py http://localhost:8000 --checks-only --pages / --software --chrome "$CHROME" --out out/checks.json
           python3 tools/audit/compare.py --checks-only out/checks.json | tee out/links.txt
       - name: Axe, keyboard and layout
-        if: env.BASELINE_REF == ''
+        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
         run: python3 tools/audit/review.py http://localhost:8000/ --chrome "$CHROME" --out out
       - name: Justified gaps
-        if: env.BASELINE_REF == ''
+        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
         run: set -o pipefail; python3 tools/audit/gaps.py http://localhost:8000/ --width 1100,1280,1440,1920 --both --chrome "$CHROME" | tee out/gaps.txt
       - name: Audit
-        if: env.BASELINE_REF == ''
+        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
         run: |
           set -o pipefail
           python3 tools/audit/run.py http://localhost:8000 --pages / --software --chrome "$CHROME" --out out/audit.json
           python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json | tee out/compare.txt
       - name: Audit tool tests
-        if: env.BASELINE_REF == ''
+        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
         run: python3 -m unittest discover -s tools/audit -p 'test_*.py'
       - name: Captures
         if: always() && env.BASELINE_REF == ''

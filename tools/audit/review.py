@@ -76,7 +76,9 @@ for w in (1100, 1280, 1440, 1920, 390):
             expected = json.loads(c.js(EXPECT)); res['keyboard'] = {'order': order, 'matchesDom': order == expected}
             if order != expected: problems.append('1440: Tab order differs from DOM order')
         res.setdefault('overflow', {})[w] = c.js('document.documentElement.scrollWidth > document.documentElement.clientWidth')
-        if res['overflow'][w]: problems.append(f'{w}: horizontal overflow')
+        if res['overflow'][w]:
+            wide = json.loads(c.js("JSON.stringify([...document.querySelectorAll('body *')].filter(e => e.getBoundingClientRect().right > document.documentElement.clientWidth + 0.5).slice(0, 8).map(e => (e.id ? '#' + e.id : e.tagName.toLowerCase() + '.' + String(e.className.baseVal ?? e.className).split(' ')[0]) + ' ' + Math.round(e.getBoundingClientRect().right)))"))
+            problems.append(f'{w}: horizontal overflow from ' + ', '.join(wide))
         errs = errors(c); res.setdefault('errors', {})[w] = errs; problems += [f'{w}: {e}' for e in errs]
     finally: c.close()
 res['problems'] = problems
