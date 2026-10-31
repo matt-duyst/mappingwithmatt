@@ -3,7 +3,8 @@
 
     python3 tools/audit/parity.py BEFORE_URL AFTER_URL --chrome BINARY --out DIR
 
-At 1440 dark, 1440 light and 390 dark, the band is captured 0.5 s, 2 s and 4 s after navigation on each serving (DIR/parity/...png), and
+At 1440 dark, 1440 light and 390 dark, the band is captured 0.5 s, 2 s and 4 s after navigation on each serving (DIR/parity/...png),
+and once more after every section entrance has finished, and
 DIR/parity.md reports, for each pair, how many pixels differ and the largest channel difference. The page's own animated layers (the liquid
 blob and the branching canvases, which draw from the clock and the pointer) are hidden in both, so a difference belongs to the band.
 """
@@ -26,20 +27,23 @@ def frames(url, w, h, theme):
         c.send('Emulation.setEmulatedMedia', {'features': [{'name': 'prefers-color-scheme', 'value': theme}]})
         c.send('Page.addScriptToEvaluateOnNewDocument', {'source': (LIGHT if theme == 'light' else '') + f" document.addEventListener('DOMContentLoaded', () => {{ const s = document.createElement('style'); s.textContent = {json.dumps(HIDE)}; document.head.appendChild(s); }});"})
         c.send('Page.navigate', {'url': url}); t0 = time.time()
-        for at in (0.5, 2.0, 4.0):
-            while time.time() - t0 < at: c.pump(0.02)
-            b = json.loads(c.js("(() => { const r = document.querySelector('.band-wrap').getBoundingClientRect(); return JSON.stringify({x: r.left, y: r.top + scrollY, w: r.width, h: r.height}); })()"))
+        for at in (0.5, 2.0, 4.0, 'entered'):
+            if at == 'entered':   # every section entrance finished, so the band is compared in the state a reader scrolls to
+                c.js("document.querySelectorAll('.reveal').forEach(e => e.classList.add('in')); true"); c.pump(2.5)
+            else:
+                while time.time() - t0 < at: c.pump(0.02)
+            b = json.loads(c.js("(() => { const el = document.querySelector('.band-wrap'), r = el.getBoundingClientRect(), rv = el.closest('.reveal'); return JSON.stringify({x: r.left, y: r.top + scrollY, w: r.width, h: r.height, entered: rv ? rv.classList.contains('in') : null, opacity: rv ? getComputedStyle(rv).opacity : null}); })()"))
             boxes[at] = b; shots[at] = base64.b64decode(c.send('Page.captureScreenshot', {'format': 'png', 'captureBeyondViewport': True, 'clip': {'x': 0, 'y': b['y'], 'width': w, 'height': b['h'], 'scale': 1}})['data'])
     finally: c.close()
     return shots, dict(boxes)
-md = ['## Contact band parity', '', '| Cell | Time after load | Pixels differing | Share | Largest channel difference | Band top and height, before / after | Differing region (x0, y0, x1, y1) |', '|---|---|---|---|---|---|---|']
+md = ['## Contact band parity', '', '| Cell | Time after load | Pixels differing | Share | Largest channel difference | Band top and height, before / after | Entrance done, before / after | Differing region (x0, y0, x1, y1) |', '|---|---|---|---|---|---|---|---|']
 for w, h, theme in ((1440, 900, 'dark'), (1440, 900, 'light'), (390, 844, 'dark')):
     (a, ba), (b, bb) = frames(before, w, h, theme), frames(after, w, h, theme)
-    for at in (0.5, 2.0, 4.0):
+    for at in (0.5, 2.0, 4.0, 'entered'):
         ia, ib = Image.open(io.BytesIO(a[at])).convert('RGB'), Image.open(io.BytesIO(b[at])).convert('RGB')
-        for name, im in (('before', ia), ('after', ib)): im.save(os.path.join(out, 'parity', f'band-{w}-{theme}-{at}s-{name}.png'))
-        where = f"{round(ba[at]['y'])}, {round(ba[at]['h'])} / {round(bb[at]['y'])}, {round(bb[at]['h'])}"
-        if ia.size != ib.size: md.append(f'| {w} {theme} | {at} s | sizes differ: {ia.size} and {ib.size} | | | {where} | |'); continue
+        for name, im in (('before', ia), ('after', ib)): im.save(os.path.join(out, 'parity', f"band-{w}-{theme}-{at if at == 'entered' else str(at) + 's'}-{name}.png"))
+        where = f"{round(ba[at]['y'])}, {round(ba[at]['h'])} / {round(bb[at]['y'])}, {round(bb[at]['h'])} | {ba[at]['entered']} (opacity {ba[at]['opacity']}) / {bb[at]['entered']} (opacity {bb[at]['opacity']})"
+        if ia.size != ib.size: md.append(f'| {w} {theme} | {at if at == "entered" else str(at) + " s"} | sizes differ: {ia.size} and {ib.size} | | | {where} | |'); continue
         d = ImageChops.difference(ia, ib); px = sum(1 for p in d.getdata() if p != (0, 0, 0)); mx = max(max(p) for p in d.getdata())
-        md.append(f'| {w} {theme} | {at} s | {px} of {ia.size[0] * ia.size[1]} | {px / (ia.size[0] * ia.size[1]):.4%} | {mx} | {where} | {d.getbbox() or "none"} |')
+        md.append(f'| {w} {theme} | {"every entrance finished" if at == "entered" else str(at) + " s"} | {px} of {ia.size[0] * ia.size[1]} | {px / (ia.size[0] * ia.size[1]):.4%} | {mx} | {where} | {d.getbbox() or "none"} |')
 open(os.path.join(out, 'parity.md'), 'w').write('\n'.join(md) + '\n'); print('\n'.join(md))
