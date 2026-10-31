@@ -3,7 +3,8 @@
 
     python3 tools/audit/review.py URL --chrome BINARY --out DIR
 
-Writes DIR/review.json and DIR/review.md: axe with every fold closed and then open (1440 and 390); Tab order through the About and record
+Writes DIR/review.json and DIR/review.md: where every in-page link lands (the hero's pills, the rail, the map cards' links to the record, and
+the record's "on the map" buttons) at 1440 and 390, the rail's current section in page order, and the record's markers; axe with every fold closed and then open (1440 and 390); Tab order through the About and record
 (1440); the reading type at 1440, 1100 and 390 (the lede's and the paragraphs' size and characters per line); the layout at 1440 (container,
 About columns and characters per line, the Experience grid and paragraph measure, each
 entry's tag block width and lines per tag row, the Awards grid, the Education columns); which column holds each About paragraph at 1100, 1280,
@@ -30,8 +31,26 @@ def session(w, h):
 def axe(c):
     c.send('Runtime.evaluate', {'expression': AXE}); return json.loads(c.js(AXE_RUN, wait=True))
 COLUMNS = """JSON.stringify((() => { const x = id => Math.round(document.getElementById(id).getBoundingClientRect().left);
-  const left = ['about-p1', 'about-p2', 'about-p3'].map(x), right = ['about-p4', 'about-p5', 'about-p6'].map(x);
-  return { left, right, ok: new Set(left).size === 1 && new Set(right).size === 1 && right[0] > left[0] }; })())"""
+  const left = ['about-p1', 'about-p2', 'about-p3'].map(x), right = ['about-p4', 'about-p5', 'about-p6'].map(x), two = innerWidth >= 1180;
+  return { left, right, two, ok: two ? (new Set(left).size === 1 && new Set(right).size === 1 && right[0] > left[0]) : new Set(left.concat(right)).size === 1 }; })())"""
+LEDE = """JSON.stringify((() => { const l = document.querySelector('.about-lede'), r = document.createRange(); r.selectNodeContents(l);
+  const tops = new Set([...r.getClientRects()].map(b => Math.round(b.top))); const box = l.getBoundingClientRect(), cols = document.getElementById('about-cols').getBoundingClientRect();
+  return { lines: tops.size, textWidth: Math.round(Math.max(...[...r.getClientRects()].map(b => b.right)) - box.left), boxWidth: Math.round(box.width), container: Math.round(cols.width), font: getComputedStyle(l).fontSize }; })())"""
+LANDING = """(async () => { const wait = ms => new Promise(r => setTimeout(r, ms)), out = [], vh = innerHeight;
+  const land = async (label, go, target) => { scrollTo(0, 0); await wait(400); go(); await wait(1600); const t = document.querySelector(target); const top = Math.round(t.getBoundingClientRect().top);
+    out.push({ label, target, top, ok: top >= -2 && top <= vh * 0.5 }); };
+  for (const a of document.querySelectorAll('#intro .jump a')) await land('pill ' + a.textContent.trim(), () => a.click(), a.getAttribute('href'));
+  for (const a of document.querySelectorAll('#rail a[data-sec]')) await land('rail ' + a.textContent.trim(), () => a.click(), a.getAttribute('href'));
+  for (const id of ['exp-grc', 'exp-seekops', 'exp-umn', 'exp-cydcor', 'exp-yale', 'exp-ucla']) await land('map card link #' + id, () => { location.hash = id; }, '#' + id);
+  for (const b of document.querySelectorAll('.on-map')) { scrollTo(0, 0); await wait(300); b.click(); await wait(2500); const top = Math.round(document.getElementById('map').getBoundingClientRect().top);
+    out.push({ label: b.getAttribute('aria-label'), target: '#map, #map-stop-' + b.getAttribute('data-stop'), top, ok: location.hash === '#map-stop-' + b.getAttribute('data-stop') && top >= -2 && top <= vh * 0.5 }); }
+  return JSON.stringify(out); })()"""
+RAIL = """(async () => { const wait = ms => new Promise(r => setTimeout(r, ms)), out = [];
+  for (const id of ['top', 'map', 'work', 'experience', 'research', 'code']) { const el = document.getElementById(id); scrollTo(0, el.getBoundingClientRect().top + scrollY - innerHeight * 0.3); await wait(700);
+    const a = document.querySelector('#rail a.active'), code = document.getElementById('code'), end = innerHeight + scrollY >= document.documentElement.scrollHeight - 2;
+    out.push({ section: id, y: Math.round(el.getBoundingClientRect().top + scrollY), expect: code.getBoundingClientRect().top < innerHeight || end ? 'code' : id, active: a ? a.getAttribute('data-sec') : null }); }
+  const lit = []; for (const ch of document.querySelectorAll('#band-experience .chapter, #band-awards .chapter')) { scrollTo(0, ch.getBoundingClientRect().top + scrollY - innerHeight * 0.25); await wait(500); lit.push({ chapter: ch.id, lit: ch.classList.contains('lit') }); }
+  return JSON.stringify({ rail: out, markers: lit }); })()"""
 LAYOUT = """JSON.stringify((() => { const r = el => el.getBoundingClientRect(), $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
   const probe = document.createElement('span'); const p2 = $('#about-p2'); probe.textContent = p2.textContent.slice(0, 55); const cs = getComputedStyle(p2);
   probe.style.cssText = 'position:absolute;white-space:nowrap;font:' + cs.font + ';letter-spacing:' + cs.letterSpacing; document.body.appendChild(probe); const w55 = r(probe).width; probe.remove();
@@ -52,16 +71,21 @@ KEYS = """(() => { const a = document.activeElement; if (!a || !(a.closest('#abo
 EXPECT = """JSON.stringify([...document.querySelectorAll('#about a, #about button, #record a, #record button, #record [tabindex="0"]')].filter(e => e.offsetParent && e.tabIndex >= 0)
   .map(a => a.tagName === 'A' ? 'link: ' + a.textContent.trim().slice(0, 30) : a.classList.contains('award') ? 'entry: ' + a.querySelector('.entry-title').textContent.trim().slice(0, 30) : 'button: ' + (a.getAttribute('aria-label') || a.textContent.trim())))"""
 res = {'columns': {}, 'hiddenPills': {}, 'axe': {}}; problems = []
-for w in (1100, 1280, 1440, 1920, 390):
+for w in (1100, 1180, 1280, 1440, 1920, 390):
     c = session(w, 844 if w < 600 else 900)
     try:
         if w >= 600:
             res['columns'][w] = json.loads(c.js(COLUMNS))
-            if w > 640 and not res['columns'][w]['ok']: problems.append(f'{w}: About paragraphs are not 1 to 3 left and 4 to 6 right')
+            if not res['columns'][w]['ok']: problems.append(f"{w}: the About is not {'two columns, 1 to 3 left and 4 to 6 right' if res['columns'][w]['two'] else 'one column'}")
+            if w in (1100, 1280, 1440, 1920): res.setdefault('lede', {})[w] = json.loads(c.js(LEDE))
         if w in (1440, 1100, 390):
             h = json.loads(c.js(HIDDEN)); res['hiddenPills'][w] = h; problems += [f'{w}: pill "{t}" is not visible' for t in h[:-1]]
         if w == 1440: res['layout'] = json.loads(c.js(LAYOUT))
-        if w in (1440, 1100, 390): res.setdefault('type', {})[w] = json.loads(c.js(TYPE))
+        if w in (1100, 1180, 1280, 1440, 390): res.setdefault('type', {})[w] = json.loads(c.js(TYPE))
+        if w in (1440, 390):
+            land = json.loads(c.js(LANDING, wait=True)); res.setdefault('landing', {})[w] = land; problems += [f"{w}: {l['label']} lands at {l['top']} px" for l in land if not l['ok']]
+            rm = json.loads(c.js(RAIL, wait=True)); res.setdefault('rail', {})[w] = rm
+            problems += [f"{w}: rail shows {r['active']} at {r['section']}" for r in rm['rail'] if w >= 900 and r['active'] != r['expect']] + [f"{w}: {m['chapter']} not lit" for m in rm['markers'] if not m['lit']]
         if w in (1440, 390):
             closed = axe(c); c.js(OPEN); c.pump(0.8); opened = axe(c); res['axe'][w] = {'closed': closed, 'open': opened}
             problems += [f'{w} axe {v["id"]} on {", ".join(v["nodes"][:3])}' for v in closed + opened]
@@ -94,6 +118,9 @@ L = res.get('layout', {}); md = ['## Review', '', f"Container {L.get('container'
 md += [f"| {t['entry']} | {t['paragraph']} | {t['block']} | " + ' | '.join(f"{x['pills']} pills, {x['lines']} line(s)" for x in t['rows']) + ' |' for t in L.get('tags', [])]
 md += ['', '| Width | Lede | Lede measure | About paragraph | About measure | Entry paragraph | Entry measure |', '|---|---|---|---|---|---|---|'] + [
     f"| {w} | {t['lede']['font']} | {t['lede']['width']} px, {t['lede']['chars']} ch | {t['about']['font']} | {t['about']['width']} px, {t['about']['chars']} ch | {t['entry']['font']} | {t['entry']['width']} px, {t['entry']['chars']} ch |" for w, t in res.get('type', {}).items()]
+md += ['', '| Width | Opening line | Lines | Text width | Box | Container |', '|---|---|---|---|---|---|'] + [f"| {w} | {v['font']} | {v['lines']} | {v['textWidth']} | {v['boxWidth']} | {v['container']} |" for w, v in res.get('lede', {}).items()]
+md += ['', '| Width | Link | Target | Top | Lands |', '|---|---|---|---|---|'] + [f"| {w} | {l['label']} | {l['target']} | {l['top']} | {'yes' if l['ok'] else 'NO'} |" for w, ls in res.get('landing', {}).items() for l in ls]
+md += ['', '| Width | Rail at each section (page order) | Markers lit |', '|---|---|---|'] + [f"| {w} | " + ', '.join(f"{r['section']} at {r['y']}: {r['active']}" for r in v['rail']) + ' | ' + ', '.join(f"{m['chapter']} {'yes' if m['lit'] else 'NO'}" for m in v['markers']) + ' |' for w, v in res.get('rail', {}).items()]
 md += ['', '| Width | About columns 1-3 / 4-6 x | holds |', '|---|---|---|'] + [f"| {w} | {v['left']} / {v['right']} | {'yes' if v['ok'] else 'NO'} |" for w, v in res['columns'].items()]
 md += ['', 'Pills not visible: ' + '; '.join(f"{w}: {len(v) - 1} of {v[-1]}" for w, v in res['hiddenPills'].items())]
 md += ['', '| Width | axe closed | axe open |', '|---|---|---|'] + [f"| {w} | {len(v['closed'])} | {len(v['open'])} |" for w, v in res['axe'].items()]

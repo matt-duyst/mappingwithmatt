@@ -4,7 +4,8 @@
     python3 tools/audit/capture.py URL --chrome BINARY --out DIR
 
 The About at 1440 (dark and light), at 1100 (dark), and at 390 (dark) with "keep reading" closed and open; the Grassroots Carbon entry at 1440
-(dark) with "read the rest" open; the full page with every fold closed at 1440 (dark); and a WebM at 1440 (dark), 15 s, scrolling from the
+(dark) with "read the rest" open; the full page with every fold closed at 1440 (dark); the opening line and the mark under it at 1440 (dark)
+with the mark's color cycle held at 0 s and at 16 s, each with the three stops' computed colors in mark.json; and a WebM at 1440 (dark), 15 s, scrolling from the
 About through the record. Screencast frames are replayed on a canvas and encoded by MediaRecorder as VP9. The contact band's parity frames
 come from parity.py.
 """
@@ -55,6 +56,18 @@ band('about-390-dark-open.png', '#about', w=390, h=844, click='#about-more')
 band('entry-grassroots-open-1440-dark.png', '#exp-grc', click='#exp-grc .fold-btn')
 c = page(1440, 900)
 try: tall(c, 1440); save(c, 'page-folded-1440-dark.png')
+finally: c.close()
+# the opening line and the mark: every animation on the mark's stops is paused and set to the same clock time, so the frame is that moment
+c = page(1440, 900); marks = {}
+try:
+    c.js(f"scrollTo(0, {int(box(c, '.about-lede')['top']) - 120}); true"); c.pump(0.8)
+    for t in (0, 16):
+        marks[f'{t}s'] = json.loads(c.js(f"""JSON.stringify((() => {{ const st = [...document.querySelectorAll('.about-mark i')];
+          st.forEach(i => i.getAnimations().forEach(a => {{ a.pause(); a.currentTime = {t * 1000}; }}));
+          return st.map(i => ({{ color: getComputedStyle(i).color, animations: i.getAnimations().length }})); }})())""")); c.pump(0.4)
+        l, m = box(c, '.about-lede'), box(c, '.about-mark')
+        save(c, f'lede-mark-1440-dark-{t}s.png', (max(0, l['x'] - 24), l['top'] - 24, l['w'] + 48, m['top'] + m['h'] - l['top'] + 48))
+    open(os.path.join(out, 'mark.json'), 'w').write(json.dumps(marks, indent=1)); print('mark', json.dumps(marks), flush=True)
 finally: c.close()
 # the clip
 c = page(1440, 900); frames = []
