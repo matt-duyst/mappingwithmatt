@@ -81,7 +81,7 @@ img { max-width: 100%; height: auto; }
 /* the drawing fades to nothing toward the viewport edges and stays light over the reading region in the middle */
 #land { -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.3) 22%, #000 48%, #000 78%, transparent 100%); mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.3) 22%, #000 48%, #000 78%, transparent 100%); }
 /* Liquid blob */
-#goo { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; opacity: 0; transition: opacity 1600ms ease; mix-blend-mode: screen; }
+#goo { position: fixed; inset: 0; width: 50%; height: 50%; transform: scale(2); transform-origin: 0 0; pointer-events: none; z-index: 1; opacity: 0; transition: opacity 1600ms ease; mix-blend-mode: screen; }
 #goo.on { opacity: 0.9; }
 #goo circle { transition: fill 800ms linear; }
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) #goo { mix-blend-mode: multiply; } :root:not([data-theme="dark"]) #goo.on { opacity: 0.6; } }
@@ -694,9 +694,9 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 <svg id="goo" aria-hidden="true">
   <defs>
     <filter id="goo-f" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="46" result="b"/>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="23" result="b"/>
       <feColorMatrix in="b" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -12" result="g"/>
-      <feGaussianBlur in="g" stdDeviation="28"/>
+      <feGaussianBlur in="g" stdDeviation="14"/>
     </filter>
   </defs>
   <g filter="url(#goo-f)" opacity="0.5">
@@ -1261,7 +1261,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     var st = discs.map(function (c, i) {
       return { ax: 0.15 + rand() * 0.7, ay: 0.15 + rand() * 0.7, rx: 0.14 + rand() * 0.2, ry: 0.12 + rand() * 0.18,
                s1: 0.00014 + rand() * 0.0001, s2: 0.0001 + rand() * 0.00008, p1: rand() * 6.28, p2: rand() * 6.28,
-               gr: 0.35 + rand() * 0.45, gp: rand() * 6.28, hoff: i * 40 + rand() * 30 };
+               gr: 0.35 + rand() * 0.45, gp: rand() * 6.28, hoff: i * 40 + rand() * 30, r0: +c.getAttribute('r') };
     });
     var t0 = null;
     var ease = function (w) { return w < 0.5 ? 2 * w * w : 1 - Math.pow(-2 * w + 2, 2) / 2; };
@@ -1274,7 +1274,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       if (pt && pt.f > 0) { for (var q = 0; q < st.length; q++) { mx += st[q].lx || 0; my += st[q].ly || 0; } mx /= st.length; my /= st.length; }
       var sumx = 0, sumy = 0;
       discs.forEach(function (c, i) {
-        var d = st[i], r = +c.getAttribute('r');
+        var d = st[i], r = d.r0;
         // dispersed target: a slow personal wander across the viewport
         var dx = (d.ax + Math.sin(t * d.s1 + d.p1) * d.rx + Math.sin(t * d.s2 * 1.7 + d.p2) * d.rx * 0.35) * W;
         var dy = (d.ay + Math.cos(t * d.s2 + d.p2) * d.ry + Math.cos(t * d.s1 * 1.3 + d.p1) * d.ry * 0.35) * Hh;
@@ -1302,7 +1302,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
         }
         var hv = (((hue + t * 0.005 + d.hoff + warm) % 360 + 360) % 360).toFixed(0);
         d.fx = x; d.fy = y; d.r = r; d.hue = hv;
-        c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1));
+        c.setAttribute('cx', (x / 2).toFixed(1)); c.setAttribute('cy', (y / 2).toFixed(1)); c.setAttribute('r', (r / 2).toFixed(1));   // the layer is drawn at half size and scaled by 2
         c.setAttribute('fill', 'hsl(' + hv + ' 82% 60%)');
       });
       if (paintName) paintName(st, clock === null ? now : clock, hue);
