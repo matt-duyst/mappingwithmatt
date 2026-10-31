@@ -19,7 +19,7 @@ def opt(name, default=None):
     i = args.index(name); v = args[i + 1]; del args[i:i + 2]; return v
 chrome = opt('--chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'); out = opt('--out', os.path.join(HERE, 'review')); root = args[0] if args else 'http://localhost:8000/'
 os.makedirs(out, exist_ok=True); AXE = open(os.path.join(HERE, 'vendor', 'axe.min.js'), encoding='utf-8').read()
-AXE_RUN = "axe.run(document, {resultTypes: ['violations']}).then(r => JSON.stringify(r.violations.map(v => ({id: v.id, impact: v.impact, nodes: v.nodes.map(n => n.target.join(' '))}))))"
+AXE_RUN = "axe.run(document, {resultTypes: ['violations']}).then(r => JSON.stringify(r.violations.map(v => ({id: v.id, impact: v.impact, nodes: v.nodes.map(n => n.target.join(' ') + n.any.filter(a => a.data && a.data.contrastRatio).map(a => ` (${a.data.fgColor} on ${a.data.bgColor}, ${a.data.contrastRatio}:1)`).join(''))}))))"
 OPEN = "document.querySelectorAll('.fold-btn').forEach(b => { if (b.getAttribute('aria-expanded') !== 'true') b.click(); }); true"
 def session(w, h):
     c = Chrome(chrome, 9990, os.path.join(HERE, '.tmp', f'review-{w}'), w, h, True)
@@ -83,26 +83,32 @@ for w in (1100, 1180, 1280, 1440, 1920, 390):
         if w == 1440: res['layout'] = json.loads(c.js(LAYOUT))
         if w in (1100, 1180, 1280, 1440, 390): res.setdefault('type', {})[w] = json.loads(c.js(TYPE))
         if w in (1440, 390):
+            closed = axe(c); c.js(OPEN); c.pump(0.8); opened = axe(c); res['axe'][w] = {'closed': closed, 'open': opened}
+            problems += [f'{w} axe {v["id"]} on {", ".join(v["nodes"][:3])}' for v in closed + opened]
+            c.js("location.replace(location.pathname); true"); c.pump(4.0)
             land = json.loads(c.js(LANDING, wait=True)); res.setdefault('landing', {})[w] = land; problems += [f"{w}: {l['label']} lands at {l['top']} px" for l in land if not l['ok']]
             rm = json.loads(c.js(RAIL, wait=True)); res.setdefault('rail', {})[w] = rm
             problems += [f"{w}: rail shows {r['active']} at {r['section']}" for r in rm['rail'] if w >= 900 and r['active'] != r['expect']] + [f"{w}: {m['chapter']} not lit" for m in rm['markers'] if not m['lit']]
-        if w in (1440, 390):
-            closed = axe(c); c.js(OPEN); c.pump(0.8); opened = axe(c); res['axe'][w] = {'closed': closed, 'open': opened}
-            problems += [f'{w} axe {v["id"]} on {", ".join(v["nodes"][:3])}' for v in closed + opened]
+            after = axe(c); res['axe'][w]['afterLinks'] = after
+            problems += [f'{w} axe after the link tests {v["id"]} on {", ".join(v["nodes"][:3])}' for v in after]
         if w == 390:
             res['pillsInside'] = json.loads(c.js("""JSON.stringify(['temperature and vapor pressure deficit (VPD) stress scalars', 'Oil and Gas Methane Partnership (OGMP) and EPA reporting'].map(t => { const p = [...document.querySelectorAll('.tag')].find(x => x.textContent === t);
               const e = p.closest('.chapter').querySelector('.entry'), a = p.getBoundingClientRect(), b = e.getBoundingClientRect(); return { pill: t, right: Math.round(a.right), entryRight: Math.round(b.right), inside: a.right <= b.right + 0.5, lines: Math.round(a.height / 12.6) }; }))"""))
             problems += [f'390: "{p["pill"]}" overruns its entry' for p in res['pillsInside'] if not p['inside']]
         if w == 1440:
-            c.js("location.reload(); true"); c.pump(4.0)
+            c.js("location.replace(location.pathname); true"); c.pump(4.0)
             c.js("const s = document.createElement('button'); s.id = 'tab-start'; document.getElementById('about').insertAdjacentElement('beforebegin', s); s.focus(); true")
-            order = []
-            for _ in range(120):
+            order, walk, seen_record = [], [], False
+            for _ in range(600):
                 for t in ('keyDown', 'keyUp'): c.send('Input.dispatchKeyEvent', {'type': t, 'key': 'Tab', 'code': 'Tab', 'windowsVirtualKeyCode': 9})
-                f = c.js(KEYS)
-                if f == 'OUT' and order: break
-                if f != 'OUT': order.append(f)
-            expected = json.loads(c.js(EXPECT)); res['keyboard'] = {'order': order, 'matchesDom': order == expected}
+                f = c.js(KEYS); in_record = c.js("!!(document.activeElement && document.activeElement.closest('#record'))")
+                if f == 'OUT' and seen_record: break
+                seen_record = seen_record or in_record
+                if f != 'OUT': order.append(f); walk.append(f)
+                elif walk and isinstance(walk[-1], int): walk[-1] += 1
+                else: walk.append(1)
+            walk = [f'({x} stops outside the About and the record)' if isinstance(x, int) else x for x in walk]
+            expected = json.loads(c.js(EXPECT)); res['keyboard'] = {'order': order, 'walk': walk, 'matchesDom': order == expected}
             if order != expected: problems.append('1440: Tab order differs from DOM order')
         res.setdefault('overflow', {})[w] = c.js('document.documentElement.scrollWidth > document.documentElement.clientWidth')
         if res['overflow'][w]:
@@ -123,8 +129,8 @@ md += ['', '| Width | Link | Target | Top | Lands |', '|---|---|---|---|---|'] +
 md += ['', '| Width | Rail at each section (page order) | Markers lit |', '|---|---|---|'] + [f"| {w} | " + ', '.join(f"{r['section']} at {r['y']}: {r['active']}" for r in v['rail']) + ' | ' + ', '.join(f"{m['chapter']} {'yes' if m['lit'] else 'NO'}" for m in v['markers']) + ' |' for w, v in res.get('rail', {}).items()]
 md += ['', '| Width | About columns 1-3 / 4-6 x | holds |', '|---|---|---|'] + [f"| {w} | {v['left']} / {v['right']} | {'yes' if v['ok'] else 'NO'} |" for w, v in res['columns'].items()]
 md += ['', 'Pills not visible: ' + '; '.join(f"{w}: {len(v) - 1} of {v[-1]}" for w, v in res['hiddenPills'].items())]
-md += ['', '| Width | axe closed | axe open |', '|---|---|---|'] + [f"| {w} | {len(v['closed'])} | {len(v['open'])} |" for w, v in res['axe'].items()]
-md += ['', f"Keyboard at 1440: {len(res.get('keyboard', {}).get('order', []))} stops, matches DOM order: {res.get('keyboard', {}).get('matchesDom')}.",
+md += ['', '| Width | axe closed | axe open | axe after the link tests |', '|---|---|---|---|'] + [f"| {w} | {len(v['closed'])} | {len(v['open'])} | {len(v.get('afterLinks', []))} |" for w, v in res['axe'].items()]
+md += ['', f"Keyboard at 1440: {len(res.get('keyboard', {}).get('order', []))} stops, matches DOM order: {res.get('keyboard', {}).get('matchesDom')}.", '', 'Tab order from the About to the end of the record:', '', *[f"{i + 1}. {x}" for i, x in enumerate(res.get('keyboard', {}).get('walk', []))], '',
        f"Pills at 390: " + '; '.join(f"{p['pill']} {'inside' if p['inside'] else 'OUTSIDE'} ({p['lines']} line(s))" for p in res.get('pillsInside', [])), '', 'Problems: ' + ('none' if not problems else '; '.join(problems))]
 open(os.path.join(out, 'review.md'), 'w').write('\n'.join(md) + '\n'); print('\n'.join(md))
 sys.exit(1 if problems else 0)
