@@ -26,3 +26,11 @@ def bytes_failure(cold, base, allowance=0.10):
     if not base or cold is None: return None
     limit = round(base * (1 + allowance), 6)   # rounded, so 15 percent of 100,000 is 115,000 and not a float a hair below it
     return f"{cold} is more than {allowance:.0%} over the baseline {base}" if cold > limit else None
+
+
+def requests_failure(cold, base, extra=0):
+    """The request gate: fail when cold requests rise more than 10 percent over the baseline, plus any extra requests a review the owner has
+    approved allows (at most 2)."""
+    if not base or cold is None: return None
+    limit = round(base * 1.10, 6) + extra
+    return f"{cold} is more than 10% over the baseline {base}" + (f" plus {extra} allowed" if extra else '') if cold > limit else None

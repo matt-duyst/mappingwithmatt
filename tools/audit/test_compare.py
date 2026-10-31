@@ -1,7 +1,7 @@
 import os, sys, unittest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from trend import trend, tbt_failure, bytes_failure
+from trend import trend, tbt_failure, bytes_failure, requests_failure
 
 
 class TrendWording(unittest.TestCase):
@@ -39,6 +39,20 @@ class ByteGate(unittest.TestCase):
     def test_an_approved_allowance_of_fifteen_percent(self):
         self.assertIsNone(bytes_failure(115000, 100000, 0.15))
         self.assertIsNotNone(bytes_failure(115001, 100000, 0.15))
+
+
+class RequestGate(unittest.TestCase):
+    def test_the_default_allows_no_added_request_on_a_baseline_of_six(self):
+        self.assertIsNone(requests_failure(6, 6))
+        self.assertIsNotNone(requests_failure(7, 6))
+
+    def test_an_approved_allowance_of_one_admits_one_more_request(self):
+        self.assertIsNone(requests_failure(7, 6, 1))
+        self.assertIsNotNone(requests_failure(8, 6, 1))
+
+    def test_the_default_keeps_ten_percent_on_a_large_baseline(self):
+        self.assertIsNone(requests_failure(66, 60))
+        self.assertIsNotNone(requests_failure(67, 60))
 
 
 if __name__ == '__main__':
