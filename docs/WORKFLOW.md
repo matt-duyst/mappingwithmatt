@@ -10,4 +10,18 @@ Performance is measured with tools/audit/run.py in headless Chrome rendering wit
 
 tools/audit/baseline.json is the state the next audit is compared with. It is refreshed with tools/audit/compare.py --write-baseline, which refuses when any gate fails against the previous baseline: requests or bytes up more than ten percent, first or largest contentful paint up more than a hundred milliseconds, cumulative layout shift above 0.05, total blocking time above 50 ms, any accessibility violation, any broken link. A baseline can be forced with --force-baseline and a reason, and the file then records that reason and the metrics that failed, so a later reader knows the line was moved on purpose and why.
 
+## Measuring in CI
+
+A branch under review is measured by .github/workflows/review.yml on a GitHub-hosted ubuntu-latest runner, which has no GPU, so Chrome renders in software there and its figures are compared only with tools/audit/baseline-ci.json, a baseline taken on the same kind of runner, never with the local GPU baseline.
+
+The audit loads the main page cold nine times in each of four cells, 1440 and 390 wide in the dark and light themes, and quotes the median of each metric with its minimum and maximum beside it. Total blocking time is held by the relative gate: it fails when a cell's median exceeds the CI baseline's own maximum for that cell by more than 25 percent, since a software-rendered runner varies far more from run to run than a GPU does. The other gates are unchanged: requests and bytes up more than ten percent, first or largest contentful paint up more than a hundred milliseconds, layout shift above 0.05.
+
+A branch may carry an allowance the owner has approved, passed to compare.py and printed in the job summary with its reason. Section three carries two. Cold bytes may rise 15 percent over the baseline instead of 10, for the record and the reading type. Cold requests may exceed the ten percent gate by one, for the self-hosted Fraunces italic of the About's opening line. Each allowance belongs to its branch and ends when that branch merges.
+
+Any change made for performance is timed as a pair before it is kept: tools/audit/paired.py loads the commit before the change and the commit with it on one runner, nine cold runs each at 1440 in both themes, alternating which goes first every round, and the change is kept only when its median total blocking time falls by more than the larger of the two sides' spreads. Runners differ from each other by more than most changes do, so two commits are never compared across separate runs.
+
+A change that could alter how the hero looks is checked at a frozen clock: the page accepts ?clock=<ms> for review, which fixes the blob's time and seeds its layout, and tools/audit/herolook.py captures the hero on both commits at 0, 5 and 20 seconds, at 1440 in both themes and at 390 in dark, and saves each pair side by side for the owner with the share of differing pixels and the largest channel difference. Without the parameter the page behaves as it always does, which the same tool confirms by comparing the DOM and the console of a normal load on both commits.
+
+After every merge into main the CI baseline is taken again from the new main, nine runs, through the review workflow's baseline mode, and committed with its reason, so the next branch is measured against the site as it now stands.
+
 Nothing in the repository, its commits or its documents attributes work to any tool. What is recorded is what changed, what was measured and what was decided.
