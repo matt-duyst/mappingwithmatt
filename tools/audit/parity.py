@@ -19,7 +19,7 @@ os.makedirs(os.path.join(out, 'parity'), exist_ok=True)
 HIDE = "#goo, #land, #land-live { visibility: hidden !important; }"
 LIGHT = "(function f() { if (document.documentElement) document.documentElement.setAttribute('data-theme', 'light'); else setTimeout(f, 0); })();"
 def frames(url, w, h, theme):
-    c = Chrome(chrome, 9995, os.path.join(HERE, '.tmp', 'parity'), w, h, True); shots = {}
+    c = Chrome(chrome, 9995, os.path.join(HERE, '.tmp', 'parity'), w, h, True); shots = {}; global boxes; boxes = {}
     try:
         for m in ('Page.enable', 'Runtime.enable'): c.send(m)
         c.send('Emulation.setDeviceMetricsOverride', {'width': w, 'height': h, 'deviceScaleFactor': 1, 'mobile': w < 600})
@@ -29,16 +29,17 @@ def frames(url, w, h, theme):
         for at in (0.5, 2.0, 4.0):
             while time.time() - t0 < at: c.pump(0.02)
             b = json.loads(c.js("(() => { const r = document.querySelector('.band-wrap').getBoundingClientRect(); return JSON.stringify({x: r.left, y: r.top + scrollY, w: r.width, h: r.height}); })()"))
-            shots[at] = base64.b64decode(c.send('Page.captureScreenshot', {'format': 'png', 'captureBeyondViewport': True, 'clip': {'x': 0, 'y': b['y'], 'width': w, 'height': b['h'], 'scale': 1}})['data'])
+            boxes[at] = b; shots[at] = base64.b64decode(c.send('Page.captureScreenshot', {'format': 'png', 'captureBeyondViewport': True, 'clip': {'x': 0, 'y': b['y'], 'width': w, 'height': b['h'], 'scale': 1}})['data'])
     finally: c.close()
-    return shots
-md = ['## Contact band parity', '', '| Cell | Time after load | Pixels differing | Share | Largest channel difference |', '|---|---|---|---|---|']
+    return shots, dict(boxes)
+md = ['## Contact band parity', '', '| Cell | Time after load | Pixels differing | Share | Largest channel difference | Band top and height, before / after | Differing region (x0, y0, x1, y1) |', '|---|---|---|---|---|---|---|']
 for w, h, theme in ((1440, 900, 'dark'), (1440, 900, 'light'), (390, 844, 'dark')):
-    a, b = frames(before, w, h, theme), frames(after, w, h, theme)
+    (a, ba), (b, bb) = frames(before, w, h, theme), frames(after, w, h, theme)
     for at in (0.5, 2.0, 4.0):
         ia, ib = Image.open(io.BytesIO(a[at])).convert('RGB'), Image.open(io.BytesIO(b[at])).convert('RGB')
         for name, im in (('before', ia), ('after', ib)): im.save(os.path.join(out, 'parity', f'band-{w}-{theme}-{at}s-{name}.png'))
-        if ia.size != ib.size: md.append(f'| {w} {theme} | {at} s | sizes differ: {ia.size} and {ib.size} | | |'); continue
+        where = f"{round(ba[at]['y'])}, {round(ba[at]['h'])} / {round(bb[at]['y'])}, {round(bb[at]['h'])}"
+        if ia.size != ib.size: md.append(f'| {w} {theme} | {at} s | sizes differ: {ia.size} and {ib.size} | | | {where} | |'); continue
         d = ImageChops.difference(ia, ib); px = sum(1 for p in d.getdata() if p != (0, 0, 0)); mx = max(max(p) for p in d.getdata())
-        md.append(f'| {w} {theme} | {at} s | {px} of {ia.size[0] * ia.size[1]} | {px / (ia.size[0] * ia.size[1]):.4%} | {mx} |')
+        md.append(f'| {w} {theme} | {at} s | {px} of {ia.size[0] * ia.size[1]} | {px / (ia.size[0] * ia.size[1]):.4%} | {mx} | {where} | {d.getbbox() or "none"} |')
 open(os.path.join(out, 'parity.md'), 'w').write('\n'.join(md) + '\n'); print('\n'.join(md))

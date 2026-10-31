@@ -6,7 +6,8 @@ cold, with the audit's network throttling.
 
 Writes DIR/trace-1440.json and DIR/trace-390.json (the raw traces, loadable in the Performance panel) and DIR/trace.md: the ten longest
 main-thread tasks at 1440, each with its duration, the work that dominates it, the script URL and function at the top of its stack, and
-whether a task with the same top frame and at least half its length also runs at 390.
+whether a task with the same top frame and at least half its length also runs at 390; then, for the three longest, the largest events nested
+inside each, so the work a frame callback does is named.
 """
 import json, os, sys, time
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE); from run import Chrome, THROTTLE
@@ -41,6 +42,11 @@ def record(w, h):
     json.dump({'traceEvents': events}, open(os.path.join(out, f'trace-{w}.json'), 'w'))
     return events
 
+def fn_of(e):
+    d = (e.get('args', {}).get('data') or {}); f = d.get('functionName') or ''; u = (d.get('url') or '').rsplit('/', 1)[-1]
+    return (f + (f' line {d["lineNumber"]}' if d.get('lineNumber') is not None else '') + (f' ({u})' if u else '')).strip()
+
+
 def tasks(events):
     """The page's renderer main thread: the CrRendererMain whose thread parsed the page's HTML."""
     names = {(e['pid'], e['tid']): e['args'].get('name') for e in events if e.get('ph') == 'M' and e.get('name') == 'thread_name'}
@@ -58,7 +64,8 @@ def tasks(events):
         url = d.get('url') or d.get('scriptName') or ''; fn = d.get('functionName') or ''
         line = d.get('lineNumber'); frame = f"{fn or '(top level)'}{f' line {line}' if line is not None else ''}" if js else ''
         out.append({'ms': round(t['dur'] / 1000, 1), 'work': top['name'] if top else '', 'event': js['name'] if js else '', 'url': url.replace(root.rstrip('/'), ''), 'frame': frame,
-                    'render': f"{render['name']} {round(render['dur'] / 1000, 1)} ms" if render else ''})
+                    'render': f"{render['name']} {round(render['dur'] / 1000, 1)} ms" if render else '',
+                    'inside': [f"{e['name']}{' ' + fn_of(e) if fn_of(e) else ''} {round(e['dur'] / 1000, 1)} ms" for e in sorted([e for e in inside if e['name'] not in ('RunTask', 'ThreadControllerImpl::RunTask')], key=lambda e: -e['dur'])[:8]]})
     return sorted(out, key=lambda x: -x['ms'])
 
 wide, narrow = tasks(record(1440, 900)), tasks(record(390, 844))
@@ -69,4 +76,5 @@ for i, t in enumerate(wide[:10], 1):
     md.append(f"| {i} | {t['ms']} | {t['work']} | {t['event']} | {t['url'] or '(none)'} | {t['frame'] or '(none)'} | {t['render'] or '(none)'} | {also} |")
 md += ['', f"Main-thread tasks over 50 ms: {sum(1 for t in wide if t['ms'] > 50)} at 1440, {sum(1 for t in narrow if t['ms'] > 50)} at 390; "
        f"their time over 50 ms (the blocking share): {round(sum(t['ms'] - 50 for t in wide if t['ms'] > 50))} ms at 1440, {round(sum(t['ms'] - 50 for t in narrow if t['ms'] > 50))} ms at 390."]
+md += ['', 'Inside the three longest tasks at 1440, largest first:', ''] + [f"{i}. {t['ms']} ms: " + '; '.join(t['inside']) for i, t in enumerate(wide[:6:2], 1)]
 open(os.path.join(out, 'trace.md'), 'w').write('\n'.join(md) + '\n'); print('\n'.join(md))
