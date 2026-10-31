@@ -19,6 +19,7 @@
 /* Self-hosted fonts (vendor/fonts/, SIL OFL 1.1): one variable latin file per family */
 @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('vendor/fonts/inter-v20-latin-variable.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('vendor/fonts/jetbrains-mono-v24-latin-variable.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Fraunces'; font-style: italic; font-weight: 400; font-display: swap; src: url('vendor/fonts/fraunces-latin-400-italic.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: 'Inter Fallback'; font-weight: 400; src: local('Arial'), local('Liberation Sans'), local('Helvetica'); ascent-override: 96.88%; descent-override: 24.12%; line-gap-override: 0%; size-adjust: 106.2%; }
 @font-face { font-family: 'Inter Fallback'; font-weight: 500; src: local('Arial'), local('Liberation Sans'), local('Helvetica'); ascent-override: 96.88%; descent-override: 24.12%; line-gap-override: 0%; size-adjust: 107.4%; }
 @font-face { font-family: 'Inter Fallback'; font-weight: 600 700; src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('Helvetica Bold'); ascent-override: 96.88%; descent-override: 24.12%; line-gap-override: 0%; size-adjust: 101.1%; }
@@ -1481,9 +1482,14 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       }, { passive: true });
       ctaWrap.addEventListener('mouseleave', function () { inside = false; mx = 0; my = 0; if (!raf) raf = requestAnimationFrame(settle); });
     }
-    // hue for the fills drifts with the page blobs
-    var hueEl = document.documentElement, hh = 200;
-    (function hueLoop() { hh = (hh + 0.05) % 360; hueEl.style.setProperty('--ch', hh.toFixed(1)); requestAnimationFrame(hueLoop); })();
+    // hue for the fills drifts with the page blobs. The value is set on the bubble rather than the page root, so a frame restyles the bubble
+    // alone, and the drift pauses while the bubble is out of view or the page is hidden, resuming from the hue it reached.
+    var hueEl = ctaWrap, hh = 200, hueRaf = null, hueSeen = true;
+    var hueLoop = function () { hh = (hh + 0.05) % 360; hueEl.style.setProperty('--ch', hh.toFixed(1)); hueRaf = requestAnimationFrame(hueLoop); };
+    var hueSync = function () { var run = hueSeen && !document.hidden; if (run && !hueRaf) hueRaf = requestAnimationFrame(hueLoop); else if (!run && hueRaf) { cancelAnimationFrame(hueRaf); hueRaf = null; } };
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { hueSeen = es[es.length - 1].isIntersecting; hueSync(); }, { threshold: 0 }).observe(hueEl);
+    document.addEventListener('visibilitychange', hueSync);
+    hueLoop();
   }
   // The Email pill copies the address: the clipboard API where the page is a secure context, else a hidden textarea and execCommand('copy'), as on the
   // LAN review server; the tooltip confirms for 1.6 s and a polite live region announces it. When both fail the tooltip holds the address, selected.
