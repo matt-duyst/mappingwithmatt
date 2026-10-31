@@ -8,7 +8,7 @@ runs axe and the link sweep and skips every performance measurement, which is wh
 
     python3 tools/audit/run.py http://localhost:8000 --out tools/audit/audit.json
 """
-import argparse, base64, collections, glob, html, json, os, re, shutil, subprocess, sys, threading, time, urllib.request
+import argparse, base64, collections, glob, html, json, os, re, shutil, subprocess, sys, threading, time, urllib.parse, urllib.request
 try:
     import websocket
 except ImportError:
@@ -160,6 +160,15 @@ def errors(c):
            [f"HTTP {e['params']['response']['status']} {e['params']['response']['url']}" for e in c.ev if e.get('method') == 'Network.responseReceived' and e['params']['response']['status'] >= 400]
 
 
+def glyphs(c):
+    """Every label glyph range the page fetched from the site, with its HTTP status, in the order first requested."""
+    seen = {}
+    for e in c.ev:
+        if e.get('method') == 'Network.responseReceived' and '/vendor/glyphs/' in e['params']['response']['url']:
+            seen.setdefault(urllib.parse.unquote(e['params']['response']['url'].split('/vendor/glyphs/', 1)[1]), e['params']['response']['status'])
+    return [f'{status} {path}' for path, status in seen.items()]
+
+
 def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=False):
     h, dpr = WIDTHS[width]
     if profile == 'throttled': dpr = 1
@@ -197,7 +206,7 @@ def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=Fal
         if profile == 'local':
             c.send('Runtime.evaluate', {'expression': axe_src})
             out['axe'] = json.loads(c.js("axe.run(document, {resultTypes: ['violations']}).then(r => JSON.stringify(r.violations.map(v => ({id: v.id, impact: v.impact, nodes: v.nodes.map(n => n.target.join(' '))}))))", wait=True))
-        out['errors'] = errors(c)
+        out['errors'] = errors(c); out['glyphs'] = glyphs(c)
     finally:
         c.close()
     return out
@@ -288,6 +297,8 @@ def main():
                         r = audit_page(args, path, width, theme, profile, port, axe_src)
                         runs.append(r)
                         say(f"{path} {width} {theme} {profile} run {k + 1}: cold {r['cold']['requests']} req {r['cold']['bytes'] // 1024} KB FCP {r['cold']['fcp']} LCP {r['cold']['lcp']} TBT {r['cold']['tbt']} CLS {r['cold']['cls']} | scroll {r['scroll']['requests']} req {r['scroll']['bytes'] // 1024} KB TBT {r['scroll']['tbt']} CLS {r['scroll']['cls']}" + (f" | axe {len(r['axe'])}" if 'axe' in r else '') + (f" | errors {len(r['errors'])}" if r['errors'] else ''), flush=True)
+                        for line in r['errors']: say('    error:', line)
+                        say('    glyph ranges:', ', '.join(r['glyphs']) or 'none')
                     entry[profile] = {'cold': median_of([r['cold'] for r in runs]), 'scroll': median_of([r['scroll'] for r in runs]),
                                       'runs': [{'cold': r['cold'], 'scroll': r['scroll']} for r in runs],
                                       'errors': [e for r in runs for e in r['errors']], 'overflow': any(r['overflow'] for r in runs)}
