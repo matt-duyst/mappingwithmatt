@@ -1255,16 +1255,20 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     var W = window.innerWidth, Hh = window.innerHeight, hue = 210, lastY = window.scrollY;
     window.addEventListener('resize', function () { W = window.innerWidth; Hh = window.innerHeight; });
     window.addEventListener('scroll', function () { var dy = window.scrollY - lastY; lastY = window.scrollY; hue += dy * 0.08; }, { passive: true });
+    // ?clock=<ms>, for review only, pins the loop's clock at that many milliseconds and seeds its random layout, so a capture is reproducible;
+    // without it the loop runs on the frame time and Math.random as before
+    var clock = params.has('clock') ? Math.max(0, parseFloat(params.get('clock')) || 0) : null, seed = 1;
+    var rand = clock === null ? Math.random : function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
     var st = discs.map(function (c, i) {
-      return { ax: 0.15 + Math.random() * 0.7, ay: 0.15 + Math.random() * 0.7, rx: 0.14 + Math.random() * 0.2, ry: 0.12 + Math.random() * 0.18,
-               s1: 0.00014 + Math.random() * 0.0001, s2: 0.0001 + Math.random() * 0.00008, p1: Math.random() * 6.28, p2: Math.random() * 6.28,
-               gr: 0.35 + Math.random() * 0.45, gp: Math.random() * 6.28, hoff: i * 40 + Math.random() * 30 };
+      return { ax: 0.15 + rand() * 0.7, ay: 0.15 + rand() * 0.7, rx: 0.14 + rand() * 0.2, ry: 0.12 + rand() * 0.18,
+               s1: 0.00014 + rand() * 0.0001, s2: 0.0001 + rand() * 0.00008, p1: rand() * 6.28, p2: rand() * 6.28,
+               gr: 0.35 + rand() * 0.45, gp: rand() * 6.28, hoff: i * 40 + rand() * 30 };
     });
     var t0 = null;
     var ease = function (w) { return w < 0.5 ? 2 * w * w : 1 - Math.pow(-2 * w + 2, 2) / 2; };
     var loop = function (now) {
       if (t0 === null) t0 = now;
-      var t = now - t0;
+      var t = clock === null ? now - t0 : clock;
       var g = ease(0.5 - 0.5 * Math.cos((t % 18000) / 18000 * 6.2832)); // 18 s breath: apart, together, apart
       var cx = W * (0.5 + 0.2 * Math.sin(t * 0.00016)), cy = Hh * (0.45 + 0.16 * Math.cos(t * 0.00013));
       var land = window.mwmLand, pt = land && land.pointer, pr = land ? land.radius : 0, mx = 0, my = 0;
@@ -1302,7 +1306,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
         c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1));
         c.setAttribute('fill', 'hsl(' + hv + ' 82% 60%)');
       });
-      if (paintName) paintName(st, now, hue);
+      if (paintName) paintName(st, clock === null ? now : clock, hue);
       if (window.mwmRing === 'halo' || window.mwmRing === 'hairhalo') { var hsum = 0; for (var hq = 0; hq < st.length; hq++) hsum += +st[hq].hue; var mk2 = document.getElementById('stop-marker'); if (mk2) mk2.style.setProperty('--halo', 'hsl(' + Math.round(hsum / st.length) + ' 82% 60% / 0.25)'); }
       requestAnimationFrame(loop);
     };
