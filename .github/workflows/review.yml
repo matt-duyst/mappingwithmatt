@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python3 -m pip install websocket-client
+      - run: python3 -m pip install websocket-client pillow
       # The tools drive Google Chrome. The workstation runs 156.0.8078.76, which Google no longer serves for Linux; this pins the same
       # 156.0.8078 branch at the build Google's package pool carries, and fails if the installed version differs.
       - name: Chrome
@@ -95,7 +95,19 @@ jobs:
           set -o pipefail
           python3 tools/audit/run.py http://localhost:8000 --pages / --software --chrome "$CHROME" --out out/audit.json
           # the relative TBT gate: this runner has no GPU, so TBT is held to the CI baseline's own spread (owner-approved)
-          python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json --gate=relative | tee out/compare.txt
+          # owner-approved for this branch: cold bytes may rise 15 percent over the CI baseline instead of 10
+          echo "Byte allowance 15 percent: section three record and reading type, owner-approved 2026-10-30" >> "$GITHUB_STEP_SUMMARY"
+          python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json --gate=relative --bytes-allowance=0.15 | tee out/compare.txt
+      - name: Contact band parity
+        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
+        env:
+          PARITY_BEFORE: 45fc27e   # the commit before the contact band's hue moved off the page root
+        run: |
+          git fetch -q --depth 1 origin "$PARITY_BEFORE" && git worktree add -q before FETCH_HEAD
+          (cd before && python3 -m http.server 8002 >/dev/null 2>&1 &)
+          sleep 1; curl -sf -o /dev/null http://localhost:8002/
+          python3 tools/audit/parity.py http://localhost:8002/ http://localhost:8000/ --chrome "$CHROME" --out out
+          cat out/parity.md >> "$GITHUB_STEP_SUMMARY"
       - name: Load-time trace
         if: ${{ !cancelled() && env.BASELINE_REF == '' }}
         run: |

@@ -19,3 +19,10 @@ def tbt_failure(median, base_max, mode='absolute'):
     if base_max is None: return f"{median} ms has no baseline spread to compare with"
     limit = base_max * 1.25
     return f"{median} ms is more than 25% over the baseline's maximum {base_max}" if median > limit else None
+
+
+def bytes_failure(cold, base, allowance=0.10):
+    """The byte gate: fail when cold bytes rise more than the allowance (10 percent unless a review passes another) over the baseline."""
+    if not base or cold is None: return None
+    limit = round(base * (1 + allowance), 6)   # rounded, so 15 percent of 100,000 is 115,000 and not a float a hair below it
+    return f"{cold} is more than {allowance:.0%} over the baseline {base}" if cold > limit else None

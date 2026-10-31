@@ -4,7 +4,8 @@
     python3 tools/audit/review.py URL --chrome BINARY --out DIR
 
 Writes DIR/review.json and DIR/review.md: axe with every fold closed and then open (1440 and 390); Tab order through the About and record
-(1440); the layout at 1440 (container, About columns and characters per line, --justify-min, the Experience grid and paragraph measure, each
+(1440); the reading type at 1440, 1100 and 390 (the lede's and the paragraphs' size and characters per line); the layout at 1440 (container,
+About columns and characters per line, the Experience grid and paragraph measure, each
 entry's tag block width and lines per tag row, the Awards grid, the Education columns); which column holds each About paragraph at 1100, 1280,
 1440 and 1920; whether every pill is visible at 1440, 1100 and 390; and whether the two longest pills stay inside their entry at 390. Exits 1 on
 any axe violation, console error, overflow, a paragraph in the wrong column, a hidden pill, or a pill outside its entry.
@@ -38,9 +39,13 @@ LAYOUT = """JSON.stringify((() => { const r = el => el.getBoundingClientRect(), 
   const tags = $$('#band-experience .chapter, #band-education .chapter').map(ch => ({ entry: ch.querySelector('.ch-place').textContent, paragraph: Math.round(r(ch.querySelector('.entry-body p')).width), block: Math.round(r(ch.querySelector('.tags')).width),
     rows: [...ch.querySelectorAll('.tag-row')].map(row => ({ label: row.querySelector('.tag-label').textContent, pills: row.querySelectorAll('.tag').length, lines: new Set([...row.querySelectorAll('.tag')].map(p => Math.round(r(p).top))).size })) }));
   return { container: Math.round(r($('#record')).width), aboutWidth: Math.round(r($('#about')).width), aboutColumns: cols, charsPerLine: cols.map(w => Math.round(w / (w55 / 55))),
-    justifyMin: getComputedStyle(document.documentElement).getPropertyValue('--justify-min').trim(), experienceGrid: getComputedStyle($('#band-experience .chapter')).gridTemplateColumns, tags,
+    experienceGrid: getComputedStyle($('#band-experience .chapter')).gridTemplateColumns, tags,
     awardsGrid: getComputedStyle($('#band-awards .chapter')).gridTemplateColumns, awardsEntry: getComputedStyle($('#band-awards .aw-entry')).gridTemplateColumns,
     educationColumns: $$('#band-education .chapter').map(c => Math.round(r(c).width)) }; })())"""
+TYPE = """JSON.stringify((() => { const per = el => { const cs = getComputedStyle(el), s = document.createElement('span'); s.textContent = 'x'.repeat(40);
+    s.style.cssText = 'position:absolute;white-space:nowrap;font:' + cs.font + ';letter-spacing:' + cs.letterSpacing; document.body.appendChild(s); const w = s.getBoundingClientRect().width / 40; s.remove();
+    const width = el.getBoundingClientRect().width; return { font: cs.fontFamily.split(',')[0].replace(/"/g, '') + ' ' + cs.fontStyle + ' ' + cs.fontSize + ' / ' + cs.lineHeight, width: Math.round(width), chars: Math.round(width / w) }; };
+  return { lede: per(document.querySelector('.about-lede')), about: per(document.getElementById('about-p2')), entry: per(document.querySelector('#rec-grc .entry-body p')) }; })())"""
 HIDDEN = """JSON.stringify([...document.querySelectorAll('#record .tag')].filter(p => { const b = p.getBoundingClientRect(); return p.hidden || b.width === 0 || b.height === 0; }).map(p => p.textContent).concat([document.querySelectorAll('#record .tag').length + ' pills']))"""
 KEYS = """(() => { const a = document.activeElement; if (!a || !(a.closest('#about') || a.closest('#record'))) return 'OUT';
   return a.tagName === 'A' ? 'link: ' + a.textContent.trim().slice(0, 30) : a.classList.contains('award') ? 'entry: ' + a.querySelector('.entry-title').textContent.trim().slice(0, 30) : 'button: ' + (a.getAttribute('aria-label') || a.textContent.trim()); })()"""
@@ -52,10 +57,11 @@ for w in (1100, 1280, 1440, 1920, 390):
     try:
         if w >= 600:
             res['columns'][w] = json.loads(c.js(COLUMNS))
-            if w > 1064 and not res['columns'][w]['ok']: problems.append(f'{w}: About paragraphs are not 1 to 3 left and 4 to 6 right')
+            if w > 640 and not res['columns'][w]['ok']: problems.append(f'{w}: About paragraphs are not 1 to 3 left and 4 to 6 right')
         if w in (1440, 1100, 390):
             h = json.loads(c.js(HIDDEN)); res['hiddenPills'][w] = h; problems += [f'{w}: pill "{t}" is not visible' for t in h[:-1]]
         if w == 1440: res['layout'] = json.loads(c.js(LAYOUT))
+        if w in (1440, 1100, 390): res.setdefault('type', {})[w] = json.loads(c.js(TYPE))
         if w in (1440, 390):
             closed = axe(c); c.js(OPEN); c.pump(0.8); opened = axe(c); res['axe'][w] = {'closed': closed, 'open': opened}
             problems += [f'{w} axe {v["id"]} on {", ".join(v["nodes"][:3])}' for v in closed + opened]
@@ -82,10 +88,12 @@ for w in (1100, 1280, 1440, 1920, 390):
     finally: c.close()
 res['problems'] = problems
 json.dump(res, open(os.path.join(out, 'review.json'), 'w'), indent=1)
-L = res.get('layout', {}); md = ['## Review', '', f"Container {L.get('container')} px; About columns {L.get('aboutColumns')} px at {L.get('charsPerLine')} characters per line; --justify-min {L.get('justifyMin')}.",
+L = res.get('layout', {}); md = ['## Review', '', f"Container {L.get('container')} px; About columns {L.get('aboutColumns')} px at {L.get('charsPerLine')} characters per line.",
      f"Experience grid {L.get('experienceGrid')}; Awards grid {L.get('awardsGrid')} with the entry as {L.get('awardsEntry')}; Education columns {L.get('educationColumns')} px.", '',
      '| Entry | Paragraph | Tag block | data: | methods: | tools: |', '|---|---|---|---|---|---|']
 md += [f"| {t['entry']} | {t['paragraph']} | {t['block']} | " + ' | '.join(f"{x['pills']} pills, {x['lines']} line(s)" for x in t['rows']) + ' |' for t in L.get('tags', [])]
+md += ['', '| Width | Lede | Lede measure | About paragraph | About measure | Entry paragraph | Entry measure |', '|---|---|---|---|---|---|---|'] + [
+    f"| {w} | {t['lede']['font']} | {t['lede']['width']} px, {t['lede']['chars']} ch | {t['about']['font']} | {t['about']['width']} px, {t['about']['chars']} ch | {t['entry']['font']} | {t['entry']['width']} px, {t['entry']['chars']} ch |" for w, t in res.get('type', {}).items()]
 md += ['', '| Width | About columns 1-3 / 4-6 x | holds |', '|---|---|---|'] + [f"| {w} | {v['left']} / {v['right']} | {'yes' if v['ok'] else 'NO'} |" for w, v in res['columns'].items()]
 md += ['', 'Pills not visible: ' + '; '.join(f"{w}: {len(v) - 1} of {v[-1]}" for w, v in res['hiddenPills'].items())]
 md += ['', '| Width | axe closed | axe open |', '|---|---|---|'] + [f"| {w} | {len(v['closed'])} | {len(v['open'])} |" for w, v in res['axe'].items()]

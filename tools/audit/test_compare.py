@@ -1,7 +1,7 @@
 import os, sys, unittest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from trend import trend, tbt_failure
+from trend import trend, tbt_failure, bytes_failure
 
 
 class TrendWording(unittest.TestCase):
@@ -29,6 +29,16 @@ class TbtGate(unittest.TestCase):
 
     def test_relative_mode_fails_without_a_baseline_spread(self):
         self.assertIsNotNone(tbt_failure(10, None, 'relative'))
+
+
+class ByteGate(unittest.TestCase):
+    def test_the_default_allows_ten_percent(self):
+        self.assertIsNone(bytes_failure(110000, 100000))
+        self.assertIsNotNone(bytes_failure(110001, 100000))
+
+    def test_an_approved_allowance_of_fifteen_percent(self):
+        self.assertIsNone(bytes_failure(115000, 100000, 0.15))
+        self.assertIsNotNone(bytes_failure(115001, 100000, 0.15))
 
 
 if __name__ == '__main__':
