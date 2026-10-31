@@ -3,10 +3,10 @@
 
     python3 tools/audit/capture.py URL --chrome BINARY --out DIR
 
-Full page with every fold closed at 1440 and 390 in both schemes; the Experience band at 1440 (dark) at rest and with the Grassroots Carbon
-entry's "Python" pill hovered; the Education band at 1440 (dark); the Awards + fellowships rows at 1440 in both schemes and at 390 (dark); and a
-WebM at 1440 (dark), 15 s, scrolling from the About through the record. Screencast frames are replayed on a canvas and encoded by MediaRecorder
-as VP9.
+The About at 1440 (dark and light), at 1100 (dark), and at 390 (dark) with "keep reading" closed and open; the Grassroots Carbon entry at 1440
+(dark) with "read the rest" open; the full page with every fold closed at 1440 (dark); and a WebM at 1440 (dark), 15 s, scrolling from the
+About through the record. Screencast frames are replayed on a canvas and encoded by MediaRecorder as VP9. The contact band's parity frames
+come from parity.py.
 """
 import base64, json, os, sys, time
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE); from run import Chrome
@@ -34,16 +34,12 @@ def tall(c, w, dpr=1):
     """Make the viewport as tall as the document, so the fixed layers and the lazy parts render in place, and scroll to the top."""
     c.js("scrollTo(0, 0); true"); h = int(c.js("document.documentElement.scrollHeight")); c.send('Emulation.setDeviceMetricsOverride', {'width': w, 'height': min(h, 16000), 'deviceScaleFactor': dpr, 'mobile': w < 600}); c.pump(2.0)
 def hover(c, x, y): c.send('Input.dispatchMouseEvent', {'type': 'mouseMoved', 'x': x, 'y': y}); c.pump(0.4)
-for theme in ('dark', 'light'):
-    for w, h in ((1440, 900), (390, 844)):
-        c = page(w, h, theme)
-        try: tall(c, w); save(c, f'page-folded-{w}-{theme}.png')
-        finally: c.close()
-def band(name, sel, w=1440, h=900, theme='dark', pill=None):
-    """A band alone: the viewport is made as tall as the band, so it renders whole; a pill is hovered after the last scroll so the pointer stays on it."""
+def band(name, sel, w=1440, h=900, theme='dark', pill=None, click=None):
+    """One element alone: the viewport is made as tall as the element, so it renders whole; a control is pressed first if asked."""
     global c_w
     c = page(w, h, theme); c_w = w
     try:
+        if click: c.js(f"document.querySelector({json.dumps(click)}).click(); true"); c.pump(0.8)
         c.send('Emulation.setDeviceMetricsOverride', {'width': w, 'height': int(box(c, sel)['h']) + 80, 'deviceScaleFactor': 1, 'mobile': w < 600}); c.pump(0.8)
         c.js(f"scrollTo(0, {int(box(c, sel)['top']) - 40}); true"); c.pump(0.8)
         if pill:
@@ -51,12 +47,15 @@ def band(name, sel, w=1440, h=900, theme='dark', pill=None):
             hover(c, p['x'], p['y'])
         save(c, name)
     finally: c.close()
-band('experience-1440-dark.png', '#band-experience')
-band('experience-thread-python-1440-dark.png', '#band-experience', pill=('#exp-grc', 'Python'))   # Python is a tag in four roles
-band('education-1440-dark.png', '#band-education')
-band('awards-1440-dark.png', '#band-awards')
-band('awards-1440-light.png', '#band-awards', theme='light')
-band('awards-390-dark.png', '#band-awards', w=390, h=844)
+band('about-1440-dark.png', '#about')
+band('about-1440-light.png', '#about', theme='light')
+band('about-1100-dark.png', '#about', w=1100)
+band('about-390-dark-closed.png', '#about', w=390, h=844)
+band('about-390-dark-open.png', '#about', w=390, h=844, click='#about-more')
+band('entry-grassroots-open-1440-dark.png', '#exp-grc', click='#exp-grc .fold-btn')
+c = page(1440, 900)
+try: tall(c, 1440); save(c, 'page-folded-1440-dark.png')
+finally: c.close()
 # the clip
 c = page(1440, 900); frames = []
 try:
