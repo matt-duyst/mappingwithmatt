@@ -1486,14 +1486,6 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       }, { passive: true });
       ctaWrap.addEventListener('mouseleave', function () { inside = false; mx = 0; my = 0; if (!raf) raf = requestAnimationFrame(settle); });
     }
-    // hue for the fills drifts with the page blobs. The value is set on the bubble rather than the page root, so a frame restyles the bubble
-    // alone, and the drift pauses while the bubble is out of view or the page is hidden, resuming from the hue it reached.
-    var hueEl = ctaWrap, hh = 200, hueRaf = null, hueSeen = true;
-    var hueLoop = function () { hh = (hh + 0.05) % 360; hueEl.style.setProperty('--ch', hh.toFixed(1)); hueRaf = requestAnimationFrame(hueLoop); };
-    var hueSync = function () { var run = hueSeen && !document.hidden; if (run && !hueRaf) hueRaf = requestAnimationFrame(hueLoop); else if (!run && hueRaf) { cancelAnimationFrame(hueRaf); hueRaf = null; } };
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { hueSeen = es[es.length - 1].isIntersecting; hueSync(); }, { threshold: 0 }).observe(hueEl);
-    document.addEventListener('visibilitychange', hueSync);
-    hueLoop();
   }
   // The Email pill copies the address: the clipboard API where the page is a secure context, else a hidden textarea and execCommand('copy'), as on the
   // LAN review server; the tooltip confirms for 1.6 s and a polite live region announces it. When both fail the tooltip holds the address, selected.
