@@ -11,6 +11,10 @@ on:
         description: 'Measure this ref and write tools/audit/baseline-ci.json from it, instead of reviewing'
         required: false
         default: ''
+      parity_ref:
+        description: 'Compare the contact band against this commit (full SHA); a push compares against the branch head before the push'
+        required: false
+        default: ''
 
 jobs:
   review:
@@ -97,12 +101,17 @@ jobs:
           # the relative TBT gate: this runner has no GPU, so TBT is held to the CI baseline's own spread (owner-approved)
           # owner-approved for this branch: cold bytes may rise 15 percent over the CI baseline instead of 10
           echo "Byte allowance 15 percent: section three record and reading type, owner-approved 2026-10-30" >> "$GITHUB_STEP_SUMMARY"
-          python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json --gate=relative --bytes-allowance=0.15 | tee out/compare.txt
+          # owner-approved for this branch: one request over the 10 percent gate, for the self-hosted Fraunces italic
+          echo "Request allowance 1: self-hosted Fraunces italic for the About's opening line, owner-approved 2026-10-31" >> "$GITHUB_STEP_SUMMARY"
+          python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json --gate=relative --bytes-allowance=0.15 --requests-allowance=1 | tee out/compare.txt
       - name: Contact band parity
         if: ${{ !cancelled() && env.BASELINE_REF == '' }}
         env:
-          PARITY_BEFORE: 45fc27ed9f31eae981f3aebf195b6611081a11a1   # 45fc27e, the commit before the contact band's hue moved off the page root
+          PARITY_BEFORE: ${{ inputs.parity_ref || github.event.before }}
         run: |
+          # a new branch's first push has no previous head (all zeros), and a manual run without parity_ref has none either
+          if [ -z "$PARITY_BEFORE" ] || [ -z "${PARITY_BEFORE//0/}" ]; then echo "Contact band parity: no previous head to compare against, skipped" >> "$GITHUB_STEP_SUMMARY"; exit 0; fi
+          echo "Contact band parity against ${PARITY_BEFORE::7}" >> "$GITHUB_STEP_SUMMARY"
           git fetch -q --depth 1 origin "$PARITY_BEFORE" && git worktree add -q before FETCH_HEAD
           (cd before && python3 -m http.server 8002 >/dev/null 2>&1 &)
           sleep 1; curl -sf -o /dev/null http://localhost:8002/
