@@ -5,7 +5,8 @@
 
 The About at 1440 (dark and light), at 1100 (dark), and at 390 (dark) with "keep reading" closed and open; the Grassroots Carbon entry at 1440
 (dark) with "read the rest" open; the full page with every fold closed at 1440 (dark); the opening line and the mark under it at 1440 (dark)
-with the mark's color cycle held at 0 s and at 16 s, each with the three stops' computed colors in mark.json; and a WebM at 1440 (dark), 15 s, scrolling from the
+with the mark's color cycle held at 0 s and at 16 s, each with the three stops' computed colors in mark.json; the map card after the map has flown to a stop, dark and light
+(with --card-only and --label, that pair alone, for another serving); and a WebM at 1440 (dark), 15 s, scrolling from the
 About through the record. Screencast frames are replayed on a canvas and encoded by MediaRecorder as VP9. The contact band's parity frames
 come from parity.py.
 """
@@ -15,7 +16,8 @@ args = sys.argv[1:]
 def opt(name, default=None):
     if name not in args: return default
     i = args.index(name); v = args[i + 1]; del args[i:i + 2]; return v
-chrome = opt('--chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'); out = opt('--out', os.path.join(HERE, 'captures')); root = args[0] if args else 'http://localhost:8000/'
+chrome = opt('--chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'); out = opt('--out', os.path.join(HERE, 'captures')); label = opt('--label', 'after')
+card_only = '--card-only' in args; args = [x for x in args if x != '--card-only']; root = args[0] if args else 'http://localhost:8000/'
 os.makedirs(out, exist_ok=True); LIGHT = "(function f() { if (document.documentElement) document.documentElement.setAttribute('data-theme', 'light'); else setTimeout(f, 0); })();"
 def page(w, h, theme='dark', dpr=1):
     c = Chrome(chrome, 9991, os.path.join(HERE, '.tmp', 'capture'), w, h, True)
@@ -48,6 +50,15 @@ def band(name, sel, w=1440, h=900, theme='dark', pill=None, click=None):
             hover(c, p['x'], p['y'])
         save(c, name)
     finally: c.close()
+def card(theme):
+    """The map card after the map has flown to a stop: the record's "Show UCLA on the map" button, then 6 s for the flight and the card."""
+    c = page(1440, 900, theme)
+    try:
+        c.js("document.querySelector('.on-map[data-stop=\"1\"]').click(); true"); c.pump(6.0)
+        b = box(c, '#card'); save(c, f'map-card-after-flight-1440-{theme}-{label}.png', (b['x'] - 8, b['top'] - 8, b['w'] + 16, b['h'] + 16))
+    finally: c.close()
+card('dark'); card('light')
+if card_only: sys.exit(0)
 band('about-1440-dark.png', '#about')
 band('about-1440-light.png', '#about', theme='light')
 band('about-1100-dark.png', '#about', w=1100)

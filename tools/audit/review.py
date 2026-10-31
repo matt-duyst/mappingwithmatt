@@ -21,10 +21,13 @@ chrome = opt('--chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google 
 os.makedirs(out, exist_ok=True); AXE = open(os.path.join(HERE, 'vendor', 'axe.min.js'), encoding='utf-8').read()
 AXE_RUN = "axe.run(document, {resultTypes: ['violations']}).then(r => JSON.stringify(r.violations.map(v => ({id: v.id, impact: v.impact, nodes: v.nodes.map(n => n.target.join(' ') + n.any.filter(a => a.data && a.data.contrastRatio).map(a => ` (${a.data.fgColor} on ${a.data.bgColor}, ${a.data.contrastRatio}:1)`).join(''))}))))"
 OPEN = "document.querySelectorAll('.fold-btn').forEach(b => { if (b.getAttribute('aria-expanded') !== 'true') b.click(); }); true"
-def session(w, h):
+LIGHT = "(function f() { if (document.documentElement) document.documentElement.setAttribute('data-theme', 'light'); else setTimeout(f, 0); })();"
+def session(w, h, theme='dark'):
     c = Chrome(chrome, 9990, os.path.join(HERE, '.tmp', f'review-{w}'), w, h, True)
     for m in ('Page.enable', 'Runtime.enable', 'Log.enable', 'Network.enable'): c.send(m)
     c.send('Emulation.setDeviceMetricsOverride', {'width': w, 'height': h, 'deviceScaleFactor': 1, 'mobile': w < 600})
+    c.send('Emulation.setEmulatedMedia', {'features': [{'name': 'prefers-color-scheme', 'value': theme}]})
+    if theme == 'light': c.send('Page.addScriptToEvaluateOnNewDocument', {'source': LIGHT})
     c.send('Page.navigate', {'url': root}); t0 = time.time()
     while time.time() - t0 < 40 and not c.js("performance.getEntriesByName('hero-ready').length > 0"): c.pump(0.2)
     c.pump(1.5); return c
@@ -70,6 +73,10 @@ KEYS = """(() => { const a = document.activeElement; if (!a || !(a.closest('#abo
   return a.tagName === 'A' ? 'link: ' + a.textContent.trim().slice(0, 30) : a.classList.contains('award') ? 'entry: ' + a.querySelector('.entry-title').textContent.trim().slice(0, 30) : 'button: ' + (a.getAttribute('aria-label') || a.textContent.trim()); })()"""
 EXPECT = """JSON.stringify([...document.querySelectorAll('#about a, #about button, #record a, #record button, #record [tabindex="0"]')].filter(e => e.offsetParent && e.tabIndex >= 0)
   .map(a => a.tagName === 'A' ? 'link: ' + a.textContent.trim().slice(0, 30) : a.classList.contains('award') ? 'entry: ' + a.querySelector('.entry-title').textContent.trim().slice(0, 30) : 'button: ' + (a.getAttribute('aria-label') || a.textContent.trim())))"""
+STOP = """(() => { const a = document.activeElement; if (!a || a === document.body || a === document.documentElement) return 'null';
+  const s = a.closest('section[id], nav[id], header, footer, [id="rt-app"], #curtain'), el = a.tagName.toLowerCase() + (a.id ? '#' + a.id : '') + (a.getAttribute('role') ? '[role=' + a.getAttribute('role') + ']' : '');
+  const path = []; for (let e = a; e && e !== document.body; e = e.parentElement) path.push(e.tagName + [...e.parentElement.children].indexOf(e));
+  return JSON.stringify({ key: path.join('/'), element: el, section: s ? (s.id ? (s.tagName.toLowerCase() === 'section' ? '' : s.tagName.toLowerCase()) + '#' + s.id : s.tagName.toLowerCase()) : '(none)' }); })()"""
 res = {'columns': {}, 'hiddenPills': {}, 'axe': {}}; problems = []
 for w in (1100, 1180, 1280, 1440, 1920, 390):
     c = session(w, 844 if w < 600 else 900)
@@ -83,14 +90,20 @@ for w in (1100, 1180, 1280, 1440, 1920, 390):
         if w == 1440: res['layout'] = json.loads(c.js(LAYOUT))
         if w in (1100, 1180, 1280, 1440, 390): res.setdefault('type', {})[w] = json.loads(c.js(TYPE))
         if w in (1440, 390):
-            closed = axe(c); c.js(OPEN); c.pump(0.8); opened = axe(c); res['axe'][w] = {'closed': closed, 'open': opened}
-            problems += [f'{w} axe {v["id"]} on {", ".join(v["nodes"][:3])}' for v in closed + opened]
-            c.js("location.replace(location.pathname); true"); c.pump(4.0)
-            land = json.loads(c.js(LANDING, wait=True)); res.setdefault('landing', {})[w] = land; problems += [f"{w}: {l['label']} lands at {l['top']} px" for l in land if not l['ok']]
-            rm = json.loads(c.js(RAIL, wait=True)); res.setdefault('rail', {})[w] = rm
-            problems += [f"{w}: rail shows {r['active']} at {r['section']}" for r in rm['rail'] if w >= 900 and r['active'] != r['expect']] + [f"{w}: {m['chapter']} not lit" for m in rm['markers'] if not m['lit']]
-            after = axe(c); res['axe'][w]['afterLinks'] = after
-            problems += [f'{w} axe after the link tests {v["id"]} on {", ".join(v["nodes"][:3])}' for v in after]
+          for theme in ('dark', 'light'):
+            ct = c if theme == 'dark' else session(w, 844 if w < 600 else 900, 'light'); cell = f'{w} {theme}'
+            try:
+                closed = axe(ct); ct.js(OPEN); ct.pump(0.8); opened = axe(ct); res['axe'][cell] = {'closed': closed, 'open': opened}
+                problems += [f'{cell} axe {v["id"]} on {", ".join(v["nodes"][:3])}' for v in closed + opened]
+                ct.js("location.replace(location.pathname); true"); ct.pump(4.0)
+                # the link tests press every "on the map" button, so the map has flown to every stop before the second axe pass
+                land = json.loads(ct.js(LANDING, wait=True)); res.setdefault('landing', {})[cell] = land; problems += [f"{cell}: {l['label']} lands at {l['top']} px" for l in land if not l['ok']]
+                rm = json.loads(ct.js(RAIL, wait=True)); res.setdefault('rail', {})[cell] = rm
+                problems += [f"{cell}: rail shows {r['active']} at {r['section']}" for r in rm['rail'] if w >= 900 and r['active'] != r['expect']] + [f"{cell}: {m['chapter']} not lit" for m in rm['markers'] if not m['lit']]
+                after = axe(ct); res['axe'][cell]['afterLinks'] = after
+                problems += [f'{cell} axe after the link tests {v["id"]} on {", ".join(v["nodes"][:3])}' for v in after]
+            finally:
+                if ct is not c: ct.close()
         if w == 390:
             res['pillsInside'] = json.loads(c.js("""JSON.stringify(['temperature and vapor pressure deficit (VPD) stress scalars', 'Oil and Gas Methane Partnership (OGMP) and EPA reporting'].map(t => { const p = [...document.querySelectorAll('.tag')].find(x => x.textContent === t);
               const e = p.closest('.chapter').querySelector('.entry'), a = p.getBoundingClientRect(), b = e.getBoundingClientRect(); return { pill: t, right: Math.round(a.right), entryRight: Math.round(b.right), inside: a.right <= b.right + 0.5, lines: Math.round(a.height / 12.6) }; }))"""))
@@ -109,6 +122,20 @@ for w in (1100, 1180, 1280, 1440, 1920, 390):
                 else: walk.append(1)
             walk = [f'({x} stops outside the About and the record)' if isinstance(x, int) else x for x in walk]
             expected = json.loads(c.js(EXPECT)); res['keyboard'] = {'order': order, 'walk': walk, 'matchesDom': order == expected}
+            # the whole page's tab order: every stop from the top of the document until focus leaves the page, with its section and its
+            # accessible name as Chrome's accessibility tree computes it
+            c.js("location.replace(location.pathname); true"); c.pump(4.0); c.js("document.activeElement && document.activeElement.blur(); scrollTo(0, 0); true")
+            full, first = [], None
+            for _ in range(500):
+                for t in ('keyDown', 'keyUp'): c.send('Input.dispatchKeyEvent', {'type': t, 'key': 'Tab', 'code': 'Tab', 'windowsVirtualKeyCode': 9})
+                info = json.loads(c.js(STOP))
+                if info is None or (first is not None and info['key'] == first): break
+                if first is None: first = info['key']
+                oid = c.send('Runtime.evaluate', {'expression': 'document.activeElement'})['result'].get('objectId')
+                try: nodes = c.send('Accessibility.getPartialAXTree', {'objectId': oid, 'fetchRelatives': False}).get('nodes', []); name = next((n.get('name', {}).get('value', '') for n in nodes if not n.get('ignored')), '')
+                except Exception: name = '(no accessibility node)'
+                full.append({'element': info['element'], 'section': info['section'], 'name': name})
+            res['tabOrder'] = full
             if order != expected: problems.append('1440: Tab order differs from DOM order')
         res.setdefault('overflow', {})[w] = c.js('document.documentElement.scrollWidth > document.documentElement.clientWidth')
         if res['overflow'][w]:
@@ -125,11 +152,12 @@ md += [f"| {t['entry']} | {t['paragraph']} | {t['block']} | " + ' | '.join(f"{x[
 md += ['', '| Width | Lede | Lede measure | About paragraph | About measure | Entry paragraph | Entry measure |', '|---|---|---|---|---|---|---|'] + [
     f"| {w} | {t['lede']['font']} | {t['lede']['width']} px, {t['lede']['chars']} ch | {t['about']['font']} | {t['about']['width']} px, {t['about']['chars']} ch | {t['entry']['font']} | {t['entry']['width']} px, {t['entry']['chars']} ch |" for w, t in res.get('type', {}).items()]
 md += ['', '| Width | Opening line | Lines | Text width | Box | Container |', '|---|---|---|---|---|---|'] + [f"| {w} | {v['font']} | {v['lines']} | {v['textWidth']} | {v['boxWidth']} | {v['container']} |" for w, v in res.get('lede', {}).items()]
-md += ['', '| Width | Link | Target | Top | Lands |', '|---|---|---|---|---|'] + [f"| {w} | {l['label']} | {l['target']} | {l['top']} | {'yes' if l['ok'] else 'NO'} |" for w, ls in res.get('landing', {}).items() for l in ls]
-md += ['', '| Width | Rail at each section (page order) | Markers lit |', '|---|---|---|'] + [f"| {w} | " + ', '.join(f"{r['section']} at {r['y']}: {r['active']}" for r in v['rail']) + ' | ' + ', '.join(f"{m['chapter']} {'yes' if m['lit'] else 'NO'}" for m in v['markers']) + ' |' for w, v in res.get('rail', {}).items()]
+md += ['', '| Cell | Link | Target | Top | Lands |', '|---|---|---|---|---|'] + [f"| {w} | {l['label']} | {l['target']} | {l['top']} | {'yes' if l['ok'] else 'NO'} |" for w, ls in res.get('landing', {}).items() for l in ls]
+md += ['', '| Cell | Rail at each section (page order) | Markers lit |', '|---|---|---|'] + [f"| {w} | " + ', '.join(f"{r['section']} at {r['y']}: {r['active']}" for r in v['rail']) + ' | ' + ', '.join(f"{m['chapter']} {'yes' if m['lit'] else 'NO'}" for m in v['markers']) + ' |' for w, v in res.get('rail', {}).items()]
 md += ['', '| Width | About columns 1-3 / 4-6 x | holds |', '|---|---|---|'] + [f"| {w} | {v['left']} / {v['right']} | {'yes' if v['ok'] else 'NO'} |" for w, v in res['columns'].items()]
 md += ['', 'Pills not visible: ' + '; '.join(f"{w}: {len(v) - 1} of {v[-1]}" for w, v in res['hiddenPills'].items())]
-md += ['', '| Width | axe closed | axe open | axe after the link tests |', '|---|---|---|---|'] + [f"| {w} | {len(v['closed'])} | {len(v['open'])} | {len(v.get('afterLinks', []))} |" for w, v in res['axe'].items()]
+md += ['', '| Cell | axe closed | axe open | axe after the link tests |', '|---|---|---|---|'] + [f"| {w} | {len(v['closed'])} | {len(v['open'])} | {len(v.get('afterLinks', []))} |" for w, v in res['axe'].items()]
+md += ['', f"Full tab order at 1440, dark: {len(res.get('tabOrder', []))} stops", ''] + [f"{i + 1}. {t['element']} in {t['section']}: {t['name'] or '(no name)'}" for i, t in enumerate(res.get('tabOrder', []))]
 md += ['', f"Keyboard at 1440: {len(res.get('keyboard', {}).get('order', []))} stops, matches DOM order: {res.get('keyboard', {}).get('matchesDom')}.", '', 'Tab order from the About to the end of the record:', '', *[f"{i + 1}. {x}" for i, x in enumerate(res.get('keyboard', {}).get('walk', []))], '',
        f"Pills at 390: " + '; '.join(f"{p['pill']} {'inside' if p['inside'] else 'OUTSIDE'} ({p['lines']} line(s))" for p in res.get('pillsInside', [])), '', 'Problems: ' + ('none' if not problems else '; '.join(problems))]
 open(os.path.join(out, 'review.md'), 'w').write('\n'.join(md) + '\n'); print('\n'.join(md))

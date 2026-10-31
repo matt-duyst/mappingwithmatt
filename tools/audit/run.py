@@ -169,7 +169,7 @@ def glyphs(c):
     return [f'{status} {path}' for path, status in seen.items()]
 
 
-def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=False):
+def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=False, cold_only=False):
     h, dpr = WIDTHS[width]
     if profile == 'throttled': dpr = 1
     c = Chrome(args.chrome, port, os.path.join(args.tmp, f'prof-{width}-{theme}-{profile}'), width, h, args.software)
@@ -199,6 +199,7 @@ def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=Fal
         out['cold'] = json.loads(c.js(METRICS)); out['cold'].update(network(c))
         if path == '/':
             out['hero'] = json.loads(c.js("JSON.stringify(Object.fromEntries(performance.getEntriesByType('mark').filter(m => m.name.startsWith('hero-')).map(m => [m.name.slice(5), Math.round(m.startTime)])))"))
+        if cold_only: out['errors'] = errors(c); return out   # the paired timing runs measure the cold load alone
         wait = scroll_through(c); c.pump(8.0)
         out['scroll'] = json.loads(c.js(METRICS)); out['scroll'].update(network(c)); out['scroll'].update(wait)
         if wait: out['scroll'].update(map_share(c))

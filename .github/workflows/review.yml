@@ -1,7 +1,9 @@
 name: review
 
 # Every browser check, measurement and capture for a branch under review, on a hosted runner. Pushes to any branch but main run the
-# review; a manual run with baseline_ref measures that ref instead and publishes tools/audit/baseline-ci.json as an artifact.
+# review; a manual run with baseline_ref measures that ref instead and publishes tools/audit/baseline-ci.json as an artifact; a manual run
+# with pair_refs times two commits against each other on this one runner (and compares the hero at a pinned clock); a manual run with
+# live_url checks the map's label glyphs on that site.
 on:
   push:
     branches-ignore: [main]
@@ -15,6 +17,22 @@ on:
         description: 'Compare the contact band against this commit (full SHA); a push compares against the branch head before the push'
         required: false
         default: ''
+      pair_refs:
+        description: 'Two full SHAs, before then after, separated by a space: paired cold timing at 1440, nine runs per side, alternating'
+        required: false
+        default: ''
+      pair_look:
+        description: 'With pair_refs: also compare the hero at ?clock=0, 5000 and 20000 (yes or no; both commits must have the clock parameter)'
+        required: false
+        default: 'yes'
+      pair_noparam:
+        description: 'With pair_refs: also diff a load without the clock parameter, DOM and console at 2 s (yes or no)'
+        required: false
+        default: 'no'
+      live_url:
+        description: 'Check the map label glyphs on this site (full scroll and every stop flight) instead of reviewing'
+        required: false
+        default: ''
 
 jobs:
   review:
@@ -22,6 +40,9 @@ jobs:
     timeout-minutes: 150
     env:
       BASELINE_REF: ${{ inputs.baseline_ref }}
+      PAIR_REFS: ${{ inputs.pair_refs }}
+      LIVE_URL: ${{ inputs.live_url }}
+      MODE: ${{ inputs.baseline_ref != '' && 'baseline' || inputs.pair_refs != '' && 'pair' || inputs.live_url != '' && 'live' || 'review' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -54,7 +75,7 @@ jobs:
           sha=$(git -C base rev-parse --short HEAD)
           (cd base && python3 -m http.server 8001 >/dev/null 2>&1 &)
           sleep 1; curl -sf -o /dev/null http://localhost:8001/
-          python3 tools/audit/run.py http://localhost:8001 --pages / --software --chrome "$CHROME" --out out/audit-base.json
+          python3 tools/audit/run.py http://localhost:8001 --pages / --software --runs 9 --chrome "$CHROME" --out out/audit-base.json
           cp out/audit-base.json tools/audit/baseline-ci.json
           # compare.py exits 1 when a gate fails even as it forces the write; the write itself is what this step checks
           python3 tools/audit/compare.py out/audit-base.json tools/audit/baseline-ci.json --force-baseline "CI baseline: ${BASELINE_REF} at ${sha}, ubuntu-latest, no GPU" || true
@@ -69,35 +90,67 @@ jobs:
           path: out/
           retention-days: 14
 
+      # Paired mode: two commits, each served from its own worktree, timed against each other on this runner
+      - name: Paired timing
+        if: env.MODE == 'pair'
+        env:
+          PAIR_LOOK: ${{ inputs.pair_look }}
+          PAIR_NOPARAM: ${{ inputs.pair_noparam }}
+        run: |
+          set -o pipefail
+          read -r before after <<< "$PAIR_REFS"
+          for side in before after; do ref=${!side}; git fetch -q --depth 1 origin "$ref" && git worktree add -q "$side" FETCH_HEAD; done
+          (cd before && python3 -m http.server 8003 >/dev/null 2>&1 &); (cd after && python3 -m http.server 8004 >/dev/null 2>&1 &)
+          sleep 1; curl -sf -o /dev/null http://localhost:8003/ && curl -sf -o /dev/null http://localhost:8004/
+          b=${before::7}; a=${after::7}
+          python3 tools/audit/paired.py http://localhost:8003 http://localhost:8004 --runs 9 --before-label "$b" --after-label "$a" --chrome "$CHROME" --out out | tee out/paired.txt
+          cat out/paired.md >> "$GITHUB_STEP_SUMMARY"
+          if [ "$PAIR_LOOK" = yes ]; then python3 tools/audit/herolook.py http://localhost:8003 http://localhost:8004 --before-label "$b" --after-label "$a" --chrome "$CHROME" --out out; cat out/hero.md >> "$GITHUB_STEP_SUMMARY"; fi
+          if [ "$PAIR_NOPARAM" = yes ]; then python3 tools/audit/herolook.py http://localhost:8003 http://localhost:8004 --noparam --chrome "$CHROME" --out out; cat out/noparam.md >> "$GITHUB_STEP_SUMMARY"; fi
+          echo "PAIR_NAME=pair-${b}-${a}" >> "$GITHUB_ENV"
+      - if: always() && env.MODE == 'pair'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PAIR_NAME }}
+          path: out/
+          retention-days: 14
+
+      # Live mode: the map's label glyphs on a deployed site
+      - name: Live map glyphs
+        if: env.MODE == 'live'
+        run: |
+          set -o pipefail; python3 tools/audit/glyphcheck.py "$LIVE_URL" --chrome "$CHROME" --out out | tee out/glyphs.txt
+          cat out/glyphs.md >> "$GITHUB_STEP_SUMMARY"
+
       # Review mode
       - name: Serve the site
-        if: env.BASELINE_REF == ''
+        if: env.MODE == 'review'
         run: |
           python3 -m http.server 8000 >/dev/null 2>&1 &
           sleep 1; curl -sf -o /dev/null http://localhost:8000/
       - name: Claims and pills
-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
+        if: ${{ !cancelled() && env.MODE == 'review' }}
         run: set -o pipefail; python3 tools/claims/check.py | tee out/claims.txt
       - name: Copy
-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
+        if: ${{ !cancelled() && env.MODE == 'review' }}
         run: set -o pipefail; python3 tools/claims/copy_check.py http://localhost:8000/ --chrome "$CHROME" | tee out/copy.txt
       - name: Links
-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
+        if: ${{ !cancelled() && env.MODE == 'review' }}
         run: |
           set -o pipefail
           python3 tools/audit/run.py http://localhost:8000 --checks-only --pages / --software --chrome "$CHROME" --out out/checks.json
           python3 tools/audit/compare.py --checks-only out/checks.json | tee out/links.txt
       - name: Axe, keyboard and layout
-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
+        if: ${{ !cancelled() && env.MODE == 'review' }}
         run: python3 tools/audit/review.py http://localhost:8000/ --chrome "$CHROME" --out out
       - name: Justified gaps
-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
+        if: ${{ !cancelled() && env.MODE == 'review' }}
         run: set -o pipefail; python3 tools/audit/gaps.py http://localhost:8000/ --width 1100,1280,1440,1920 --both --chrome "$CHROME" | tee out/gaps.txt
       - name: Audit
-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
+        if: ${{ !cancelled() && env.MODE == 'review' }}
         run: |
           set -o pipefail
-          python3 tools/audit/run.py http://localhost:8000 --pages / --software --chrome "$CHROME" --out out/audit.json
+          python3 tools/audit/run.py http://localhost:8000 --pages / --software --runs 9 --chrome "$CHROME" --out out/audit.json
           # the relative TBT gate: this runner has no GPU, so TBT is held to the CI baseline's own spread (owner-approved)
           # owner-approved for this branch: cold bytes may rise 15 percent over the CI baseline instead of 10
           echo "Byte allowance 15 percent: section three record and reading type, owner-approved 2026-10-30" >> "$GITHUB_STEP_SUMMARY"
@@ -105,7 +158,7 @@ jobs:
           echo "Request allowance 1: self-hosted Fraunces italic for the About's opening line, owner-approved 2026-10-31" >> "$GITHUB_STEP_SUMMARY"
           python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json --gate=relative --bytes-allowance=0.15 --requests-allowance=1 | tee out/compare.txt
       - name: Contact band parity
-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
+        if: ${{ !cancelled() && env.MODE == 'review' }}
         env:
           PARITY_BEFORE: ${{ inputs.parity_ref || github.event.before }}
         run: |
@@ -117,19 +170,26 @@ jobs:
           sleep 1; curl -sf -o /dev/null http://localhost:8002/
           python3 tools/audit/parity.py http://localhost:8002/ http://localhost:8000/ --chrome "$CHROME" --out out
           cat out/parity.md >> "$GITHUB_STEP_SUMMARY"
+          # the map card after a stop flight on the commit compared against, beside the Captures step's own pair
+          python3 tools/audit/capture.py http://localhost:8002/ --card-only --label "before-${PARITY_BEFORE::7}" --chrome "$CHROME" --out out/captures
+      - name: Map glyphs
+        if: ${{ !cancelled() && env.MODE == 'review' }}
+        run: |
+          set -o pipefail; python3 tools/audit/glyphcheck.py http://localhost:8000/ --chrome "$CHROME" --out out | tee out/glyphs.txt
+          cat out/glyphs.md >> "$GITHUB_STEP_SUMMARY"
       - name: Load-time trace
-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
+        if: ${{ !cancelled() && env.MODE == 'review' }}
         run: |
           python3 tools/audit/trace.py http://localhost:8000/ --chrome "$CHROME" --out out
           cat out/trace.md >> "$GITHUB_STEP_SUMMARY"
       - name: Audit tool tests
-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
+        if: ${{ !cancelled() && env.MODE == 'review' }}
         run: python3 -m unittest discover -s tools/audit -p 'test_*.py'
       - name: Captures
-        if: always() && env.BASELINE_REF == ''
+        if: always() && env.MODE == 'review'
         run: python3 tools/audit/capture.py http://localhost:8000/ --chrome "$CHROME" --out out/captures
       - name: Summary
-        if: always() && env.BASELINE_REF == ''
+        if: always() && env.MODE == 'review'
         run: |
           python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
           import os
@@ -145,7 +205,7 @@ jobs:
           print(read('out/review.md'))
           print(f"Artifact: review-{os.environ['GITHUB_SHA'][:7]}")
           PY
-      - if: always() && env.BASELINE_REF == ''
+      - if: always() && env.MODE == 'review'
         uses: actions/upload-artifact@v4
         with:
           name: review-${{ steps.sha.outputs.short }}
