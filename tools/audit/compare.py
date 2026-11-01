@@ -14,7 +14,10 @@ not a gate.
 Fails (exit 1) when, on the throttled profile, requests or bytes rise more than 10 percent (--bytes-allowance=0.15, at most, widens the
 byte gate, and --requests-allowance=N, at most 2, adds N requests, for a review the owner has approved), FCP or LCP rise more than 100 ms,
 CLS exceeds 0.05 or TBT exceeds 50 ms (--gate=absolute, the default, for local runs against the GPU baseline); with --gate=relative, for
-the review workflow's GPU-less runner, TBT fails instead when it exceeds the CI baseline's maximum for the cell by more than 25 percent; and when any axe violation, console error, overflow or broken internal link is present.
+the review workflow's GPU-less runner, TBT fails instead when it exceeds the CI baseline's maximum for the cell by more than 25 percent;
+with --gate=paired, the review workflow's present rule, TBT, FCP and LCP are not gated here at all: a separate job times the branch against
+main on one runner (paired.py --gate), and this comparison keeps them only as report-only trend lines, while requests, bytes and CLS stay
+gated against the stored baseline; and when any axe violation, console error, overflow or broken internal link is present.
 The local profile is printed beside the quoted figure and does not gate.
 """
 import json, os, sys
@@ -24,7 +27,7 @@ from trend import trend as trend_text, tbt_failure, bytes_failure, requests_fail
 HERE = os.path.dirname(os.path.abspath(__file__))
 args = sys.argv[1:]; CHECKS = '--checks-only' in args; WRITE = '--write-baseline' in args; FORCE = None
 GATE = next((a.split('=', 1)[1] for a in args if a.startswith('--gate=')), 'absolute'); args = [a for a in args if not a.startswith('--gate=')]
-if GATE not in ('absolute', 'relative'): sys.exit(f'--gate must be absolute or relative, not {GATE}')
+if GATE not in ('absolute', 'relative', 'paired'): sys.exit(f'--gate must be absolute, relative or paired, not {GATE}')
 ALLOW = float(next((a.split('=', 1)[1] for a in args if a.startswith('--bytes-allowance=')), '0.10')); args = [a for a in args if not a.startswith('--bytes-allowance=')]
 if not 0 < ALLOW <= 0.15: sys.exit('--bytes-allowance must be above 0 and at most 0.15')
 EXTRA = next((a.split('=', 1)[1] for a in args if a.startswith('--requests-allowance=')), '0'); args = [a for a in args if not a.startswith('--requests-allowance=')]
@@ -88,9 +91,9 @@ for path, widths in cur['pages'].items():
                     if metric == 'bytes':
                         why = bytes_failure(q, bq, ALLOW)
                         if why: fails.append(f"{tag}: {why}")
-                    if metric in ('fcp', 'lcp') and bq is not None and q is not None and q > bq + 100: fails.append(f"{tag}: {q} ms is more than 100 ms over the baseline {bq}")
+                    if metric in ('fcp', 'lcp') and GATE != 'paired' and bq is not None and q is not None and q > bq + 100: fails.append(f"{tag}: {q} ms is more than 100 ms over the baseline {bq}")
                     if metric == 'cls' and q > 0.05: fails.append(f"{tag}: {q} is above 0.05")
-                    if metric == 'tbt':
+                    if metric == 'tbt' and GATE != 'paired':
                         why = tbt_failure(q, spread(b, stage, metric)[1], GATE)
                         if why: fails.append(f"{tag}: {why}")
             for v in e.get('axe', []): fails.append(f"{path} {width} {theme}: axe {v['id']} ({v['impact']}) on {', '.join(v['nodes'][:3])}")

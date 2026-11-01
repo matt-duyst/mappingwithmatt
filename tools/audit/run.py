@@ -169,7 +169,7 @@ def glyphs(c):
     return [f'{status} {path}' for path, status in seen.items()]
 
 
-def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=False, cold_only=False):
+def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=False, cold_only=False, extra_src=''):
     h, dpr = WIDTHS[width]
     if profile == 'throttled': dpr = 1
     c = Chrome(args.chrome, port, os.path.join(args.tmp, f'prof-{width}-{theme}-{profile}'), width, h, args.software)
@@ -180,7 +180,7 @@ def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=Fal
         if width < 600: c.send('Emulation.setTouchEmulationEnabled', {'enabled': True})
         c.send('Emulation.setEmulatedMedia', {'features': [{'name': 'prefers-color-scheme', 'value': theme}]})
         if profile == 'throttled': c.send('Network.emulateNetworkConditions', dict(offline=False, **THROTTLE))
-        src = OBSERVERS + (" (function f() { if (document.documentElement) document.documentElement.setAttribute('data-theme', 'light'); else setTimeout(f, 0); })();" if theme == 'light' else '')
+        src = OBSERVERS + (" (function f() { if (document.documentElement) document.documentElement.setAttribute('data-theme', 'light'); else setTimeout(f, 0); })();" if theme == 'light' else '') + extra_src   # extra_src: a test's injected script
         c.send('Page.addScriptToEvaluateOnNewDocument', {'source': src})
         c.send('Page.navigate', {'url': args.root + path}); t0 = time.time()
         # the main page's first visit ends when the first typed phrase completes (the hero-ready mark); other pages when loaded

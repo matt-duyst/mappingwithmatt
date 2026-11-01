@@ -41,6 +41,14 @@ on:
         description: 'Check the map label glyphs on this site (full scroll and every stop flight) instead of reviewing'
         required: false
         default: ''
+      gate_refs:
+        description: 'Two full SHAs, main side then branch side: run only the paired timing gate between them (its A/A and sensitivity tests)'
+        required: false
+        default: ''
+      gate_inject:
+        description: 'With gate_refs: milliseconds of busy-wait to inject after first paint on the branch side only (0 for none)'
+        required: false
+        default: '0'
 
 jobs:
   review:
@@ -50,7 +58,7 @@ jobs:
       BASELINE_REF: ${{ inputs.baseline_ref }}
       PAIR_REFS: ${{ inputs.pair_refs }}
       LIVE_URL: ${{ inputs.live_url }}
-      MODE: ${{ inputs.baseline_ref != '' && 'baseline' || inputs.pair_refs != '' && 'pair' || inputs.live_url != '' && 'live' || 'review' }}
+      MODE: ${{ inputs.baseline_ref != '' && 'baseline' || inputs.pair_refs != '' && 'pair' || inputs.live_url != '' && 'live' || inputs.gate_refs != '' && 'gate' || 'review' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -148,6 +156,15 @@ jobs:
         run: |
           set -o pipefail; python3 tools/audit/glyphcheck.py "$LIVE_URL" --chrome "$CHROME" --out out | tee out/glyphs.txt
           cat out/glyphs.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Live captures
+        if: always() && env.MODE == 'live'
+        run: python3 tools/audit/capture.py "$LIVE_URL" --full-only --label live --chrome "$CHROME" --out out/captures
+      - if: always() && env.MODE == 'live'
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-${{ steps.sha.outputs.short }}
+          path: out/
+          retention-days: 14
 
       # Review mode
       - name: Serve the site
@@ -178,12 +195,14 @@ jobs:
         run: |
           set -o pipefail
           python3 tools/audit/run.py http://localhost:8000 --pages / --software --runs 9 --chrome "$CHROME" --out out/audit.json
-          # the relative TBT gate: this runner has no GPU, so TBT is held to the CI baseline's own spread (owner-approved)
+          # TBT, FCP and LCP are gated by the timing job's paired comparison against main on one runner (owner-approved); here they are only a
+          # trend against the stored baseline, while requests, bytes and CLS stay gated against it
+          echo "Timing: gated by the paired comparison against main in the timing job; the stored-baseline timing below is a report-only trend" >> "$GITHUB_STEP_SUMMARY"
           # owner-approved for this branch: cold bytes may rise 15 percent over the CI baseline instead of 10
           echo "Byte allowance 15 percent: section three record and reading type, owner-approved 2026-10-30" >> "$GITHUB_STEP_SUMMARY"
           # owner-approved for this branch: one request over the 10 percent gate, for the self-hosted Fraunces italic
           echo "Request allowance 1: self-hosted Fraunces italic for the About's opening line, owner-approved 2026-10-31" >> "$GITHUB_STEP_SUMMARY"
-          python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json --gate=relative --bytes-allowance=0.15 --requests-allowance=1 | tee out/compare.txt
+          python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json --gate=paired --bytes-allowance=0.15 --requests-allowance=1 | tee out/compare.txt
       - name: Contact band parity
         if: ${{ !cancelled() && env.MODE == 'review' }}
         env:
@@ -236,5 +255,51 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: review-${{ steps.sha.outputs.short }}
+          path: out/
+          retention-days: 14
+
+  # The timing gate (owner-approved): main's head and the branch's head, served side by side and loaded alternately on this one runner, nine
+  # rounds per cell; TBT, FCP and LCP fail only when at least 8 of 9 rounds show the branch slower and the median difference exceeds the
+  # threshold (tools/audit/trend.py paired_failure). A manual run with gate_refs runs this job alone between two given commits.
+  timing:
+    if: github.event_name == 'push' || inputs.gate_refs != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install websocket-client pillow
+      - name: Chrome
+        id: sha
+        env:
+          CHROME_VERSION: 156.0.8078.79
+        run: |
+          curl -fsSLo chrome.deb "https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb"
+          sudo apt-get update -q && sudo apt-get install -y -q ./chrome.deb && rm chrome.deb
+          google-chrome-stable --version | grep -F "$CHROME_VERSION"
+          echo "CHROME=$(command -v google-chrome-stable)" >> "$GITHUB_ENV"
+          echo "short=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          mkdir -p out
+      - name: Paired timing gate
+        env:
+          GATE_REFS: ${{ inputs.gate_refs }}
+          GATE_INJECT: ${{ inputs.gate_inject }}
+        run: |
+          set -o pipefail
+          if [ -n "$GATE_REFS" ]; then read -r main branch <<< "$GATE_REFS"
+          else git fetch -q --depth 1 origin main && main=$(git rev-parse FETCH_HEAD); branch=$GITHUB_SHA; fi
+          for side in main branch; do ref=${!side}; git fetch -q --depth 1 origin "$ref" && git worktree add -q "gate-$side" FETCH_HEAD; done
+          (cd gate-main && python3 -m http.server 8101 >/dev/null 2>&1 &); (cd gate-branch && python3 -m http.server 8102 >/dev/null 2>&1 &)
+          sleep 1; curl -sf -o /dev/null http://localhost:8101/ && curl -sf -o /dev/null http://localhost:8102/
+          if python3 tools/audit/paired.py http://localhost:8101 http://localhost:8102 --gate --runs 9 --inject-busy-ms "${GATE_INJECT:-0}" \
+            --before-label "main ${main::7}" --after-label "branch ${branch::7}" --chrome "$CHROME" --out out | tee out/gate.txt; then code=0; else code=$?; fi
+          cat out/gate.md >> "$GITHUB_STEP_SUMMARY"
+          exit $code
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timing-${{ steps.sha.outputs.short }}
           path: out/
           retention-days: 14
