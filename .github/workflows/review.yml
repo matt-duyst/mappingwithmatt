@@ -78,9 +78,13 @@ jobs:
           python3 tools/audit/run.py http://localhost:8001 --pages / --software --runs 9 --chrome "$CHROME" --out out/audit-base.json
           cp out/audit-base.json tools/audit/baseline-ci.json
           # compare.py exits 1 when a gate fails even as it forces the write; the write itself is what this step checks
-          python3 tools/audit/compare.py out/audit-base.json tools/audit/baseline-ci.json --force-baseline "CI baseline: ${BASELINE_REF} at ${sha}, ubuntu-latest, no GPU" || true
+          python3 tools/audit/compare.py out/audit-base.json tools/audit/baseline-ci.json --force-baseline "CI baseline: ${BASELINE_REF} at ${sha}, nine runs, ubuntu-latest, no GPU" || true
+          # run.py records the commit of the tools' checkout; the baseline is of the measured ref, so its commit and note name that ref, and the tools' commit is kept beside it
+          python3 -c "import json, os; p = 'tools/audit/baseline-ci.json'; j = json.load(open(p)); m = j['meta']; m['tools_commit'] = os.environ['GITHUB_SHA'][:7]; m['commit'] = '${sha}'; m['note'] = f\"Baseline taken of ${BASELINE_REF} at ${sha} with the tools at {m['tools_commit']} on {m['date']}: software rendering, {m['runs']} throttled run(s) per page with the median quoted.\"; json.dump(j, open(p, 'w'), indent=1)"
           python3 -c "import json, sys; m = json.load(open('tools/audit/baseline-ci.json'))['meta']; sys.exit(0 if m.get('commit') and 'note' in m else 1)"
           cp tools/audit/baseline-ci.json out/baseline-ci.json
+          # the file into the log as well, in numbered chunks with its SHA-256, so it can be committed without downloading the artifact
+          python3 -c "import hashlib; b = open('tools/audit/baseline-ci.json', 'rb').read(); print('BASELINE-SHA256', hashlib.sha256(b).hexdigest(), len(b)); [print(f'BASELINE-CHUNK {i // 3000:05d} ' + b[i:i + 3000].hex()) for i in range(0, len(b), 3000)]"
           echo "CI baseline written from ${BASELINE_REF} at ${sha}; artifact baseline-ci-${sha}" >> "$GITHUB_STEP_SUMMARY"
           echo "BASE_SHA=${sha}" >> "$GITHUB_ENV"
       - if: env.BASELINE_REF != ''
