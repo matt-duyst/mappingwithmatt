@@ -35,7 +35,7 @@ for w, h in ((1440, 900), (390, 844)):
     count = len(sd) + abs(len(x['styles']) - len(y['styles'])); bad += count + len(td)
     md += [f"{w}: {len(x['styles'])} and {len(y['styles'])} elements, {count} with a differing computed style; {len(x['text'].splitlines())} and {len(y['text'].splitlines())} text lines, {len(td)} differing."]
     for p, q in sd[:5]:
-        pp, qq = dict(kv.split(':', 1) for kv in p.split(' ', 1)[1].split(';') if ':' in kv), dict(kv.split(':', 1) for kv in q.split(' ', 1)[1].split(';') if ':' in kv)
-        md.append(f"    {p.split(' ', 1)[0]}: " + ', '.join(f'{k} {pp.get(k)} / {qq.get(k)}' for k in sorted(set(pp) | set(qq)) if pp.get(k) != qq.get(k))[:300])
+        pp, qq = p.split(' ', 1)[1].split(';'), q.split(' ', 1)[1].split(';')
+        md.append(f"    {p.split(' ', 1)[0]}: " + ' | '.join(f'{x} -> {y}' for x, y in zip(pp, qq) if x != y)[:400] + (f' (property counts {len(pp)} and {len(qq)})' if len(pp) != len(qq) else ''))
     md += [f'    {l[:200]}' for l in td[:10]]
 open(os.path.join(a.out, 'domstyle.md'), 'w').write('\n'.join(md) + '\n'); print('\n'.join(md)); sys.exit(1 if bad else 0)
