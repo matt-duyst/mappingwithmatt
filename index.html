@@ -1253,16 +1253,19 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   if (goo && !reduce) {
     var discs = Array.prototype.slice.call(goo.querySelectorAll('circle'));
     var W = window.innerWidth, Hh = window.innerHeight, hue = 210, lastY = window.scrollY;
-    // The blob is drawn on a canvas at half the device resolution, through a copy of the goo filter with its blurs halved to match, and CSS
-    // scales the canvas to the viewport: the same discs, hues and threshold, a quarter of the pixels to blur each frame. The canvas takes the
-    // SVG's id, so the page's #goo rules (fixed, faded in, blended) apply to it; the SVG stays only to hold the filters.
+    // The blob is drawn on a canvas at half the device resolution: s backing pixels per CSS pixel, s = devicePixelRatio / 2. Every distance
+    // the SVG layer gives in CSS pixels (both blur deviations, each disc's radius and position) is multiplied by s, the canvas is sized in CSS
+    // pixels to exactly its backing size divided by s, and the browser scales it up. The threshold, opacity, blend and motion are the SVG's.
+    // The canvas takes the SVG's id, so the page's #goo rules (fixed, faded in, blended) apply to it; the SVG stays only to hold the filters.
     var svgEl = goo, gooCv = document.createElement('canvas'), gx = gooCv.getContext('2d'), gooSrc = document.createElement('canvas'), gs = gooSrc.getContext('2d');
     var gooF = document.getElementById('goo-f'), gooHalf = gooF.cloneNode(true); gooHalf.id = 'goo-half'; gooF.parentNode.appendChild(gooHalf);
     svgEl.removeAttribute('id'); svgEl.setAttribute('style', 'position:absolute;width:0;height:0;overflow:hidden'); svgEl.querySelector('g').style.display = 'none';
     gooCv.id = 'goo'; gooCv.setAttribute('aria-hidden', 'true'); svgEl.parentNode.insertBefore(gooCv, svgEl); goo = gooCv;
     var gk = 0.5, lastReal = null;
+    var hslRgb = function (h) { var l = 0.6, a = 0.82 * Math.min(l, 1 - l), f = function (n) { var k = (n + h / 30) % 12; return 255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))); }; return [f(0), f(8), f(4)]; };
     var gooFit = function () {
       gk = (window.devicePixelRatio || 1) / 2; gooCv.width = gooSrc.width = Math.max(1, Math.round(W * gk)); gooCv.height = gooSrc.height = Math.max(1, Math.round(Hh * gk));
+      gooCv.style.width = (gooCv.width / gk) + 'px'; gooCv.style.height = (gooCv.height / gk) + 'px';
       var bl = gooHalf.querySelectorAll('feGaussianBlur'); bl[0].setAttribute('stdDeviation', (46 * gk).toFixed(2)); bl[1].setAttribute('stdDeviation', (28 * gk).toFixed(2));
     };
     gooFit();
@@ -1315,11 +1318,12 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
         }
         var hv = (((hue + t * 0.005 + d.hoff + warm) % 360 + 360) % 360).toFixed(0);
         d.fx = x; d.fy = y; d.r = r; d.hue = hv;
-        // the SVG discs eased into each new fill over 800 ms; the drawn hue follows its target the same way
-        if (d.sh === undefined) d.sh = +hv; else d.sh += ((((+hv - d.sh) % 360) + 540) % 360 - 180) * Math.min(1, gdt / 800);
+        // the SVG discs ease each new fill in over 800 ms, in RGB, from their initial black; the drawn color follows its target the same way
+        var tc = hslRgb(+hv); if (!d.rgb) d.rgb = [0, 0, 0];
+        for (var ci = 0; ci < 3; ci++) d.rgb[ci] += (tc[ci] - d.rgb[ci]) * Math.min(1, gdt / 800);
       });
       gs.setTransform(1, 0, 0, 1, 0, 0); gs.clearRect(0, 0, gooSrc.width, gooSrc.height);
-      for (var gi2 = 0; gi2 < st.length; gi2++) { var gd = st[gi2]; gs.fillStyle = 'hsl(' + (((gd.sh % 360) + 360) % 360).toFixed(1) + ' 82% 60%)'; gs.beginPath(); gs.arc(gd.fx * gk, gd.fy * gk, gd.r * gk, 0, 6.2832); gs.fill(); }
+      for (var gi2 = 0; gi2 < st.length; gi2++) { var gd = st[gi2]; gs.fillStyle = 'rgb(' + gd.rgb[0].toFixed(1) + ' ' + gd.rgb[1].toFixed(1) + ' ' + gd.rgb[2].toFixed(1) + ')'; gs.beginPath(); gs.arc(gd.fx * gk, gd.fy * gk, gd.r * gk, 0, 6.2832); gs.fill(); }
       gx.setTransform(1, 0, 0, 1, 0, 0); gx.clearRect(0, 0, gooCv.width, gooCv.height); gx.filter = 'url(#goo-half)'; gx.globalAlpha = 0.5; gx.drawImage(gooSrc, 0, 0); gx.filter = 'none'; gx.globalAlpha = 1;
       if (paintName) paintName(st, clock === null ? now : clock, hue);
       if (window.mwmRing === 'halo' || window.mwmRing === 'hairhalo') { var hsum = 0; for (var hq = 0; hq < st.length; hq++) hsum += +st[hq].hue; var mk2 = document.getElementById('stop-marker'); if (mk2) mk2.style.setProperty('--halo', 'hsl(' + Math.round(hsum / st.length) + ' 82% 60% / 0.25)'); }
