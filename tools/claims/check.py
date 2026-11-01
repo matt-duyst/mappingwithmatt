@@ -140,6 +140,10 @@ def main():
             else: sourced += 1
     print(f"{total} sentences with a digit, percent sign or claim word: {sourced} sourced, {unsourced} unsourced, {len(missing)} without a ledger row")
     for page, s in missing: print(f"  {page}: {s}")
+    # report only: ledger rows sourced in part, whose source or evidence still marks a piece "not verified"
+    partial = [(pg, s) for pg, rows in ledger.items() for s, (src, line) in rows.items() if 'not verified' in (src + ' ' + line).lower()]
+    print(f"{len(partial)} ledger row(s) not verified in part")
+    for pg, s in partial: print(f"  {pg}: {s[:110]}")
     known = load_pills(); found = pills(); unpilled = [(r, p) for r, p in found if (r, p) not in known]
     bad = [(r, p, citation_problem(r, *known[(r, p)])) for r, p in found if (r, p) in known]; bad = [x for x in bad if x[2]]
     unverified = [(r, p) for r, p in found if known.get((r, p), ('',))[0] == 'not verified']
