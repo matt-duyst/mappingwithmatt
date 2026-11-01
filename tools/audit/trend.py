@@ -34,3 +34,21 @@ def requests_failure(cold, base, extra=0):
     if not base or cold is None: return None
     limit = round(base * 1.10, 6) + extra
     return f"{cold} is more than 10% over the baseline {base}" + (f" plus {extra} allowed" if extra else '') if cold > limit else None
+
+
+PAIRED_THRESHOLDS = {'cold_tbt': 50, 'fcp': 100, 'lcp': 100}   # ms; scroll TBT's threshold is 10 percent of main's median
+
+
+def paired_failure(diffs, main_values, metric, runs=9, need=8):
+    """The paired timing gate for one cell and metric. diffs are the round-by-round differences, branch minus main, from loads alternated
+    on one runner; main_values are main's own loads, for scroll TBT's threshold. The branch fails only when at least `need` of the `runs`
+    differences show it slower (a one-sided sign test, p about 0.02 for 8 of 9) and the median difference exceeds the metric's threshold.
+    Missing or empty data raises ValueError: it is an error, never a pass. Returns a dict with the counts, the threshold and the decision."""
+    if not diffs or len(diffs) != runs or any(d is None for d in diffs): raise ValueError(f'{metric}: expected {runs} paired differences, got {diffs!r}')
+    if metric == 'scroll_tbt':
+        if not main_values or len(main_values) != runs or any(v is None for v in main_values): raise ValueError(f'{metric}: expected {runs} main values, got {main_values!r}')
+        threshold = 0.10 * sorted(main_values)[runs // 2]
+    elif metric in PAIRED_THRESHOLDS: threshold = PAIRED_THRESHOLDS[metric]
+    else: raise ValueError(f'unknown metric {metric}')
+    slower = sum(1 for d in diffs if d > 0); median = sorted(diffs)[runs // 2]
+    return {'slower': slower, 'median': median, 'threshold': round(threshold, 1), 'fail': slower >= need and median > threshold}
