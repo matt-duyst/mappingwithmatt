@@ -29,6 +29,14 @@ on:
         description: 'With pair_refs: also diff a load without the clock parameter, DOM and console at 2 s (yes or no)'
         required: false
         default: 'no'
+      pair_timing:
+        description: 'With pair_refs: run the paired cold timing (yes or no)'
+        required: false
+        default: 'yes'
+      pair_domstyle:
+        description: 'With pair_refs: compare the rendered text and every computed style at 1440 and 390 (yes or no)'
+        required: false
+        default: 'no'
       live_url:
         description: 'Check the map label glyphs on this site (full scroll and every stop flight) instead of reviewing'
         required: false
@@ -100,6 +108,8 @@ jobs:
         env:
           PAIR_LOOK: ${{ inputs.pair_look }}
           PAIR_NOPARAM: ${{ inputs.pair_noparam }}
+          PAIR_TIMING: ${{ inputs.pair_timing }}
+          PAIR_DOMSTYLE: ${{ inputs.pair_domstyle }}
         run: |
           set -o pipefail
           read -r before after <<< "$PAIR_REFS"
@@ -107,8 +117,14 @@ jobs:
           (cd before && python3 -m http.server 8003 >/dev/null 2>&1 &); (cd after && python3 -m http.server 8004 >/dev/null 2>&1 &)
           sleep 1; curl -sf -o /dev/null http://localhost:8003/ && curl -sf -o /dev/null http://localhost:8004/
           b=${before::7}; a=${after::7}
-          python3 tools/audit/paired.py http://localhost:8003 http://localhost:8004 --runs 9 --before-label "$b" --after-label "$a" --chrome "$CHROME" --out out | tee out/paired.txt
-          cat out/paired.md >> "$GITHUB_STEP_SUMMARY"
+          if [ "$PAIR_TIMING" != no ]; then
+            python3 tools/audit/paired.py http://localhost:8003 http://localhost:8004 --runs 9 --before-label "$b" --after-label "$a" --chrome "$CHROME" --out out | tee out/paired.txt
+            cat out/paired.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ "$PAIR_DOMSTYLE" = yes ]; then
+            if python3 tools/audit/domstyle.py http://localhost:8003 http://localhost:8004 --chrome "$CHROME" --out out; then dom=0; else dom=1; fi
+            cat out/domstyle.md >> "$GITHUB_STEP_SUMMARY"; [ $dom -eq 0 ] || exit 1
+          fi
           if [ "$PAIR_LOOK" = yes ]; then
             # the look check and the blob layer's size, place and color, at device pixel ratio 1 and again at 2 for high-density screens
             for dpr in 1 2; do
