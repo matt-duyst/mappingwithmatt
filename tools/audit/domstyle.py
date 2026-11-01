@@ -5,7 +5,7 @@
 
 At 1440 x 900 and 390 x 844, dark, each serving is loaded with prefers-reduced-motion: reduce, so the typewriter shows its whole text, the
 blob and the mark stay still and nothing moves between the two loads. Once the page is ready it records the body's text and, for every element
-in document order, its tag and id and every computed style property. DIR/domstyle.md reports how many elements and text lines differ and
+in document order, its tag and id and every computed style property, sorted by name, since Chrome lists custom properties in no fixed order. DIR/domstyle.md reports how many elements and text lines differ and
 lists the first differences; the exit code is 1 when anything differs.
 """
 import argparse, difflib, json, os, sys, time
@@ -14,7 +14,7 @@ ap = argparse.ArgumentParser(); ap.add_argument('before'); ap.add_argument('afte
 ap.add_argument('--chrome', default='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'); ap.add_argument('--out', default=os.path.join(HERE, 'domstyle'))
 a = ap.parse_args(); os.makedirs(a.out, exist_ok=True)
 SNAP = """JSON.stringify({ text: document.body.innerText, styles: [...document.querySelectorAll('*')].map(e => { const cs = getComputedStyle(e);
-  return e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + ' ' + [...cs].map(p => p + ':' + cs.getPropertyValue(p)).join(';'); }) })"""
+  return e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + ' ' + [...cs].sort().map(p => p + ':' + cs.getPropertyValue(p)).join(';'); }) })"""
 
 def snap(url, w, h):
     c = Chrome(a.chrome, 9998, os.path.join(HERE, '.tmp', 'domstyle'), w, h, True)
