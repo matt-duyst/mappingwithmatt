@@ -8,7 +8,7 @@ runs axe and the link sweep and skips every performance measurement, which is wh
 
     python3 tools/audit/run.py http://localhost:8000 --out tools/audit/audit.json
 """
-import argparse, base64, collections, glob, html, json, os, re, shutil, subprocess, sys, threading, time, urllib.request
+import argparse, base64, collections, glob, html, json, os, re, shutil, subprocess, sys, threading, time, urllib.parse, urllib.request
 try:
     import websocket
 except ImportError:
@@ -160,7 +160,16 @@ def errors(c):
            [f"HTTP {e['params']['response']['status']} {e['params']['response']['url']}" for e in c.ev if e.get('method') == 'Network.responseReceived' and e['params']['response']['status'] >= 400]
 
 
-def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=False):
+def glyphs(c):
+    """Every label glyph range the page fetched from the site, with its HTTP status, in the order first requested."""
+    seen = {}
+    for e in c.ev:
+        if e.get('method') == 'Network.responseReceived' and '/vendor/glyphs/' in e['params']['response']['url']:
+            seen.setdefault(urllib.parse.unquote(e['params']['response']['url'].split('/vendor/glyphs/', 1)[1]), e['params']['response']['status'])
+    return [f'{status} {path}' for path, status in seen.items()]
+
+
+def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=False, cold_only=False, extra_src=''):
     h, dpr = WIDTHS[width]
     if profile == 'throttled': dpr = 1
     c = Chrome(args.chrome, port, os.path.join(args.tmp, f'prof-{width}-{theme}-{profile}'), width, h, args.software)
@@ -171,7 +180,7 @@ def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=Fal
         if width < 600: c.send('Emulation.setTouchEmulationEnabled', {'enabled': True})
         c.send('Emulation.setEmulatedMedia', {'features': [{'name': 'prefers-color-scheme', 'value': theme}]})
         if profile == 'throttled': c.send('Network.emulateNetworkConditions', dict(offline=False, **THROTTLE))
-        src = OBSERVERS + (" (function f() { if (document.documentElement) document.documentElement.setAttribute('data-theme', 'light'); else setTimeout(f, 0); })();" if theme == 'light' else '')
+        src = OBSERVERS + (" (function f() { if (document.documentElement) document.documentElement.setAttribute('data-theme', 'light'); else setTimeout(f, 0); })();" if theme == 'light' else '') + extra_src   # extra_src: a test's injected script
         c.send('Page.addScriptToEvaluateOnNewDocument', {'source': src})
         c.send('Page.navigate', {'url': args.root + path}); t0 = time.time()
         # the main page's first visit ends when the first typed phrase completes (the hero-ready mark); other pages when loaded
@@ -190,6 +199,7 @@ def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=Fal
         out['cold'] = json.loads(c.js(METRICS)); out['cold'].update(network(c))
         if path == '/':
             out['hero'] = json.loads(c.js("JSON.stringify(Object.fromEntries(performance.getEntriesByType('mark').filter(m => m.name.startsWith('hero-')).map(m => [m.name.slice(5), Math.round(m.startTime)])))"))
+        if cold_only: out['errors'] = errors(c); return out   # the paired timing runs measure the cold load alone
         wait = scroll_through(c); c.pump(8.0)
         out['scroll'] = json.loads(c.js(METRICS)); out['scroll'].update(network(c)); out['scroll'].update(wait)
         if wait: out['scroll'].update(map_share(c))
@@ -197,7 +207,7 @@ def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=Fal
         if profile == 'local':
             c.send('Runtime.evaluate', {'expression': axe_src})
             out['axe'] = json.loads(c.js("axe.run(document, {resultTypes: ['violations']}).then(r => JSON.stringify(r.violations.map(v => ({id: v.id, impact: v.impact, nodes: v.nodes.map(n => n.target.join(' '))}))))", wait=True))
-        out['errors'] = errors(c)
+        out['errors'] = errors(c); out['glyphs'] = glyphs(c)
     finally:
         c.close()
     return out
@@ -254,6 +264,7 @@ def main():
     ap.add_argument('--software', action='store_true', help='render with SwiftShader instead of the GPU (not comparable with the baseline)')
     ap.add_argument('--profiles', default='throttled,local')
     ap.add_argument('--pages', default=','.join(PAGES))
+    ap.add_argument('--themes', default='dark,light', help='color schemes to load, comma separated')
     ap.add_argument('--tmp', default=os.path.join(HERE, '.tmp'))
     ap.add_argument('--port', type=int, default=9950)
     ap.add_argument('--runs', type=int, default=5, help='runs of the throttled profile; the median of each metric is the quoted figure, with the minimum and maximum of the timed metrics beside it')
@@ -272,7 +283,7 @@ def main():
         result['pages'][path] = {}
         for width in WIDTHS:
             result['pages'][path][str(width)] = {}
-            for theme in ('dark', 'light'):
+            for theme in args.themes.split(','):
                 entry = {}
                 if args.checks_only:
                     port += 1
@@ -287,6 +298,8 @@ def main():
                         r = audit_page(args, path, width, theme, profile, port, axe_src)
                         runs.append(r)
                         say(f"{path} {width} {theme} {profile} run {k + 1}: cold {r['cold']['requests']} req {r['cold']['bytes'] // 1024} KB FCP {r['cold']['fcp']} LCP {r['cold']['lcp']} TBT {r['cold']['tbt']} CLS {r['cold']['cls']} | scroll {r['scroll']['requests']} req {r['scroll']['bytes'] // 1024} KB TBT {r['scroll']['tbt']} CLS {r['scroll']['cls']}" + (f" | axe {len(r['axe'])}" if 'axe' in r else '') + (f" | errors {len(r['errors'])}" if r['errors'] else ''), flush=True)
+                        for line in r['errors']: say('    error:', line)
+                        say('    glyph ranges:', ', '.join(r['glyphs']) or 'none')
                     entry[profile] = {'cold': median_of([r['cold'] for r in runs]), 'scroll': median_of([r['scroll'] for r in runs]),
                                       'runs': [{'cold': r['cold'], 'scroll': r['scroll']} for r in runs],
                                       'errors': [e for r in runs for e in r['errors']], 'overflow': any(r['overflow'] for r in runs)}

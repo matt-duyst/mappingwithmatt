@@ -1,0 +1,143 @@
+The Sierra Nevada stands at the eastern edge of the valley where I grew up, on a small citrus farm near Sequoia National Park.
+
+The orchards there depend on snow that falls in those mountains every winter and melts down into the valley months later: a dry winter in the Sierra shows up as a hard summer on the valley floor. Growing up there, you get used to the idea that what changes the land under your feet is often happening somewhere you can't see.
+
+That's probably why satellite imagery hooked me at UCLA. I studied geography and environmental studies there, with minors in Geographic Information Systems (GIS) and English, and spent a lot of those years learning to read land from above: mapping burn severity after the 2018 Mendocino Complex fires from Landsat, looking through cloud and smoke with radar, building terrain out of elevation data. The English minor shaped how I read maps as much as books. Close reading trains you to notice what a text claims and what it quietly leaves out, and maps reward the same attention, because every one is a set of choices about what to show and what to drop. Every map is biased; it makes a visual argument about what matters, and I came out of UCLA caring about that argument as much as the imagery underneath it.
+
+At Yale I wanted to understand what land does to the air: the greenhouse gases it takes in and gives off. My thesis followed the Yangtze River Delta over about two decades as its rice paddies gave way to cities, which matters because both give off methane. I mapped that change from Landsat and global land-cover data, used spatial statistics to see where the methane in the air was clustering, and designed a deep learning model to try to predict it from the land underneath. One summer took me to northern Minnesota, to a flux tower standing over a peat bog in the Marcell Experimental Forest. It measures the methane and carbon dioxide moving between the bog and the air many times a second, and I spent that summer working out what drives those fluxes and forecasting them with time-series and machine learning models. Closer to campus, I flew a drone with a thermal camera over the solar array on Yale's West Campus, reading the temperature of every panel at once to map how efficiently each one was running and flag the ones that might need repair.
+
+My interests have a way of turning into side quests. On a whim I entered a Global Stocktake Climate Datathon ahead of COP 27 and built a tool that takes a sector's emissions under cap-and-trade from 2005 to 2021 and projects them out to 2030: you set how fast its allowances shrink each year and watch what happens to the emissions. Ours was one of four entries the judges recognized, with an honorable mention, alongside teams founded by start-ups and a multi-institutional international group. Not too shabby for a team of two: me and a buddy from the gym.
+
+After Yale I wanted to be closer to where emissions actually come from, so I went into industry, and by choice into start-ups, where sensor technology, remote sensing, and machine learning meet, and the work is funded to solve a real problem for a real company. SeekOps, spun out of NASA's Jet Propulsion Laboratory, works with oil and gas operators, and for the first time I wasn't studying emissions from a distance. We flew drones carrying laser sensors through the plumes coming off flares in the Bakken and Permian basins to measure how much methane was slipping through unburned. Getting a drone into the right part of a plume is its own puzzle, so I built object detection models that pick out wellheads, compressors, storage tanks, and flare stacks from imagery of a site, and used what they found to plan where the drone should fly.
+
+Now I'm at Grassroots Carbon, which works with ranchers on the carbon in their land, and it's an unusual place to be. Grasslands hold about a fifth of the world's soil carbon, and much of it has been lost to overgrazing and conversion to cropland, which makes working ranchland one of the places where carbon can go back into the ground, through the people already managing it. Grazing done with care, with herds moved often enough that pasture has time to recover, can rebuild some of what was lost. Whether that's worth anything, to the climate or to the rancher being paid for it, depends on measuring it well, and that's my job. On the modeling side, it means process-based models that follow the grass through its year, from green-up through senescence in the fall, and track how carbon moves from those plants down into the soil, with machine learning correcting them against what the land actually did. On the data side, it means the pipelines that bring satellite imagery, soil samples, and weather records into the cloud and onto one shared spatial grid, so every ranch is measured the same way.
+
+Environmental Data Scientist, Machine Learning
+
+Grassroots Carbon · Austin and San Antonio, TX
+
+Grassroots Carbon pays ranchers for the carbon their land stores when they change how they graze it, and sells that carbon as credits to companies such as Microsoft and Boeing. Measuring that carbon is the center of the company's science. It rests on three kinds of record: soil samples taken across each ranch; what the ranchers themselves log about their grazing, through PastureMap, the company's own software (which pastures the herd was on and for how long); and public data that describes the land from above and around it, satellite imagery of how it's growing, daily weather, soil surveys, and elevation. On the data science team, my work is the modeling. We estimate how much carbon a ranch's soil is gaining and, just as important, how much it would have gained anyway under the old grazing: only the difference counts as a credit. A typical model follows the grass through its seasons. From the years before the change, it learns how much the land grows from the sunlight, weather, and cover it gets; it then runs those same rules forward to show what the old grazing would have produced. Others answer the questions that come before and after it: how much grass is standing on a ranch right now, estimated from satellite imagery and the field measurements that calibrate it; how deep a ranch's soil can be credited, worked out from where its own cores stopped and what the terrain and soil maps say about the ground beneath; and how to divide a ranch into zones that sample alike, so that fewer cores carry less uncertainty into the credit. Around the models sit the shared data systems the team maintains (one grid, one set of sources, so any ranch in the country can be run the same way) and the checks that test our estimates against research sites where grazing never changed.
+
+data: soil organic carbon cores; BLM AIM field plots (TerrADat); GrassCast productivity forecasts; Rangeland Analysis Platform (RAP); Harmonized Landsat Sentinel-2 (HLS); AlphaEarth Foundations embeddings; MODIS productivity and phenology; gridMET weather; Open-Meteo weather; PRISM climate normals; POLARIS soil properties; gSSURGO soil survey; 3DEP elevation; National Land Cover Database (NLCD); NRCS land resource regions (MLRA, LRR); IPCC climate zones; NEON and AmeriFlux research sites for validation
+
+methods: light use efficiency (LUE) modeling; counterfactual baselines; growing-season efficiency calibration; temperature and vapor pressure deficit (VPD) stress scalars; growing degree day (GDD) residual diagnostics; random forest biomass modeling; allometric biomass estimation; bounded residual correction; causally constrained features; spatial and temporal cross-validation; creditable depth modeling; sampling stratification; Soil Enrichment Protocol (CAR-SEP); Verra VM0042; Regenerative Standard
+
+tools: Python; pandas; NumPy; scikit-learn; GeoPandas; xarray; Rasterio; Dask; DuckDB; Parquet; STAC catalogs; Microsoft Planetary Computer; OPeNDAP; AWS S3; Cloud Optimized GeoTIFF (COG); Uber H3; pytest; GitHub; Matplotlib
+
+Environmental Data Scientist
+
+SeekOps · Austin, TX
+
+SeekOps is a start-up spun out of NASA's Jet Propulsion Laboratory that measures methane for oil and gas operators with sensors carried on drones. Flares are meant to burn methane off, and the operators' question is how much gets through unburned. On a science team of three, I led the study that answered it across the Bakken and Permian basins. A drone carrying a laser spectrometer crosses the plume downwind of a flare while instruments on the ground record the wind; the methane passing through that crossing, set against what the flare was fed, gives the share that escaped. Each measurement was corrected for the terrain beneath the flight, for the way a facility's own structures bend the wind, and for how the plume spreads, so that the number an operator received could be defended. The findings went into their leak detection programs and, later, into a paper at SPE ATCE 2024. The same campaigns needed a map of every site before a drone could fly it, so I trained a detection model on aerial imagery to pick out the wellheads, compressors, tanks, and flares, and built the maps and dashboards that carried each campaign's results to the clients.
+
+data: tunable diode laser spectroscopy (TDLAS); flare inflow telemetry; ultrasonic anemometers; RTK ground stations; AirData flight telemetry; LiDAR surface models; drone aerial imagery
+
+methods: destruction removal efficiency (DRE); mass balance emission rates; Navier-Stokes plume modeling; terrain and surface roughness correction; wind vector validation; object detection (YOLOv8); transfer learning; predictive emissions modeling; leak detection and repair (LDAR); Oil and Gas Methane Partnership (OGMP) and EPA reporting
+
+tools: Python; PyTorch; Folium; Plotly Dash; QGIS; ArcGIS Pro
+
+Visiting Research Scientist
+
+University of Minnesota · St. Paul, MN
+
+Northern Minnesota is peat country, and the Marcell Experimental Forest has been watching it longer than almost anyone: the Forest Service has run research there since the early 1960s, and a tower in its Bog Lake Peatland has measured the carbon dioxide moving between the peat and the air since 2007, and the methane since 2009, many times a second. That record is part of the AmeriFlux network, and it was the reason for a summer in Tim Griffis's lab. The question was simple to ask and hard to answer: what drives those fluxes, and how far ahead can they be forecast? Part of the summer went to the instruments that make the record, the tower, the anemometers, and the gas analyzers, run under the network's protocols. The rest went to the record itself. I separated the seasons from the trend, ranked the environmental drivers, and set classical time-series models and gradient boosting against the same data, stacking them where each did best.
+
+data: eddy covariance flux tower; methane and carbon dioxide fluxes; 3D sonic anemometers; greenhouse gas analyzers; soil and air temperature; precipitation; AmeriFlux site US-MBP
+
+methods: correlation analysis; ordinary least squares (OLS) regression; time series decomposition; feature importance; SARIMAX forecasting; Prophet forecasting; gradient boosting (LightGBM, XGBoost); ensemble stacking; error-based model selection (MAPE); autocorrelation and stationarity tests; AmeriFlux protocols
+
+Geospatial Analyst
+
+Cydcor · Los Angeles, CA
+
+Cydcor runs door-to-door and business-to-business sales campaigns, and the question it brought to a geographer was where the next ones should go. Working directly with the company's leadership, I joined census demographics to its own sales records and modeled the map that came out of them: interpolating between the neighborhoods already known to find the ones most likely to respond, extending the model to markets the company had never entered, and automating the geocoding with batch processing and validation so thousands of addresses could be placed and checked at once.
+
+data: census tract demographics; internal sales metrics; Google Geocoding API
+
+methods: kriging and spatial interpolation; spatial regression; weighted overlay; batch geocoding and validation
+
+tools: ArcGIS; Python
+
+MESc, Machine Learning, Remote Sensing and Spatial Statistics
+
+Yale School of the Environment · The Lee Lab · New Haven, CT
+
+Two years in Xuhui Lee's lab, which studies how land, air, and people act on one another, on one large question: when land use changes, how does the methane above it change with it? The Yangtze River Delta made the case. Home to more than 150 million people and some of China's most productive rice land, it has been losing paddies to cities year by year, and both give off methane. The work had three parts. I classified two decades of land cover from Landsat, drawing urban extent from a global dataset and separating rice from similar crops by its flooding and cropping calendar. I then mapped where present-day methane from Sentinel-5P clusters and how closely it follows that land use. And, to address the gap in the record, since satellites have measured methane only since 2017 while the land has been changing for decades, I trained a segmentation network to estimate the methane field for the years before any satellite saw it. Alongside the thesis, coursework in machine learning, computer vision, spatial statistics, and remote sensing, with graduate computer science beside it, and a term as teaching fellow for Regression Modeling of Ecological and Environmental Data, the school's applied statistics course.
+
+data: Sentinel-5P methane (TROPOMI); Landsat archive (TM, ETM+, OLI); global urban extent (GAIA); paddy rice mapping (PPPM); vegetation and water indices (NDVI, EVI, LSWI); China provincial agricultural statistics; drone thermal and RGB imagery
+
+methods: land cover classification; hot spot analysis (Getis-Ord Gi*); spatial autocorrelation (Moran's I); semantic segmentation (DeepLabV3+, ResNet50); thermal and RGB image fusion; photogrammetry; multivariate statistics; regression modeling
+
+tools: Google Earth Engine; PyTorch; scikit-image; OpenCV; Google Colab; Agisoft Metashape; MATLAB
+
+BA, Geography and Environmental Studies; minors in Geographic Information Systems (GIS) and English
+
+UCLA · Los Angeles, CA
+
+UCLA's geography department asks three questions of anything on the map: where it is, why it's there, and what that location does to it. The environmental studies side of the degree turns those questions on the systems that shape the planet and on how people live within them. I took both, along with a minor in GIS, which is where the questions become measurable: in the imagery satellites return, the elevation and radar data that describe the ground beneath it, and the analysis that turns both into evidence. The English minor was for love of the classics and the playwrights: who knew close reading would become crucial to making a good map. My undergraduate thesis tracked how vegetation returns after wildfire, following the 2018 Mendocino Complex, at the time the largest fire in California's history, through Landsat scenes before and after the burn in Google Earth Engine. A faculty committee chose it for presentation at the 2019 Los Angeles Geospatial Summit.
+
+data: Landsat 8 imagery; synthetic aperture radar (SAR); digital elevation models (DEM)
+
+methods: supervised and unsupervised classification; vegetation and burn indices (NDVI, NBR, dNBR); change detection; spatial interpolation; spatial autocorrelation; predictive modeling; cartographic design
+
+tools: ENVI; Google Earth Engine; ArcGIS; QGIS; spatial SQL
+
+2021 to 2023
+
+Merit Research Scholar and Dean's Scholar
+
+Full funding for the master's, awarded each year to a limited number of the school's top applicants.
+
+Yale School of the Environment
+
+New Haven, CT
+
+2022
+
+Honorable Mention, Global Stocktake Climate Datathon
+
+Recognized by an expert panel as one of four entries from more than 100 participants in 30 countries: a tool, built by a team of two, that projects European cap-and-trade emissions out to 2030.
+
+Data-Driven EnviroLab, UNC-Chapel Hill
+
+OpenEarth Foundation
+
+2022
+
+Hixon Center for Urban Sustainability Fellow
+
+Funding for the Yangtze study of how the methane above the delta shifts as its cities spread over the rice paddies, one of a handful of student projects the center backs each year on how cities grow and are run.
+
+Yale School of the Environment
+
+New Haven, CT
+
+2019
+
+Poster and lightning talk, Los Angeles Geospatial Summit
+
+Chosen by a faculty committee to present the Mendocino Complex fire study at the institute's annual conference, alongside student work from six universities.
+
+USC Spatial Sciences Institute
+
+Los Angeles, CA
+
+2017 to 2018
+
+Undergraduate Research Scholars Program
+
+A year of original research with a faculty mentor, Nick Burkhart in the geography department, that grew into the undergraduate thesis.
+
+UCLA
+
+Los Angeles, CA
+
+2014 to 2018
+
+Regents Scholar
+
+Awarded on admission by a faculty committee for academic achievement and promise, and held through all four years.
+
+UCLA
+
+Los Angeles, CA

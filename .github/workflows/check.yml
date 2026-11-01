@@ -2,7 +2,7 @@ name: check
 
 on:
   push:
-    branches: [main]
+    branches: ['**']
   pull_request:
     branches: [main]
 
@@ -26,6 +26,10 @@ jobs:
           python3 -m http.server 8000 >/dev/null 2>&1 &
           sleep 1
           curl -sf -o /dev/null http://localhost:8000/
+      - name: Audit tool tests
+        run: python3 -m unittest discover -s tools/audit -p 'test_*.py'
+      - name: Copy
+        run: python3 tools/claims/copy_check.py http://localhost:8000/ --chrome "$CHROME"
       - name: Claims
         run: |
           set -o pipefail

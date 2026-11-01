@@ -1,0 +1,305 @@
+name: review
+
+# Every browser check, measurement and capture for a branch under review, on a hosted runner. Pushes to any branch but main run the
+# review; a manual run with baseline_ref measures that ref instead and publishes tools/audit/baseline-ci.json as an artifact; a manual run
+# with pair_refs times two commits against each other on this one runner (and compares the hero at a pinned clock); a manual run with
+# live_url checks the map's label glyphs on that site.
+on:
+  push:
+    branches-ignore: [main]
+  workflow_dispatch:
+    inputs:
+      baseline_ref:
+        description: 'Measure this ref and write tools/audit/baseline-ci.json from it, instead of reviewing'
+        required: false
+        default: ''
+      parity_ref:
+        description: 'Compare the contact band against this commit (full SHA); a push compares against the branch head before the push'
+        required: false
+        default: ''
+      pair_refs:
+        description: 'Two full SHAs, before then after, separated by a space: paired cold timing at 1440, nine runs per side, alternating'
+        required: false
+        default: ''
+      pair_look:
+        description: 'With pair_refs: also compare the hero at ?clock=0, 5000 and 20000 (yes or no; both commits must have the clock parameter)'
+        required: false
+        default: 'yes'
+      pair_noparam:
+        description: 'With pair_refs: also diff a load without the clock parameter, DOM and console at 2 s (yes or no)'
+        required: false
+        default: 'no'
+      pair_timing:
+        description: 'With pair_refs: run the paired cold timing (yes or no)'
+        required: false
+        default: 'yes'
+      pair_domstyle:
+        description: 'With pair_refs: compare the rendered text and every computed style at 1440 and 390 (yes or no)'
+        required: false
+        default: 'no'
+      live_url:
+        description: 'Check the map label glyphs on this site (full scroll and every stop flight) instead of reviewing'
+        required: false
+        default: ''
+      gate_refs:
+        description: 'Two full SHAs, main side then branch side: run only the paired timing gate between them (its A/A and sensitivity tests)'
+        required: false
+        default: ''
+      gate_inject:
+        description: 'With gate_refs: milliseconds of busy-wait to inject after first paint on the branch side only (0 for none)'
+        required: false
+        default: '0'
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      BASELINE_REF: ${{ inputs.baseline_ref }}
+      PAIR_REFS: ${{ inputs.pair_refs }}
+      LIVE_URL: ${{ inputs.live_url }}
+      MODE: ${{ inputs.baseline_ref != '' && 'baseline' || inputs.pair_refs != '' && 'pair' || inputs.live_url != '' && 'live' || inputs.gate_refs != '' && 'gate' || 'review' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install websocket-client pillow
+      # The tools drive Google Chrome. The workstation runs 156.0.8078.76, which Google no longer serves for Linux; this pins the same
+      # 156.0.8078 branch at the build Google's package pool carries, and fails if the installed version differs.
+      - name: Chrome
+        id: sha
+        env:
+          CHROME_VERSION: 156.0.8078.79
+        run: |
+          curl -fsSLo chrome.deb "https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb"
+          sudo apt-get update -q && sudo apt-get install -y -q ./chrome.deb && rm chrome.deb
+          google-chrome-stable --version | grep -F "$CHROME_VERSION"
+          echo "CHROME=$(command -v google-chrome-stable)" >> "$GITHUB_ENV"
+          echo "short=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          mkdir -p out
+
+      # Baseline mode
+      - if: env.BASELINE_REF != ''
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.baseline_ref }}
+          path: base
+      - name: CI baseline
+        if: env.BASELINE_REF != ''
+        run: |
+          sha=$(git -C base rev-parse --short HEAD)
+          (cd base && python3 -m http.server 8001 >/dev/null 2>&1 &)
+          sleep 1; curl -sf -o /dev/null http://localhost:8001/
+          python3 tools/audit/run.py http://localhost:8001 --pages / --software --runs 9 --chrome "$CHROME" --out out/audit-base.json
+          cp out/audit-base.json tools/audit/baseline-ci.json
+          # compare.py exits 1 when a gate fails even as it forces the write; the write itself is what this step checks
+          python3 tools/audit/compare.py out/audit-base.json tools/audit/baseline-ci.json --force-baseline "CI baseline: ${BASELINE_REF} at ${sha}, nine runs, ubuntu-latest, no GPU" || true
+          # run.py records the commit of the tools' checkout; the baseline is of the measured ref, so its commit and note name that ref, and the tools' commit is kept beside it
+          python3 -c "import json, os; p = 'tools/audit/baseline-ci.json'; j = json.load(open(p)); m = j['meta']; m['tools_commit'] = os.environ['GITHUB_SHA'][:7]; m['commit'] = '${sha}'; m['note'] = f\"Baseline taken of ${BASELINE_REF} at ${sha} with the tools at {m['tools_commit']} on {m['date']}: software rendering, {m['runs']} throttled run(s) per page with the median quoted.\"; json.dump(j, open(p, 'w'), indent=1)"
+          python3 -c "import json, sys; m = json.load(open('tools/audit/baseline-ci.json'))['meta']; sys.exit(0 if m.get('commit') and 'note' in m else 1)"
+          cp tools/audit/baseline-ci.json out/baseline-ci.json
+          # the file into the log as well, in numbered chunks with its SHA-256, so it can be committed without downloading the artifact
+          python3 -c "import hashlib; b = open('tools/audit/baseline-ci.json', 'rb').read(); print('BASELINE-SHA256', hashlib.sha256(b).hexdigest(), len(b)); [print(f'BASELINE-CHUNK {i // 3000:05d} ' + b[i:i + 3000].hex()) for i in range(0, len(b), 3000)]"
+          echo "CI baseline written from ${BASELINE_REF} at ${sha}; artifact baseline-ci-${sha}" >> "$GITHUB_STEP_SUMMARY"
+          echo "BASE_SHA=${sha}" >> "$GITHUB_ENV"
+      - if: env.BASELINE_REF != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: baseline-ci-${{ env.BASE_SHA }}
+          path: out/
+          retention-days: 14
+
+      # Paired mode: two commits, each served from its own worktree, timed against each other on this runner
+      - name: Paired timing
+        if: env.MODE == 'pair'
+        env:
+          PAIR_LOOK: ${{ inputs.pair_look }}
+          PAIR_NOPARAM: ${{ inputs.pair_noparam }}
+          PAIR_TIMING: ${{ inputs.pair_timing }}
+          PAIR_DOMSTYLE: ${{ inputs.pair_domstyle }}
+        run: |
+          set -o pipefail
+          read -r before after <<< "$PAIR_REFS"
+          for side in before after; do ref=${!side}; git fetch -q --depth 1 origin "$ref" && git worktree add -q "$side" FETCH_HEAD; done
+          (cd before && python3 -m http.server 8003 >/dev/null 2>&1 &); (cd after && python3 -m http.server 8004 >/dev/null 2>&1 &)
+          sleep 1; curl -sf -o /dev/null http://localhost:8003/ && curl -sf -o /dev/null http://localhost:8004/
+          b=${before::7}; a=${after::7}
+          if [ "$PAIR_TIMING" != no ]; then
+            python3 tools/audit/paired.py http://localhost:8003 http://localhost:8004 --runs 9 --before-label "$b" --after-label "$a" --chrome "$CHROME" --out out | tee out/paired.txt
+            cat out/paired.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ "$PAIR_DOMSTYLE" = yes ]; then
+            if python3 tools/audit/domstyle.py http://localhost:8003 http://localhost:8004 --chrome "$CHROME" --out out; then dom=0; else dom=1; fi
+            cat out/domstyle.md >> "$GITHUB_STEP_SUMMARY"; [ $dom -eq 0 ] || exit 1
+          fi
+          if [ "$PAIR_LOOK" = yes ]; then
+            # the look check and the blob layer's size, place and color, at device pixel ratio 1 and again at 2 for high-density screens
+            for dpr in 1 2; do
+              python3 tools/audit/herolook.py http://localhost:8003 http://localhost:8004 --dpr $dpr --before-label "$b" --after-label "$a" --chrome "$CHROME" --out out
+              python3 tools/audit/herolook.py http://localhost:8003 http://localhost:8004 --blob --dpr $dpr --before-label "$b" --after-label "$a" --chrome "$CHROME" --out out
+            done
+            cat out/hero.md out/blob.md out/hero-dpr2.md out/blob-dpr2.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ "$PAIR_NOPARAM" = yes ]; then python3 tools/audit/herolook.py http://localhost:8003 http://localhost:8004 --noparam --chrome "$CHROME" --out out; cat out/noparam.md >> "$GITHUB_STEP_SUMMARY"; fi
+          echo "PAIR_NAME=pair-${b}-${a}" >> "$GITHUB_ENV"
+      - if: always() && env.MODE == 'pair'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PAIR_NAME }}
+          path: out/
+          retention-days: 14
+
+      # Live mode: the map's label glyphs on a deployed site
+      - name: Live map glyphs
+        if: env.MODE == 'live'
+        run: |
+          set -o pipefail; python3 tools/audit/glyphcheck.py "$LIVE_URL" --chrome "$CHROME" --out out | tee out/glyphs.txt
+          cat out/glyphs.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Live captures
+        if: always() && env.MODE == 'live'
+        run: python3 tools/audit/capture.py "$LIVE_URL" --full-only --label live --chrome "$CHROME" --out out/captures
+      - if: always() && env.MODE == 'live'
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-${{ steps.sha.outputs.short }}
+          path: out/
+          retention-days: 14
+
+      # Review mode
+      - name: Serve the site
+        if: env.MODE == 'review'
+        run: |
+          python3 -m http.server 8000 >/dev/null 2>&1 &
+          sleep 1; curl -sf -o /dev/null http://localhost:8000/
+      - name: Claims and pills
+        if: ${{ !cancelled() && env.MODE == 'review' }}
+        run: set -o pipefail; python3 tools/claims/check.py | tee out/claims.txt
+      - name: Copy
+        if: ${{ !cancelled() && env.MODE == 'review' }}
+        run: set -o pipefail; python3 tools/claims/copy_check.py http://localhost:8000/ --chrome "$CHROME" | tee out/copy.txt
+      - name: Links
+        if: ${{ !cancelled() && env.MODE == 'review' }}
+        run: |
+          set -o pipefail
+          python3 tools/audit/run.py http://localhost:8000 --checks-only --pages / --software --chrome "$CHROME" --out out/checks.json
+          python3 tools/audit/compare.py --checks-only out/checks.json | tee out/links.txt
+      - name: Axe, keyboard and layout
+        if: ${{ !cancelled() && env.MODE == 'review' }}
+        run: python3 tools/audit/review.py http://localhost:8000/ --chrome "$CHROME" --out out
+      - name: Justified gaps
+        if: ${{ !cancelled() && env.MODE == 'review' }}
+        run: set -o pipefail; python3 tools/audit/gaps.py http://localhost:8000/ --width 1100,1280,1440,1920 --both --chrome "$CHROME" | tee out/gaps.txt
+      - name: Audit
+        if: ${{ !cancelled() && env.MODE == 'review' }}
+        run: |
+          set -o pipefail
+          python3 tools/audit/run.py http://localhost:8000 --pages / --software --runs 9 --chrome "$CHROME" --out out/audit.json
+          # TBT, FCP and LCP are gated by the timing job's paired comparison against main on one runner (owner-approved); here they are only a
+          # trend against the stored baseline, while requests, bytes and CLS stay gated against it
+          echo "Timing: gated by the paired comparison against main in the timing job; the stored-baseline timing below is a report-only trend" >> "$GITHUB_STEP_SUMMARY"
+          # owner-approved for this branch: cold bytes may rise 15 percent over the CI baseline instead of 10
+          echo "Byte allowance 15 percent: section three record and reading type, owner-approved 2026-10-30" >> "$GITHUB_STEP_SUMMARY"
+          # owner-approved for this branch: one request over the 10 percent gate, for the self-hosted Fraunces italic
+          echo "Request allowance 1: self-hosted Fraunces italic for the About's opening line, owner-approved 2026-10-31" >> "$GITHUB_STEP_SUMMARY"
+          python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json --gate=paired --bytes-allowance=0.15 --requests-allowance=1 | tee out/compare.txt
+      - name: Contact band parity
+        if: ${{ !cancelled() && env.MODE == 'review' }}
+        env:
+          PARITY_BEFORE: ${{ inputs.parity_ref || github.event.before }}
+        run: |
+          # a new branch's first push has no previous head (all zeros), and a manual run without parity_ref has none either
+          if [ -z "$PARITY_BEFORE" ] || [ -z "${PARITY_BEFORE//0/}" ]; then echo "Contact band parity: no previous head to compare against, skipped" >> "$GITHUB_STEP_SUMMARY"; exit 0; fi
+          echo "Contact band parity against ${PARITY_BEFORE::7}" >> "$GITHUB_STEP_SUMMARY"
+          git fetch -q --depth 1 origin "$PARITY_BEFORE" && git worktree add -q before FETCH_HEAD
+          (cd before && python3 -m http.server 8002 >/dev/null 2>&1 &)
+          sleep 1; curl -sf -o /dev/null http://localhost:8002/
+          python3 tools/audit/parity.py http://localhost:8002/ http://localhost:8000/ --chrome "$CHROME" --out out
+          cat out/parity.md >> "$GITHUB_STEP_SUMMARY"
+          # the map card after a stop flight on the commit compared against, beside the Captures step's own pair
+          python3 tools/audit/capture.py http://localhost:8002/ --card-only --label "before-${PARITY_BEFORE::7}" --chrome "$CHROME" --out out/captures
+      - name: Map glyphs
+        if: ${{ !cancelled() && env.MODE == 'review' }}
+        run: |
+          set -o pipefail; python3 tools/audit/glyphcheck.py http://localhost:8000/ --chrome "$CHROME" --out out | tee out/glyphs.txt
+          cat out/glyphs.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Load-time trace
+        if: ${{ !cancelled() && env.MODE == 'review' }}
+        run: |
+          python3 tools/audit/trace.py http://localhost:8000/ --chrome "$CHROME" --out out
+          cat out/trace.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Audit tool tests
+        if: ${{ !cancelled() && env.MODE == 'review' }}
+        run: python3 -m unittest discover -s tools/audit -p 'test_*.py'
+      - name: Captures
+        if: always() && env.MODE == 'review'
+        run: python3 tools/audit/capture.py http://localhost:8000/ --chrome "$CHROME" --out out/captures
+      - name: Summary
+        if: always() && env.MODE == 'review'
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import os
+          def read(p): return open(p).read() if os.path.exists(p) else '(not run)\n'
+          print('# Review of', os.environ['GITHUB_SHA'][:7]); print()
+          print('## Claims and pills'); print('```'); print(read('out/claims.txt').strip()); print('```')
+          print('## Copy'); print('```'); print(read('out/copy.txt').strip()); print('```')
+          print('## Links'); print('```'); print(read('out/links.txt').strip()); print('```')
+          print('## Justified gaps'); print(); print('| Width and folds | Lines over 2.0x | Over 2.5x | Widest |'); print('|---|---|---|---|')
+          for l in read('out/gaps.txt').splitlines():
+              if l.startswith('SUMMARY'): p = l.split('\t'); print(f'| {p[1]} | {p[2]} | {p[3]} | {p[4]}x |')
+          print(); print('## Audit against baseline-ci.json'); print('```'); print(read('out/compare.txt').strip()); print('```')
+          print(read('out/review.md'))
+          print(f"Artifact: review-{os.environ['GITHUB_SHA'][:7]}")
+          PY
+      - if: always() && env.MODE == 'review'
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-${{ steps.sha.outputs.short }}
+          path: out/
+          retention-days: 14
+
+  # The timing gate (owner-approved): main's head and the branch's head, served side by side and loaded alternately on this one runner, nine
+  # rounds per cell; TBT, FCP and LCP fail only when at least 8 of 9 rounds show the branch slower and the median difference exceeds the
+  # threshold (tools/audit/trend.py paired_failure). A manual run with gate_refs runs this job alone between two given commits.
+  timing:
+    if: github.event_name == 'push' || inputs.gate_refs != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install websocket-client pillow
+      - name: Chrome
+        id: sha
+        env:
+          CHROME_VERSION: 156.0.8078.79
+        run: |
+          curl -fsSLo chrome.deb "https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}-1_amd64.deb"
+          sudo apt-get update -q && sudo apt-get install -y -q ./chrome.deb && rm chrome.deb
+          google-chrome-stable --version | grep -F "$CHROME_VERSION"
+          echo "CHROME=$(command -v google-chrome-stable)" >> "$GITHUB_ENV"
+          echo "short=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          mkdir -p out
+      - name: Paired timing gate
+        env:
+          GATE_REFS: ${{ inputs.gate_refs }}
+          GATE_INJECT: ${{ inputs.gate_inject }}
+        run: |
+          set -o pipefail
+          if [ -n "$GATE_REFS" ]; then read -r main branch <<< "$GATE_REFS"
+          else git fetch -q --depth 1 origin main && main=$(git rev-parse FETCH_HEAD); branch=$GITHUB_SHA; fi
+          for side in main branch; do ref=${!side}; git fetch -q --depth 1 origin "$ref" && git worktree add -q "gate-$side" FETCH_HEAD; done
+          (cd gate-main && python3 -m http.server 8101 >/dev/null 2>&1 &); (cd gate-branch && python3 -m http.server 8102 >/dev/null 2>&1 &)
+          sleep 1; curl -sf -o /dev/null http://localhost:8101/ && curl -sf -o /dev/null http://localhost:8102/
+          if python3 tools/audit/paired.py http://localhost:8101 http://localhost:8102 --gate --runs 9 --inject-busy-ms "${GATE_INJECT:-0}" \
+            --before-label "main ${main::7}" --after-label "branch ${branch::7}" --chrome "$CHROME" --out out | tee out/gate.txt; then code=0; else code=$?; fi
+          cat out/gate.md >> "$GITHUB_STEP_SUMMARY"
+          exit $code
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timing-${{ steps.sha.outputs.short }}
+          path: out/
+          retention-days: 14

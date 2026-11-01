@@ -19,6 +19,7 @@
 /* Self-hosted fonts (vendor/fonts/, SIL OFL 1.1): one variable latin file per family */
 @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('vendor/fonts/inter-v20-latin-variable.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('vendor/fonts/jetbrains-mono-v24-latin-variable.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Fraunces'; font-style: italic; font-weight: 400; font-display: swap; src: url('vendor/fonts/fraunces-latin-400-italic.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: 'Inter Fallback'; font-weight: 400; src: local('Arial'), local('Liberation Sans'), local('Helvetica'); ascent-override: 96.88%; descent-override: 24.12%; line-gap-override: 0%; size-adjust: 106.2%; }
 @font-face { font-family: 'Inter Fallback'; font-weight: 500; src: local('Arial'), local('Liberation Sans'), local('Helvetica'); ascent-override: 96.88%; descent-override: 24.12%; line-gap-override: 0%; size-adjust: 107.4%; }
 @font-face { font-family: 'Inter Fallback'; font-weight: 600 700; src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('Helvetica Bold'); ascent-override: 96.88%; descent-override: 24.12%; line-gap-override: 0%; size-adjust: 101.1%; }
@@ -37,6 +38,9 @@
   --accent-text: #F2F2F0;
   --link: #D9A066;
   --body: #ECECEA;
+  --page-surface: #17171a;
+  --page-line: #2c2b2e;
+  --page-shadow: rgba(0,0,0,.45);
   --max: 1100px;
   --pad: clamp(16px, 4vw, 40px);
   --font-body: "Inter", "Inter Fallback", ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -44,10 +48,10 @@
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --bg: #FAFAF7; --surface: rgba(0,0,0,0.03); --text: #18181B; --muted: #626976; --line: #E5E5E0; --accent: #18181B; --accent-soft: #0000000C; --accent-text: #18181B; --link: #9A5F22; --body: #18181B;
+    --bg: #FAFAF7; --surface: rgba(0,0,0,0.03); --text: #18181B; --muted: #626976; --line: #E5E5E0; --accent: #18181B; --accent-soft: #0000000C; --accent-text: #18181B; --link: #9A5F22; --body: #18181B; --page-surface: #fffdf8; --page-line: #e3ded3; --page-shadow: rgba(0,0,0,.12);
   }
 }
-:root[data-theme="dark"] { --bg: #0f0f10; --surface: rgba(255,255,255,0.035); --text: #ECECEA; --muted: #9A9A98; --line: #2A2A2C; --accent: #F2F2F0; --accent-soft: #FFFFFF14; --accent-text: #F2F2F0; --body: #ECECEA; }
+:root[data-theme="dark"] { --bg: #0f0f10; --surface: rgba(255,255,255,0.035); --text: #ECECEA; --muted: #9A9A98; --line: #2A2A2C; --accent: #F2F2F0; --accent-soft: #FFFFFF14; --accent-text: #F2F2F0; --body: #ECECEA; --page-surface: #17171a; --page-line: #2c2b2e; --page-shadow: rgba(0,0,0,.45); }
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -60,21 +64,20 @@ a[href^="http"]:not([href*="mappingwithmatt.com"]):not(.band-links a):hover::aft
 a:not([href^="http"]):not([href^="mailto:"]):not(.intro .jump a):not(#rail a):not(.archive-strip a):not(.tagpill), a[href*="mappingwithmatt.com"] { background-image: linear-gradient(currentColor, currentColor); background-repeat: no-repeat; background-size: 0% 1px; background-position: 0 100%; transition: background-size 240ms ease, color .15s ease; }
 a:not([href^="http"]):not([href^="mailto:"]):not(.intro .jump a):not(#rail a):not(.archive-strip a):hover, a[href*="mappingwithmatt.com"]:hover { background-size: 100% 1px; }
 @media (prefers-reduced-motion: reduce) { a::after, a { transition: none; } }
-.intro .jump a, .hero .links a, .composer a, #rail a, footer.site a, .exp-head h3 a, .oss .card h3 a { color: var(--text); }
-.exp-head h3 a { border-bottom: 1px solid var(--line); } .exp-head h3 a:hover { color: var(--link); border-bottom-color: var(--link); }
+.intro .jump a, .hero .links a, .composer a, #rail a, footer.site a, .oss .card h3 a { color: var(--text); }
 
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 /* links set inside running text are underlined, so they do not rely on colour alone */
-.bio a, .roadmap .card-body a, .roles-grid .role a, .experience p a, .themes .line-v a, .papers .venue a { border-bottom: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); transition: text-decoration-color .15s ease, color .15s ease; }
-.bio a:hover, .roadmap .card-body a:hover, .roles-grid .role a:hover, .experience p a:hover, .themes .line-v a:hover, .papers .venue a:hover { text-decoration-color: currentColor; }
+.bio a, .roadmap .card-body a, .roles-grid .role a, .themes .line-v a, .papers .venue a { border-bottom: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); transition: text-decoration-color .15s ease, color .15s ease; }
+.bio a:hover, .roadmap .card-body a:hover, .roles-grid .role a:hover, .themes .line-v a:hover, .papers .venue a:hover { text-decoration-color: currentColor; }
 img { max-width: 100%; height: auto; }
 
 /* The page's branching drawing and its live layer: two canvases behind the blob, drawn by assets/land.js */
 #land, #land-live { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 /* A soft scrim of the page color behind the text columns only, so muted text keeps AA contrast over the drawing's densest region
    (measured after a minute of growth: light muted text read 4.02:1 at 1440 and 3.68:1 at 390 without it; at 60 percent it reads 4.75:1 and 4.62:1) */
-.hero .bio, .hero .roles-col, .papers .proj > :first-child, .papers .proj-intro, .experience .inner, .themes .inner, .composer-form { position: relative; }
-.hero .bio::before, .hero .roles-col::before, .papers .proj > :first-child::before, .papers .proj-intro::before, .experience .inner::before, .themes .inner::before, .composer-form::before { content: ""; position: absolute; inset: -10px -14px; z-index: -1; border-radius: 14px; background: color-mix(in srgb, var(--bg) 60%, transparent); box-shadow: 0 0 28px 14px color-mix(in srgb, var(--bg) 60%, transparent); pointer-events: none; }
+.hero .bio, .hero .roles-col, .papers .proj > :first-child, .papers .proj-intro, .themes .inner, .composer-form { position: relative; }
+.hero .bio::before, .hero .roles-col::before, .papers .proj > :first-child::before, .papers .proj-intro::before, .themes .inner::before, .composer-form::before { content: ""; position: absolute; inset: -10px -14px; z-index: -1; border-radius: 14px; background: color-mix(in srgb, var(--bg) 60%, transparent); box-shadow: 0 0 28px 14px color-mix(in srgb, var(--bg) 60%, transparent); pointer-events: none; }
 /* the drawing fades to nothing toward the viewport edges and stays light over the reading region in the middle */
 #land { -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.3) 22%, #000 48%, #000 78%, transparent 100%); mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.3) 22%, #000 48%, #000 78%, transparent 100%); }
 /* Liquid blob */
@@ -145,9 +148,11 @@ footer.site .legend { display: none; }
 @media (prefers-reduced-motion: reduce) { #rail, #rail a span, #rail a i { transition: none; } }
 
 /* Typewriter intro */
-.intro { min-height: 84svh; display: grid; place-items: center; text-align: center; padding: 20px var(--pad) 12px; position: relative; }
-/* On desktop the hero is a band about 70 percent of the viewport, the name starting about 15 percent from the top, so About shows at the bottom edge */
-@media (min-width: 900px) { .intro { min-height: 70vh; place-items: start center; padding-top: 15vh; padding-bottom: 24px; } }
+.intro { --under-pills: clamp(48px, 6vh, 80px); display: grid; place-items: start center; text-align: center; padding: max(20px, calc(42svh - 198px)) var(--pad) var(--under-pills); position: relative; }
+/* The band is its content: the stack starts where it did when the band was 84svh with the stack centered (half the band less half the stack, which is
+   376 px tall at 390 wide with the 104 px portrait and 28 px taller with the 132 px one), and a fixed space follows the pills */
+@media (max-width: 600px) { .intro { padding-top: max(20px, calc(42svh - 184px)); } }
+@media (min-width: 900px) { .intro { padding-top: 15vh; } }
 .intro .stack { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }   /* full width from the first paint, so a paint that lands mid-markup does not shift the stack as it fills */
 .intro h1.name { max-width: 760px; }
 .intro .stack > * { opacity: 0; transform: translateY(10px); transition: opacity 520ms cubic-bezier(.65, 0, .35, 1), transform 520ms cubic-bezier(.65, 0, .35, 1); }
@@ -246,7 +251,125 @@ p { margin: 0 0 16px; }
 .hero { padding-top: 14px; padding-bottom: 8px; border-top: 1px solid var(--line); }
 .hero .row { display: grid; gap: clamp(24px, 4vw, 44px); align-items: start; grid-template-columns: 1.7fr 1fr; }
 @media (max-width: 640px) { .hero .row { grid-template-columns: 1fr; gap: 28px; } .hero .row > div:first-child { order: 1; } .roles-col { order: 2; } .band-wrap { order: 3; } .photo-col { order: 3; margin-top: 4px; } }
-.hero p.bio { font-family: var(--font-mono); font-size: 13px; line-height: 1.75; letter-spacing: -0.005em; color: var(--body); max-width: 72ch; }
+/* About and record. Both share one container, 1280 px at most within the site's gutters, centered over the hero's narrower row (--sbw, the
+   scrollbar's width, is set by the script so the container matches the gutters exactly). The About is two explicit columns of three paragraphs.
+   The record is three bands on one route: Experience and Awards + fellowships as one row per role or honor (label | route | entry), Education as
+   two columns once the container reaches 1180 px; every tag shows, under its entry's text. The About is set on a surface of its own, above the live
+   branching, with a Fraunces italic opening line and its paragraphs in JetBrains Mono. */
+:root { --rec-label: 150px; --rec-stop: 16px; --rec-gap: 24px; --pill-gap: 6px; }
+.hero .about, .record { --wide: min(1280px, calc(100vw - var(--sbw, 0px) - 2 * var(--pad))); grid-column: 1 / -1; position: relative; justify-self: start; width: var(--wide); margin-left: calc((100% - var(--wide)) / 2); }   /* centered over the row by margin, so a container wider than the row never spills to the right */
+.about h2.eyebrow, .record h2.eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; margin: 0 0 12px; }   /* a real heading in the eyebrow's style, so the entry titles below it keep heading order */
+@media (max-width: 640px) { .hero .about { order: 1; } }   /* the row's phone order on main gives its first child 1 and the contact band 3 */
+.hero .about::before, .record::before { content: ""; position: absolute; inset: -10px -14px; z-index: -1; border-radius: 14px; background: color-mix(in srgb, var(--bg) 60%, transparent); box-shadow: 0 0 28px 14px color-mix(in srgb, var(--bg) 60%, transparent); }
+.hero .about { background: color-mix(in srgb, var(--page-surface) 94%, transparent); border: 1px solid var(--page-line); border-radius: 6px; padding: 44px 52px;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text) 6%, transparent), 0 30px 60px -30px var(--page-shadow); }   /* no backdrop-filter: the branching under it redraws every frame */
+.about-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 48px; align-items: start; }
+.about-lede { grid-column: 1 / -1; font-family: "Fraunces", Georgia, serif; font-style: italic; font-weight: 400; font-size: clamp(16px, 1.32vw, 19px); line-height: 1.5; letter-spacing: 0; max-width: none; text-wrap: pretty;
+  color: color-mix(in srgb, var(--text) 88%, var(--muted)); text-align: left; margin: 0 0 26px; }
+.record-section { padding-top: 24px; }
+/* The mark under the opening line: three stops on a short dashed route, the last one filled where the route arrives. Each stop's color walks
+   through the hero blobs' own hues (the blob loop's base hue 210 and its 40 degree step per disc, at 82% saturation and 60% lightness), one
+   stop a third of the cycle behind the next, by a CSS animation alone. */
+.about-mark { grid-column: 1 / -1; width: 70px; height: 10px; position: relative; margin: 0 0 30px; opacity: 0.8; }
+.about-mark::before { content: ""; position: absolute; left: 4px; right: 4px; top: 4px; border-top: 1.5px dashed color-mix(in srgb, var(--muted) 70%, transparent); }
+.about-mark i { position: absolute; top: 0; width: 9px; height: 9px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid currentColor; background: var(--page-surface); color: hsl(210 82% 60%); animation: mark-hue 32s linear infinite; }
+.about-mark i:nth-child(1) { left: 0; }
+.about-mark i:nth-child(2) { left: 30px; animation-delay: -10.67s; }
+.about-mark i:nth-child(3) { left: 61px; background: currentColor; animation-delay: -21.33s; }
+@keyframes mark-hue { 0%, 100% { color: hsl(210 82% 60%); } 14.29% { color: hsl(250 82% 60%); } 28.57% { color: hsl(290 82% 60%); } 42.86% { color: hsl(330 82% 60%); } 57.14% { color: hsl(10 82% 60%); } 71.43% { color: hsl(50 82% 60%); } 85.71% { color: hsl(90 82% 60%); } }
+@media (prefers-reduced-motion: reduce) { .about-mark i { animation: none; } }
+/* the About is two columns at 1180 px and wider; narrower, the two column containers stack, paragraphs 1 to 6 in order */
+@media (max-width: 1179px) { .about-cols { grid-template-columns: minmax(0, 1fr); } .about-p { max-width: 72ch; } }
+.about-col { min-width: 0; }
+.about-p { font-family: var(--font-mono); font-weight: 400; font-size: 15px; line-height: 1.85; letter-spacing: -0.005em; color: var(--body); margin: 0 0 22px; text-align: left; }
+.about-p[hidden] { display: none; }
+.about a, .record a { color: inherit; font-weight: inherit; background-image: none; border: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); transition: text-decoration-color .12s ease; }
+.about a:hover, .record a:hover, .about a:focus-visible, .record a:focus-visible { text-decoration-color: currentColor; background-image: none; }
+.fold-btn, .on-map { padding: 0; font: 500 12px/1.6 var(--font-mono); letter-spacing: 0.03em; color: var(--muted); background: none; border: 0; cursor: pointer; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); transition: text-decoration-color .12s ease; }
+.fold-btn { display: inline-block; margin: 2px 0 0; }
+.fold-btn:hover, .fold-btn:focus-visible, .on-map:hover, .on-map:focus-visible { text-decoration-color: currentColor; }
+.fold-btn:focus-visible, .on-map:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.fold-btn.keep { display: none; }
+.on-map { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; font-size: 11px; line-height: 1.4; }
+.on-map svg { width: 12px; height: 12px; flex: none; }
+.record { container: record / inline-size; margin-top: 8px; }
+.rec-band { --rec-label: 110px; margin-top: 24px; }
+.rec-band .chapters { list-style: none; margin: 0; padding: 0; position: relative; }
+.rec-route { position: absolute; top: 0; bottom: 0; left: calc(var(--rec-label) + var(--rec-gap) + var(--rec-stop) / 2 - 3.5px); width: 7px; pointer-events: none; }
+.rec-route svg { position: absolute; left: 0; top: 0; width: 7px; height: 100%; overflow: visible; }
+.rec-route line { stroke-width: 1.5; stroke-linecap: round; stroke-dasharray: 5 4.5; fill: none; }
+.rec-route .track { stroke: var(--line); }
+.rec-route .prog { stroke: var(--text); stroke-dasharray: none; }
+.chapter { display: grid; grid-template-columns: var(--rec-label) var(--rec-stop) minmax(0, 1fr); column-gap: var(--rec-gap); align-items: start; padding: 0 0 28px; }
+.chapter > .ch-label { grid-column: 1; }
+.chapter > .ch-stop { grid-column: 2; }
+.chapter > .entry { grid-column: 3; min-width: 0; }
+.ch-label { text-align: right; font-family: var(--font-mono); font-size: 12px; line-height: 1.5; letter-spacing: 0.03em; padding-top: 2px; }
+.ch-place { display: block; color: var(--text); font-weight: 500; }
+.ch-years { display: block; color: var(--muted); }
+.ch-stop { position: relative; align-self: stretch; }
+.ch-stop i { position: absolute; left: 50%; top: 7.5px; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; border: 1px solid var(--muted); background: var(--bg); box-sizing: border-box; transition: background-color 120ms ease, border-color 120ms ease; }
+.chapter.lit .ch-stop i { background: var(--text); border-color: var(--text); }
+.entry-title { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.35; margin: 0 0 4px; }
+.entry-sub { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); margin: 0 0 10px; }
+.entry-body p { font-family: var(--font-mono); font-weight: 400; font-size: 15px; line-height: 1.85; letter-spacing: -0.005em; color: var(--body); margin: 0; text-align: left; }
+.award-line { font-size: 17px; line-height: 1.7; letter-spacing: -0.005em; color: var(--body); margin: 0; }
+.entry-body p { max-width: 662px; }
+.entry-body { margin-bottom: 4px; }
+.chapter.animating { overflow: hidden; transition: height 240ms ease; }
+.s-rest[hidden] { display: none; }
+/* Tags: a block under the entry's text, set off by a rule. The labels hang in one right-aligned column at the widest ("methods:"), and each
+   row's pills wrap beside it, so every pill line starts at the same x. Every pill shows; a pill wider than its column wraps its own text. */
+.tags { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 10px; row-gap: 8px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+.tag-row { display: contents; }
+.tag-label { grid-column: 1; align-self: start; text-align: right; font: 500 11px/1 var(--font-mono); letter-spacing: 0.04em; color: var(--muted); padding-top: 6px; }
+.tag-pills { grid-column: 2; display: flex; flex-wrap: wrap; gap: var(--pill-gap); min-width: 0; }
+.tag-row .tag { font: 500 10.5px/1.2 var(--font-mono); letter-spacing: 0.04em; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 9px; white-space: normal; max-width: 100%; overflow-wrap: break-word; box-sizing: border-box; transition: opacity 120ms ease, color 120ms ease, border-color 120ms ease; }
+.record.threading .tag:not(.thread) { opacity: 0.45; }
+.record .tag.thread { color: var(--text); border-color: var(--text); }
+/* Awards + fellowships: one row per honor on the route, newest first. The years sit in the label column; the entry sets the title and its
+   description beside the awarding body, which moves above the title in narrower containers. */
+.aw-years { color: var(--text); font-size: 12.5px; }
+.aw-row { padding-bottom: 36px; }
+.aw-entry { display: grid; grid-template-areas: "body" "title" "desc"; }
+.aw-entry .entry-title { grid-area: title; font-size: 17px; margin: 0; }
+.aw-row .award-line { grid-area: desc; font-size: 15.5px; line-height: 1.65; color: var(--muted); text-align: left; margin-top: 6px; max-width: 662px; }
+.aw-body { grid-area: body; margin: 0 0 6px; font-family: var(--font-mono); font-size: 12px; line-height: 1.5; color: var(--muted); }
+.aw-body span { display: block; }
+@container record (min-width: 1180px) {
+  .rec-band { --rec-label: 150px; }
+  #band-education .chapters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 48px; }
+  #band-education .rec-route { display: none; }
+  #band-education .chapter { display: block; padding-bottom: 0; }
+  #band-education .ch-label { text-align: left; display: flex; flex-wrap: wrap; gap: 2px 10px; align-items: baseline; padding-top: 0; }
+  #band-education .ch-place, #band-education .ch-years { display: inline; }
+  #band-education .on-map { margin-top: 0; }
+  #band-education .ch-stop { height: 7px; margin: 10px 0 14px; background: repeating-linear-gradient(to right, var(--line) 0 5px, transparent 5px 9.5px) 0 50% / 100% 1.5px no-repeat; }
+  #band-education .ch-stop i { left: 0; margin-left: 0; top: 0; }
+  .aw-entry { grid-template-columns: minmax(0, 662px) minmax(0, 1fr); grid-template-areas: "title body" "desc body"; column-gap: 40px; }
+  .aw-body { text-align: right; margin: 2px 0 0; }
+}
+@media (max-width: 640px) {
+  .hero .about { padding: 24px 20px; }
+  .about-cols { grid-template-columns: minmax(0, 1fr); }
+  .fold-btn.keep { display: inline-block; margin: 2px 0 10px; }
+  .about:not(.reading) .about-p.later { display: none; }
+  .chapter { grid-template-columns: var(--rec-stop) minmax(0, 1fr); column-gap: 14px; }
+  .chapter > .ch-label { grid-column: 2; grid-row: 1; text-align: left; display: flex; flex-wrap: wrap; gap: 2px 10px; align-items: baseline; padding-top: 0; }
+  .ch-place, .ch-years { display: inline; }
+  .on-map { margin-top: 0; }
+  .chapter > .ch-stop { grid-column: 1; grid-row: 1 / span 2; }
+  .ch-stop i { top: 5.5px; }
+  .chapter > .entry { grid-column: 2; grid-row: 2; margin-top: 10px; }
+  .rec-route { left: calc(var(--rec-stop) / 2 - 3.5px); }
+  .tags { grid-template-columns: minmax(0, 1fr); row-gap: 6px; }
+  .tag-label, .tag-pills { grid-column: 1; text-align: left; }
+  .tag-label { padding-top: 4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ch-stop i, .fold-btn, .on-map, .about a, .record a, .tag-row .tag { transition: none; }
+  .chapter.animating { transition: none; }
+}
 .hero .links { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14.5px; margin-top: 12px; }
 
 
@@ -282,28 +405,6 @@ p { margin: 0 0 16px; }
 .photo-col .affiliations a:hover { border-bottom-color: var(--link); }
 .photo-col .affiliations strong { color: var(--text); font-weight: 500; }
 
-/* Experience */
-/* Role cards: dates in a mono column, title and company, the existing summary, and skill pills from the CV's lines for the role.
-   Hover or focus lifts a card 2 px and brightens it one surface step while its siblings dim; two entries hold the rest of their text behind "more". */
-.exp-list { display: grid; gap: 14px; }
-.exp { display: grid; grid-template-columns: 150px 1fr; gap: 28px; padding: 22px 24px; border: 1px solid var(--line); border-radius: 3px; background: var(--surface); transition: transform 240ms ease, background 240ms ease, opacity 240ms ease, border-color 240ms ease; }
-.exp:hover, .exp:focus-within { transform: translateY(-2px); background: color-mix(in srgb, var(--surface), var(--text) 4%); border-color: color-mix(in srgb, var(--line), var(--text) 18%); }
-.exp-list:hover .exp:not(:hover), .exp-list:focus-within .exp:not(:focus-within) { opacity: 0.85; }
-.exp-dates { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.03em; color: var(--muted); line-height: 1.6; padding-top: 3px; }
-.exp-head h3 { font-size: 17px; margin: 0 0 6px; }
-.exp-skills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
-.exp-skills .tag { font: 500 10.5px/1 var(--font-mono); letter-spacing: 0.04em; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 8px; }
-.exp-more[hidden] { display: none; }
-.exp-toggle { font: 500 11px/1 var(--font-mono); letter-spacing: 0.03em; color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 4px 9px; cursor: pointer; margin-left: 2px; transition: border-color .15s ease; }
-.exp-toggle:hover, .exp-toggle:focus-visible { border-color: var(--text); }
-.exp-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-@media (max-width: 700px) { .exp { grid-template-columns: 1fr; gap: 10px; padding: 18px 16px; } }
-@media (prefers-reduced-motion: reduce) { .exp { transition: none; } .exp:hover, .exp:focus-within { transform: none; } }
-.exp-head h3 a { border-bottom: 1px solid var(--line); }
-.exp-meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted); line-height: 1.55; }
-.exp-body p { font-family: var(--font-mono); color: var(--body); font-size: 12.5px; line-height: 1.75; margin: 0 0 12px; }
-.exp-body p:last-child { margin-bottom: 0; }
-@media (max-width: 820px) { .exp { grid-template-columns: 1fr; gap: 12px; } }
 
 /* Themes */
 .themes .grid { display: grid; gap: 32px; grid-template-columns: repeat(4, 1fr); }
@@ -389,12 +490,6 @@ p { margin: 0 0 16px; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
 
 /* Roles */
-.roles-grid { display: grid; grid-template-columns: 1fr; gap: 0; font-family: var(--font-mono); font-size: 12px; }
-.roles-grid .role { padding: 10px 0; line-height: 1.5; }
-.roles-grid .role + .role { border-top: 1px solid var(--line); }
-.roles-grid .role strong { display: block; font-weight: 500; color: var(--text); }
-.roles-grid .role-meta { display: block; color: var(--muted); }
-.roles-grid .role a { color: var(--muted); }
 
 /* Roadmap app (MapLibre) */
 .roadmap .inner { margin-bottom: 18px; }
@@ -456,9 +551,9 @@ p { margin: 0 0 16px; }
 .card .rt-when { font-size:11px; color:var(--muted); margin-bottom:6px; }
 .card .rt-head { font-family:var(--font-body); font-size:15px; font-weight:600; margin:0 0 6px; line-height:1.35; }
 .card .rt-note { font-size:11.5px; line-height:1.6; color:var(--muted); margin:0 0 8px; }
-.card .g-role { margin:6px 0 0; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.035); font-size:11px; line-height:1.6; }
+.card .g-role { margin:6px 0 0; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.035); font-size:11px; line-height:1.6; color:var(--text); }
 .card-body[hidden] { display:none; }
-.rt-app { --text: #ECECEA; --muted: #9A9A98; }  /* the panel is dark in both schemes; its text keeps the dark scheme's tokens */
+.rt-app { --text: #ECECEA; --muted: #9A9A98; --link: #D9A066; }  /* the panel is dark in both schemes; its text keeps the dark scheme's tokens */
 /* The Sentinel-2 year row: shown only while Sentinel-2 is the basemap; the active year is lit */
 .s2-years[hidden] { display:none; } .s2-years .years { display:flex; flex-wrap:wrap; gap:2px; margin-top:6px; }
 .s2-years .years button { font:inherit; font-family:var(--font-mono); font-size:11px; letter-spacing:0.02em; color:var(--muted); background:transparent; border:1px solid transparent; border-radius:4px; padding:3px 5px; cursor:pointer; }
@@ -650,32 +745,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
 <section class="hero" id="top">
   <div class="inner">
     <div class="row">
-      <div>
-        <div class="eyebrow">About</div>
-        <p class="bio">
-          I'm an environmental data scientist at <a href="https://grassrootscarbon.com/">Grassroots Carbon</a>, where I build the data systems and models that turn satellite imagery, soil samples, and climate records into the biomass and soil carbon estimates behind verified carbon credits.
-          <br><br>
-          Before that I was at <a href="/projects/flare-efficiency/">SeekOps</a>, a NASA JPL spin-off, measuring methane from drones: I led a study of flare destruction removal efficiency across the Bakken and Permian basins and published it at SPE ATCE 2024.
-          <br><br>
-          I hold a Master of Environmental Science from <a href="/projects/yangtze/">Yale</a> in machine learning, remote sensing, and spatial statistics, fully funded as a Merit Research Scholar and Hixon Center Fellow, with a summer at the University of Minnesota's <a href="/projects/peatland/">Marcell Experimental Forest</a> forecasting methane from a peatland flux tower, and an <a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Honorable Mention at the 2022 Global Stocktake Climate Datathon</a> ahead of COP 27. My BA is from UCLA, in Geography and Environmental Studies with minors in GIS and English.
-          <br><br>
-          I grew up on a small citrus farm near <a href="#map-stop-0">Sequoia National Park</a>, where land, climate, and livelihood were never abstract.
-        </p>
-                
-        
-      </div>
-      
-      <div class="roles-col">
-        <div class="eyebrow">Roles</div>
-        <div class="roles-grid">
-          <div class="role"><strong>Environmental Data Scientist, Machine Learning</strong><span class="role-meta"><a href="#exp-grc">Grassroots Carbon</a> &middot; <span class="aff-yr">2025 to present</span></span></div>
-          <div class="role"><strong>Environmental Data Scientist</strong><span class="role-meta"><a href="#exp-seekops">SeekOps</a> &middot; <span class="aff-yr">2024</span></span></div>
-          <div class="role"><strong>MESc</strong><span class="role-meta"><a href="#exp-yale">Yale School of the Environment</a> &middot; <span class="aff-yr">2021 to 2023</span></span></div>
-          <div class="role"><strong>Visiting Research Scientist</strong><span class="role-meta"><a href="#exp-umn">University of Minnesota</a> &middot; <span class="aff-yr">2022</span></span></div>
-          <div class="role"><strong>Geospatial Analyst</strong><span class="role-meta"><a href="#map-stop-2">Cydcor</a> &middot; <span class="aff-yr">2019 to 2020</span></span></div>
-          <div class="role"><strong>BA, Geography and Environmental Studies</strong><span class="role-meta"><a href="#exp-ucla">UCLA</a> &middot; <span class="aff-yr">2014 to 2018</span></span></div>
-        </div>
-      </div>
+      <div class="about" id="about"><h2 class="eyebrow">About</h2><div class="about-cols" id="about-cols"><p class="about-lede" data-copy>The Sierra Nevada stands at the eastern edge of the valley where I grew up, on a small citrus farm near Sequoia National Park.</p><div class="about-mark" aria-hidden="true"><i></i><i></i><i></i></div><div class="about-col"><p class="about-p" id="about-p1" data-copy>The orchards there depend on snow that falls in those mountains every winter and melts down into the valley months later: a dry winter in the Sierra shows up as a hard summer on the valley floor. Growing up there, you get used to the idea that what changes the land under your feet is often happening somewhere you can't see.</p><p class="about-p" id="about-p2" data-copy>That's probably why satellite imagery hooked me at UCLA. I studied geography and environmental studies there, with minors in Geographic Information Systems (GIS) and English, and spent a lot of those years learning to read land from above: mapping burn severity after the 2018 Mendocino Complex fires from Landsat, looking through cloud and smoke with radar, building terrain out of elevation data. The English minor shaped how I read maps as much as books. Close reading trains you to notice what a text claims and what it quietly leaves out, and maps reward the same attention, because every one is a set of choices about what to show and what to drop. Every map is biased; it makes a visual argument about what matters, and I came out of UCLA caring about that argument as much as the imagery underneath it.</p><p class="about-p later" id="about-p3" data-copy>At Yale I wanted to understand what land does to the air: the greenhouse gases it takes in and gives off. My thesis followed the Yangtze River Delta over about two decades as its rice paddies gave way to cities, which matters because both give off methane. I mapped that change from Landsat and global land-cover data, used spatial statistics to see where the methane in the air was clustering, and designed a deep learning model to try to predict it from the land underneath. One summer took me to northern Minnesota, to a flux tower standing over a peat bog in the <a href="/projects/peatland/">Marcell Experimental Forest</a>. It measures the methane and carbon dioxide moving between the bog and the air many times a second, and I spent that summer working out what drives those fluxes and forecasting them with time-series and machine learning models. Closer to campus, I flew a drone with a thermal camera over the solar array on Yale's West Campus, reading the temperature of every panel at once to map how efficiently each one was running and flag the ones that might need repair.</p></div><div class="about-col"><p class="about-p later" id="about-p4" data-copy>My interests have a way of turning into side quests. On a whim I entered a <a href="/projects/carbon-trading/">Global Stocktake Climate Datathon</a> ahead of COP 27 and built a tool that takes a sector's emissions under cap-and-trade from 2005 to 2021 and projects them out to 2030: you set how fast its allowances shrink each year and watch what happens to the emissions. Ours was one of four entries the judges recognized, with an honorable mention, alongside teams founded by start-ups and a multi-institutional international group. Not too shabby for a team of two: me and a buddy from the gym.</p><p class="about-p later" id="about-p5" data-copy>After Yale I wanted to be closer to where emissions actually come from, so I went into industry, and by choice into start-ups, where sensor technology, remote sensing, and machine learning meet, and the work is funded to solve a real problem for a real company. <a href="https://seekops.com/" target="_blank" rel="noopener">SeekOps</a>, spun out of NASA's Jet Propulsion Laboratory, works with oil and gas operators, and for the first time I wasn't studying emissions from a distance. We flew drones carrying laser sensors through the plumes coming off flares in the Bakken and Permian basins to measure how much methane was slipping through unburned. Getting a drone into the right part of a plume is its own puzzle, so I built object detection models that pick out wellheads, compressors, storage tanks, and flare stacks from imagery of a site, and used what they found to plan where the drone should fly.</p><p class="about-p later" id="about-p6" data-copy>Now I'm at <a href="https://grassrootscarbon.com/" target="_blank" rel="noopener">Grassroots Carbon</a>, which works with ranchers on the carbon in their land, and it's an unusual place to be. Grasslands hold about a fifth of the world's soil carbon, and much of it has been lost to overgrazing and conversion to cropland, which makes working ranchland one of the places where carbon can go back into the ground, through the people already managing it. Grazing done with care, with herds moved often enough that pasture has time to recover, can rebuild some of what was lost. Whether that's worth anything, to the climate or to the rancher being paid for it, depends on measuring it well, and that's my job. On the modeling side, it means process-based models that follow the grass through its year, from green-up through senescence in the fall, and track how carbon moves from those plants down into the soil, with machine learning correcting them against what the land actually did. On the data side, it means the pipelines that bring satellite imagery, soil samples, and weather records into the cloud and onto one shared spatial grid, so every ranch is measured the same way.</p></div></div><button type="button" class="fold-btn keep" id="about-more" aria-expanded="false" aria-controls="about-p3 about-p4 about-p5 about-p6">keep reading</button></div>
 
       <div class="band-wrap">
 <div class="band" id="band">
@@ -949,96 +1019,8 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   </div>
 </section>
 
-<section id="experience" class="experience">
-  <div class="inner">
-    <div class="eyebrow">Experience and education</div>
-    <h2>Where the work happened.</h2>
-
-    <div class="exp-list">
-    <article class="exp" id="exp-grc">
-      <div class="exp-dates">February 2025 to present</div>
-      <div class="exp-main">
-        <div class="exp-head">
-          <h3><a href="https://grassrootscarbon.com/">Grassroots Carbon</a></h3>
-          <div class="exp-meta">Environmental Data Scientist, Machine Learning<br>San Antonio and Austin, Texas</div>
-        </div>
-        <div class="exp-body">
-          <p>I engineered the team's shared covariate extraction tooling, a Python client that queries five authoritative geospatial sources through one interface and consolidates what were previously fragmented workflows into a single maintained codebase. I benchmark biomass and structural vegetation architectures spanning deep learning, ensemble methods, and process-based ecological models, with outputs supporting quantification under the Regenerative Standard, VM0042, and CAR-SEP, and extend them into counterfactual baselines that reconstruct expected productivity under business-as-usual management, a required step under each methodology. <span class="exp-more" id="exp-grc-more" hidden>Ranch-level stratification is designed around SEP v2, where clustering geophysically similar ground directly reduces the sampling uncertainty that drives credit deductions. This work is under active development and unpublished; publications are forthcoming.</span> <button type="button" class="exp-toggle" aria-expanded="false" aria-controls="exp-grc-more">more</button></p>
-        </div>
-        <div class="exp-skills" aria-label="Skills"><span class="tag">Light Use Efficiency</span><span class="tag">RothC</span><span class="tag">CAR-SEP</span><span class="tag">Harmonized Landsat-Sentinel</span><span class="tag">AWS S3</span><span class="tag">Cloud Optimized GeoTIFF</span><span class="tag">Uber H3</span></div>
-      </div>
-    </article>
-
-    <article class="exp" id="exp-seekops">
-      <div class="exp-dates">January to December 2024</div>
-      <div class="exp-main">
-        <div class="exp-head">
-          <h3><a href="https://seekops.com/">SeekOps</a></h3>
-          <div class="exp-meta">Environmental Data Scientist<br>Austin, Texas</div>
-        </div>
-        <div class="exp-body">
-          <p>As one of three scientists on the Science team, reporting to the co-founder and CTO, I led a quantitative assessment of flare destruction removal efficiency across the Bakken and Permian basins. The result covered 42 flare systems across 71 observations, including 27 revisits, and was published as first author and presented at SPE ATCE 2024 (SPE-221067-MS), contributing to enhanced leak detection and repair programs in two major shale basins. <span class="exp-more" id="exp-seekops-more" hidden>I trained a fine-tuned YOLOv8 detector to classify wellheads, compressors, storage tanks, and flare stacks from aerial imagery for autonomous site characterization, managing the full cycle from annotation to held-out validation, and built the client-facing and internal visualization suites in Python and GIS platforms that communicated spatial emissions distributions across survey campaigns.</span> <button type="button" class="exp-toggle" aria-expanded="false" aria-controls="exp-seekops-more">more</button></p>
-        </div>
-        <div class="exp-skills" aria-label="Skills"><span class="tag">UAV TDLAS</span><span class="tag">mass balance</span><span class="tag">LiDAR terrain correction</span><span class="tag">Navier-Stokes plume model</span><span class="tag">YOLOv8</span><span class="tag">Folium</span><span class="tag">Plotly Dash</span><span class="tag">QGIS</span><span class="tag">ArcGIS Pro</span></div>
-      </div>
-    </article>
-
-    <article class="exp" id="exp-yale">
-      <div class="exp-dates">2021 to 2023</div>
-      <div class="exp-main">
-        <div class="exp-head">
-          <h3><a href="https://environment.yale.edu/">Yale School of the Environment</a></h3>
-          <div class="exp-meta">Master of Environmental Science, Machine Learning, Remote Sensing and Spatial Statistics<br>New Haven, Connecticut</div>
-        </div>
-        <div class="exp-body">
-          <p>In the Lee Lab I investigated the relationship between urbanization, rice cultivation, and methane across China's Yangtze River Delta, home to more than 150 million people: multi-decadal land cover classified from 30 m Landsat in Google Earth Engine, with urban extent from the GAIA dataset and paddy rice from the Phenology and Pixel-Based Paddy Mapping algorithm, set against Sentinel-5P TROPOMI column methane and tested for spatial clustering with Getis-Ord Gi* and Global Moran's I. The thesis proposed a DeepLabV3+ network to extend the emissions record before the satellite era. A 2026 reproduction of the analysis does not reach the thesis conclusion: no land-cover model outperforms a spatial null at 0.25 degrees, and both the original thesis and the reproduction are published together with an errata.</p>
-        </div>
-        <div class="exp-skills" aria-label="Skills"><span class="tag">Google Earth Engine</span><span class="tag">Landsat</span><span class="tag">GAIA</span><span class="tag">PPPM</span><span class="tag">Sentinel-5P TROPOMI</span><span class="tag">Getis-Ord Gi*</span><span class="tag">Moran's I</span><span class="tag">DeepLabV3+</span><span class="tag">ResNet50</span></div>
-      </div>
-    </article>
-
-    <article class="exp" id="exp-umn">
-      <div class="exp-dates">Summer 2022</div>
-      <div class="exp-main">
-        <div class="exp-head">
-          <h3><a href="https://twin-cities.umn.edu/">University of Minnesota</a></h3>
-          <div class="exp-meta">Visiting Research Scientist, Griffis Lab<br>Marcell Experimental Forest, Minnesota</div>
-        </div>
-        <div class="exp-body">
-          <p>The 2022 work applied feature importance and seasonal decomposition to isolate the environmental drivers of flux and built an ensemble of LightGBM, SARIMAX, Prophet, and XGBoost over OLS regression; soil temperature was the strongest signal, with a Pearson r of 0.87 with methane flux, and the ordinary least squares regression yielded an R&sup2; of 0.78. The project was rebuilt from source in 2026 as a monthly study of the full 2009 to 2024 record, forecasting one to twelve months ahead against seasonal benchmarks and projecting the fitted relationships back two decades. The rebuilt finding is narrower and more useful: the seasonal cycle repeats reliably, the size of each season varies without trend, and none of the recorded covariates predict that variation once seasonality is accounted for.</p>
-        </div>
-        <div class="exp-skills" aria-label="Skills"><span class="tag">eddy covariance</span><span class="tag">GHG analyzers</span><span class="tag">OLS regression</span><span class="tag">LightGBM</span><span class="tag">SARIMAX</span><span class="tag">Prophet</span><span class="tag">XGBoost</span><span class="tag">MAPE</span></div>
-      </div>
-    </article>
-
-    <article class="exp" id="exp-cydcor">
-      <div class="exp-dates">2019 to 2020</div>
-      <div class="exp-main">
-        <div class="exp-head">
-          <h3><a href="https://www.cydcor.com/">Cydcor</a></h3>
-          <div class="exp-meta">Geospatial Analyst<br>Los Angeles, California</div>
-        </div>
-        <div class="exp-body">
-          <p>A North American outsourced sales company running face-to-face campaigns for brands. Spatial statistics applied outside science. Territory planning from census demographics and sales data in ArcGIS, spatial models for expansion into new markets, and automated geocoding in Python for high-volume campaigns.</p>
-        </div>
-      </div>
-    </article>
-
-    <article class="exp" id="exp-ucla">
-      <div class="exp-dates">2014 to 2018</div>
-      <div class="exp-main">
-        <div class="exp-head">
-          <h3><a href="https://www.ucla.edu/">University of California, Los Angeles</a></h3>
-          <div class="exp-meta">BA, Geography and Environmental Studies; minors in Geographic Information Systems (GIS) and English<br>Los Angeles, California</div>
-        </div>
-        <div class="exp-body">
-          <p>The coursework covered the full geospatial stack: supervised and unsupervised image classification, spectral index analysis, SAR interpretation, DEM construction, spatial interpolation and autocorrelation, SQL spatial querying, cartographic design, and predictive environmental modeling. The undergraduate thesis measured surface vegetation change across the Mendocino Complex, at the time the largest wildfire in California history, from Landsat 8 pre- and post-fire scenes in Google Earth Engine using NDVI and NBR, and was presented at the 2019 Los Angeles Geospatial Summit, hosted by the USC Spatial Sciences Institute.</p>
-        </div>
-        <div class="exp-skills" aria-label="Skills"><span class="tag">Landsat 8</span><span class="tag">NDVI</span><span class="tag">dNBR</span><span class="tag">ENVI</span><span class="tag">Google Earth Engine</span><span class="tag">SAR</span><span class="tag">DEM construction</span><span class="tag">cartography</span></div>
-      </div>
-    </article>
-    </div>
-  </div>
+<section class="record-section" id="record-section">
+  <div class="record" id="record"><div class="rec-band" id="band-experience"><h2 class="eyebrow" id="experience">Experience</h2><ol class="chapters"><div class="rec-route" aria-hidden="true"><svg><defs><clipPath id="band-experience-clip"><rect class="rec-clip" x="0" y="0" width="7" height="0"/></clipPath></defs><line class="track" x1="3.5" y1="0" x2="3.5" y2="100%"/><g clip-path="url(#band-experience-clip)"><line class="prog" x1="3.5" y1="0" x2="3.5" y2="100%"/></g></svg></div><li class="chapter" id="exp-grc"><div class="ch-label"><span class="ch-place">Grassroots Carbon</span><span class="ch-years">2025 to present</span><button type="button" class="on-map" data-stop="6" aria-label="Show Grassroots Carbon on the map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>on the map</button></div><div class="ch-stop" aria-hidden="true"><i></i></div><article class="entry" id="rec-grc"><h3 class="entry-title" data-copy>Environmental Data Scientist, Machine Learning</h3><p class="entry-sub" data-copy><a href="https://grassrootscarbon.com/" target="_blank" rel="noopener">Grassroots Carbon</a> · Austin and San Antonio, TX</p><div class="entry-body" data-copy><p><span class="s1">Grassroots Carbon pays ranchers for the carbon their land stores when they change how they graze it, and sells that carbon as credits to companies such as Microsoft and Boeing.</span> <span class="s2">Measuring that carbon is the center of the company's science.</span> <span class="s-rest" id="rec-grc-rest" hidden>It rests on three kinds of record: soil samples taken across each ranch; what the ranchers themselves log about their grazing, through <a href="https://pasturemap.com/" target="_blank" rel="noopener">PastureMap</a>, the company's own software (which pastures the herd was on and for how long); and public data that describes the land from above and around it, satellite imagery of how it's growing, daily weather, soil surveys, and elevation. On the data science team, my work is the modeling. We estimate how much carbon a ranch's soil is gaining and, just as important, how much it would have gained anyway under the old grazing: only the difference counts as a credit. A typical model follows the grass through its seasons. From the years before the change, it learns how much the land grows from the sunlight, weather, and cover it gets; it then runs those same rules forward to show what the old grazing would have produced. Others answer the questions that come before and after it: how much grass is standing on a ranch right now, estimated from satellite imagery and the field measurements that calibrate it; how deep a ranch's soil can be credited, worked out from where its own cores stopped and what the terrain and soil maps say about the ground beneath; and how to divide a ranch into zones that sample alike, so that fewer cores carry less uncertainty into the credit. Around the models sit the shared data systems the team maintains (one grid, one set of sources, so any ranch in the country can be run the same way) and the checks that test our estimates against research sites where grazing never changed.</span></p></div><button type="button" class="fold-btn" aria-expanded="false" aria-controls="rec-grc-rest">read the rest</button><div class="tags" id="rec-grc-tags" data-role="Grassroots Carbon"><div class="tag-row" data-copy><span class="tag-label">data:</span><span class="tag-pills"><span class="tag" data-tag="soil organic carbon cores">soil organic carbon cores</span><span class="tag" data-tag="blm aim field plots (terradat)">BLM AIM field plots (TerrADat)</span><span class="tag" data-tag="grasscast productivity forecasts">GrassCast productivity forecasts</span><span class="tag" data-tag="rangeland analysis platform (rap)">Rangeland Analysis Platform (RAP)</span><span class="tag" data-tag="harmonized landsat sentinel-2 (hls)">Harmonized Landsat Sentinel-2 (HLS)</span><span class="tag" data-tag="alphaearth foundations embeddings">AlphaEarth Foundations embeddings</span><span class="tag" data-tag="modis productivity and phenology">MODIS productivity and phenology</span><span class="tag" data-tag="gridmet weather">gridMET weather</span><span class="tag" data-tag="open-meteo weather">Open-Meteo weather</span><span class="tag" data-tag="prism climate normals">PRISM climate normals</span><span class="tag" data-tag="polaris soil properties">POLARIS soil properties</span><span class="tag" data-tag="gssurgo soil survey">gSSURGO soil survey</span><span class="tag" data-tag="3dep elevation">3DEP elevation</span><span class="tag" data-tag="national land cover database (nlcd)">National Land Cover Database (NLCD)</span><span class="tag" data-tag="nrcs land resource regions (mlra, lrr)">NRCS land resource regions (MLRA, LRR)</span><span class="tag" data-tag="ipcc climate zones">IPCC climate zones</span><span class="tag" data-tag="neon and ameriflux research sites for validation">NEON and AmeriFlux research sites for validation</span></span></div><div class="tag-row" data-copy><span class="tag-label">methods:</span><span class="tag-pills"><span class="tag" data-tag="light use efficiency (lue) modeling">light use efficiency (LUE) modeling</span><span class="tag" data-tag="counterfactual baselines">counterfactual baselines</span><span class="tag" data-tag="growing-season efficiency calibration">growing-season efficiency calibration</span><span class="tag" data-tag="temperature and vapor pressure deficit (vpd) stress scalars">temperature and vapor pressure deficit (VPD) stress scalars</span><span class="tag" data-tag="growing degree day (gdd) residual diagnostics">growing degree day (GDD) residual diagnostics</span><span class="tag" data-tag="random forest biomass modeling">random forest biomass modeling</span><span class="tag" data-tag="allometric biomass estimation">allometric biomass estimation</span><span class="tag" data-tag="bounded residual correction">bounded residual correction</span><span class="tag" data-tag="causally constrained features">causally constrained features</span><span class="tag" data-tag="spatial and temporal cross-validation">spatial and temporal cross-validation</span><span class="tag" data-tag="creditable depth modeling">creditable depth modeling</span><span class="tag" data-tag="sampling stratification">sampling stratification</span><span class="tag" data-tag="soil enrichment protocol (car-sep)">Soil Enrichment Protocol (CAR-SEP)</span><span class="tag" data-tag="verra vm0042">Verra VM0042</span><span class="tag" data-tag="regenerative standard">Regenerative Standard</span></span></div><div class="tag-row" data-copy><span class="tag-label">tools:</span><span class="tag-pills"><span class="tag" data-tag="python">Python</span><span class="tag" data-tag="pandas">pandas</span><span class="tag" data-tag="numpy">NumPy</span><span class="tag" data-tag="scikit-learn">scikit-learn</span><span class="tag" data-tag="geopandas">GeoPandas</span><span class="tag" data-tag="xarray">xarray</span><span class="tag" data-tag="rasterio">Rasterio</span><span class="tag" data-tag="dask">Dask</span><span class="tag" data-tag="duckdb">DuckDB</span><span class="tag" data-tag="parquet">Parquet</span><span class="tag" data-tag="stac catalogs">STAC catalogs</span><span class="tag" data-tag="microsoft planetary computer">Microsoft Planetary Computer</span><span class="tag" data-tag="opendap">OPeNDAP</span><span class="tag" data-tag="aws s3">AWS S3</span><span class="tag" data-tag="cloud optimized geotiff (cog)">Cloud Optimized GeoTIFF (COG)</span><span class="tag" data-tag="uber h3">Uber H3</span><span class="tag" data-tag="pytest">pytest</span><span class="tag" data-tag="github">GitHub</span><span class="tag" data-tag="matplotlib">Matplotlib</span></span></div></div></article></li><li class="chapter" id="exp-seekops"><div class="ch-label"><span class="ch-place">SeekOps</span><span class="ch-years">2024</span><button type="button" class="on-map" data-stop="5" aria-label="Show SeekOps on the map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>on the map</button></div><div class="ch-stop" aria-hidden="true"><i></i></div><article class="entry" id="rec-seekops"><h3 class="entry-title" data-copy>Environmental Data Scientist</h3><p class="entry-sub" data-copy><a href="https://seekops.com/" target="_blank" rel="noopener">SeekOps</a> · Austin, TX</p><div class="entry-body" data-copy><p><span class="s1">SeekOps is a start-up spun out of NASA's Jet Propulsion Laboratory that measures methane for oil and gas operators with sensors carried on drones.</span> <span class="s2">Flares are meant to burn methane off, and the operators' question is how much gets through unburned.</span> <span class="s-rest" id="rec-seekops-rest" hidden>On a science team of three, I led the study that answered it across the Bakken and Permian basins. A drone carrying a laser spectrometer crosses the plume downwind of a flare while instruments on the ground record the wind; the methane passing through that crossing, set against what the flare was fed, gives the share that escaped. Each measurement was corrected for the terrain beneath the flight, for the way a facility's own structures bend the wind, and for how the plume spreads, so that the number an operator received could be defended. The findings went into their leak detection programs and, later, into a paper at SPE ATCE 2024. The same campaigns needed a map of every site before a drone could fly it, so I trained a detection model on aerial imagery to pick out the wellheads, compressors, tanks, and flares, and built the maps and dashboards that carried each campaign's results to the clients.</span></p></div><button type="button" class="fold-btn" aria-expanded="false" aria-controls="rec-seekops-rest">read the rest</button><div class="tags" id="rec-seekops-tags" data-role="SeekOps"><div class="tag-row" data-copy><span class="tag-label">data:</span><span class="tag-pills"><span class="tag" data-tag="tunable diode laser spectroscopy (tdlas)">tunable diode laser spectroscopy (TDLAS)</span><span class="tag" data-tag="flare inflow telemetry">flare inflow telemetry</span><span class="tag" data-tag="ultrasonic anemometers">ultrasonic anemometers</span><span class="tag" data-tag="rtk ground stations">RTK ground stations</span><span class="tag" data-tag="airdata flight telemetry">AirData flight telemetry</span><span class="tag" data-tag="lidar surface models">LiDAR surface models</span><span class="tag" data-tag="drone aerial imagery">drone aerial imagery</span></span></div><div class="tag-row" data-copy><span class="tag-label">methods:</span><span class="tag-pills"><span class="tag" data-tag="destruction removal efficiency (dre)">destruction removal efficiency (DRE)</span><span class="tag" data-tag="mass balance emission rates">mass balance emission rates</span><span class="tag" data-tag="navier-stokes plume modeling">Navier-Stokes plume modeling</span><span class="tag" data-tag="terrain and surface roughness correction">terrain and surface roughness correction</span><span class="tag" data-tag="wind vector validation">wind vector validation</span><span class="tag" data-tag="object detection (yolov8)">object detection (YOLOv8)</span><span class="tag" data-tag="transfer learning">transfer learning</span><span class="tag" data-tag="predictive emissions modeling">predictive emissions modeling</span><span class="tag" data-tag="leak detection and repair (ldar)">leak detection and repair (LDAR)</span><span class="tag" data-tag="oil and gas methane partnership (ogmp) and epa reporting">Oil and Gas Methane Partnership (OGMP) and EPA reporting</span></span></div><div class="tag-row" data-copy><span class="tag-label">tools:</span><span class="tag-pills"><span class="tag" data-tag="python">Python</span><span class="tag" data-tag="pytorch">PyTorch</span><span class="tag" data-tag="folium">Folium</span><span class="tag" data-tag="plotly dash">Plotly Dash</span><span class="tag" data-tag="qgis">QGIS</span><span class="tag" data-tag="arcgis pro">ArcGIS Pro</span></span></div></div></article></li><li class="chapter" id="exp-umn"><div class="ch-label"><span class="ch-place">Minnesota</span><span class="ch-years">summer 2022</span><button type="button" class="on-map" data-stop="4" aria-label="Show Minnesota on the map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>on the map</button></div><div class="ch-stop" aria-hidden="true"><i></i></div><article class="entry" id="rec-umn"><h3 class="entry-title" data-copy>Visiting Research Scientist</h3><p class="entry-sub" data-copy>University of Minnesota · St. Paul, MN</p><div class="entry-body" data-copy><p><span class="s1">Northern Minnesota is peat country, and the <a href="/projects/peatland/">Marcell Experimental Forest</a> has been watching it longer than almost anyone: the Forest Service has run research there since the early 1960s, and a tower in its Bog Lake Peatland has measured the carbon dioxide moving between the peat and the air since 2007, and the methane since 2009, many times a second.</span> <span class="s2">That record is part of the <a href="https://ameriflux.lbl.gov/sites/siteinfo/US-MBP" target="_blank" rel="noopener">AmeriFlux</a> network, and it was the reason for a summer in Tim Griffis's lab.</span> <span class="s-rest" id="rec-umn-rest" hidden>The question was simple to ask and hard to answer: what drives those fluxes, and how far ahead can they be forecast? Part of the summer went to the instruments that make the record, the tower, the anemometers, and the gas analyzers, run under the network's protocols. The rest went to the record itself. I separated the seasons from the trend, ranked the environmental drivers, and set classical time-series models and gradient boosting against the same data, stacking them where each did best.</span></p></div><button type="button" class="fold-btn" aria-expanded="false" aria-controls="rec-umn-rest">read the rest</button><div class="tags" id="rec-umn-tags" data-role="University of Minnesota"><div class="tag-row" data-copy><span class="tag-label">data:</span><span class="tag-pills"><span class="tag" data-tag="eddy covariance flux tower">eddy covariance flux tower</span><span class="tag" data-tag="methane and carbon dioxide fluxes">methane and carbon dioxide fluxes</span><span class="tag" data-tag="3d sonic anemometers">3D sonic anemometers</span><span class="tag" data-tag="greenhouse gas analyzers">greenhouse gas analyzers</span><span class="tag" data-tag="soil and air temperature">soil and air temperature</span><span class="tag" data-tag="precipitation">precipitation</span><span class="tag" data-tag="ameriflux site us-mbp">AmeriFlux site US-MBP</span></span></div><div class="tag-row" data-copy><span class="tag-label">methods:</span><span class="tag-pills"><span class="tag" data-tag="correlation analysis">correlation analysis</span><span class="tag" data-tag="ordinary least squares (ols) regression">ordinary least squares (OLS) regression</span><span class="tag" data-tag="time series decomposition">time series decomposition</span><span class="tag" data-tag="feature importance">feature importance</span><span class="tag" data-tag="sarimax forecasting">SARIMAX forecasting</span><span class="tag" data-tag="prophet forecasting">Prophet forecasting</span><span class="tag" data-tag="gradient boosting (lightgbm, xgboost)">gradient boosting (LightGBM, XGBoost)</span><span class="tag" data-tag="ensemble stacking">ensemble stacking</span><span class="tag" data-tag="error-based model selection (mape)">error-based model selection (MAPE)</span><span class="tag" data-tag="autocorrelation and stationarity tests">autocorrelation and stationarity tests</span><span class="tag" data-tag="ameriflux protocols">AmeriFlux protocols</span></span></div></div></article></li><li class="chapter" id="exp-cydcor"><div class="ch-label"><span class="ch-place">Cydcor</span><span class="ch-years">2019 to 2020</span><button type="button" class="on-map" data-stop="2" aria-label="Show Cydcor on the map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>on the map</button></div><div class="ch-stop" aria-hidden="true"><i></i></div><article class="entry" id="rec-cydcor"><h3 class="entry-title" data-copy>Geospatial Analyst</h3><p class="entry-sub" data-copy>Cydcor · Los Angeles, CA</p><div class="entry-body" data-copy><p><span class="s1">Cydcor runs door-to-door and business-to-business sales campaigns, and the question it brought to a geographer was where the next ones should go.</span> <span class="s2">Working directly with the company's leadership, I joined census demographics to its own sales records and modeled the map that came out of them: interpolating between the neighborhoods already known to find the ones most likely to respond, extending the model to markets the company had never entered, and automating the geocoding with batch processing and validation so thousands of addresses could be placed and checked at once.</span></p></div><div class="tags" id="rec-cydcor-tags" data-role="Cydcor"><div class="tag-row" data-copy><span class="tag-label">data:</span><span class="tag-pills"><span class="tag" data-tag="census tract demographics">census tract demographics</span><span class="tag" data-tag="internal sales metrics">internal sales metrics</span><span class="tag" data-tag="google geocoding api">Google Geocoding API</span></span></div><div class="tag-row" data-copy><span class="tag-label">methods:</span><span class="tag-pills"><span class="tag" data-tag="kriging and spatial interpolation">kriging and spatial interpolation</span><span class="tag" data-tag="spatial regression">spatial regression</span><span class="tag" data-tag="weighted overlay">weighted overlay</span><span class="tag" data-tag="batch geocoding and validation">batch geocoding and validation</span></span></div><div class="tag-row" data-copy><span class="tag-label">tools:</span><span class="tag-pills"><span class="tag" data-tag="arcgis">ArcGIS</span><span class="tag" data-tag="python">Python</span></span></div></div></article></li></ol></div><div class="rec-band" id="band-education"><h2 class="eyebrow">Education</h2><ol class="chapters"><div class="rec-route" aria-hidden="true"><svg><defs><clipPath id="band-education-clip"><rect class="rec-clip" x="0" y="0" width="7" height="0"/></clipPath></defs><line class="track" x1="3.5" y1="0" x2="3.5" y2="100%"/><g clip-path="url(#band-education-clip)"><line class="prog" x1="3.5" y1="0" x2="3.5" y2="100%"/></g></svg></div><li class="chapter" id="exp-yale"><div class="ch-label"><span class="ch-place">Yale</span><span class="ch-years">2021 to 2023</span><button type="button" class="on-map" data-stop="3" aria-label="Show Yale on the map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>on the map</button></div><div class="ch-stop" aria-hidden="true"><i></i></div><article class="entry" id="rec-yale"><h3 class="entry-title" data-copy>MESc, Machine Learning, Remote Sensing and Spatial Statistics</h3><p class="entry-sub" data-copy>Yale School of the Environment · <a href="https://lee-lab.yale.edu/" target="_blank" rel="noopener">The Lee Lab</a> · New Haven, CT</p><div class="entry-body" data-copy><p><span class="s1">Two years in Xuhui Lee's lab, which studies how land, air, and people act on one another, on one large question: when land use changes, how does the methane above it change with it?</span> <span class="s2">The Yangtze River Delta made the case.</span> <span class="s-rest" id="rec-yale-rest" hidden>Home to more than 150 million people and some of China's most productive rice land, it has been losing paddies to cities year by year, and both give off methane. The work had three parts. I classified two decades of land cover from Landsat, drawing urban extent from a global dataset and separating rice from similar crops by its flooding and cropping calendar. I then mapped where present-day methane from Sentinel-5P clusters and how closely it follows that land use. And, to address the gap in the record, since satellites have measured methane only since 2017 while the land has been changing for decades, I trained a segmentation network to estimate the methane field for the years before any satellite saw it. Alongside the <a href="/projects/yangtze/">thesis</a>, coursework in machine learning, computer vision, spatial statistics, and remote sensing, with graduate computer science beside it, and a term as teaching fellow for Regression Modeling of Ecological and Environmental Data, the school's applied statistics course.</span></p></div><button type="button" class="fold-btn" aria-expanded="false" aria-controls="rec-yale-rest">read the rest</button><div class="tags" id="rec-yale-tags" data-role="Yale School of the Environment"><div class="tag-row" data-copy><span class="tag-label">data:</span><span class="tag-pills"><span class="tag" data-tag="sentinel-5p methane (tropomi)">Sentinel-5P methane (TROPOMI)</span><span class="tag" data-tag="landsat archive (tm, etm+, oli)">Landsat archive (TM, ETM+, OLI)</span><span class="tag" data-tag="global urban extent (gaia)">global urban extent (GAIA)</span><span class="tag" data-tag="paddy rice mapping (pppm)">paddy rice mapping (PPPM)</span><span class="tag" data-tag="vegetation and water indices (ndvi, evi, lswi)">vegetation and water indices (NDVI, EVI, LSWI)</span><span class="tag" data-tag="china provincial agricultural statistics">China provincial agricultural statistics</span><span class="tag" data-tag="drone thermal and rgb imagery">drone thermal and RGB imagery</span></span></div><div class="tag-row" data-copy><span class="tag-label">methods:</span><span class="tag-pills"><span class="tag" data-tag="land cover classification">land cover classification</span><span class="tag" data-tag="hot spot analysis (getis-ord gi*)">hot spot analysis (Getis-Ord Gi*)</span><span class="tag" data-tag="spatial autocorrelation (moran's i)">spatial autocorrelation (Moran's I)</span><span class="tag" data-tag="semantic segmentation (deeplabv3+, resnet50)">semantic segmentation (DeepLabV3+, ResNet50)</span><span class="tag" data-tag="thermal and rgb image fusion">thermal and RGB image fusion</span><span class="tag" data-tag="photogrammetry">photogrammetry</span><span class="tag" data-tag="multivariate statistics">multivariate statistics</span><span class="tag" data-tag="regression modeling">regression modeling</span></span></div><div class="tag-row" data-copy><span class="tag-label">tools:</span><span class="tag-pills"><span class="tag" data-tag="google earth engine">Google Earth Engine</span><span class="tag" data-tag="pytorch">PyTorch</span><span class="tag" data-tag="scikit-image">scikit-image</span><span class="tag" data-tag="opencv">OpenCV</span><span class="tag" data-tag="google colab">Google Colab</span><span class="tag" data-tag="agisoft metashape">Agisoft Metashape</span><span class="tag" data-tag="matlab">MATLAB</span></span></div></div></article></li><li class="chapter" id="exp-ucla"><div class="ch-label"><span class="ch-place">UCLA</span><span class="ch-years">2014 to 2018</span><button type="button" class="on-map" data-stop="1" aria-label="Show UCLA on the map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>on the map</button></div><div class="ch-stop" aria-hidden="true"><i></i></div><article class="entry" id="rec-ucla"><h3 class="entry-title" data-copy>BA, Geography and Environmental Studies; minors in Geographic Information Systems (GIS) and English</h3><p class="entry-sub" data-copy>UCLA · Los Angeles, CA</p><div class="entry-body" data-copy><p><span class="s1">UCLA's geography department asks three questions of anything on the map: where it is, why it's there, and what that location does to it.</span> <span class="s2">The environmental studies side of the degree turns those questions on the systems that shape the planet and on how people live within them.</span> <span class="s-rest" id="rec-ucla-rest" hidden>I took both, along with a minor in GIS, which is where the questions become measurable: in the imagery satellites return, the elevation and radar data that describe the ground beneath it, and the analysis that turns both into evidence. The English minor was for love of the classics and the playwrights: who knew close reading would become crucial to making a good map. My undergraduate thesis tracked how vegetation returns after wildfire, following the <a href="/maps/mendocino-fire-complex/">2018 Mendocino Complex</a>, at the time the largest fire in California's history, through Landsat scenes before and after the burn in Google Earth Engine. A faculty committee chose it for presentation at the 2019 <a href="https://web.archive.org/web/20251216180226/https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program/" target="_blank" rel="noopener">Los Angeles Geospatial Summit</a>.</span></p></div><button type="button" class="fold-btn" aria-expanded="false" aria-controls="rec-ucla-rest">read the rest</button><div class="tags" id="rec-ucla-tags" data-role="University of California, Los Angeles"><div class="tag-row" data-copy><span class="tag-label">data:</span><span class="tag-pills"><span class="tag" data-tag="landsat 8 imagery">Landsat 8 imagery</span><span class="tag" data-tag="synthetic aperture radar (sar)">synthetic aperture radar (SAR)</span><span class="tag" data-tag="digital elevation models (dem)">digital elevation models (DEM)</span></span></div><div class="tag-row" data-copy><span class="tag-label">methods:</span><span class="tag-pills"><span class="tag" data-tag="supervised and unsupervised classification">supervised and unsupervised classification</span><span class="tag" data-tag="vegetation and burn indices (ndvi, nbr, dnbr)">vegetation and burn indices (NDVI, NBR, dNBR)</span><span class="tag" data-tag="change detection">change detection</span><span class="tag" data-tag="spatial interpolation">spatial interpolation</span><span class="tag" data-tag="spatial autocorrelation">spatial autocorrelation</span><span class="tag" data-tag="predictive modeling">predictive modeling</span><span class="tag" data-tag="cartographic design">cartographic design</span></span></div><div class="tag-row" data-copy><span class="tag-label">tools:</span><span class="tag-pills"><span class="tag" data-tag="envi">ENVI</span><span class="tag" data-tag="google earth engine">Google Earth Engine</span><span class="tag" data-tag="arcgis">ArcGIS</span><span class="tag" data-tag="qgis">QGIS</span><span class="tag" data-tag="spatial sql">spatial SQL</span></span></div></div></article></li></ol></div><div class="rec-band" id="band-awards"><h2 class="eyebrow">Awards + fellowships</h2><ol class="chapters"><div class="rec-route" aria-hidden="true"><svg><defs><clipPath id="band-awards-clip"><rect class="rec-clip" x="0" y="0" width="7" height="0"/></clipPath></defs><line class="track" x1="3.5" y1="0" x2="3.5" y2="100%"/><g clip-path="url(#band-awards-clip)"><line class="prog" x1="3.5" y1="0" x2="3.5" y2="100%"/></g></svg></div><li class="chapter aw-row" id="aw-merit"><div class="ch-label"><span class="aw-years" data-copy>2021 to 2023</span></div><div class="ch-stop" aria-hidden="true"><i></i></div><article class="entry aw-entry"><h3 class="entry-title" data-copy>Merit Research Scholar and Dean's Scholar</h3><p class="award-line" data-copy>Full funding for the master's, awarded each year to a limited number of the school's top applicants.</p><p class="aw-body"><span data-copy>Yale School of the Environment</span><span data-copy>New Haven, CT</span></p></article></li><li class="chapter aw-row" id="aw-datathon"><div class="ch-label"><span class="aw-years" data-copy>2022</span></div><div class="ch-stop" aria-hidden="true"><i></i></div><article class="entry aw-entry"><h3 class="entry-title" data-copy>Honorable Mention, <a href="/projects/carbon-trading/">Global Stocktake Climate Datathon</a></h3><p class="award-line" data-copy>Recognized by an expert panel as one of four entries from more than 100 participants in 30 countries: a tool, built by a team of two, that projects European cap-and-trade emissions out to 2030.</p><p class="aw-body"><span data-copy>Data-Driven EnviroLab, UNC-Chapel Hill</span><span data-copy>OpenEarth Foundation</span></p></article></li><li class="chapter aw-row" id="aw-hixon"><div class="ch-label"><span class="aw-years" data-copy>2022</span></div><div class="ch-stop" aria-hidden="true"><i></i></div><article class="entry aw-entry"><h3 class="entry-title" data-copy><a href="https://hixon.yale.edu/hixon-fellows/matthew-duyst" target="_blank" rel="noopener">Hixon Center for Urban Sustainability Fellow</a></h3><p class="award-line" data-copy>Funding for the Yangtze study of how the methane above the delta shifts as its cities spread over the rice paddies, one of a handful of student projects the center backs each year on how cities grow and are run.</p><p class="aw-body"><span data-copy>Yale School of the Environment</span><span data-copy>New Haven, CT</span></p></article></li><li class="chapter aw-row" id="aw-summit"><div class="ch-label"><span class="aw-years" data-copy>2019</span></div><div class="ch-stop" aria-hidden="true"><i></i></div><article class="entry aw-entry"><h3 class="entry-title" data-copy>Poster and lightning talk, <a href="https://web.archive.org/web/20251216180226/https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program/" target="_blank" rel="noopener">Los Angeles Geospatial Summit</a></h3><p class="award-line" data-copy>Chosen by a faculty committee to present the Mendocino Complex fire study at the institute's annual conference, alongside student work from six universities.</p><p class="aw-body"><span data-copy>USC Spatial Sciences Institute</span><span data-copy>Los Angeles, CA</span></p></article></li><li class="chapter aw-row" id="aw-ursp"><div class="ch-label"><span class="aw-years" data-copy>2017 to 2018</span></div><div class="ch-stop" aria-hidden="true"><i></i></div><article class="entry aw-entry"><h3 class="entry-title" data-copy>Undergraduate Research Scholars Program</h3><p class="award-line" data-copy>A year of original research with a faculty mentor, Nick Burkhart in the geography department, that grew into the undergraduate thesis.</p><p class="aw-body"><span data-copy>UCLA</span><span data-copy>Los Angeles, CA</span></p></article></li><li class="chapter aw-row" id="aw-regents"><div class="ch-label"><span class="aw-years" data-copy>2014 to 2018</span></div><div class="ch-stop" aria-hidden="true"><i></i></div><article class="entry aw-entry"><h3 class="entry-title" data-copy>Regents Scholar</h3><p class="award-line" data-copy>Awarded on admission by a faculty committee for academic achievement and promise, and held through all four years.</p><p class="aw-body"><span data-copy>UCLA</span><span data-copy>Los Angeles, CA</span></p></article></li></ol></div></div>
 </section>
 
 <section id="research" class="themes surface">
@@ -1069,7 +1051,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       
     </div>
     <div class="lines">
-      <div class="line-row"><span class="line-k">Publications and talks</span><span class="line-v"><a href="https://doi.org/10.2118/221067-MS">SPE-221067-MS, SPE ATCE 2024, first author</a> &middot; <a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Global Stocktake Climate Datathon, Honorable Mention, 2022</a> &middot; <a href="https://hixon.yale.edu/hixon-fellows/matthew-duyst">Hixon Center Fellow, 2022</a> &middot; <a href="https://web.archive.org/web/20251216180226/https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program/">Los Angeles Geospatial Summit, poster, 2019</a></span></div>
+      <div class="line-row"><span class="line-k">Publications and talks</span><span class="line-v"><a href="https://doi.org/10.2118/221067-MS">SPE-221067-MS, SPE ATCE 2024, first author</a> &middot; <a href="https://www.openearth.org/blog/first-global-stocktake-climate-datathon-produces-solutions-at-cop-27">Global Stocktake Climate Datathon, Honorable Mention, 2022</a> &middot; <a href="https://hixon.yale.edu/hixon-fellows/matthew-duyst">Hixon Center Fellow, 2022</a> &middot; <a href="https://web.archive.org/web/20251216180226/https://spatial.usc.edu/los-angeles-geospatial-summit/los-angeles-geospatial-summit-2021-events/2019-full-program/">Los Angeles Geospatial Summit, poster and lightning talk, 2019</a></span></div>
       <div class="line-row"><span class="line-k">Methods and tools</span><span class="line-v">Python, R, SQL &middot; PyTorch, TensorFlow, scikit-learn, XGBoost, LightGBM &middot; Google Earth Engine, GDAL, Rasterio, GeoPandas &middot; QGIS, ArcGIS Pro &middot; Landsat, Sentinel-5P TROPOMI, LiDAR, UAV photogrammetry &middot; eddy covariance, spatial statistics, time series forecasting &middot; Docker, Azure</span></div>
     </div>
   </div>
@@ -1272,16 +1254,19 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
     var W = window.innerWidth, Hh = window.innerHeight, hue = 210, lastY = window.scrollY;
     window.addEventListener('resize', function () { W = window.innerWidth; Hh = window.innerHeight; });
     window.addEventListener('scroll', function () { var dy = window.scrollY - lastY; lastY = window.scrollY; hue += dy * 0.08; }, { passive: true });
+    // ?clock=<ms>, review only: a fixed clock and a seeded layout, for reproducible captures
+    var clock = params.has('clock') ? +params.get('clock') || 0 : null, seed = 1;
+    var rand = clock === null ? Math.random : function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
     var st = discs.map(function (c, i) {
-      return { ax: 0.15 + Math.random() * 0.7, ay: 0.15 + Math.random() * 0.7, rx: 0.14 + Math.random() * 0.2, ry: 0.12 + Math.random() * 0.18,
-               s1: 0.00014 + Math.random() * 0.0001, s2: 0.0001 + Math.random() * 0.00008, p1: Math.random() * 6.28, p2: Math.random() * 6.28,
-               gr: 0.35 + Math.random() * 0.45, gp: Math.random() * 6.28, hoff: i * 40 + Math.random() * 30 };
+      return { ax: 0.15 + rand() * 0.7, ay: 0.15 + rand() * 0.7, rx: 0.14 + rand() * 0.2, ry: 0.12 + rand() * 0.18,
+               s1: 0.00014 + rand() * 0.0001, s2: 0.0001 + rand() * 0.00008, p1: rand() * 6.28, p2: rand() * 6.28,
+               gr: 0.35 + rand() * 0.45, gp: rand() * 6.28, hoff: i * 40 + rand() * 30 };
     });
     var t0 = null;
     var ease = function (w) { return w < 0.5 ? 2 * w * w : 1 - Math.pow(-2 * w + 2, 2) / 2; };
     var loop = function (now) {
       if (t0 === null) t0 = now;
-      var t = now - t0;
+      var t = clock === null ? now - t0 : clock;
       var g = ease(0.5 - 0.5 * Math.cos((t % 18000) / 18000 * 6.2832)); // 18 s breath: apart, together, apart
       var cx = W * (0.5 + 0.2 * Math.sin(t * 0.00016)), cy = Hh * (0.45 + 0.16 * Math.cos(t * 0.00013));
       var land = window.mwmLand, pt = land && land.pointer, pr = land ? land.radius : 0, mx = 0, my = 0;
@@ -1319,7 +1304,7 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
         c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1));
         c.setAttribute('fill', 'hsl(' + hv + ' 82% 60%)');
       });
-      if (paintName) paintName(st, now, hue);
+      if (paintName) paintName(st, clock === null ? now : clock, hue);
       if (window.mwmRing === 'halo' || window.mwmRing === 'hairhalo') { var hsum = 0; for (var hq = 0; hq < st.length; hq++) hsum += +st[hq].hue; var mk2 = document.getElementById('stop-marker'); if (mk2) mk2.style.setProperty('--halo', 'hsl(' + Math.round(hsum / st.length) + ' 82% 60% / 0.25)'); }
       requestAnimationFrame(loop);
     };
@@ -1330,7 +1315,8 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
   var dock = document.getElementById('rail'), introEl = document.getElementById('intro');
   if (dock && introEl && 'IntersectionObserver' in window) {
     new IntersectionObserver(function (es) { dock.classList.toggle('show', !es[0].isIntersecting); }, { threshold: 0.05 }).observe(introEl);
-    var secs = ['top', 'map', 'work', 'experience', 'research', 'code'].map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    var secs = ['top', 'map', 'work', 'experience', 'research', 'code'].map(function (id) { return document.getElementById(id); }).filter(Boolean)
+      .sort(function (a, b) { return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1; });   // page order: the Experience band sits above the map
     var links = dock.querySelectorAll('a'), railRaf = null;
     // The section whose top has passed the band 40 to 45 percent down the viewport is current; the last section
     // also becomes current once its top is in view or the page is at the bottom, since it is too short to reach the band
@@ -1371,10 +1357,83 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       });
     }
   }
-  // Role cards: "more" reveals the rest of an entry in place
-  document.querySelectorAll('.exp-toggle').forEach(function (btn) {
-    btn.addEventListener('click', function () { var more = document.getElementById(btn.getAttribute('aria-controls')); var open = btn.getAttribute('aria-expanded') === 'true'; btn.setAttribute('aria-expanded', open ? 'false' : 'true'); if (more) more.hidden = open; btn.textContent = open ? 'more' : 'less'; });
-  });
+  // About and record. Folds are real DOM expansions: a remainder carries the hidden attribute and the chapter's height eases over 240 ms. Under
+  // 640 px the About's last four paragraphs fold behind "keep reading". Each entry's "read the rest" opens its paragraph's remainder; every
+  // tag always shows. Hovering a pill lights every pill with the same text across the record. Experience and Awards + fellowships each light
+  // one stop at a time, the row that most recently crossed into the upper third of the viewport; each Education column lights on its own while
+  // it is in view. A band's route runs solid down to its lit stop.
+  (function () {
+    var about = document.getElementById('about'), record = document.getElementById('record'); if (!about || !record) return;
+    var root = document.documentElement;
+    function setScrollbar() { root.style.setProperty('--sbw', Math.max(0, window.innerWidth - root.clientWidth) + 'px'); }
+    setScrollbar();
+    var phone = window.matchMedia('(max-width: 640px)');
+    function ids(list) { return (list || '').split(/\s+/).filter(Boolean).map(function (id) { return document.getElementById(id); }).filter(Boolean); }
+    function each(list, fn) { Array.prototype.forEach.call(list, fn); }
+    function animate(body, change) {
+      if (!body || reduce) { change(); return; }
+      var h0 = body.getBoundingClientRect().height; change(); var h1 = body.getBoundingClientRect().height; if (h0 === h1) return;
+      body.style.height = h0 + 'px'; body.classList.add('animating'); void body.offsetHeight; body.style.height = h1 + 'px';
+      var done = function () { body.classList.remove('animating'); body.style.height = ''; body.removeEventListener('transitionend', done); };
+      body.addEventListener('transitionend', done); setTimeout(done, 320);
+    }
+    each(record.querySelectorAll('.fold-btn'), function (btn) {
+      btn.addEventListener('click', function () {
+        var open = btn.getAttribute('aria-expanded') !== 'true', rest = ids(btn.getAttribute('aria-controls'));
+        animate(btn.closest('.chapter'), function () { rest.forEach(function (r) { r.hidden = !open; }); });
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false'); btn.textContent = open ? 'fold' : 'read the rest';
+      });
+    });
+    var keep = document.getElementById('about-more'), aboutRest = ids(keep && keep.getAttribute('aria-controls'));
+    function setAbout(open, anim) {
+      var change = function () { about.classList.toggle('reading', open); aboutRest.forEach(function (p) { p.hidden = phone.matches && !open; }); };
+      if (anim) animate(document.getElementById('about-cols'), change); else change();
+      if (keep) { keep.setAttribute('aria-expanded', open ? 'true' : 'false'); keep.textContent = open ? 'fold' : 'keep reading'; }
+    }
+    if (keep) keep.addEventListener('click', function () { setAbout(keep.getAttribute('aria-expanded') !== 'true', true); });
+    // Tag threads: one delegated listener; pills carry their normalized text in data-tag
+    function thread(key) {
+      record.classList.toggle('threading', !!key);
+      each(record.querySelectorAll('.tag'), function (p) { p.classList.toggle('thread', !!key && p.getAttribute('data-tag') === key); });
+    }
+    record.addEventListener('pointerover', function (e) { var t = e.target.closest && e.target.closest('.tag'); if (t) thread(t.getAttribute('data-tag')); });
+    record.addEventListener('pointerout', function (e) { var t = e.target.closest && e.target.closest('.tag'); if (!t) return; var to = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('.tag'); if (to !== t) thread(to ? to.getAttribute('data-tag') : null); });
+    // Show on map: the map's own hashchange listener opens the stop (it scrolls to the map and selects the stop, as its stop list does)
+    record.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('.on-map'); if (!b) return;
+      history.replaceState(null, '', location.pathname + location.search); location.hash = 'map-stop-' + b.getAttribute('data-stop');
+    });
+    // The route: one line per band from its first stop to its last, a clip on the solid line down to the band's last lit stop
+    var bands = Array.prototype.slice.call(record.querySelectorAll('.rec-band')).map(function (b) { return { el: b, svg: b.querySelector('.rec-route svg'), route: b.querySelector('.rec-route'), clip: b.querySelector('.rec-clip'), chapters: Array.prototype.slice.call(b.querySelectorAll('.chapter')), each: b.id === 'band-education' }; });
+    function center(stop) { return stop.getBoundingClientRect().top + 11; }
+    function fitRoutes() {
+      bands.forEach(function (b) {
+        var stops = b.chapters.map(function (c) { return c.querySelector('.ch-stop'); }), top = b.route.getBoundingClientRect().top;
+        var y0 = center(stops[0]) - top, y1 = center(stops[stops.length - 1]) - top;
+        b.y0 = y0; b.h = Math.max(0, y1 - y0); b.svg.style.top = y0 + 'px'; b.svg.style.height = b.h + 'px';
+      });
+      light();
+    }
+    var raf = null;
+    function light() {
+      raf = null; var vh = window.innerHeight;
+      bands.forEach(function (b) {
+        var lit = [];
+        if (b.each) b.chapters.forEach(function (c) { var r = c.getBoundingClientRect(); if (r.top < vh * 0.8 && r.bottom > vh / 3) lit.push(c); });
+        else { var last = null; b.chapters.forEach(function (c) { var r = c.getBoundingClientRect(); if (r.top < vh / 3 && r.bottom > 0) last = c; }); if (last) lit.push(last); }
+        b.chapters.forEach(function (c) { c.classList.toggle('lit', lit.indexOf(c) >= 0); });
+        var fill = 0, end = lit[lit.length - 1];
+        if (end) fill = center(end.querySelector('.ch-stop')) - b.route.getBoundingClientRect().top - b.y0;
+        else if (b.el.getBoundingClientRect().bottom < vh / 3) fill = b.h;
+        b.clip.setAttribute('height', Math.max(0, Math.min(b.h, fill)).toFixed(1));
+      });
+    }
+    window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(light); }, { passive: true });
+    if (phone.addEventListener) phone.addEventListener('change', function () { setAbout(keep && keep.getAttribute('aria-expanded') === 'true', false); fitRoutes(); });
+    if ('ResizeObserver' in window) new ResizeObserver(fitRoutes).observe(record);
+    window.addEventListener('resize', function () { setScrollbar(); fitRoutes(); });
+    setAbout(false, false); fitRoutes();
+  })();
   // Section entrances: eyebrow, headline, then body rise in on the intro's curve
   document.querySelectorAll('section:not(.intro) .inner').forEach(function (inner) {
     var kids = Array.prototype.slice.call(inner.children);
@@ -1445,9 +1504,6 @@ footer.site a:hover { color: var(--accent-text); border-bottom-color: var(--acce
       }, { passive: true });
       ctaWrap.addEventListener('mouseleave', function () { inside = false; mx = 0; my = 0; if (!raf) raf = requestAnimationFrame(settle); });
     }
-    // hue for the fills drifts with the page blobs
-    var hueEl = document.documentElement, hh = 200;
-    (function hueLoop() { hh = (hh + 0.05) % 360; hueEl.style.setProperty('--ch', hh.toFixed(1)); requestAnimationFrame(hueLoop); })();
   }
   // The Email pill copies the address: the clipboard API where the page is a secure context, else a hidden textarea and execCommand('copy'), as on the
   // LAN review server; the tooltip confirms for 1.6 s and a polite live region announces it. When both fail the tooltip holds the address, selected.

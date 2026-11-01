@@ -7,17 +7,32 @@
     python3 tools/audit/compare.py audit.json baseline.json --force-baseline "reason"    # writes it anyway, recording the reason and the failing metrics in the file
 
 The quoted figure for each throttled metric is the median of the audit's runs (five by default); all runs are printed beside it. For the timed
-metrics (FCP, LCP, TBT) a trend column compares the median with the baseline's spread: "moved" when it lies outside the baseline's minimum-to-maximum
-range across its runs, "within noise" otherwise. The trend is a report, not a gate.
+metrics (FCP, LCP, TBT) a trend column compares the median with the baseline's spread: a direction when it lies outside the baseline's minimum-to-maximum
+range across its runs ("down from X to Y" or "up from X to Y", X the baseline median), "within noise" otherwise. The trend is a report,
+not a gate.
 
-Fails (exit 1) when, on the throttled profile, requests or bytes rise more than 10 percent, FCP or LCP rise more than 100 ms,
-CLS exceeds 0.05 or TBT exceeds 50 ms; and when any axe violation, console error, overflow or broken internal link is present.
+Fails (exit 1) when, on the throttled profile, requests or bytes rise more than 10 percent (--bytes-allowance=0.15, at most, widens the
+byte gate, and --requests-allowance=N, at most 2, adds N requests, for a review the owner has approved), FCP or LCP rise more than 100 ms,
+CLS exceeds 0.05 or TBT exceeds 50 ms (--gate=absolute, the default, for local runs against the GPU baseline); with --gate=relative, for
+the review workflow's GPU-less runner, TBT fails instead when it exceeds the CI baseline's maximum for the cell by more than 25 percent;
+with --gate=paired, the review workflow's present rule, TBT, FCP and LCP are not gated here at all: a separate job times the branch against
+main on one runner (paired.py --gate), and this comparison keeps them only as report-only trend lines, while requests, bytes and CLS stay
+gated against the stored baseline; and when any axe violation, console error, overflow or broken internal link is present.
 The local profile is printed beside the quoted figure and does not gate.
 """
 import json, os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from trend import trend as trend_text, tbt_failure, bytes_failure, requests_failure
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 args = sys.argv[1:]; CHECKS = '--checks-only' in args; WRITE = '--write-baseline' in args; FORCE = None
+GATE = next((a.split('=', 1)[1] for a in args if a.startswith('--gate=')), 'absolute'); args = [a for a in args if not a.startswith('--gate=')]
+if GATE not in ('absolute', 'relative', 'paired'): sys.exit(f'--gate must be absolute, relative or paired, not {GATE}')
+ALLOW = float(next((a.split('=', 1)[1] for a in args if a.startswith('--bytes-allowance=')), '0.10')); args = [a for a in args if not a.startswith('--bytes-allowance=')]
+if not 0 < ALLOW <= 0.15: sys.exit('--bytes-allowance must be above 0 and at most 0.15')
+EXTRA = next((a.split('=', 1)[1] for a in args if a.startswith('--requests-allowance=')), '0'); args = [a for a in args if not a.startswith('--requests-allowance=')]
+if not EXTRA.isdigit() or int(EXTRA) > 2: sys.exit('--requests-allowance must be a whole number from 0 to 2')
+EXTRA = int(EXTRA)
 if '--force-baseline' in args:
     i = args.index('--force-baseline'); FORCE = args[i + 1] if i + 1 < len(args) else ''
     if not FORCE.strip(): sys.exit('--force-baseline needs a reason')
@@ -49,7 +64,7 @@ def spread(e, stage, metric):
 moved = []
 print(f"audit {cur['meta']['date']} at {cur['meta']['commit']} ({cur['meta']['renderer']}) vs baseline {base['meta']['date']} at {base['meta']['commit']} ({base['meta']['renderer']})")
 if cur['meta']['renderer'] != base['meta']['renderer']: fails.append('renderer differs from the baseline; numbers are not comparable')
-print(f"{'page':26s} {'w':>4s} {'theme':5s} {'metric':9s} {'quoted':>9s} {'baseline':>9s} {'local':>9s} {'base local':>10s}  {'spread':>11s} {'base spread':>11s}  {'trend':12s}  runs")
+print(f"{'page':26s} {'w':>4s} {'theme':5s} {'metric':9s} {'quoted':>9s} {'baseline':>9s} {'local':>9s} {'base local':>10s}  {'spread':>11s} {'base spread':>11s}  {'trend':22s}  runs")
 for path, widths in cur['pages'].items():
     for width, themes in widths.items():
         for theme, e in themes.items():
@@ -65,15 +80,22 @@ for path, widths in cur['pages'].items():
                         lo, hi = spread(e, stage, metric); blo, bhi = spread(b, stage, metric)
                         sp = f"{lo}-{hi}" if lo is not None else ''; bsp = f"{blo}-{bhi}" if blo is not None else ''
                         if blo is not None:
-                            trend = 'moved' if (q < blo or q > bhi) else 'within noise'
-                            if trend == 'moved': moved.append(f"{path} {width} {theme} {stage} {metric}: {q} against {blo}-{bhi}")
-                    print(f"{path:26s} {width:>4s} {theme:5s} {stage[:1] + ' ' + metric:9s} {cell(q):>9} {cell(bq):>9} {cell(l):>9} {cell(bl):>10}  {sp:>11s} {bsp:>11s}  {trend:12s}  {runs}")
+                            trend = trend_text(q, bq, blo, bhi)
+                            if trend != 'within noise': moved.append(f"{path} {width} {theme} {stage} {metric}: {trend}, outside the baseline's {blo}-{bhi}")
+                    print(f"{path:26s} {width:>4s} {theme:5s} {stage[:1] + ' ' + metric:9s} {cell(q):>9} {cell(bq):>9} {cell(l):>9} {cell(bl):>10}  {sp:>11s} {bsp:>11s}  {trend:22s}  {runs}")
                     tag = f"{path} {width} {theme} {stage} {metric}"
                     if q is None: continue
-                    if metric in ('requests', 'bytes') and bq and q > bq * 1.10: fails.append(f"{tag}: {q} is more than 10% over the baseline {bq}")
-                    if metric in ('fcp', 'lcp') and bq is not None and q is not None and q > bq + 100: fails.append(f"{tag}: {q} ms is more than 100 ms over the baseline {bq}")
+                    if metric == 'requests':
+                        why = requests_failure(q, bq, EXTRA)
+                        if why: fails.append(f"{tag}: {why}")
+                    if metric == 'bytes':
+                        why = bytes_failure(q, bq, ALLOW)
+                        if why: fails.append(f"{tag}: {why}")
+                    if metric in ('fcp', 'lcp') and GATE != 'paired' and bq is not None and q is not None and q > bq + 100: fails.append(f"{tag}: {q} ms is more than 100 ms over the baseline {bq}")
                     if metric == 'cls' and q > 0.05: fails.append(f"{tag}: {q} is above 0.05")
-                    if metric == 'tbt' and q > 50: fails.append(f"{tag}: {q} ms is above 50 ms")
+                    if metric == 'tbt' and GATE != 'paired':
+                        why = tbt_failure(q, spread(b, stage, metric)[1], GATE)
+                        if why: fails.append(f"{tag}: {why}")
             for v in e.get('axe', []): fails.append(f"{path} {width} {theme}: axe {v['id']} ({v['impact']}) on {', '.join(v['nodes'][:3])}")
             for profile in ('throttled', 'local'):
                 for err in e.get(profile, {}).get('errors', []): fails.append(f"{path} {width} {theme} {profile}: {err}")

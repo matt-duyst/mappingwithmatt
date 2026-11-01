@@ -1,0 +1,621 @@
+diff --git a/.github/workflows/review.yml b/.github/workflows/review.yml
+index 00e3f48..35c6b64 100644
+--- a/.github/workflows/review.yml
++++ b/.github/workflows/review.yml
+@@ -1,7 +1,9 @@
+ name: review
+ 
+ # Every browser check, measurement and capture for a branch under review, on a hosted runner. Pushes to any branch but main run the
+-# review; a manual run with baseline_ref measures that ref instead and publishes tools/audit/baseline-ci.json as an artifact.
++# review; a manual run with baseline_ref measures that ref instead and publishes tools/audit/baseline-ci.json as an artifact; a manual run
++# with pair_refs times two commits against each other on this one runner (and compares the hero at a pinned clock); a manual run with
++# live_url checks the map's label glyphs on that site.
+ on:
+   push:
+     branches-ignore: [main]
+@@ -15,6 +17,22 @@ on:
+         description: 'Compare the contact band against this commit (full SHA); a push compares against the branch head before the push'
+         required: false
+         default: ''
++      pair_refs:
++        description: 'Two full SHAs, before then after, separated by a space: paired cold timing at 1440, nine runs per side, alternating'
++        required: false
++        default: ''
++      pair_look:
++        description: 'With pair_refs: also compare the hero at ?clock=0, 5000 and 20000 (yes or no; both commits must have the clock parameter)'
++        required: false
++        default: 'yes'
++      pair_noparam:
++        description: 'With pair_refs: also diff a load without the clock parameter, DOM and console at 2 s (yes or no)'
++        required: false
++        default: 'no'
++      live_url:
++        description: 'Check the map label glyphs on this site (full scroll and every stop flight) instead of reviewing'
++        required: false
++        default: ''
+ 
+ jobs:
+   review:
+@@ -22,6 +40,9 @@ jobs:
+     timeout-minutes: 150
+     env:
+       BASELINE_REF: ${{ inputs.baseline_ref }}
++      PAIR_REFS: ${{ inputs.pair_refs }}
++      LIVE_URL: ${{ inputs.live_url }}
++      MODE: ${{ inputs.baseline_ref != '' && 'baseline' || inputs.pair_refs != '' && 'pair' || inputs.live_url != '' && 'live' || 'review' }}
+     steps:
+       - uses: actions/checkout@v4
+       - uses: actions/setup-python@v5
+@@ -54,12 +75,16 @@ jobs:
+           sha=$(git -C base rev-parse --short HEAD)
+           (cd base && python3 -m http.server 8001 >/dev/null 2>&1 &)
+           sleep 1; curl -sf -o /dev/null http://localhost:8001/
+-          python3 tools/audit/run.py http://localhost:8001 --pages / --software --chrome "$CHROME" --out out/audit-base.json
++          python3 tools/audit/run.py http://localhost:8001 --pages / --software --runs 9 --chrome "$CHROME" --out out/audit-base.json
+           cp out/audit-base.json tools/audit/baseline-ci.json
+           # compare.py exits 1 when a gate fails even as it forces the write; the write itself is what this step checks
+-          python3 tools/audit/compare.py out/audit-base.json tools/audit/baseline-ci.json --force-baseline "CI baseline: ${BASELINE_REF} at ${sha}, ubuntu-latest, no GPU" || true
++          python3 tools/audit/compare.py out/audit-base.json tools/audit/baseline-ci.json --force-baseline "CI baseline: ${BASELINE_REF} at ${sha}, nine runs, ubuntu-latest, no GPU" || true
++          # run.py records the commit of the tools' checkout; the baseline is of the measured ref, so its commit and note name that ref, and the tools' commit is kept beside it
++          python3 -c "import json, os; p = 'tools/audit/baseline-ci.json'; j = json.load(open(p)); m = j['meta']; m['tools_commit'] = os.environ['GITHUB_SHA'][:7]; m['commit'] = '${sha}'; m['note'] = f\"Baseline taken of ${BASELINE_REF} at ${sha} with the tools at {m['tools_commit']} on {m['date']}: software rendering, {m['runs']} throttled run(s) per page with the median quoted.\"; json.dump(j, open(p, 'w'), indent=1)"
+           python3 -c "import json, sys; m = json.load(open('tools/audit/baseline-ci.json'))['meta']; sys.exit(0 if m.get('commit') and 'note' in m else 1)"
+           cp tools/audit/baseline-ci.json out/baseline-ci.json
++          # the file into the log as well, in numbered chunks with its SHA-256, so it can be committed without downloading the artifact
++          python3 -c "import hashlib; b = open('tools/audit/baseline-ci.json', 'rb').read(); print('BASELINE-SHA256', hashlib.sha256(b).hexdigest(), len(b)); [print(f'BASELINE-CHUNK {i // 3000:05d} ' + b[i:i + 3000].hex()) for i in range(0, len(b), 3000)]"
+           echo "CI baseline written from ${BASELINE_REF} at ${sha}; artifact baseline-ci-${sha}" >> "$GITHUB_STEP_SUMMARY"
+           echo "BASE_SHA=${sha}" >> "$GITHUB_ENV"
+       - if: env.BASELINE_REF != ''
+@@ -69,35 +94,67 @@ jobs:
+           path: out/
+           retention-days: 14
+ 
++      # Paired mode: two commits, each served from its own worktree, timed against each other on this runner
++      - name: Paired timing
++        if: env.MODE == 'pair'
++        env:
++          PAIR_LOOK: ${{ inputs.pair_look }}
++          PAIR_NOPARAM: ${{ inputs.pair_noparam }}
++        run: |
++          set -o pipefail
++          read -r before after <<< "$PAIR_REFS"
++          for side in before after; do ref=${!side}; git fetch -q --depth 1 origin "$ref" && git worktree add -q "$side" FETCH_HEAD; done
++          (cd before && python3 -m http.server 8003 >/dev/null 2>&1 &); (cd after && python3 -m http.server 8004 >/dev/null 2>&1 &)
++          sleep 1; curl -sf -o /dev/null http://localhost:8003/ && curl -sf -o /dev/null http://localhost:8004/
++          b=${before::7}; a=${after::7}
++          python3 tools/audit/paired.py http://localhost:8003 http://localhost:8004 --runs 9 --before-label "$b" --after-label "$a" --chrome "$CHROME" --out out | tee out/paired.txt
++          cat out/paired.md >> "$GITHUB_STEP_SUMMARY"
++          if [ "$PAIR_LOOK" = yes ]; then python3 tools/audit/herolook.py http://localhost:8003 http://localhost:8004 --before-label "$b" --after-label "$a" --chrome "$CHROME" --out out; cat out/hero.md >> "$GITHUB_STEP_SUMMARY"; fi
++          if [ "$PAIR_NOPARAM" = yes ]; then python3 tools/audit/herolook.py http://localhost:8003 http://localhost:8004 --noparam --chrome "$CHROME" --out out; cat out/noparam.md >> "$GITHUB_STEP_SUMMARY"; fi
++          echo "PAIR_NAME=pair-${b}-${a}" >> "$GITHUB_ENV"
++      - if: always() && env.MODE == 'pair'
++        uses: actions/upload-artifact@v4
++        with:
++          name: ${{ env.PAIR_NAME }}
++          path: out/
++          retention-days: 14
++
++      # Live mode: the map's label glyphs on a deployed site
++      - name: Live map glyphs
++        if: env.MODE == 'live'
++        run: |
++          set -o pipefail; python3 tools/audit/glyphcheck.py "$LIVE_URL" --chrome "$CHROME" --out out | tee out/glyphs.txt
++          cat out/glyphs.md >> "$GITHUB_STEP_SUMMARY"
++
+       # Review mode
+       - name: Serve the site
+-        if: env.BASELINE_REF == ''
++        if: env.MODE == 'review'
+         run: |
+           python3 -m http.server 8000 >/dev/null 2>&1 &
+           sleep 1; curl -sf -o /dev/null http://localhost:8000/
+       - name: Claims and pills
+-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
++        if: ${{ !cancelled() && env.MODE == 'review' }}
+         run: set -o pipefail; python3 tools/claims/check.py | tee out/claims.txt
+       - name: Copy
+-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
++        if: ${{ !cancelled() && env.MODE == 'review' }}
+         run: set -o pipefail; python3 tools/claims/copy_check.py http://localhost:8000/ --chrome "$CHROME" | tee out/copy.txt
+       - name: Links
+-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
++        if: ${{ !cancelled() && env.MODE == 'review' }}
+         run: |
+           set -o pipefail
+           python3 tools/audit/run.py http://localhost:8000 --checks-only --pages / --software --chrome "$CHROME" --out out/checks.json
+           python3 tools/audit/compare.py --checks-only out/checks.json | tee out/links.txt
+       - name: Axe, keyboard and layout
+-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
++        if: ${{ !cancelled() && env.MODE == 'review' }}
+         run: python3 tools/audit/review.py http://localhost:8000/ --chrome "$CHROME" --out out
+       - name: Justified gaps
+-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
++        if: ${{ !cancelled() && env.MODE == 'review' }}
+         run: set -o pipefail; python3 tools/audit/gaps.py http://localhost:8000/ --width 1100,1280,1440,1920 --both --chrome "$CHROME" | tee out/gaps.txt
+       - name: Audit
+-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
++        if: ${{ !cancelled() && env.MODE == 'review' }}
+         run: |
+           set -o pipefail
+-          python3 tools/audit/run.py http://localhost:8000 --pages / --software --chrome "$CHROME" --out out/audit.json
++          python3 tools/audit/run.py http://localhost:8000 --pages / --software --runs 9 --chrome "$CHROME" --out out/audit.json
+           # the relative TBT gate: this runner has no GPU, so TBT is held to the CI baseline's own spread (owner-approved)
+           # owner-approved for this branch: cold bytes may rise 15 percent over the CI baseline instead of 10
+           echo "Byte allowance 15 percent: section three record and reading type, owner-approved 2026-10-30" >> "$GITHUB_STEP_SUMMARY"
+@@ -105,7 +162,7 @@ jobs:
+           echo "Request allowance 1: self-hosted Fraunces italic for the About's opening line, owner-approved 2026-10-31" >> "$GITHUB_STEP_SUMMARY"
+           python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json --gate=relative --bytes-allowance=0.15 --requests-allowance=1 | tee out/compare.txt
+       - name: Contact band parity
+-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
++        if: ${{ !cancelled() && env.MODE == 'review' }}
+         env:
+           PARITY_BEFORE: ${{ inputs.parity_ref || github.event.before }}
+         run: |
+@@ -117,19 +174,26 @@ jobs:
+           sleep 1; curl -sf -o /dev/null http://localhost:8002/
+           python3 tools/audit/parity.py http://localhost:8002/ http://localhost:8000/ --chrome "$CHROME" --out out
+           cat out/parity.md >> "$GITHUB_STEP_SUMMARY"
++          # the map card after a stop flight on the commit compared against, beside the Captures step's own pair
++          python3 tools/audit/capture.py http://localhost:8002/ --card-only --label "before-${PARITY_BEFORE::7}" --chrome "$CHROME" --out out/captures
++      - name: Map glyphs
++        if: ${{ !cancelled() && env.MODE == 'review' }}
++        run: |
++          set -o pipefail; python3 tools/audit/glyphcheck.py http://localhost:8000/ --chrome "$CHROME" --out out | tee out/glyphs.txt
++          cat out/glyphs.md >> "$GITHUB_STEP_SUMMARY"
+       - name: Load-time trace
+-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
++        if: ${{ !cancelled() && env.MODE == 'review' }}
+         run: |
+           python3 tools/audit/trace.py http://localhost:8000/ --chrome "$CHROME" --out out
+           cat out/trace.md >> "$GITHUB_STEP_SUMMARY"
+       - name: Audit tool tests
+-        if: ${{ !cancelled() && env.BASELINE_REF == '' }}
++        if: ${{ !cancelled() && env.MODE == 'review' }}
+         run: python3 -m unittest discover -s tools/audit -p 'test_*.py'
+       - name: Captures
+-        if: always() && env.BASELINE_REF == ''
++        if: always() && env.MODE == 'review'
+         run: python3 tools/audit/capture.py http://localhost:8000/ --chrome "$CHROME" --out out/captures
+       - name: Summary
+-        if: always() && env.BASELINE_REF == ''
++        if: always() && env.MODE == 'review'
+         run: |
+           python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+           import os
+@@ -145,7 +209,7 @@ jobs:
+           print(read('out/review.md'))
+           print(f"Artifact: review-{os.environ['GITHUB_SHA'][:7]}")
+           PY
+-      - if: always() && env.BASELINE_REF == ''
++      - if: always() && env.MODE == 'review'
+         uses: actions/upload-artifact@v4
+         with:
+           name: review-${{ steps.sha.outputs.short }}
+diff --git a/tools/audit/capture.py b/tools/audit/capture.py
+index fcdbc7c..0877475 100644
+--- a/tools/audit/capture.py
++++ b/tools/audit/capture.py
+@@ -5,7 +5,8 @@
+ 
+ The About at 1440 (dark and light), at 1100 (dark), and at 390 (dark) with "keep reading" closed and open; the Grassroots Carbon entry at 1440
+ (dark) with "read the rest" open; the full page with every fold closed at 1440 (dark); the opening line and the mark under it at 1440 (dark)
+-with the mark's color cycle held at 0 s and at 16 s, each with the three stops' computed colors in mark.json; and a WebM at 1440 (dark), 15 s, scrolling from the
++with the mark's color cycle held at 0 s and at 16 s, each with the three stops' computed colors in mark.json; the map card after the map has flown to a stop, dark and light
++(with --card-only and --label, that pair alone, for another serving); and a WebM at 1440 (dark), 15 s, scrolling from the
+ About through the record. Screencast frames are replayed on a canvas and encoded by MediaRecorder as VP9. The contact band's parity frames
+ come from parity.py.
+ """
+@@ -15,7 +16,8 @@ args = sys.argv[1:]
+ def opt(name, default=None):
+     if name not in args: return default
+     i = args.index(name); v = args[i + 1]; del args[i:i + 2]; return v
+-chrome = opt('--chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'); out = opt('--out', os.path.join(HERE, 'captures')); root = args[0] if args else 'http://localhost:8000/'
++chrome = opt('--chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'); out = opt('--out', os.path.join(HERE, 'captures')); label = opt('--label', 'after')
++card_only = '--card-only' in args; args = [x for x in args if x != '--card-only']; root = args[0] if args else 'http://localhost:8000/'
+ os.makedirs(out, exist_ok=True); LIGHT = "(function f() { if (document.documentElement) document.documentElement.setAttribute('data-theme', 'light'); else setTimeout(f, 0); })();"
+ def page(w, h, theme='dark', dpr=1):
+     c = Chrome(chrome, 9991, os.path.join(HERE, '.tmp', 'capture'), w, h, True)
+@@ -48,6 +50,15 @@ def band(name, sel, w=1440, h=900, theme='dark', pill=None, click=None):
+             hover(c, p['x'], p['y'])
+         save(c, name)
+     finally: c.close()
++def card(theme):
++    """The map card after the map has flown to a stop: the record's "Show UCLA on the map" button, then 6 s for the flight and the card."""
++    c = page(1440, 900, theme)
++    try:
++        c.js("document.querySelector('.on-map[data-stop=\"1\"]').click(); true"); c.pump(6.0)
++        b = box(c, '#card'); save(c, f'map-card-after-flight-1440-{theme}-{label}.png', (b['x'] - 8, b['top'] - 8, b['w'] + 16, b['h'] + 16))
++    finally: c.close()
++card('dark'); card('light')
++if card_only: sys.exit(0)
+ band('about-1440-dark.png', '#about')
+ band('about-1440-light.png', '#about', theme='light')
+ band('about-1100-dark.png', '#about', w=1100)
+diff --git a/tools/audit/glyphcheck.py b/tools/audit/glyphcheck.py
+new file mode 100644
+index 0000000..0da5758
+--- /dev/null
++++ b/tools/audit/glyphcheck.py
+@@ -0,0 +1,42 @@
++#!/usr/bin/env python3
++"""The map's label glyphs on one serving of the main page, for CI: every glyph range requested and every failed request.
++
++    python3 tools/audit/glyphcheck.py URL --chrome BINARY --out DIR
++
++At 1440 x 900 and 390 x 844, dark, the page is scrolled top to bottom with a stop at the map until it settles, then every "on the map"
++button in the record (or, on a page without the record, every stop tab on the map) is pressed in turn and the map's flight to that stop is given 6 s. DIR/glyphs.md lists each glyph range with its HTTP
++status and every response at or above 400; the exit code is 1 when any glyph request fails.
++"""
++import argparse, json, os, sys, time, urllib.parse
++HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE); from run import Chrome
++ap = argparse.ArgumentParser(); ap.add_argument('url')
++ap.add_argument('--chrome', default='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'); ap.add_argument('--out', default=os.path.join(HERE, 'glyphs'))
++a = ap.parse_args(); os.makedirs(a.out, exist_ok=True)
++md = [f'## Map glyphs at {a.url}', '']; bad = 0
++for w, h in ((1440, 900), (390, 844)):
++    c = Chrome(a.chrome, 9997, os.path.join(HERE, '.tmp', 'glyphs'), w, h, True)
++    try:
++        for m in ('Page.enable', 'Runtime.enable', 'Network.enable'): c.send(m)
++        c.send('Network.setCacheDisabled', {'cacheDisabled': True})
++        c.send('Emulation.setDeviceMetricsOverride', {'width': w, 'height': h, 'deviceScaleFactor': 1, 'mobile': w < 600})
++        c.send('Emulation.setEmulatedMedia', {'features': [{'name': 'prefers-color-scheme', 'value': 'dark'}]})
++        c.send('Page.navigate', {'url': a.url}); t0 = time.time()
++        while time.time() - t0 < 40 and not c.js("performance.getEntriesByName('hero-ready').length > 0"): c.pump(0.2)
++        c.js("(async () => { const m = document.getElementById('map'); const stop = m.getBoundingClientRect().top + scrollY; for (let y = 0; y < stop; y += 450) { scrollTo(0, y); await new Promise(r => setTimeout(r, 220)); } m.scrollIntoView({ block: 'center' }); await new Promise(r => setTimeout(r, 12000)); for (let y = scrollY; y < document.body.scrollHeight; y += 450) { scrollTo(0, y); await new Promise(r => setTimeout(r, 220)); } return true; })()", wait=True)
++        # the record's "on the map" buttons where the page has them; otherwise (main, before the record) the map's own stop tabs
++        sel = '.on-map' if int(c.js("document.querySelectorAll('.on-map').length")) else '#rt-app .tab'
++        n = int(c.js(f"document.querySelectorAll({json.dumps(sel)}).length"))
++        for i in range(n):
++            pre = "scrollTo(0, 0); " if sel == '.on-map' else "document.getElementById('map').scrollIntoView({ block: 'center' }); "
++            c.js(f"{pre}document.querySelectorAll({json.dumps(sel)})[{i}].click(); true"); c.pump(6.0)
++        seen, fails = {}, []
++        for e in c.ev:
++            if e.get('method') != 'Network.responseReceived': continue
++            u, st = e['params']['response']['url'], e['params']['response']['status']
++            if '/vendor/glyphs/' in u: seen.setdefault(urllib.parse.unquote(u.split('/vendor/glyphs/', 1)[1]), st)
++            if st >= 400: fails.append(f'{st} {u}')
++        g404 = [k for k, v in seen.items() if v >= 400]; bad += len(g404)
++        md += [f'{w}: {n} stop flights through {sel}; glyph ranges requested: ' + (', '.join(f'{v} {k}' for k, v in seen.items()) or 'none'),
++               f'{w}: glyph requests failing: {len(g404)}; all responses at or above 400: {len(fails)}', *[f'    {f}' for f in fails[:20]], '']
++    finally: c.close()
++open(os.path.join(a.out, 'glyphs.md'), 'w').write('\n'.join(md) + '\n'); print('\n'.join(md)); sys.exit(1 if bad else 0)
+diff --git a/tools/audit/herolook.py b/tools/audit/herolook.py
+new file mode 100644
+index 0000000..bb7df7a
+--- /dev/null
++++ b/tools/audit/herolook.py
+@@ -0,0 +1,77 @@
++#!/usr/bin/env python3
++"""The hero's look across a change, at a pinned blob clock, for CI; and proof that the clock parameter is inert when absent.
++
++    python3 tools/audit/herolook.py BEFORE_URL AFTER_URL --chrome BINARY --out DIR [--before-label X] [--after-label Y]
++    python3 tools/audit/herolook.py BEFORE_URL AFTER_URL --chrome BINARY --out DIR --noparam
++
++Look check: at ?clock=0, ?clock=5000 and ?clock=20000, at 1440 dark, 1440 light and 390 dark, the hero's first viewport is captured on each
++serving once the blob has faded in. The branching canvases (their own clock, which the parameter does not pin) and the typewriter line
++(random typing delays) are hidden on both sides, so a difference belongs to the blob, the name's liquid fill or the page. DIR/hero/ holds each
++pair side by side, before on the left; DIR/hero.md gives the share of differing pixels and the largest channel difference.
++
++--noparam: each serving is loaded without the parameter and, 2 s after navigation, its DOM is serialized with the values that move every
++frame or by chance masked (the blob discs' cx, cy and fill, inline styles, the typed text) and the source text of every script and style
++element emptied, since that is the change itself and its console and exceptions are collected;
++DIR/noparam.md reports the lines that differ.
++"""
++import argparse, base64, difflib, io, json, os, sys, time
++HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE); from run import Chrome
++from PIL import Image, ImageChops
++ap = argparse.ArgumentParser(); ap.add_argument('before'); ap.add_argument('after')
++ap.add_argument('--chrome', default='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'); ap.add_argument('--out', default=os.path.join(HERE, 'herolook'))
++ap.add_argument('--before-label', default='before'); ap.add_argument('--after-label', default='after'); ap.add_argument('--noparam', action='store_true')
++a = ap.parse_args(); os.makedirs(os.path.join(a.out, 'hero'), exist_ok=True)
++HIDE = "#land, #land-live, #type { visibility: hidden !important; }"
++LIGHT = "(function f() { if (document.documentElement) document.documentElement.setAttribute('data-theme', 'light'); else setTimeout(f, 0); })();"
++
++def open_page(url, w, h, theme, extra=''):
++    c = Chrome(a.chrome, 9996, os.path.join(HERE, '.tmp', 'herolook'), w, h, True)
++    for m in ('Page.enable', 'Runtime.enable', 'Log.enable'): c.send(m)
++    c.send('Emulation.setDeviceMetricsOverride', {'width': w, 'height': h, 'deviceScaleFactor': 1, 'mobile': w < 600})
++    c.send('Emulation.setEmulatedMedia', {'features': [{'name': 'prefers-color-scheme', 'value': theme}]})
++    c.send('Page.addScriptToEvaluateOnNewDocument', {'source': (LIGHT if theme == 'light' else '') + extra})
++    c.send('Page.navigate', {'url': url}); return c
++
++def shot(url, w, h, theme):
++    hide = f" document.addEventListener('DOMContentLoaded', () => {{ const s = document.createElement('style'); s.textContent = {json.dumps(HIDE)}; document.head.appendChild(s); }});"
++    c = open_page(url, w, h, theme, hide)
++    try:
++        t0 = time.time()
++        while time.time() - t0 < 40 and not c.js("performance.getEntriesByName('hero-ready').length > 0"): c.pump(0.2)
++        c.pump(3.0)   # the blob fades in over 1.6 s and its discs take their color over 0.8 s
++        return Image.open(io.BytesIO(base64.b64decode(c.send('Page.captureScreenshot', {'format': 'png'})['data']))).convert('RGB')
++    finally: c.close()
++
++if a.noparam:
++    MASK = """(() => { const d = document.documentElement.cloneNode(true);
++      d.querySelectorAll('#goo circle').forEach(e => { e.removeAttribute('cx'); e.removeAttribute('cy'); e.removeAttribute('fill'); });
++      d.querySelectorAll('[style]').forEach(e => e.removeAttribute('style')); d.querySelectorAll('script, style').forEach(e => { e.textContent = ''; }); const t = d.querySelector('#typed'); if (t) t.textContent = '';
++      return d.outerHTML.replace(/></g, '>\\n<'); })()"""
++    md = ['## The clock parameter when absent', '']
++    for w, h, theme in ((1440, 900, 'dark'), (390, 844, 'dark')):
++        got = {}
++        for side, url in (('before', a.before), ('after', a.after)):
++            c = open_page(url, w, h, theme)
++            try:
++                c.pump(2.0); dom = c.js(MASK)
++                con = [f"{e['params']['type']}: " + ' '.join(str(x.get('value', x.get('description', ''))) for x in e['params']['args']) for e in c.ev if e.get('method') == 'Runtime.consoleAPICalled']
++                con += ['exception: ' + e['params']['exceptionDetails'].get('text', '') for e in c.ev if e.get('method') == 'Runtime.exceptionThrown']
++                con += [f"log {e['params']['entry']['level']}: {e['params']['entry']['text']}" for e in c.ev if e.get('method') == 'Log.entryAdded']
++                got[side] = (dom.splitlines(), con)
++            finally: c.close()
++        dd = [l for l in difflib.unified_diff(got['before'][0], got['after'][0], lineterm='', n=0) if l[:1] in '+-' and l[:3] not in ('+++', '---')]
++        cd = [l for l in difflib.unified_diff(got['before'][1], got['after'][1], lineterm='', n=0) if l[:1] in '+-' and l[:3] not in ('+++', '---')]
++        md += [f"{w} {theme}: DOM lines {len(got['before'][0])} and {len(got['after'][0])}, {len(dd)} differing; console entries {len(got['before'][1])} and {len(got['after'][1])}, {len(cd)} differing.", *[f'    {l[:200]}' for l in (dd + cd)[:20]], '']
++    open(os.path.join(a.out, 'noparam.md'), 'w').write('\n'.join(md) + '\n'); print('\n'.join(md)); sys.exit(0)
++
++md = [f"## The hero at a pinned clock: {a.before_label} against {a.after_label}", '', '| Cell | Clock | Pixels differing | Share | Largest channel difference |', '|---|---|---|---|---|']
++for w, h, theme in ((1440, 900, 'dark'), (1440, 900, 'light'), (390, 844, 'dark')):
++    for clk in (0, 5000, 20000):
++        q = f'?clock={clk}'; ia, ib = shot(a.before.rstrip('/') + '/' + q, w, h, theme), shot(a.after.rstrip('/') + '/' + q, w, h, theme)
++        pair = Image.new('RGB', (ia.width + ib.width + 8, max(ia.height, ib.height)), (255, 0, 255)); pair.paste(ia, (0, 0)); pair.paste(ib, (ia.width + 8, 0))
++        pair.save(os.path.join(a.out, 'hero', f'hero-{w}-{theme}-clock{clk}-{a.before_label}-vs-{a.after_label}.png'))
++        if ia.size != ib.size: md.append(f'| {w} {theme} | {clk} | sizes differ | | |'); continue
++        d = ImageChops.difference(ia, ib)
++        px = sum(1 for p in d.getdata() if p != (0, 0, 0)); mx = max(max(p) for p in d.getdata()) if px else 0
++        md.append(f'| {w} {theme} | {clk} | {px} of {ia.width * ia.height} | {px / (ia.width * ia.height):.4%} | {mx} |')
++open(os.path.join(a.out, 'hero.md'), 'w').write('\n'.join(md) + '\n'); print('\n'.join(md))
+diff --git a/tools/audit/paired.py b/tools/audit/paired.py
+new file mode 100644
+index 0000000..377584b
+--- /dev/null
++++ b/tools/audit/paired.py
+@@ -0,0 +1,43 @@
++#!/usr/bin/env python3
++"""Paired cold-load timing of two servings of the main page on one runner, for CI.
++
++    python3 tools/audit/paired.py BEFORE_URL AFTER_URL --chrome BINARY --out DIR [--runs 9] [--before-label X] [--after-label Y]
++
++At 1440 x 900, dark and light, with the audit's network throttling, each serving's main page is loaded cold RUNS times. The two servings
++alternate, and the order flips every round (before then after, then after then before), so drift on the runner falls on both sides alike.
++DIR/paired.md and DIR/paired.json give each side's total blocking time per run, its median and its minimum-to-maximum spread, and whether
++the after side's median is lower than the before side's by more than the larger of the two spreads (the keep test for a change).
++"""
++import argparse, json, os, statistics, sys, types
++HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
++from run import audit_page
++
++ap = argparse.ArgumentParser()
++ap.add_argument('before'); ap.add_argument('after')
++ap.add_argument('--chrome', default='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome')
++ap.add_argument('--out', default=os.path.join(HERE, 'paired')); ap.add_argument('--runs', type=int, default=9)
++ap.add_argument('--before-label', default='before'); ap.add_argument('--after-label', default='after')
++a = ap.parse_args(); os.makedirs(a.out, exist_ok=True)
++sides = {'before': a.before.rstrip('/'), 'after': a.after.rstrip('/')}
++res = {t: {'before': [], 'after': []} for t in ('dark', 'light')}; port = 9700
++for k in range(a.runs):
++    order = ('before', 'after') if k % 2 == 0 else ('after', 'before')
++    for theme in ('dark', 'light'):
++        for side in order:
++            port += 1
++            ns = types.SimpleNamespace(chrome=a.chrome, tmp=os.path.join(HERE, '.tmp', 'paired'), software=True, root=sides[side])
++            r = audit_page(ns, '/', 1440, theme, 'throttled', port, None, cold_only=True)
++            res[theme][side].append(r['cold']['tbt']); print(f"round {k + 1} {theme} {side}: TBT {r['cold']['tbt']} FCP {r['cold']['fcp']} LCP {r['cold']['lcp']}", flush=True)
++md = [f"## Paired cold TBT at 1440: {a.before_label} against {a.after_label}, {a.runs} runs per side, alternating", '',
++      '| Theme | Side | Runs (ms) | Median | Spread (min to max) |', '|---|---|---|---|---|']
++verdict = {}
++for theme, v in res.items():
++    st = {}
++    for side in ('before', 'after'):
++        xs = v[side]; med = statistics.median(xs); st[side] = (med, max(xs) - min(xs))
++        md.append(f"| {theme} | {a.before_label if side == 'before' else a.after_label} | {', '.join(str(x) for x in xs)} | {med} | {min(xs)} to {max(xs)} ({max(xs) - min(xs)}) |")
++    drop, bar = st['before'][0] - st['after'][0], max(st['before'][1], st['after'][1])
++    verdict[theme] = {'drop': drop, 'larger_spread': bar, 'passes': drop > bar}
++md += [''] + [f"{t}: the median falls by {v['drop']} ms against a larger spread of {v['larger_spread']} ms; keep test {'passed' if v['passes'] else 'not passed'}." for t, v in verdict.items()]
++json.dump({'runs': res, 'verdict': verdict, 'before': a.before_label, 'after': a.after_label}, open(os.path.join(a.out, 'paired.json'), 'w'), indent=1)
++open(os.path.join(a.out, 'paired.md'), 'w').write('\n'.join(md) + '\n'); print('\n'.join(md))
+diff --git a/tools/audit/review.py b/tools/audit/review.py
+index fc7774a..4590305 100644
+--- a/tools/audit/review.py
++++ b/tools/audit/review.py
+@@ -21,10 +21,13 @@ chrome = opt('--chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google
+ os.makedirs(out, exist_ok=True); AXE = open(os.path.join(HERE, 'vendor', 'axe.min.js'), encoding='utf-8').read()
+ AXE_RUN = "axe.run(document, {resultTypes: ['violations']}).then(r => JSON.stringify(r.violations.map(v => ({id: v.id, impact: v.impact, nodes: v.nodes.map(n => n.target.join(' ') + n.any.filter(a => a.data && a.data.contrastRatio).map(a => ` (${a.data.fgColor} on ${a.data.bgColor}, ${a.data.contrastRatio}:1)`).join(''))}))))"
+ OPEN = "document.querySelectorAll('.fold-btn').forEach(b => { if (b.getAttribute('aria-expanded') !== 'true') b.click(); }); true"
+-def session(w, h):
++LIGHT = "(function f() { if (document.documentElement) document.documentElement.setAttribute('data-theme', 'light'); else setTimeout(f, 0); })();"
++def session(w, h, theme='dark'):
+     c = Chrome(chrome, 9990, os.path.join(HERE, '.tmp', f'review-{w}'), w, h, True)
+     for m in ('Page.enable', 'Runtime.enable', 'Log.enable', 'Network.enable'): c.send(m)
+     c.send('Emulation.setDeviceMetricsOverride', {'width': w, 'height': h, 'deviceScaleFactor': 1, 'mobile': w < 600})
++    c.send('Emulation.setEmulatedMedia', {'features': [{'name': 'prefers-color-scheme', 'value': theme}]})
++    if theme == 'light': c.send('Page.addScriptToEvaluateOnNewDocument', {'source': LIGHT})
+     c.send('Page.navigate', {'url': root}); t0 = time.time()
+     while time.time() - t0 < 40 and not c.js("performance.getEntriesByName('hero-ready').length > 0"): c.pump(0.2)
+     c.pump(1.5); return c
+@@ -70,6 +73,10 @@ KEYS = """(() => { const a = document.activeElement; if (!a || !(a.closest('#abo
+   return a.tagName === 'A' ? 'link: ' + a.textContent.trim().slice(0, 30) : a.classList.contains('award') ? 'entry: ' + a.querySelector('.entry-title').textContent.trim().slice(0, 30) : 'button: ' + (a.getAttribute('aria-label') || a.textContent.trim()); })()"""
+ EXPECT = """JSON.stringify([...document.querySelectorAll('#about a, #about button, #record a, #record button, #record [tabindex="0"]')].filter(e => e.offsetParent && e.tabIndex >= 0)
+   .map(a => a.tagName === 'A' ? 'link: ' + a.textContent.trim().slice(0, 30) : a.classList.contains('award') ? 'entry: ' + a.querySelector('.entry-title').textContent.trim().slice(0, 30) : 'button: ' + (a.getAttribute('aria-label') || a.textContent.trim())))"""
++STOP = """(() => { const a = document.activeElement; if (!a || a === document.body || a === document.documentElement) return 'null';
++  const s = a.closest('section[id], nav[id], header, footer, [id="rt-app"], #curtain'), el = a.tagName.toLowerCase() + (a.id ? '#' + a.id : '') + (a.getAttribute('role') ? '[role=' + a.getAttribute('role') + ']' : '');
++  const path = []; for (let e = a; e && e !== document.body; e = e.parentElement) path.push(e.tagName + [...e.parentElement.children].indexOf(e));
++  return JSON.stringify({ key: path.join('/'), element: el, section: s ? (s.id ? (s.tagName.toLowerCase() === 'section' ? '' : s.tagName.toLowerCase()) + '#' + s.id : s.tagName.toLowerCase()) : '(none)' }); })()"""
+ res = {'columns': {}, 'hiddenPills': {}, 'axe': {}}; problems = []
+ for w in (1100, 1180, 1280, 1440, 1920, 390):
+     c = session(w, 844 if w < 600 else 900)
+@@ -83,14 +90,20 @@ for w in (1100, 1180, 1280, 1440, 1920, 390):
+         if w == 1440: res['layout'] = json.loads(c.js(LAYOUT))
+         if w in (1100, 1180, 1280, 1440, 390): res.setdefault('type', {})[w] = json.loads(c.js(TYPE))
+         if w in (1440, 390):
+-            closed = axe(c); c.js(OPEN); c.pump(0.8); opened = axe(c); res['axe'][w] = {'closed': closed, 'open': opened}
+-            problems += [f'{w} axe {v["id"]} on {", ".join(v["nodes"][:3])}' for v in closed + opened]
+-            c.js("location.replace(location.pathname); true"); c.pump(4.0)
+-            land = json.loads(c.js(LANDING, wait=True)); res.setdefault('landing', {})[w] = land; problems += [f"{w}: {l['label']} lands at {l['top']} px" for l in land if not l['ok']]
+-            rm = json.loads(c.js(RAIL, wait=True)); res.setdefault('rail', {})[w] = rm
+-            problems += [f"{w}: rail shows {r['active']} at {r['section']}" for r in rm['rail'] if w >= 900 and r['active'] != r['expect']] + [f"{w}: {m['chapter']} not lit" for m in rm['markers'] if not m['lit']]
+-            after = axe(c); res['axe'][w]['afterLinks'] = after
+-            problems += [f'{w} axe after the link tests {v["id"]} on {", ".join(v["nodes"][:3])}' for v in after]
++          for theme in ('dark', 'light'):
++            ct = c if theme == 'dark' else session(w, 844 if w < 600 else 900, 'light'); cell = f'{w} {theme}'
++            try:
++                closed = axe(ct); ct.js(OPEN); ct.pump(0.8); opened = axe(ct); res['axe'][cell] = {'closed': closed, 'open': opened}
++                problems += [f'{cell} axe {v["id"]} on {", ".join(v["nodes"][:3])}' for v in closed + opened]
++                ct.js("location.replace(location.pathname); true"); ct.pump(4.0)
++                # the link tests press every "on the map" button, so the map has flown to every stop before the second axe pass
++                land = json.loads(ct.js(LANDING, wait=True)); res.setdefault('landing', {})[cell] = land; problems += [f"{cell}: {l['label']} lands at {l['top']} px" for l in land if not l['ok']]
++                rm = json.loads(ct.js(RAIL, wait=True)); res.setdefault('rail', {})[cell] = rm
++                problems += [f"{cell}: rail shows {r['active']} at {r['section']}" for r in rm['rail'] if w >= 900 and r['active'] != r['expect']] + [f"{cell}: {m['chapter']} not lit" for m in rm['markers'] if not m['lit']]
++                after = axe(ct); res['axe'][cell]['afterLinks'] = after
++                problems += [f'{cell} axe after the link tests {v["id"]} on {", ".join(v["nodes"][:3])}' for v in after]
++            finally:
++                if ct is not c: ct.close()
+         if w == 390:
+             res['pillsInside'] = json.loads(c.js("""JSON.stringify(['temperature and vapor pressure deficit (VPD) stress scalars', 'Oil and Gas Methane Partnership (OGMP) and EPA reporting'].map(t => { const p = [...document.querySelectorAll('.tag')].find(x => x.textContent === t);
+               const e = p.closest('.chapter').querySelector('.entry'), a = p.getBoundingClientRect(), b = e.getBoundingClientRect(); return { pill: t, right: Math.round(a.right), entryRight: Math.round(b.right), inside: a.right <= b.right + 0.5, lines: Math.round(a.height / 12.6) }; }))"""))
+@@ -109,6 +122,20 @@ for w in (1100, 1180, 1280, 1440, 1920, 390):
+                 else: walk.append(1)
+             walk = [f'({x} stops outside the About and the record)' if isinstance(x, int) else x for x in walk]
+             expected = json.loads(c.js(EXPECT)); res['keyboard'] = {'order': order, 'walk': walk, 'matchesDom': order == expected}
++            # the whole page's tab order: every stop from the top of the document until focus leaves the page, with its section and its
++            # accessible name as Chrome's accessibility tree computes it
++            c.js("location.replace(location.pathname); true"); c.pump(4.0); c.js("document.activeElement && document.activeElement.blur(); scrollTo(0, 0); true")
++            full, first = [], None
++            for _ in range(500):
++                for t in ('keyDown', 'keyUp'): c.send('Input.dispatchKeyEvent', {'type': t, 'key': 'Tab', 'code': 'Tab', 'windowsVirtualKeyCode': 9})
++                info = json.loads(c.js(STOP))
++                if info is None or (first is not None and info['key'] == first): break
++                if first is None: first = info['key']
++                oid = c.send('Runtime.evaluate', {'expression': 'document.activeElement'})['result'].get('objectId')
++                try: nodes = c.send('Accessibility.getPartialAXTree', {'objectId': oid, 'fetchRelatives': False}).get('nodes', []); name = next((n.get('name', {}).get('value', '') for n in nodes if not n.get('ignored')), '')
++                except Exception: name = '(no accessibility node)'
++                full.append({'element': info['element'], 'section': info['section'], 'name': name})
++            res['tabOrder'] = full
+             if order != expected: problems.append('1440: Tab order differs from DOM order')
+         res.setdefault('overflow', {})[w] = c.js('document.documentElement.scrollWidth > document.documentElement.clientWidth')
+         if res['overflow'][w]:
+@@ -125,11 +152,12 @@ md += [f"| {t['entry']} | {t['paragraph']} | {t['block']} | " + ' | '.join(f"{x[
+ md += ['', '| Width | Lede | Lede measure | About paragraph | About measure | Entry paragraph | Entry measure |', '|---|---|---|---|---|---|---|'] + [
+     f"| {w} | {t['lede']['font']} | {t['lede']['width']} px, {t['lede']['chars']} ch | {t['about']['font']} | {t['about']['width']} px, {t['about']['chars']} ch | {t['entry']['font']} | {t['entry']['width']} px, {t['entry']['chars']} ch |" for w, t in res.get('type', {}).items()]
+ md += ['', '| Width | Opening line | Lines | Text width | Box | Container |', '|---|---|---|---|---|---|'] + [f"| {w} | {v['font']} | {v['lines']} | {v['textWidth']} | {v['boxWidth']} | {v['container']} |" for w, v in res.get('lede', {}).items()]
+-md += ['', '| Width | Link | Target | Top | Lands |', '|---|---|---|---|---|'] + [f"| {w} | {l['label']} | {l['target']} | {l['top']} | {'yes' if l['ok'] else 'NO'} |" for w, ls in res.get('landing', {}).items() for l in ls]
+-md += ['', '| Width | Rail at each section (page order) | Markers lit |', '|---|---|---|'] + [f"| {w} | " + ', '.join(f"{r['section']} at {r['y']}: {r['active']}" for r in v['rail']) + ' | ' + ', '.join(f"{m['chapter']} {'yes' if m['lit'] else 'NO'}" for m in v['markers']) + ' |' for w, v in res.get('rail', {}).items()]
++md += ['', '| Cell | Link | Target | Top | Lands |', '|---|---|---|---|---|'] + [f"| {w} | {l['label']} | {l['target']} | {l['top']} | {'yes' if l['ok'] else 'NO'} |" for w, ls in res.get('landing', {}).items() for l in ls]
++md += ['', '| Cell | Rail at each section (page order) | Markers lit |', '|---|---|---|'] + [f"| {w} | " + ', '.join(f"{r['section']} at {r['y']}: {r['active']}" for r in v['rail']) + ' | ' + ', '.join(f"{m['chapter']} {'yes' if m['lit'] else 'NO'}" for m in v['markers']) + ' |' for w, v in res.get('rail', {}).items()]
+ md += ['', '| Width | About columns 1-3 / 4-6 x | holds |', '|---|---|---|'] + [f"| {w} | {v['left']} / {v['right']} | {'yes' if v['ok'] else 'NO'} |" for w, v in res['columns'].items()]
+ md += ['', 'Pills not visible: ' + '; '.join(f"{w}: {len(v) - 1} of {v[-1]}" for w, v in res['hiddenPills'].items())]
+-md += ['', '| Width | axe closed | axe open | axe after the link tests |', '|---|---|---|---|'] + [f"| {w} | {len(v['closed'])} | {len(v['open'])} | {len(v.get('afterLinks', []))} |" for w, v in res['axe'].items()]
++md += ['', '| Cell | axe closed | axe open | axe after the link tests |', '|---|---|---|---|'] + [f"| {w} | {len(v['closed'])} | {len(v['open'])} | {len(v.get('afterLinks', []))} |" for w, v in res['axe'].items()]
++md += ['', f"Full tab order at 1440, dark: {len(res.get('tabOrder', []))} stops", ''] + [f"{i + 1}. {t['element']} in {t['section']}: {t['name'] or '(no name)'}" for i, t in enumerate(res.get('tabOrder', []))]
+ md += ['', f"Keyboard at 1440: {len(res.get('keyboard', {}).get('order', []))} stops, matches DOM order: {res.get('keyboard', {}).get('matchesDom')}.", '', 'Tab order from the About to the end of the record:', '', *[f"{i + 1}. {x}" for i, x in enumerate(res.get('keyboard', {}).get('walk', []))], '',
+        f"Pills at 390: " + '; '.join(f"{p['pill']} {'inside' if p['inside'] else 'OUTSIDE'} ({p['lines']} line(s))" for p in res.get('pillsInside', [])), '', 'Problems: ' + ('none' if not problems else '; '.join(problems))]
+ open(os.path.join(out, 'review.md'), 'w').write('\n'.join(md) + '\n'); print('\n'.join(md))
+diff --git a/tools/audit/run.py b/tools/audit/run.py
+index f38f9c2..567b123 100644
+--- a/tools/audit/run.py
++++ b/tools/audit/run.py
+@@ -169,7 +169,7 @@ def glyphs(c):
+     return [f'{status} {path}' for path, status in seen.items()]
+ 
+ 
+-def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=False):
++def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=False, cold_only=False):
+     h, dpr = WIDTHS[width]
+     if profile == 'throttled': dpr = 1
+     c = Chrome(args.chrome, port, os.path.join(args.tmp, f'prof-{width}-{theme}-{profile}'), width, h, args.software)
+@@ -199,6 +199,7 @@ def audit_page(args, path, width, theme, profile, port, axe_src, checks_only=Fal
+         out['cold'] = json.loads(c.js(METRICS)); out['cold'].update(network(c))
+         if path == '/':
+             out['hero'] = json.loads(c.js("JSON.stringify(Object.fromEntries(performance.getEntriesByType('mark').filter(m => m.name.startsWith('hero-')).map(m => [m.name.slice(5), Math.round(m.startTime)])))"))
++        if cold_only: out['errors'] = errors(c); return out   # the paired timing runs measure the cold load alone
+         wait = scroll_through(c); c.pump(8.0)
+         out['scroll'] = json.loads(c.js(METRICS)); out['scroll'].update(network(c)); out['scroll'].update(wait)
+         if wait: out['scroll'].update(map_share(c))
+diff --git a/tools/audit/trace.py b/tools/audit/trace.py
+index 40c8564..0a72b86 100644
+--- a/tools/audit/trace.py
++++ b/tools/audit/trace.py
+@@ -7,7 +7,8 @@ cold, with the audit's network throttling.
+ Writes DIR/trace-1440.json and DIR/trace-390.json (the raw traces, loadable in the Performance panel) and DIR/trace.md: the ten longest
+ main-thread tasks at 1440, each with its duration, the work that dominates it, the script URL and function at the top of its stack, and
+ whether a task with the same top frame and at least half its length also runs at 390; then, for the three longest, the largest events nested
+-inside each, so the work a frame callback does is named.
++inside each, so the work a frame callback does is named; and for the same three, each task's self time split into scripting, style, layout, paint,
++rasterization, compositing and other, with the work the compositor, raster and display threads did while it ran.
+ """
+ import json, os, sys, time
+ HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE); from run import Chrome, THROTTLE
+@@ -17,7 +18,7 @@ def opt(name, default=None):
+     i = args.index(name); v = args[i + 1]; del args[i:i + 2]; return v
+ chrome = opt('--chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'); out = opt('--out', os.path.join(HERE, 'trace')); root = args[0] if args else 'http://localhost:8000/'
+ os.makedirs(out, exist_ok=True)
+-CATS = 'devtools.timeline,toplevel,v8.execute,blink.user_timing,loading,disabled-by-default-devtools.timeline,disabled-by-default-devtools.timeline.stack'
++CATS = 'devtools.timeline,toplevel,v8.execute,blink.user_timing,loading,disabled-by-default-devtools.timeline,disabled-by-default-devtools.timeline.stack,disabled-by-default-devtools.timeline.frame,cc,viz,benchmark,gpu'
+ JS = ('EvaluateScript', 'v8.evaluateModule', 'FunctionCall', 'TimerFire', 'FireAnimationFrame', 'EventDispatch', 'v8.compile', 'v8.compileModule')
+ 
+ def record(w, h):
+@@ -47,6 +48,43 @@ def fn_of(e):
+     return (f + (f' line {d["lineNumber"]}' if d.get('lineNumber') is not None else '') + (f' ({u})' if u else '')).strip()
+ 
+ 
++BUCKETS = (('scripting', ('FunctionCall', 'EvaluateScript', 'FireAnimationFrame', 'TimerFire', 'EventDispatch', 'RunMicrotasks', 'v8.', 'V8.', 'GC', 'MinorGC', 'MajorGC', 'v8::', 'Compile', 'ParseHTML')),
++           ('style', ('UpdateLayoutTree', 'RecalculateStyles', 'ScheduleStyleRecalculation', 'ParseAuthorStyleSheet')),
++           ('layout', ('Layout', 'UpdateLayout', 'LocalFrameView::layout')),
++           ('paint', ('Paint', 'PrePaint', 'PaintImage', 'Layerize', 'UpdateLayer', 'Decode', 'PaintArtifactCompositor', 'LocalFrameView::RunPrePaint', 'LocalFrameView::RunPaint')),
++           ('rasterization', ('Raster', 'TileManager', 'GpuRasterization', 'ImageDecode', 'SoftwareRaster')),
++           ('compositing', ('Commit', 'CompositeLayers', 'BeginMainFrame', 'ProxyMain', 'ProxyImpl', 'LayerTreeHost', 'cc::', 'Scheduler', 'Animate', 'Canvas', 'Swap', 'Draw')))
++
++def bucket(name):
++    for b, keys in BUCKETS:
++        if any(name.startswith(k) or name == k for k in keys): return b
++    return 'other'
++
++def breakdown(events, main, task):
++    """Self time on the main thread inside one task, by kind, and the busiest events on every other renderer or display thread in its window."""
++    t0, t1 = task['ts'], task['ts'] + task['dur']
++    inside = sorted([e for e in events if (e.get('pid'), e.get('tid')) == main and e.get('ph') == 'X' and 'dur' in e and t0 <= e['ts'] and e['ts'] + e['dur'] <= t1], key=lambda e: (e['ts'], -e['dur']))
++    self_t, stack = {}, []
++    for e in inside:
++        while stack and stack[-1]['ts'] + stack[-1]['dur'] <= e['ts']: stack.pop()
++        if stack: self_t[id(stack[-1])] = self_t.get(id(stack[-1]), stack[-1]['dur']) - e['dur']
++        self_t.setdefault(id(e), e['dur']); stack.append(e)
++    kinds, other_names = {}, {}
++    for e in inside:
++        k = bucket(e['name']) if e['name'] not in ('RunTask', 'ThreadControllerImpl::RunTask') else 'other'
++        kinds[k] = kinds.get(k, 0) + max(0, self_t[id(e)])
++        if k == 'other': other_names[e['name']] = other_names.get(e['name'], 0) + max(0, self_t[id(e)])
++    names = {(e['pid'], e['tid']): e['args'].get('name') for e in events if e.get('ph') == 'M' and e.get('name') == 'thread_name'}
++    threads = {}
++    for e in events:
++        if e.get('ph') != 'X' or 'dur' not in e or (e.get('pid'), e.get('tid')) == main or e['ts'] >= t1 or e['ts'] + e['dur'] <= t0: continue
++        tn = names.get((e.get('pid'), e.get('tid'))) or 'thread'
++        if not any(x in tn for x in ('Compositor', 'Raster', 'Viz', 'Gpu', 'CrGpuMain', 'TileWorker')): continue
++        ov = min(t1, e['ts'] + e['dur']) - max(t0, e['ts']); threads.setdefault(tn, {}); threads[tn][e['name']] = max(threads[tn].get(e['name'], 0), ov)
++    return ({k: round(v / 1000, 1) for k, v in sorted(kinds.items(), key=lambda x: -x[1])}, {k: round(v / 1000, 1) for k, v in sorted(other_names.items(), key=lambda x: -x[1])[:4]},
++            {tn: ', '.join(f'{n} {round(v / 1000, 1)}' for n, v in sorted(d.items(), key=lambda x: -x[1])[:4]) for tn, d in threads.items()})
++
++
+ def tasks(events):
+     """The page's renderer main thread: the CrRendererMain whose thread parsed the page's HTML."""
+     names = {(e['pid'], e['tid']): e['args'].get('name') for e in events if e.get('ph') == 'M' and e.get('name') == 'thread_name'}
+@@ -63,12 +101,12 @@ def tasks(events):
+         render = max((e for e in inside if e['name'] in ('UpdateLayoutTree', 'Layout', 'RecalculateStyles', 'Paint', 'PrePaint', 'Layerize', 'UpdateLayer')), key=lambda e: e['dur'], default=None)
+         url = d.get('url') or d.get('scriptName') or ''; fn = d.get('functionName') or ''
+         line = d.get('lineNumber'); frame = f"{fn or '(top level)'}{f' line {line}' if line is not None else ''}" if js else ''
+-        out.append({'ms': round(t['dur'] / 1000, 1), 'work': top['name'] if top else '', 'event': js['name'] if js else '', 'url': url.replace(root.rstrip('/'), ''), 'frame': frame,
++        out.append({'task': t, 'main': main, 'ms': round(t['dur'] / 1000, 1), 'work': top['name'] if top else '', 'event': js['name'] if js else '', 'url': url.replace(root.rstrip('/'), ''), 'frame': frame,
+                     'render': f"{render['name']} {round(render['dur'] / 1000, 1)} ms" if render else '',
+                     'inside': [f"{e['name']}{' ' + fn_of(e) if fn_of(e) else ''} {round(e['dur'] / 1000, 1)} ms" for e in sorted([e for e in inside if e['name'] not in ('RunTask', 'ThreadControllerImpl::RunTask')], key=lambda e: -e['dur'])[:8]]})
+     return sorted(out, key=lambda x: -x['ms'])
+ 
+-wide, narrow = tasks(record(1440, 900)), tasks(record(390, 844))
++ev_wide = record(1440, 900); wide, narrow = tasks(ev_wide), tasks(record(390, 844))
+ md = ['## Load-time trace, 1440 x 900 dark, cold, throttled', '', '| # | ms | Dominant work | JS entry | Script | Function | Largest rendering step | Also at 390 |', '|---|---|---|---|---|---|---|---|']
+ for i, t in enumerate(wide[:10], 1):
+     twin = next((n for n in narrow if n['url'] == t['url'] and n['frame'] == t['frame'] and n['work'] == t['work'] and n['ms'] >= t['ms'] / 2), None)
+@@ -77,4 +115,9 @@ for i, t in enumerate(wide[:10], 1):
+ md += ['', f"Main-thread tasks over 50 ms: {sum(1 for t in wide if t['ms'] > 50)} at 1440, {sum(1 for t in narrow if t['ms'] > 50)} at 390; "
+        f"their time over 50 ms (the blocking share): {round(sum(t['ms'] - 50 for t in wide if t['ms'] > 50))} ms at 1440, {round(sum(t['ms'] - 50 for t in narrow if t['ms'] > 50))} ms at 390."]
+ md += ['', 'Inside the three longest tasks at 1440, largest first:', ''] + [f"{i}. {t['ms']} ms: " + '; '.join(t['inside']) for i, t in enumerate(wide[:6:2], 1)]
++md += ['', 'The same three tasks at 1440, self time in ms by kind; then the largest other self-time events; then, per thread, the longest events overlapping the task (ms):', '']
++for i, t in enumerate(wide[:6:2], 1):
++    kinds, others, threads = breakdown(ev_wide, t['main'], t['task'])
++    md += [f"{i}. {t['ms']} ms: " + ', '.join(f'{k} {v}' for k, v in kinds.items()) + '; other: ' + (', '.join(f'{k} {v}' for k, v in others.items()) or 'none')]
++    md += [f"   - {tn}: {v}" for tn, v in sorted(threads.items())]
+ open(os.path.join(out, 'trace.md'), 'w').write('\n'.join(md) + '\n'); print('\n'.join(md))
