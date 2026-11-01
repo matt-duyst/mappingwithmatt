@@ -109,7 +109,14 @@ jobs:
           b=${before::7}; a=${after::7}
           python3 tools/audit/paired.py http://localhost:8003 http://localhost:8004 --runs 9 --before-label "$b" --after-label "$a" --chrome "$CHROME" --out out | tee out/paired.txt
           cat out/paired.md >> "$GITHUB_STEP_SUMMARY"
-          if [ "$PAIR_LOOK" = yes ]; then python3 tools/audit/herolook.py http://localhost:8003 http://localhost:8004 --before-label "$b" --after-label "$a" --chrome "$CHROME" --out out; cat out/hero.md >> "$GITHUB_STEP_SUMMARY"; fi
+          if [ "$PAIR_LOOK" = yes ]; then
+            # the look check and the blob layer's size, place and color, at device pixel ratio 1 and again at 2 for high-density screens
+            for dpr in 1 2; do
+              python3 tools/audit/herolook.py http://localhost:8003 http://localhost:8004 --dpr $dpr --before-label "$b" --after-label "$a" --chrome "$CHROME" --out out
+              python3 tools/audit/herolook.py http://localhost:8003 http://localhost:8004 --blob --dpr $dpr --before-label "$b" --after-label "$a" --chrome "$CHROME" --out out
+            done
+            cat out/hero.md out/blob.md out/hero-dpr2.md out/blob-dpr2.md >> "$GITHUB_STEP_SUMMARY"
+          fi
           if [ "$PAIR_NOPARAM" = yes ]; then python3 tools/audit/herolook.py http://localhost:8003 http://localhost:8004 --noparam --chrome "$CHROME" --out out; cat out/noparam.md >> "$GITHUB_STEP_SUMMARY"; fi
           echo "PAIR_NAME=pair-${b}-${a}" >> "$GITHUB_ENV"
       - if: always() && env.MODE == 'pair'
