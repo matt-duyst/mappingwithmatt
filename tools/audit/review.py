@@ -101,6 +101,10 @@ for w in (1100, 1180, 1280, 1440, 1920, 390):
                 rm = json.loads(ct.js(RAIL, wait=True)); res.setdefault('rail', {})[cell] = rm
                 problems += [f"{cell}: rail shows {r['active']} at {r['section']}" for r in rm['rail'] if w >= 900 and r['active'] != r['expect']] + [f"{cell}: {m['chapter']} not lit" for m in rm['markers'] if not m['lit']]
                 after = axe(ct); res['axe'][cell]['afterLinks'] = after
+                # the map card's role-line link as the last flight leaves it: its computed color and the card's background
+                res.setdefault('cardLink', {})[cell] = json.loads(ct.js("""JSON.stringify((() => { const a = document.querySelector('.card-body:not([hidden]) .g-role a'), c = document.getElementById('card');
+                  if (!a) return null; let e = c, bg = 'rgba(0, 0, 0, 0)'; while (e && (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent')) { bg = getComputedStyle(e).backgroundColor; e = e.parentElement; }
+                  return { link: getComputedStyle(a).color, background: bg, text: a.textContent.trim().slice(0, 40) }; })())"""))
                 problems += [f'{cell} axe after the link tests {v["id"]} on {", ".join(v["nodes"][:3])}' for v in after]
             finally:
                 if ct is not c: ct.close()
@@ -156,6 +160,7 @@ md += ['', '| Cell | Link | Target | Top | Lands |', '|---|---|---|---|---|'] + 
 md += ['', '| Cell | Rail at each section (page order) | Markers lit |', '|---|---|---|'] + [f"| {w} | " + ', '.join(f"{r['section']} at {r['y']}: {r['active']}" for r in v['rail']) + ' | ' + ', '.join(f"{m['chapter']} {'yes' if m['lit'] else 'NO'}" for m in v['markers']) + ' |' for w, v in res.get('rail', {}).items()]
 md += ['', '| Width | About columns 1-3 / 4-6 x | holds |', '|---|---|---|'] + [f"| {w} | {v['left']} / {v['right']} | {'yes' if v['ok'] else 'NO'} |" for w, v in res['columns'].items()]
 md += ['', 'Pills not visible: ' + '; '.join(f"{w}: {len(v) - 1} of {v[-1]}" for w, v in res['hiddenPills'].items())]
+md += ['', '| Cell | Map card role-line link after the flights | Card background |', '|---|---|---|'] + [f"| {w} | {v['link'] if v else '(none)'} | {v['background'] if v else ''} |" for w, v in res.get('cardLink', {}).items()]
 md += ['', '| Cell | axe closed | axe open | axe after the link tests |', '|---|---|---|---|'] + [f"| {w} | {len(v['closed'])} | {len(v['open'])} | {len(v.get('afterLinks', []))} |" for w, v in res['axe'].items()]
 md += ['', f"Full tab order at 1440, dark: {len(res.get('tabOrder', []))} stops", ''] + [f"{i + 1}. {t['element']} in {t['section']}: {t['name'] or '(no name)'}" for i, t in enumerate(res.get('tabOrder', []))]
 md += ['', f"Keyboard at 1440: {len(res.get('keyboard', {}).get('order', []))} stops, matches DOM order: {res.get('keyboard', {}).get('matchesDom')}.", '', 'Tab order from the About to the end of the record:', '', *[f"{i + 1}. {x}" for i, x in enumerate(res.get('keyboard', {}).get('walk', []))], '',
