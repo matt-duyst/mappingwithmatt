@@ -554,8 +554,7 @@ p { margin: 0 0 16px; }
 .card .rt-note { font-size:11.5px; line-height:1.6; color:var(--muted); margin:0 0 8px; }
 .card .g-role { margin:6px 0 0; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.035); font-size:11px; line-height:1.6; color:var(--text); }
 .card-body[hidden] { display:none; }
-.rt-app { --text: #ECECEA; --muted: #9A9A98; }  /* the panel is dark in both schemes; its text keeps the dark scheme's tokens */
-@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .rt-app { --link: #D9A066; } }
+.rt-app { --text: #ECECEA; --muted: #9A9A98; --link: #D9A066; }  /* the panel is dark in both schemes; its text keeps the dark scheme's tokens */
 /* The Sentinel-2 year row: shown only while Sentinel-2 is the basemap; the active year is lit */
 .s2-years[hidden] { display:none; } .s2-years .years { display:flex; flex-wrap:wrap; gap:2px; margin-top:6px; }
 .s2-years .years button { font:inherit; font-family:var(--font-mono); font-size:11px; letter-spacing:0.02em; color:var(--muted); background:transparent; border:1px solid transparent; border-radius:4px; padding:3px 5px; cursor:pointer; }
