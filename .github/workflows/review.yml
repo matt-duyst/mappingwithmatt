@@ -198,11 +198,7 @@ jobs:
           # TBT, FCP and LCP are gated by the timing job's paired comparison against main on one runner (owner-approved); here they are only a
           # trend against the stored baseline, while requests, bytes and CLS stay gated against it
           echo "Timing: gated by the paired comparison against main in the timing job; the stored-baseline timing below is a report-only trend" >> "$GITHUB_STEP_SUMMARY"
-          # owner-approved for this branch: cold bytes may rise 15 percent over the CI baseline instead of 10
-          echo "Byte allowance 15 percent: section three record and reading type, owner-approved 2026-10-30" >> "$GITHUB_STEP_SUMMARY"
-          # owner-approved for this branch: one request over the 10 percent gate, for the self-hosted Fraunces italic
-          echo "Request allowance 1: self-hosted Fraunces italic for the About's opening line, owner-approved 2026-10-31" >> "$GITHUB_STEP_SUMMARY"
-          python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json --gate=paired --bytes-allowance=0.15 --requests-allowance=1 | tee out/compare.txt
+          python3 tools/audit/compare.py out/audit.json tools/audit/baseline-ci.json --gate=paired | tee out/compare.txt
       - name: Contact band parity
         if: ${{ !cancelled() && env.MODE == 'review' }}
         env:
